@@ -745,21 +745,21 @@ export default function TransactionHistory() {
                   onClick={() => setActiveTab('all')}
                 >
                   {t("See All ")}
-                  <span className="text-xs text-gray-500">â€¢</span>
+                  <span className="text-xs text-gray-500">.</span>
                 </button>
                 <button 
                   className={`${activeTab === 'deposits' ? 'text-black dark:text-white' : 'text-gray-400'} hover:text-black dark:hover:text-white transition-colors flex items-center gap-1`}
                   onClick={() => handleTabChange('deposits')}
                 >
                   {t("See Deposits ")}
-                  <span className="text-xs text-gray-500">â€¢</span>
+                  <span className="text-xs text-gray-500">.</span>
                 </button>
                 <button 
                   className={`${activeTab === 'withdrawals' ? 'text-black dark:text-white' : 'text-gray-400'} hover:text-black dark:hover:text-white transition-colors flex items-center gap-1`}
                   onClick={() => handleTabChange('withdrawals')}
                 >
                   {t("See Withdrawals")} 
-                  <span className="text-xs text-gray-500">â€¢</span>
+                  <span className="text-xs text-gray-500">.</span>
                 </button>
               </div>
             </div>
