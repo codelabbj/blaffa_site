@@ -20,7 +20,7 @@ const resources = {
       "24/7 Support": "24/7 Support",
       "Your trusted partner for secure transactions": "Your trusted partner for secure transactions",
       "Available": "Available",
-      "Transaction Fee": "Transaction Fee",
+      "Transaction Smoothness": "Transaction Smoothness",
       "© 2025 Yapson. All rights reserved.": "© 2025 Yapson. All rights reserved.",
 
 
@@ -203,7 +203,7 @@ const resources = {
       "Payments made easy": "Paiements faciles",
       "24/7 Support": "Support 24/7",
       "Available": "Disponible",
-      "Transaction Fee": "Frais de transaction",
+      "Transaction Smoothness": "Fluidité de la transaction",
       "Processing Time": "Temps de traitement",
       "© 2025 Yapson. All rights reserved.": "© 2025 Yapson. Tous droits réservés.",
 

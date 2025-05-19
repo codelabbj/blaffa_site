@@ -926,7 +926,7 @@ export default function LeftSideContent() {
       <div className="mt-4 grid grid-cols-3 gap-2">
         {[
           { text: t("24/7 Support"), value: t("Available") },
-          { text: t("Transaction Fee"), value: "0%" },
+          { text: t("Transaction Smoothness"), value: "100%" },
           { text: t("Processing Time"), value: "<1s" }
         ].map((item, i) => (
           <div 

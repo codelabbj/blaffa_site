@@ -765,7 +765,7 @@ const { theme } = useTheme();
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       required
-                      className="bg-gray-700 text-white w-full pl-10 pr-10 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                      className="bg-gray-700 text-white w-44 pl-10 pr-10 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
                       placeholder={t("Confirm your password")}
                     />
                     <button
