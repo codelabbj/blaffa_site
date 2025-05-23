@@ -7,7 +7,6 @@ import Head from 'next/head';
 import axios, { AxiosError } from 'axios';
 import { useTranslation } from 'react-i18next';
 // import styles from '../styles/Withdraw.module.css';
-// import { ClipboardIcon } from 'lucide-react';
 import DashboardHeader from '@/components/DashboardHeader';
 import { useTheme } from '../../components/ThemeProvider';
 
@@ -24,6 +23,25 @@ interface App {
   name: string;
   public_name?: string;
   image?: string;
+  is_active?: boolean;
+  hash?: string;
+  cashdeskid?: string;
+  cashierpass?: string;
+  order?: string | null;
+  city?: string;
+  street?: string;
+  deposit_tuto_content?: string;
+  deposit_link?: string;
+  withdrawal_tuto_content?: string;
+  withdrawal_link?: string;
+}
+
+// Updated IdLink interface to match the structure from deposit/page.tsx
+interface IdLink {
+  id: string;
+  user: string;
+  link: string; // This is the saved bet ID
+  app_name: App; // This should be the full App object
 }
 
 interface Transaction {
@@ -66,7 +84,7 @@ export default function Withdraw() {
   });
 
   const [networks, setNetworks] = useState<{ id: string; name: string; image?: string }[]>([]);
-  //const [apps, setApps] = useState<{ id: string; name: string }[]>([]);
+  const [apps, setApps] = useState<App[]>([]); // Use the full App interface here
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -74,7 +92,14 @@ export default function Withdraw() {
   const [selectedTransaction, setSelectedTransaction] = useState<TransactionDetail | null>(null);
   const {theme} = useTheme();
 
-  // Fetch networks and apps data on component mount
+  // State for saved app IDs and suggestions
+  const [savedAppIds, setSavedAppIds] = useState<IdLink[]>([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [filteredSuggestions, setFilteredSuggestions] = useState<IdLink[]>([]);
+  // State to hold the selected saved IdLink for the withdrawal
+  const [selectedSavedIdLink, setSelectedSavedIdLink] = useState<IdLink | null>(null);
+
+  // Fetch networks, apps, and saved app IDs data on component mount
   useEffect(() => {
     const fetchData = async () => {
       const token = localStorage.getItem('accessToken'); // Retrieve the token from localStorage
@@ -91,20 +116,61 @@ export default function Withdraw() {
         });
         setNetworks(networksResponse.data);
 
-        // const appsResponse = await axios.get('https://api.yapson.net/yapson/app_name', {
-        //   headers: {
-        //     Authorization: `Bearer ${token}` // Include the token in the headers
-        //   }
-        // });
-        //setApps(appsResponse.data);
-      } catch (err) {
+        // Fetch available apps (needed to link saved IDs to app details)
+        const appsResponse = await axios.get('https://api.yapson.net/yapson/app_name', {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        setApps(appsResponse.data);
+
+        // Fetch saved app IDs
+        const savedIdsResponse = await axios.get('https://api.yapson.net/yapson/id_link', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        // Assuming the API returns an array of IdLink objects directly or within a 'results'/'data' field
+        let processedData: IdLink[] = [];
+        if (Array.isArray(savedIdsResponse.data)) {
+          processedData = savedIdsResponse.data;
+        } else if (savedIdsResponse.data && Array.isArray(savedIdsResponse.data.results)) {
+          processedData = savedIdsResponse.data.results; // Handle paginated response
+        } else if (savedIdsResponse.data && Array.isArray(savedIdsResponse.data.data)) {
+          processedData = savedIdsResponse.data.data; // Handle other data structures
+        } else if (savedIdsResponse.data && typeof savedIdsResponse.data === 'object') {
+          // Handle case where a single object might be returned (less common for a list)
+          // Ensure it conforms to IdLink structure or skip
+          if (savedIdsResponse.data.id && savedIdsResponse.data.link && savedIdsResponse.data.app_name) {
+            processedData = [savedIdsResponse.data as IdLink];
+          }
+        }
+        console.log("Fetched Saved App IDs:", processedData); // Log fetched saved IDs
+        setSavedAppIds(processedData);
+      } catch (err: unknown) { // Use unknown for caught errors
         console.error(t('Error fetching data:'), err);
-        setError(t('Failed to load necessary data. Please try again later.'));
+        if (err instanceof Error) { // Type guard
+          setError(err.message || t('Failed to load necessary data. Please try again later.'));
+        } else {
+          setError(t('Failed to load necessary data. Please try again later.'));
+        }
       }
     };
 
     fetchData();
   }, [t]);
+
+  // Filter suggestions based on input value
+  useEffect(() => {
+    if (formData.id) {
+      const filtered = savedAppIds.filter(item =>
+        item.link.toLowerCase().includes(formData.id.toLowerCase()) ||
+        item.app_name?.name?.toLowerCase().includes(formData.id.toLowerCase()) ||
+        item.app_name?.public_name?.toLowerCase().includes(formData.id.toLowerCase())
+      );
+      setFilteredSuggestions(filtered);
+    } else {
+      setFilteredSuggestions(savedAppIds); // Show all saved IDs when input is empty
+    }
+  }, [formData.id, savedAppIds]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -112,6 +178,17 @@ export default function Withdraw() {
       ...prevState,
       [name]: value
     }));
+    // Clear selectedSavedIdLink when the user types in the ID field
+    if (name === 'id') {
+      setSelectedSavedIdLink(null);
+    }
+  };
+
+  // Handler for selecting a suggestion
+  const handleSelectSuggestion = (item: IdLink) => {
+    setFormData(prev => ({ ...prev, id: item.link })); // Set the input value to the saved link
+    setSelectedSavedIdLink(item); // Store the selected IdLink object
+    setShowSuggestions(false); // Hide suggestions
   };
 
   const handleNetworkSelect = (networkName: string) => {
@@ -171,7 +248,7 @@ export default function Withdraw() {
       // Check if the error is in the format { "amount": ["Minimum deposit is 200.00 F CFA"] }
       for (const field in data) {
         if (Array.isArray(data[field]) && data[field].length > 0) {
-          return data[field][0];
+          return data[field][0] as string; // Cast to string
         }
       }
       
@@ -209,9 +286,14 @@ export default function Withdraw() {
       return;
     }
 
-
     if (!formData.network) {
       setError(t('Please select a network'));
+      setLoading(false);
+      return;
+    }
+
+    if (!formData.id) {
+      setError(t('Please enter or select a Bet ID'));
       setLoading(false);
       return;
     }
@@ -233,14 +315,45 @@ export default function Withdraw() {
         throw new Error(t('Please select a network'));
       }
 
-      // // Find 1xbet app ID
-      // const xbetApp = apps.find(app =>
-      //   app.name.toLowerCase() === '1xbet'
-      // );
+      // Determine app_id and user_app_id based on whether a saved ID was selected
+      let appIdToSend: string;
+      let userAppIdToSend: string = formData.id;
 
-      // if (!xbetApp) {
-      //   throw new Error(t('Application information not available'));
-      // }
+      if (selectedSavedIdLink) {
+        // If a saved ID was selected from suggestions
+        appIdToSend = selectedSavedIdLink.app_name.id;
+        userAppIdToSend = selectedSavedIdLink.link;
+        console.log("Using selected saved ID:", selectedSavedIdLink); // Log selected saved ID
+      } else {
+        // If the user typed an ID that wasn't selected from suggestions
+        // Try to find if the typed ID matches any saved ID's link
+        const matchedSavedId = savedAppIds.find(item => item.link === formData.id);
+
+        if (matchedSavedId) {
+          // If the typed ID matches a saved ID, use that app's info
+          appIdToSend = matchedSavedId.app_name.id;
+          userAppIdToSend = matchedSavedId.link; // Use the typed ID (which matches the saved link)
+          console.log("Typed ID matches saved ID, using app:", matchedSavedId.app_name);
+        } else {
+          // If the user typed an ID that wasn't selected from suggestions
+          // We need a way to determine the app_id for this manually entered ID.
+          // Currently, there's no UI element to select the app for a new ID.
+          // For now, we'll default to 1xbet as in the original code
+          console.log("Typed ID does not match saved ID, trying to find 1xbet app in:", apps); // Log apps before finding 1xbet
+          const xbetAppInfo = apps.find(app =>
+            app.name.toLowerCase() === '1xbet'
+          );
+          console.log("Found 1xbet app info:", xbetAppInfo); // Log result of finding 1xbet
+
+          if (!xbetAppInfo) {
+            setError(t('Application information not available for the default app.'));
+            setLoading(false);
+            return;
+          }
+          appIdToSend = xbetAppInfo.id;
+          userAppIdToSend = formData.id; // Use the manually entered ID
+        }
+      }
 
       // Prepare the payload
       const payload = {
@@ -248,9 +361,12 @@ export default function Withdraw() {
         network_id: selectedNetwork.id,
         phone_number: parseInt(formData.number),
         indication: "+229", // Country code as provided in example
-        user_app_id: parseInt(formData.id),
+        app_id: appIdToSend, // Use the determined app ID
+        user_app_id: userAppIdToSend, // Use the determined user app ID
         withdriwal_code: formData.withdrawalCode // Note the typo 'withdriwal_code' which matches the original API
       };
+
+      console.log("Sending withdrawal payload:", payload); // Log the payload
 
       // Send the withdrawal request
       const response = await axios.post('https://api.yapson.net/yapson/transaction', payload, {
@@ -258,6 +374,8 @@ export default function Withdraw() {
           Authorization: `Bearer ${token}`
         }
       });
+
+      console.log("Withdrawal response:", response.data); // Log the response
 
       setSuccess(t('Withdrawal request submitted successfully! Transaction ID:') + ' ' + (response.data.transaction_id || response.data.id || ''));
       
@@ -272,10 +390,19 @@ export default function Withdraw() {
             }
           });
           
-          showTransactionDetails(transactionResponse.data);
+          // Add user_app_id to the fetched transaction data
+          const transactionDataWithId = {
+            ...transactionResponse.data,
+            user_app_id: userAppIdToSend // Add the ID from the form/selected saved ID
+          };
+          showTransactionDetails(transactionDataWithId);
         } else {
-          // If the response is the transaction itself
-          showTransactionDetails(response.data);
+          // If the response is the transaction itself, add user_app_id to it
+          const transactionDataWithId = {
+            ...response.data,
+            user_app_id: userAppIdToSend // Add the ID from the form/selected saved ID
+          };
+          showTransactionDetails(transactionDataWithId);
         }
       }
       
@@ -287,8 +414,9 @@ export default function Withdraw() {
         confirmNumber: '',
         network: ''
       });
+      setSelectedSavedIdLink(null); // Clear selected saved ID
       
-    } catch (err) {
+    } catch (err: unknown) {
       console.error(t('Error processing withdrawal:'), err);
       
       // Extract the specific error message from the response
@@ -342,33 +470,8 @@ export default function Withdraw() {
         {/* Main Card */}
         <div className={`bg-gradient-to-br ${theme.colors.a_background} rounded-2xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl`}>
 
-          {/* Important Notice Banner */}
-          {/* <div className="bg-gradient-to-r from-orange-600 to-orange-600 text-white p-6">
-            <div className="flex items-center gap-3 mb-3">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 animate-pulse" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-              <h3 className="text-xl font-bold">{t('IMPORTANT')}</h3>
-            </div>
-            <p className="text-white/90 mb-3">{t('Your account currency must be in XOF.')}</p>
-             <div className="flex flex-wrap gap-4 mt-3 text-white/80 text-sm">
-              <div className="flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                </svg>
-                <span>{t("CITY")}: Porto-Novo</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
-                </svg>
-                <span>{t("STREET")}: yapson</span>
-              </div>
-            </div> 
-          </div> */}
-           {/* Important notice banner */}
-           <div className="bg-amber-50 dark:bg-amber-900/30 border-l-4 border-amber-500 dark:border-amber-400 p-4">
+          {/* Important notice banner */}
+          <div className="bg-amber-50 dark:bg-amber-900/30 border-l-4 border-amber-500 dark:border-amber-400 p-4">
             <div className="flex items-center">
               <div className="flex-shrink-0">
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-amber-500" viewBox="0 0 20 20" fill="currentColor">
@@ -409,10 +512,10 @@ export default function Withdraw() {
           {/* Form */}
           <form onSubmit={handleSubmit} className="p-6">
             <div className="space-y-6">
-              {/* ID Field */}
+              {/* ID Field with suggestions */}
               <div className="group">
                 <label className="block text-sm font-medium mb-1" htmlFor="id">
-                  {t('ID')}
+                  {t('Betting App ID')}
                 </label>
                 <div className="relative">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -424,16 +527,55 @@ export default function Withdraw() {
                     type="text"
                     id="id"
                     name="id"
-                    placeholder={t('Enter your ID')}
+                    placeholder={t('Enter or select your betting app ID')}
                     value={formData.id}
                     onChange={handleChange}
-                    className={`block w-full pl-10 pr-3 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500  transition-all duration-300`}
+                    onFocus={() => setShowSuggestions(true)}
+                    // Add onBlur to hide suggestions after a short delay to allow click
+                    onBlur={() => setTimeout(() => setShowSuggestions(false), 100)}
+                    className={`block w-full pl-10 pr-3 py-3 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-300`}
                     required
                   />
+
+                  {/* Suggestions dropdown */}
+                  {showSuggestions && filteredSuggestions.length > 0 && (
+                    <div className="absolute z-10 w-full mt-1 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-lg max-h-48 overflow-y-auto">
+                      <div className="p-2 border-b border-gray-200 dark:border-gray-700">
+                        <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{t('Saved IDs')}</span>
+                      </div>
+                      {filteredSuggestions.map((item) => (
+                        <div
+                          key={item.id}
+                          onClick={() => handleSelectSuggestion(item)}
+                          className="px-3 py-2 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer flex justify-between items-center"
+                        >
+                          <span className="font-medium text-gray-800 dark:text-white">
+                            {item.app_name?.public_name || item.app_name?.name || t('Unknown App')}
+                            <span className="ml-2 text-gray-600 dark:text-gray-400 font-normal">
+                              - {item.link}
+                            </span>
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
-                <small className="mt-1 text-sm ">
-                  {t('This is your 1xbet user ID')}
-                </small>
+                {/* Display selected app name if a saved ID is chosen */}
+                {selectedSavedIdLink && (
+                  <p className="mt-1 text-sm text-green-600 dark:text-green-400">
+                    {t('Selected App')}: {selectedSavedIdLink.app_name?.public_name || selectedSavedIdLink.app_name?.name || 'Unknown App'}
+                  </p>
+                )}
+                {!selectedSavedIdLink && formData.id && (
+                  <p className="mt-1 text-sm text-amber-600 dark:text-amber-400">
+                    {t('You are entering a new ID. Defaulting to 1xbet app.')} {/* Inform user about default */}
+                  </p>
+                )}
+                {!selectedSavedIdLink && !formData.id && (
+                  <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                    {t('Enter your betting app ID or select from saved IDs.')}
+                  </p>
+                )}
               </div>
   
               {/* Withdrawal Code Field */}

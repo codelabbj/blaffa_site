@@ -469,11 +469,12 @@
 
 "use client"
 import { useState, useEffect } from 'react';
-import { ArrowUpRight, ArrowDownLeft} from 'lucide-react';
+import { ArrowUpRight, ArrowDownLeft } from 'lucide-react';
 import DashboardHeader from '@/components/DashboardHeader';
 import TransactionHistory from '@/components/TransactionHistory';
 import { useTranslation } from 'react-i18next';
 import Footer from '@/components/footer';
+import Advertisement_Hero from '@/components/Advertisement_Hero';
 
 
 export default function Dashboard() {
@@ -529,6 +530,8 @@ export default function Dashboard() {
       {/* Header */}
       <DashboardHeader />
 
+       <Advertisement_Hero />
+
       {/* Main Content */}
       <main className="py-4 md:py-6 px-4 md:px-6">
         <h1 className={`text-xl md:text-2xl font-bold mb-4 md:mb-6 relative inline-block ${animateHeader ? 'animate-fadeIn' : 'opacity-0'}`}>
@@ -553,6 +556,7 @@ export default function Dashboard() {
               <ArrowUpRight size={16} className="transition-transform group-hover:translate-y-1 group-hover:-translate-x-1 group-hover:animate-pulse" />
             </span>
           </a>
+          
         </div>
         
         {/* Transaction History */}
