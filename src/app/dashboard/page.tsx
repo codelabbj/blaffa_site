@@ -467,105 +467,105 @@
 
 
 
-"use client"
-import { useState, useEffect } from 'react';
-import { ArrowUpRight, ArrowDownLeft } from 'lucide-react';
-import DashboardHeader from '@/components/DashboardHeader';
-import TransactionHistory from '@/components/TransactionHistory';
-import { useTranslation } from 'react-i18next';
-import Footer from '@/components/footer';
-import Advertisement_Hero from '@/components/Advertisement_Hero';
+// "use client"
+// import { useState, useEffect } from 'react';
+// import { ArrowUpRight, ArrowDownLeft } from 'lucide-react';
+// import DashboardHeader from '@/components/DashboardHeader';
+// import TransactionHistory from '@/components/TransactionHistory';
+// import { useTranslation } from 'react-i18next';
+// import Footer from '@/components/footer';
+// import Advertisement_Hero from '@/components/Advertisement_Hero';
 
 
-export default function Dashboard() {
-  const { t } = useTranslation();
-  const [isLoading, setIsLoading] = useState(true);
-  const [animateHeader, setAnimateHeader] = useState(false);
+// export default function Dashboard() {
+//   const { t } = useTranslation();
+//   const [isLoading, setIsLoading] = useState(true);
+//   const [animateHeader, setAnimateHeader] = useState(false);
 
   
 
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme') || 'dark';
-    document.documentElement.classList.toggle('dark', savedTheme === 'dark');
-  }, []);
+//   useEffect(() => {
+//     const savedTheme = localStorage.getItem('theme') || 'dark';
+//     document.documentElement.classList.toggle('dark', savedTheme === 'dark');
+//   }, []);
   
   
-  // Simulates loading state
-  useEffect(() => {
+//   // Simulates loading state
+//   useEffect(() => {
 
-    setAnimateHeader(true);
+//     setAnimateHeader(true);
 
 
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 1000);
+//     setTimeout(() => {
+//       setIsLoading(false);
+//     }, 1000);
     
-    // Show a notification after 3 seconds
+//     // Show a notification after 3 seconds
    
     
-    // Trigger header animation
-    setTimeout(() => {
-      setAnimateHeader(true);
-    }, 500);
-  }, []);
+//     // Trigger header animation
+//     setTimeout(() => {
+//       setAnimateHeader(true);
+//     }, 500);
+//   }, []);
  
 
-  return (
+//   return (
    
-    <div className="min-h-screen font-sans relative overflow-hidden">
-      {/* Background gradient effects */}
-      <div className="absolute top-20 -left-10 w-40 h-40 bg-orange-700/20 rounded-full blur-3xl animate-pulse-slow"></div>
-      <div className="absolute bottom-20 right-10 w-60 h-60 bg-purple-700/10 rounded-full blur-3xl animate-pulse-slow"></div>
+//     <div className="min-h-screen font-sans relative overflow-hidden">
+//       {/* Background gradient effects */}
+//       <div className="absolute top-20 -left-10 w-40 h-40 bg-orange-700/20 rounded-full blur-3xl animate-pulse-slow"></div>
+//       <div className="absolute bottom-20 right-10 w-60 h-60 bg-purple-700/10 rounded-full blur-3xl animate-pulse-slow"></div>
       
-      {/* Loading overlay */}
-      {isLoading && (
-        <div className="absolute inset-0 bg-gray-900/90 z-50 flex items-center justify-center">
-          <div className="flex flex-col items-center gap-3">
-            <div className="w-16 h-16 border-4 border-gray-700 border-t-orange-500 rounded-full animate-spin"></div>
-            <p className="text-gray-400">Loading Yapson...</p>
-          </div>
-        </div>
-      )}
+//       {/* Loading overlay */}
+//       {isLoading && (
+//         <div className="absolute inset-0 bg-gray-900/90 z-50 flex items-center justify-center">
+//           <div className="flex flex-col items-center gap-3">
+//             <div className="w-16 h-16 border-4 border-gray-700 border-t-orange-500 rounded-full animate-spin"></div>
+//             <p className="text-gray-400">Loading Yapson...</p>
+//           </div>
+//         </div>
+//       )}
       
-      {/* Header */}
-      <DashboardHeader />
+//       {/* Header */}
+//       <DashboardHeader />
 
-       <Advertisement_Hero />
+//        <Advertisement_Hero />
 
-      {/* Main Content */}
-      <main className="py-4 md:py-6 px-4 md:px-6">
-        <h1 className={`text-xl md:text-2xl font-bold mb-4 md:mb-6 relative inline-block ${animateHeader ? 'animate-fadeIn' : 'opacity-0'}`}>
-          {t("Welcome to Yapson")}
-          <span className="absolute bottom-0 left-0 w-full h-0.5 bg-orange-500 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 animate-widthExpand"></span>
-        </h1>
+//       {/* Main Content */}
+//       <main className="py-4 md:py-6 px-4 md:px-6">
+//         <h1 className={`text-xl md:text-2xl font-bold mb-4 md:mb-6 relative inline-block ${animateHeader ? 'animate-fadeIn' : 'opacity-0'}`}>
+//           {t("Welcome to Yapson")}
+//           <span className="absolute bottom-0 left-0 w-full h-0.5 bg-orange-500 scale-x-0 group-hover:scale-x-100 origin-left transition-transform duration-300 animate-widthExpand"></span>
+//         </h1>
         
-        {/* Action Buttons */}
-        <div className={`flex gap-2 md:gap-4 mb-6 md:mb-8 ${animateHeader ? 'animate-slideInRight' : 'opacity-0'}`} style={{animationDelay: '300ms'}} >
-          <a className="group relative flex-1 md:flex-none flex items-center justify-center gap-1 md:gap-2 bg-orange-600 hover:bg-orange-700 text-white font-medium py-2 md:py-3 px-4 md:px-6 rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 md:w-40 overflow-hidden text-sm md:text-base" href="/deposit">
-            <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-orange-500 to-orange-700 opacity-0 group-hover:opacity-100 transition-opacity"></span>
-            <span className="absolute -inset-px bg-gradient-to-r from-orange-400 to-orange-600 opacity-0 group-hover:opacity-30 group-hover:animate-pulse rounded-lg"></span>
-            <span className="relative z-10 flex items-center gap-1 md:gap-2">
-              {t("DEPOSIT")}
-              <ArrowDownLeft size={16} className="transition-transform group-hover:translate-y-1 group-hover:animate-bounce" />
-            </span>
-          </a>
-          <a className="group relative flex-1 md:flex-none flex items-center justify-center gap-1 md:gap-2 bg-gray-800 hover:bg-gray-700 text-white font-medium py-2 md:py-3 px-4 md:px-6 rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 md:w-40 border border-gray-700 overflow-hidden text-sm md:text-base" href='/withdraw'>
-            <span className="absolute inset-0 w-0 h-full bg-orange-600/20 transition-all duration-300 group-hover:w-full"></span>
-            <span className="relative z-10 flex items-center gap-1 md:gap-2">
-              {t("WITHDRAW")}
-              <ArrowUpRight size={16} className="transition-transform group-hover:translate-y-1 group-hover:-translate-x-1 group-hover:animate-pulse" />
-            </span>
-          </a>
+//         {/* Action Buttons */}
+//         <div className={`flex gap-2 md:gap-4 mb-6 md:mb-8 ${animateHeader ? 'animate-slideInRight' : 'opacity-0'}`} style={{animationDelay: '300ms'}} >
+//           <a className="group relative flex-1 md:flex-none flex items-center justify-center gap-1 md:gap-2 bg-orange-600 hover:bg-orange-700 text-white font-medium py-2 md:py-3 px-4 md:px-6 rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 md:w-40 overflow-hidden text-sm md:text-base" href="/deposit">
+//             <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-orange-500 to-orange-700 opacity-0 group-hover:opacity-100 transition-opacity"></span>
+//             <span className="absolute -inset-px bg-gradient-to-r from-orange-400 to-orange-600 opacity-0 group-hover:opacity-30 group-hover:animate-pulse rounded-lg"></span>
+//             <span className="relative z-10 flex items-center gap-1 md:gap-2">
+//               {t("DEPOSIT")}
+//               <ArrowDownLeft size={16} className="transition-transform group-hover:translate-y-1 group-hover:animate-bounce" />
+//             </span>
+//           </a>
+//           <a className="group relative flex-1 md:flex-none flex items-center justify-center gap-1 md:gap-2 bg-gray-800 hover:bg-gray-700 text-white font-medium py-2 md:py-3 px-4 md:px-6 rounded-lg transition-all duration-300 transform hover:scale-105 active:scale-95 md:w-40 border border-gray-700 overflow-hidden text-sm md:text-base" href='/withdraw'>
+//             <span className="absolute inset-0 w-0 h-full bg-orange-600/20 transition-all duration-300 group-hover:w-full"></span>
+//             <span className="relative z-10 flex items-center gap-1 md:gap-2">
+//               {t("WITHDRAW")}
+//               <ArrowUpRight size={16} className="transition-transform group-hover:translate-y-1 group-hover:-translate-x-1 group-hover:animate-pulse" />
+//             </span>
+//           </a>
           
-        </div>
+//         </div>
         
-        {/* Transaction History */}
-        <TransactionHistory/>
+//         {/* Transaction History */}
+//         <TransactionHistory/>
         
-          <Footer/>
+//           <Footer/>
         
-      </main>
-    </div>
+//       </main>
+//     </div>
 
-  );
-}
+//   );
+// }

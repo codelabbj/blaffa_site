@@ -11,7 +11,7 @@ import { getMessaging, getToken } from 'firebase/messaging';
 import { useTheme } from './ThemeProvider';
 
 
-const API_URL = 'https://api.yapson.net/auth';
+const API_URL = 'https://api..net/auth';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAy0fmT-yf9Hy1lqZwIKGO_yRjriZ_Oqo0",
@@ -166,7 +166,7 @@ const { theme } = useTheme();
           if (fcmToken) {
             // Optionally send the token to your backend
             await axios.post(
-              `https://api.yapson.net/yapson/devices/`,
+              `https://api..net//devices/`,
               { registration_id: fcmToken,
                 type: 'web',
                },
@@ -186,7 +186,7 @@ const { theme } = useTheme();
         
         setNotification({ type: 'success', message: t('Login successful! Redirecting to your dashboard...') });
         setTimeout(() => {
-          window.location.href = '/dashboard';
+          window.location.href = '/';
         }, 500);
       } else {
         setNotification({ type: 'success', message: t('Registration successful! Please login.') });
@@ -309,7 +309,7 @@ const { theme } = useTheme();
             
             <button
               type="submit"
-              className={`w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-4 rounded-lg flex items-center justify-center transition-all duration-300  relative overflow-hidden group`}
+              className={`w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-4 rounded-lg flex items-center justify-center transition-all duration-300  relative overflow-hidden group`}
               >
               {t('Send Verification Code')}
             </button>
@@ -561,11 +561,11 @@ const { theme } = useTheme();
 
   return (
    <div className={`bg-gradient-to-br ${theme.colors.c_background} backdrop-blur-sm rounded-2xl p-8 shadow-xl`}>
-        {!isForgotPassword && (
+        {/* {!isForgotPassword && (
           <h2 className={`text-2xl font-bold text-center mb-6 ${theme.colors.text}`}>
             {t("Welcome to Yapson")}
           </h2>
-        )}
+        )} */}
 
         {/* Notification */}
         {notification && (
@@ -573,7 +573,7 @@ const { theme } = useTheme();
             className={`mb-4 p-3 rounded ${
               notification.type === "success"
                 ? "bg-green-100 text-green-700"
-                : "bg-orange-100 text-orange-700"
+                : "bg-blue-100 text-blue-700"
             }`}
           >
             {notification.message.split("\n").map((line, index) => (
@@ -588,7 +588,7 @@ const { theme } = useTheme();
               type="button"
               onClick={() => setIsLogin(true)}
               className={`flex-1 py-2 font-medium text-center transition-all ${
-                isLogin ? "bg-orange-500 text-white rounded-lg" : "bg-transparent"
+                isLogin ? "bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105 text-white rounded-lg" : "bg-transparent"
               }`}
             >
               {t("Login")}
@@ -597,7 +597,7 @@ const { theme } = useTheme();
               type="button"
               onClick={() => setIsLogin(false)}
               className={`flex-1 py-2 font-medium text-center transition-all ${
-                !isLogin ? "text-white bg-orange-500 rounded-lg" : "bg-transparent"
+                !isLogin ? "text-white bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105 rounded-lg" : "bg-transparent"
               }`}
             >
               {t("Register")}
@@ -625,7 +625,7 @@ const { theme } = useTheme();
                         onChange={(e) => setFullName(e.target.value)}
                         required
                         placeholder={t("Enter your full name")}
-                        className="bg-gray-700 text-white w-full pl-10 pr-3 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                        className="bg-gray-700 text-white w-full pl-10 pr-3 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                       />
                     </div>
                   
@@ -647,7 +647,7 @@ const { theme } = useTheme();
                       onChange={(e) => setEmailOrPhone(e.target.value)}
                       required
                       placeholder={t("Enter your email or phone")}
-                      className="bg-gray-700 text-white w-full pl-10 pr-3 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                      className="bg-gray-700 text-white w-full pl-10 pr-3 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                     />
                 </div>
                 </div>
@@ -667,7 +667,7 @@ const { theme } = useTheme();
                     onChange={(e) => setEmail(e.target.value)}
                     required
                     placeholder={t("Enter your email")}
-                    className="bg-gray-700 text-white w-full pl-10 pr-3 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                    className="bg-gray-700 text-white w-full pl-10 pr-3 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                   />
                 </div>
                   </div>
@@ -685,7 +685,7 @@ const { theme } = useTheme();
                     onChange={(e) => setPhone(e.target.value)}
                     required
                     placeholder={t("Enter your phone number")}
-                    className="bg-gray-700 text-white w-full pl-10 pr-3 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                    className="bg-gray-700 text-white w-full pl-10 pr-3 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                   />
                 </div>
                    
@@ -707,7 +707,7 @@ const { theme } = useTheme();
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder={t("Enter your password")}
-                    className="bg-gray-700 text-white w-full pl-10 pr-10 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                    className="bg-gray-700 text-white w-full pl-10 pr-10 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                   />
                   <button
                     type="button"
@@ -739,7 +739,7 @@ const { theme } = useTheme();
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                       required
-                      className="bg-gray-700 text-white w-full pl-10 pr-10 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                      className="bg-gray-700 text-white w-full pl-10 pr-10 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                       placeholder={t("Enter your password")}
                     />
                     <button
@@ -765,7 +765,7 @@ const { theme } = useTheme();
                       value={confirmPassword}
                       onChange={(e) => setConfirmPassword(e.target.value)}
                       required
-                      className="bg-gray-700 text-white w-44 pl-10 pr-10 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                      className="bg-gray-700 text-white w-44 pl-10 pr-10 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
                       placeholder={t("Confirm your password")}
                     />
                     <button
@@ -788,7 +788,7 @@ const { theme } = useTheme();
                       setIsForgotPassword(true);
                       setForgotPasswordStep(1);
                     }}
-                    className="text-orange-500 hover:text-orange-400 text-sm transition-colors">
+                    className="text-blue-500 hover:text-blue-400 text-sm transition-colors">
                     {t("Forgot Password?")}
                   </button>
                 </div>
@@ -796,7 +796,7 @@ const { theme } = useTheme();
 
               <button
                 type="submit"
-                className="w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-4 rounded-lg flex items-center justify-center transition-all duration-300 ${isLoading ? 'animate-pulse' : ''} relative overflow-hidden group"
+                className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105 text-white font-medium py-3 px-4 rounded-lg flex items-center justify-center duration-300 ${isLoading ? 'animate-pulse' : ''} relative overflow-hidden group"
               >
                 <span className="flex items-center justify-center relative z-10">
                 {isLogin ? (isLoading ? t('Processing...') : t('Log in')) : (isLoading ? t('Processing...') : t('Register'))}
@@ -805,7 +805,7 @@ const { theme } = useTheme();
                 </span>
                 
                 {/* Button animation overlay */}
-                <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-orange-600 to-orange-500 transform scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-300"></span>
+                <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-2 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105 duration-300"></span>
               
                 
               </button>
