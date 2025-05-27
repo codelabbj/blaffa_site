@@ -1,80 +1,708 @@
+// "use client"
+// import React, { useState, useEffect } from 'react';
+// import { ArrowRight, Shield, Zap, Users, Menu, X, Star, ChevronDown } from 'lucide-react';
+
+// export default function BlaffaLanding() {
+//   const [isMenuOpen, setIsMenuOpen] = useState(false);
+//   const [scrollY, setScrollY] = useState(0);
+//  // const [activeTab, setActiveTab] = useState(0);
+
+//   useEffect(() => {
+//     const handleScroll = () => setScrollY(window.scrollY);
+//     window.addEventListener('scroll', handleScroll);
+//     return () => window.removeEventListener('scroll', handleScroll);
+//   }, []);
+
+//   const features = [
+//     {
+//       icon: <Shield className="w-8 h-8" />,
+//       title: "Bank-Grade Security",
+//       description: "Your transactions are protected with military-grade encryption and multi-layer security protocols."
+//     },
+//     {
+//       icon: <Zap className="w-8 h-8" />,
+//       title: "Instant Deposits & Withdrawals",
+//       description: "Deposit to betting platforms instantly or withdraw your winnings with our lightning-fast processing technology."
+//     },
+//     {
+//       icon: <Users className="w-8 h-8" />,
+//       title: "24/7 Support",
+//       description: "Our dedicated support team is available around the clock to assist with any questions."
+//     }
+//   ];
+
+//   const stats = [
+//     { number: "500K+", label: "Active Users" },
+//     { number: "$50M+", label: "Transferred Monthly" },
+//     { number: "99.9%", label: "Uptime" },
+//     { number: "150+", label: "Supported Platforms" }
+//   ];
+
+//   const testimonials = [
+//     {
+//       name: "Marcus Chen",
+//       role: "Professional Trader",
+//       content: "Blaffa has revolutionized how I manage my betting funds. Deposits are instant and withdrawals are seamless.",
+//       rating: 5
+//     },
+//     {
+//       name: "Sarah Williams",
+//       role: "Sports Enthusiast", 
+//       content: "Finally, a platform that understands the needs of serious bettors. Seamless experience every time.",
+//       rating: 5
+//     },
+//     {
+//       name: "David Rodriguez",
+//       role: "Finance Professional",
+//       content: "The security features give me complete peace of mind. This is how financial transfers should work.",
+//       rating: 5
+//     }
+//   ];
+
+//   const faqs = [
+//     {
+//       question: "How fast are deposits and withdrawals?",
+//       answer: "Most deposits are completed within seconds. Withdrawals typically take 2-5 minutes depending on the betting platform and verification requirements."
+//     },
+//     {
+//       question: "Is my money safe with Blaffa?",
+//       answer: "Absolutely. We use bank-grade security, are fully regulated, and maintain insurance coverage for all user funds."
+//     },
+//     {
+//       question: "What are your fees?",
+//       answer: "We offer competitive rates starting from 0.5% per transaction, with volume discounts available for frequent users."
+//     },
+//     {
+//       question: "Which betting platforms do you support?",
+//       answer: "We support over 150 major betting platforms worldwide, with new integrations added regularly."
+//     }
+//   ];
+
+//   const [openFaq, setOpenFaq] = useState(-1);
+
+//   return (
+//     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 text-white">
+//       {/* Navigation */}
+//       <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+//         scrollY > 50 ? 'bg-slate-900/95 backdrop-blur-md border-b border-slate-700' : 'bg-transparent'
+//       }`}>
+//         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+//           <div className="flex justify-between items-center py-4">
+//             <div className="flex items-center space-x-2">
+//               <img src="/logo.png" alt="Blaffa Logo" className="w-15 h-15" >
+//               </img>
+//               <span className="text-2xl font-bold">Blaffa</span>
+//             </div>
+            
+//             <div className="hidden md:flex items-center">
+//               <a href='/auth' className="bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-2 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105">
+//                 Get Started
+//               </a>
+//             </div>
+
+//             <button 
+//               className="md:hidden"
+//               onClick={() => setIsMenuOpen(!isMenuOpen)}
+//             >
+//               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+//             </button>
+//           </div>
+//         </div>
+
+//         {/* Mobile Menu */}
+//         {isMenuOpen && (
+//           <div className="md:hidden bg-slate-900/95 backdrop-blur-md border-t border-slate-700">
+//             <div className="px-4 py-4">
+//               <a href='/auth' className="w-full bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-2 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all">
+//                 Get Started
+//               </a>
+//             </div>
+//           </div>
+//         )}
+//       </nav>
+
+//       {/* Hero Section */}
+//       <section className="pt-24 pb-20 px-4 sm:px-6 lg:px-8">
+//         <div className="max-w-7xl mx-auto">
+//           <div className="grid lg:grid-cols-2 gap-12 items-center">
+//             <div className="space-y-8">
+//               <div className="space-y-4">
+//                 <div className="inline-block bg-blue-500/20 text-blue-300 px-4 py-2 rounded-full text-sm font-medium">
+//                   🚀 Trusted by 500,000+ Users
+//                 </div>
+//                 <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
+//                   The Future of
+//                   <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"> Betting </span>
+//                   Deposits & Withdrawals
+//                 </h1>
+//                 <p className="text-xl text-slate-300 leading-relaxed">
+//                   Deposit to and withdraw from your favorite betting platforms instantly and securely. 
+//                   Join thousands of users who trust Blaffa for seamless betting transactions.
+//                 </p>
+//               </div>
+
+//               <div className="flex flex-col sm:flex-row gap-4">
+//                 <button className="bg-gradient-to-r from-blue-500 to-purple-600 px-8 py-4 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105 flex items-center justify-center space-x-2 font-semibold">
+//                   <a href='/auth'>Start Banking</a>
+//                   <ArrowRight className="w-5 h-5" />
+//                 </button>
+//                 {/* <button className="border border-slate-500 px-8 py-4 rounded-lg hover:bg-slate-800 transition-all flex items-center justify-center space-x-2">
+//                   <span>Watch Demo</span>
+//                 </button> */}
+//               </div>
+
+//               <div className="flex items-center space-x-8 pt-8">
+//                 {stats.map((stat, index) => (
+//                   <div key={index} className="text-center">
+//                     <div className="text-2xl font-bold text-blue-400">{stat.number}</div>
+//                     <div className="text-sm text-slate-400">{stat.label}</div>
+//                   </div>
+//                 ))}
+//               </div>
+//             </div>
+
+//             <div className="relative">
+//               <div className="relative z-10 bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-8 border border-slate-700 shadow-2xl">
+//                 <div className="space-y-6">
+//                   <div className="flex items-center justify-between">
+//                     <h3 className="text-xl font-semibold">Quick Transfer</h3>
+//                     <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
+//                   </div>
+                  
+//                   <div className="space-y-4">
+//                     <div className="bg-slate-800 rounded-lg p-4">
+//                       <label className="text-sm text-slate-400">Amount</label>
+//                       <div className="text-2xl font-bold">XOF</div>
+//                     </div>
+                    
+//                     <div className="bg-slate-800 rounded-lg p-4">
+//                       <label className="text-sm text-slate-400">To Platform</label>
+//                       <div className="text-lg font-semibold">1xbet</div>
+//                     </div>
+                    
+//                     {/* <button className="w-full bg-gradient-to-r from-green-500 to-emerald-600 py-3 rounded-lg font-semibold hover:from-green-600 hover:to-emerald-700 transition-all">
+//                       Transfer Now
+//                     </button> */}
+//                   </div>
+//                 </div>
+//               </div>
+              
+//               <div className="absolute -top-4 -right-4 w-24 h-24 bg-blue-500/20 rounded-full blur-xl"></div>
+//               <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-purple-500/20 rounded-full blur-xl"></div>
+//             </div>
+//           </div>
+//         </div>
+//       </section>
+
+//       {/* Features Section */}
+//       <section id="features" className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-800/50">
+//         <div className="max-w-7xl mx-auto">
+//           <div className="text-center space-y-4 mb-16">
+//             <h2 className="text-4xl font-bold">Why Choose Blaffa?</h2>
+//             <p className="text-xl text-slate-300 max-w-3xl mx-auto">
+//               {("We've built the most secure, fast, and reliable platform for betting deposits and withdrawals")}
+//             </p>
+//           </div>
+
+//           <div className="grid md:grid-cols-3 gap-8">
+//             {features.map((feature, index) => (
+//               <div key={index} className="bg-gradient-to-br from-slate-800 to-slate-900 p-8 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-all hover:transform hover:scale-105">
+//                 <div className="text-blue-400 mb-4">
+//                   {feature.icon}
+//                 </div>
+//                 <h3 className="text-xl font-semibold mb-3">{feature.title}</h3>
+//                 <p className="text-slate-300 leading-relaxed">{feature.description}</p>
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+//       </section>
+
+//       {/* Testimonials Section */}
+//       <section className="py-20 px-4 sm:px-6 lg:px-8">
+//         <div className="max-w-7xl mx-auto">
+//           <div className="text-center space-y-4 mb-16">
+//             <h2 className="text-4xl font-bold">Trusted by Professionals</h2>
+//             <p className="text-xl text-slate-300">See what our users say about Blaffa</p>
+//           </div>
+
+//           <div className="grid md:grid-cols-3 gap-8">
+//             {testimonials.map((testimonial, index) => (
+//               <div key={index} className="bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-xl border border-slate-700">
+//                 <div className="flex mb-4">
+//                   {[...Array(testimonial.rating)].map((_, i) => (
+//                     <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+//                   ))}
+//                 </div>
+//                 <p className="text-slate-300 mb-6 italic">{testimonial.content}</p>
+//                 <div>
+//                   <div className="font-semibold">{testimonial.name}</div>
+//                   <div className="text-sm text-slate-400">{testimonial.role}</div>
+//                 </div>
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+//       </section>
+
+//       {/* FAQ Section */}
+//       <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-800/50">
+//         <div className="max-w-4xl mx-auto">
+//           <div className="text-center space-y-4 mb-16">
+//             <h2 className="text-4xl font-bold">Frequently Asked Questions</h2>
+//             <p className="text-xl text-slate-300">Everything you need to know about Blaffa</p>
+//           </div>
+
+//           <div className="space-y-4">
+//             {faqs.map((faq, index) => (
+//               <div key={index} className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl border border-slate-700 overflow-hidden">
+//                 <button
+//                   className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-slate-700/50 transition-all"
+//                   onClick={() => setOpenFaq(openFaq === index ? -1 : index)}
+//                 >
+//                   <span className="font-semibold">{faq.question}</span>
+//                   <ChevronDown className={`w-5 h-5 transition-transform ${openFaq === index ? 'rotate-180' : ''}`} />
+//                 </button>
+//                 {openFaq === index && (
+//                   <div className="px-6 pb-4">
+//                     <p className="text-slate-300">{faq.answer}</p>
+//                   </div>
+//                 )}
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+//       </section>
+
+//       {/* CTA Section */}
+//       <section className="py-20 px-4 sm:px-6 lg:px-8">
+//         <div className="max-w-4xl mx-auto text-center">
+//           <div className="bg-gradient-to-br from-blue-600 to-purple-700 p-12 rounded-2xl space-y-6">
+//             <h2 className="text-4xl font-bold">Ready to Get Started?</h2>
+//             <p className="text-xl text-blue-100">
+//               Join thousands of users who trust Blaffa for secure, instant betting deposits and withdrawals
+//             </p>
+//             <div className="flex flex-col sm:flex-row gap-4 justify-center">
+//               <a href='/auth' className="bg-white text-blue-600 px-8 py-4 rounded-lg hover:bg-gray-100 transition-all transform hover:scale-105 font-semibold">
+//                 Create Free Account
+//               </a>
+//               <button className="border border-white/30 px-8 py-4 rounded-lg hover:bg-white/10 transition-all">
+//                 Contact Sales
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+//       </section>
+
+//       {/* Footer */}
+//       <footer className="py-12 px-4 sm:px-6 lg:px-8 bg-slate-900 border-t border-slate-700">
+//         <div className="max-w-7xl mx-auto">
+//           <div className="grid md:grid-cols-4 gap-8">
+//             <div className="space-y-4">
+//               <div className="flex items-center space-x-2">
+//                 <img src="/logo.png" alt="Blaffa Logo" className="w-15 h-15" >
+//               </img>
+//                 <span className="text-xl font-bold">Blaffa</span>
+//               </div>
+//               <p className="text-slate-400">
+//                 The most trusted platform for betting deposits and withdrawals worldwide.
+//               </p>
+//             </div>
+
+//             <div>
+//               <h4 className="font-semibold mb-4">Product</h4>
+//               <div className="space-y-2 text-slate-400">
+//                 <div>Features</div>
+//                 <div>Security</div>
+//                 <div>Pricing</div>
+//                 <div>API</div>
+//               </div>
+//             </div>
+
+//             <div>
+//               <h4 className="font-semibold mb-4">Company</h4>
+//               <div className="space-y-2 text-slate-400">
+//                 {/* <div>About</div>
+//                 <div>Careers</div>
+//                 <div>Press</div>
+//                 <div>Contact</div> */}
+//               </div>
+//             </div>
+
+//             <div>
+//               <h4 className="font-semibold mb-4">Legal</h4>
+//               <div className="space-y-2 text-slate-400">
+//                 <div>Privacy Policy</div>
+//                 <div>Terms of Service</div>
+//                 <div>Compliance</div>
+//                 <div>Licenses</div>
+//               </div>
+//             </div>
+//           </div>
+
+//           <div className="border-t border-slate-700 mt-12 pt-8 text-center text-slate-400">
+//             <p>&copy; 2025 Blaffa. All rights reserved. Licensed and regulated financial service provider.</p>
+//           </div>
+//         </div>
+//       </footer>
+//     </div>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 "use client"
+
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, Shield, Zap, Users, Menu, X, Star, ChevronDown } from 'lucide-react';
+import { ArrowRight, Shield, Zap, Users, Menu, X, Star, ChevronDown, Smartphone, CreditCard, Globe } from 'lucide-react';
+
+// Adjust the path as necessary
+
+
+const translations = {
+  en: {
+    // Navigation
+    getStarted: "Get Started",
+    
+    // Hero Section
+    approvedBy: "🚀 Trusted by 500,000+ Users",
+    heroTitle: "The Future of",
+    heroTitleHighlight: "Betting",
+    heroTitleEnd: "Deposits & Withdrawals",
+    heroDescription: "Deposit and withdraw from your favorite betting platforms instantly and securely. Join thousands of users who trust Blaffa for seamless betting transactions.",
+    startNow: "Get Started Now",
+    
+    // Stats
+    activeUsers: "Active Users",
+    monthlyTransfers: "Transferred/Month",
+    uptime: "Uptime",
+    networksSupported: "Networks Supported",
+    
+    // Quick Transfer
+    quickTransfer: "Quick Transfer",
+    amount: "Amount",
+    toPlatform: "To Platform",
+    
+    // Supported Platforms
+    supportedPlatforms: "Supported Betting Platforms",
+    supportedPlatformsDesc: "Easily deposit and withdraw on your favorite platforms",
+    
+    // Mobile Networks
+    mobileNetworks: "Mobile Money Networks",
+    mobileNetworksDesc: "Pay with your favorite mobile payment networks",
+    
+    // Features
+    whyChoose: "Why Choose Blaffa?",
+    whyChooseDesc: "We've built the most secure, fast, and reliable platform for betting deposits and withdrawals",
+    
+    bankingSecurity: "Banking Security",
+    bankingSecurityDesc: "Your transactions are protected by military-grade encryption and multi-layer security protocols.",
+    
+    instantDeposits: "Instant Deposits & Withdrawals",
+    instantDepositsDesc: "Deposit to betting platforms instantly or withdraw your winnings with our ultra-fast processing technology.",
+    
+    support247: "24/7 Support",
+    support247Desc: "Our dedicated support team is available 24/7 to help you with all your questions.",
+    
+    // Testimonials
+    approvedByPros: "Trusted by Professionals",
+    testimonialsDesc: "See what our users say about Blaffa",
+    
+    testimonial1: "Blaffa has revolutionized how I manage my betting funds. Deposits are instant and withdrawals seamless.",
+    testimonial2: "Finally, a platform that understands serious bettors' needs. Smooth experience every time.",
+    testimonial3: "The security features give me complete peace of mind. This is how financial transfers should work.",
+    
+    professionalTrader: "Professional Trader",
+    sportsEnthusiast: "Sports Enthusiast",
+    financeExpert: "Finance Professional",
+    
+    // FAQ
+    faqTitle: "Frequently Asked Questions",
+    faqDesc: "Everything you need to know about Blaffa",
+    
+    faq1Q: "How fast are deposits and withdrawals?",
+    faq1A: "Most deposits are completed within seconds. Withdrawals typically take 2-5 minutes depending on the betting platform and verification requirements.",
+    
+    faq2Q: "Is my money safe with Blaffa?",
+    faq2A: "Absolutely. We use bank-level security, are fully regulated, and maintain insurance coverage for all user funds.",
+    
+    faq3Q: "What are your fees?",
+    faq3A: "We offer competitive rates starting from 0.5% per transaction, with volume discounts available for frequent users.",
+    
+    faq4Q: "Which betting platforms do you support?",
+    faq4A: "We support 1xbet, 888STARZ, BETWINNER, and MELBET, with new integrations added regularly.",
+    
+    faq5Q: "Which mobile payment networks do you accept?",
+    faq5A: "We support all major networks: Orange, MTN, Moov, and Wave across multiple West African countries.",
+    
+    // CTA
+    readyToStart: "Ready to Get Started?",
+    ctaDesc: "Join thousands of users who trust Blaffa for secure and instant betting deposits and withdrawals",
+    createFreeAccount: "Create Free Account",
+    contactSales: "Contact Sales",
+    
+    // Footer
+    footerDesc: "The world's most trusted platform for betting deposits and withdrawals.",
+    product: "Product",
+    features: "Features",
+    security: "Security",
+    pricing: "Pricing",
+    api: "API",
+    company: "Company",
+    about: "About",
+    careers: "Careers",
+    press: "Press",
+    contact: "Contact",
+    legal: "Legal",
+    privacy: "Privacy Policy",
+    terms: "Terms of Service",
+    compliance: "Compliance",
+    licenses: "Licenses",
+    copyright: "© 2025 Blaffa. All rights reserved. Licensed and regulated financial services provider."
+  },
+  fr: {
+    // Navigation
+    getStarted: "Commencer",
+    
+    // Hero Section
+    approvedBy: "🚀 Approuvé par 500 000+ Utilisateurs",
+    heroTitle: "L'Avenir des",
+    heroTitleHighlight: "Paris",
+    heroTitleEnd: "Dépôts & Retraits",
+    heroDescription: "Déposez et retirez de vos plateformes de paris préférées instantanément et en toute sécurité. Rejoignez des milliers d'utilisateurs qui font confiance à Blaffa pour des transactions de paris fluides.",
+    startNow: "Commencer Maintenant",
+    
+    // Stats
+    activeUsers: "Utilisateurs Actifs",
+    monthlyTransfers: "Transférés/Mois",
+    uptime: "Disponibilité",
+    networksSupported: "Réseaux Supportés",
+    
+    // Quick Transfer
+    quickTransfer: "Transfert Rapide",
+    amount: "Montant",
+    toPlatform: "Vers la Plateforme",
+    
+    // Supported Platforms
+    supportedPlatforms: "Plateformes de Paris Supportées",
+    supportedPlatformsDesc: "Déposez et retirez facilement sur vos plateformes préférées",
+    
+    // Mobile Networks
+    mobileNetworks: "Réseaux Mobile Money",
+    mobileNetworksDesc: "Payez avec vos réseaux de paiement mobile favoris",
+    
+    // Features
+    whyChoose: "Pourquoi Choisir Blaffa ?",
+    whyChooseDesc: "Nous avons construit la plateforme la plus sécurisée, rapide et fiable pour les dépôts et retraits de paris",
+    
+    bankingSecurity: "Sécurité Bancaire",
+    bankingSecurityDesc: "Vos transactions sont protégées par un cryptage de niveau militaire et des protocoles de sécurité multicouches.",
+    
+    instantDeposits: "Dépôts et Retraits Instantanés",
+    instantDepositsDesc: "Déposez sur les plateformes de paris instantanément ou retirez vos gains avec notre technologie de traitement ultra-rapide.",
+    
+    support247: "Support 24h/24 7j/7",
+    support247Desc: "Notre équipe de support dédiée est disponible 24h/24 pour vous aider avec toutes vos questions.",
+    
+    // Testimonials
+    approvedByPros: "Approuvé par les Professionnels",
+    testimonialsDesc: "Découvrez ce que nos utilisateurs disent de Blaffa",
+    
+    testimonial1: "Blaffa a révolutionné la façon dont je gère mes fonds de paris. Les dépôts sont instantanés et les retraits transparents.",
+    testimonial2: "Enfin, une plateforme qui comprend les besoins des parieurs sérieux. Expérience fluide à chaque fois.",
+    testimonial3: "Les fonctionnalités de sécurité me donnent une tranquillité d'esprit totale. C'est ainsi que les transferts financiers devraient fonctionner.",
+    
+    professionalTrader: "Trader Professionnel",
+    sportsEnthusiast: "Passionnée de Sport",
+    financeExpert: "Professionnel de la Finance",
+    
+    // FAQ
+    faqTitle: "Questions Fréquemment Posées",
+    faqDesc: "Tout ce que vous devez savoir sur Blaffa",
+    
+    faq1Q: "À quelle vitesse sont les dépôts et retraits ?",
+    faq1A: "La plupart des dépôts sont complétés en quelques secondes. Les retraits prennent généralement 2-5 minutes selon la plateforme de paris et les exigences de vérification.",
+    
+    faq2Q: "Mon argent est-il en sécurité avec Blaffa ?",
+    faq2A: "Absolument. Nous utilisons une sécurité de niveau bancaire, sommes entièrement réglementés et maintenons une couverture d'assurance pour tous les fonds des utilisateurs.",
+    
+    faq3Q: "Quels sont vos frais ?",
+    faq3A: "Nous offrons des tarifs compétitifs à partir de 0,5% par transaction, avec des remises sur volume disponibles pour les utilisateurs fréquents.",
+    
+    faq4Q: "Quelles plateformes de paris supportez-vous ?",
+    faq4A: "Nous supportons 1xbet, 888STARZ, BETWINNER, et MELBET, avec de nouvelles intégrations ajoutées régulièrement.",
+    
+    faq5Q: "Quels réseaux de paiement mobile acceptez-vous ?",
+    faq5A: "Nous supportons tous les principaux réseaux : Orange, MTN, Moov et Wave dans plusieurs pays d'Afrique de l'Ouest.",
+    
+    // CTA
+    readyToStart: "Prêt à Commencer ?",
+    ctaDesc: "Rejoignez des milliers d'utilisateurs qui font confiance à Blaffa pour des dépôts et retraits de paris sécurisés et instantanés",
+    createFreeAccount: "Créer un Compte Gratuit",
+    contactSales: "Contacter les Ventes",
+    
+    // Footer
+    footerDesc: "La plateforme la plus fiable pour les dépôts et retraits de paris dans le monde.",
+    product: "Produit",
+    features: "Fonctionnalités",
+    security: "Sécurité",
+    pricing: "Tarification",
+    api: "API",
+    company: "Entreprise",
+    about: "À Propos",
+    careers: "Carrières",
+    press: "Presse",
+    contact: "Contact",
+    legal: "Légal",
+    privacy: "Politique de Confidentialité",
+    terms: "Conditions d'Utilisation",
+    compliance: "Conformité",
+    licenses: "Licences",
+    copyright: "© 2025 Blaffa. Tous droits réservés. Fournisseur de services financiers licencié et réglementé."
+  }
+};
 
 export default function BlaffaLanding() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
- // const [activeTab, setActiveTab] = useState(0);
+  const [language, setLanguage] = useState('en');
 
   useEffect(() => {
+    // Detect browser language
+    const browserLang = navigator.language || navigator.languages[0];
+    const detectedLang = browserLang.startsWith('fr') ? 'fr' : 'en';
+    setLanguage(detectedLang);
+
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  const t = translations[language];
+
   const features = [
     {
       icon: <Shield className="w-8 h-8" />,
-      title: "Bank-Grade Security",
-      description: "Your transactions are protected with military-grade encryption and multi-layer security protocols."
+      title: t.bankingSecurity,
+      description: t.bankingSecurityDesc
     },
     {
       icon: <Zap className="w-8 h-8" />,
-      title: "Instant Deposits & Withdrawals",
-      description: "Deposit to betting platforms instantly or withdraw your winnings with our lightning-fast processing technology."
+      title: t.instantDeposits,
+      description: t.instantDepositsDesc
     },
     {
       icon: <Users className="w-8 h-8" />,
-      title: "24/7 Support",
-      description: "Our dedicated support team is available around the clock to assist with any questions."
+      title: t.support247,
+      description: t.support247Desc
     }
   ];
 
+  const bettingPlatforms = [
+    { 
+      name: "1xbet", 
+      logo: "/1x.jpg"
+    },
+    { 
+      name: "888STARZ", 
+      logo: "88.png"
+    },
+    { 
+      name: "BETWINNER", 
+      logo: "/bw.jpg"
+    },
+    { 
+      name: "MELBET", 
+      logo: "/mb.png"
+    }
+  ];
+
+  const mobileNetworks = [
+    { name: "ORANGE BF", country: "Burkina Faso", flag: "BF", color: "/bf.png", logo: "/orange.png" },
+    { name: "WAVE CI", country: "Côte d'Ivoire", flag: "🇨🇮", color: "/ci.png", logo: "/w.jpg" },
+    { name: "MOOV CI", country: "Côte d'Ivoire", flag: "🇨🇮", color: "/ci.png", logo: "/moov.png" },
+    { name: "ORANGE CI", country: "Côte d'Ivoire", flag: "🇨🇮", color: "/ci.png", logo: "/orange.png" },
+    { name: "MTN CI", country: "Côte d'Ivoire", flag: "🇨🇮", color: "/ci.png", logo: "/mtn.jpg" },
+    { name: "MOOV BENIN", country: "Bénin", flag: "🇧🇯", color: "/bj.png", logo: "/moov.png" },
+    { name: "MTN BÉNIN", country: "Bénin", flag: "🇧🇯", color: "/bj.png", logo: "/mtn.jpg" },
+    { name: "MOOV BF", country: "Burkina Faso", flag: "🇧🇫", color: "bf.png", logo: "/moov.png" }
+  ];
+
   const stats = [
-    { number: "500K+", label: "Active Users" },
-    { number: "$50M+", label: "Transferred Monthly" },
-    { number: "99.9%", label: "Uptime" },
-    { number: "150+", label: "Supported Platforms" }
+    { number: "500K+", label: t.activeUsers },
+    { number: "50M+ FCFA", label: t.monthlyTransfers },
+    { number: "99.9%", label: t.uptime },
+    { number: "12+", label: t.networksSupported }
   ];
 
   const testimonials = [
     {
       name: "Marcus Chen",
-      role: "Professional Trader",
-      content: "Blaffa has revolutionized how I manage my betting funds. Deposits are instant and withdrawals are seamless.",
-      rating: 5
+      role: t.professionalTrader,
+      content: t.testimonial1,
+      rating: 5,
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face"
     },
     {
       name: "Sarah Williams",
-      role: "Sports Enthusiast", 
-      content: "Finally, a platform that understands the needs of serious bettors. Seamless experience every time.",
-      rating: 5
+      role: t.sportsEnthusiast, 
+      content: t.testimonial2,
+      rating: 5,
+      avatar: "https://images.unsplash.com/photo-1494790108755-2616b332c3ff?w=60&h=60&fit=crop&crop=face"
     },
     {
       name: "David Rodriguez",
-      role: "Finance Professional",
-      content: "The security features give me complete peace of mind. This is how financial transfers should work.",
-      rating: 5
+      role: t.financeExpert,
+      content: t.testimonial3,
+      rating: 5,
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=60&h=60&fit=crop&crop=face"
     }
   ];
 
   const faqs = [
     {
-      question: "How fast are deposits and withdrawals?",
-      answer: "Most deposits are completed within seconds. Withdrawals typically take 2-5 minutes depending on the betting platform and verification requirements."
+      question: t.faq1Q,
+      answer: t.faq1A
     },
     {
-      question: "Is my money safe with Blaffa?",
-      answer: "Absolutely. We use bank-grade security, are fully regulated, and maintain insurance coverage for all user funds."
+      question: t.faq2Q,
+      answer: t.faq2A
     },
     {
-      question: "What are your fees?",
-      answer: "We offer competitive rates starting from 0.5% per transaction, with volume discounts available for frequent users."
+      question: t.faq3Q,
+      answer: t.faq3A
     },
     {
-      question: "Which betting platforms do you support?",
-      answer: "We support over 150 major betting platforms worldwide, with new integrations added regularly."
+      question: t.faq4Q,
+      answer: t.faq4A
+    },
+    {
+      question: t.faq5Q,
+      answer: t.faq5A
     }
   ];
 
@@ -89,14 +717,22 @@ export default function BlaffaLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-2">
-              <img src="/logo.png" alt="Blaffa Logo" className="w-15 h-15" >
-              </img>
+              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center font-bold text-xl">
+                B
+              </div>
               <span className="text-2xl font-bold">Blaffa</span>
             </div>
             
-            <div className="hidden md:flex items-center">
+            <div className="hidden md:flex items-center space-x-4">
+              <button
+                onClick={() => setLanguage(language === 'en' ? 'fr' : 'en')}
+                className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-slate-700/50 transition-all"
+              >
+                <Globe className="w-4 h-4" />
+                <span className="text-sm">{language === 'en' ? 'FR' : 'EN'}</span>
+              </button>
               <a href='/auth' className="bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-2 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105">
-                Get Started
+                {t.getStarted}
               </a>
             </div>
 
@@ -112,9 +748,16 @@ export default function BlaffaLanding() {
         {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="md:hidden bg-slate-900/95 backdrop-blur-md border-t border-slate-700">
-            <div className="px-4 py-4">
-              <a href='/auth' className="w-full bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-2 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all">
-                Get Started
+            <div className="px-4 py-4 space-y-4">
+              <button
+                onClick={() => setLanguage(language === 'en' ? 'fr' : 'en')}
+                className="flex items-center space-x-2 px-3 py-2 rounded-lg hover:bg-slate-700/50 transition-all w-full"
+              >
+                <Globe className="w-4 h-4" />
+                <span className="text-sm">{language === 'en' ? 'Français' : 'English'}</span>
+              </button>
+              <a href='/auth' className="w-full bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-2 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all block text-center">
+                {t.getStarted}
               </a>
             </div>
           </div>
@@ -128,27 +771,23 @@ export default function BlaffaLanding() {
             <div className="space-y-8">
               <div className="space-y-4">
                 <div className="inline-block bg-blue-500/20 text-blue-300 px-4 py-2 rounded-full text-sm font-medium">
-                  🚀 Trusted by 500,000+ Users
+                  {t.approvedBy}
                 </div>
                 <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
-                  The Future of
-                  <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"> Betting </span>
-                  Deposits & Withdrawals
+                  {t.heroTitle}
+                  <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"> {t.heroTitleHighlight} </span>
+                  {t.heroTitleEnd}
                 </h1>
                 <p className="text-xl text-slate-300 leading-relaxed">
-                  Deposit to and withdraw from your favorite betting platforms instantly and securely. 
-                  Join thousands of users who trust Blaffa for seamless betting transactions.
+                  {t.heroDescription}
                 </p>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <button className="bg-gradient-to-r from-blue-500 to-purple-600 px-8 py-4 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105 flex items-center justify-center space-x-2 font-semibold">
-                  <a href='/auth'>Start Banking</a>
+                <a href='/auth' className="bg-gradient-to-r from-blue-500 to-purple-600 px-8 py-4 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105 flex items-center justify-center space-x-2 font-semibold">
+                  <span>{t.startNow}</span>
                   <ArrowRight className="w-5 h-5" />
-                </button>
-                {/* <button className="border border-slate-500 px-8 py-4 rounded-lg hover:bg-slate-800 transition-all flex items-center justify-center space-x-2">
-                  <span>Watch Demo</span>
-                </button> */}
+                </a>
               </div>
 
               <div className="flex items-center space-x-8 pt-8">
@@ -165,24 +804,20 @@ export default function BlaffaLanding() {
               <div className="relative z-10 bg-gradient-to-br from-slate-800 to-slate-900 rounded-2xl p-8 border border-slate-700 shadow-2xl">
                 <div className="space-y-6">
                   <div className="flex items-center justify-between">
-                    <h3 className="text-xl font-semibold">Quick Transfer</h3>
+                    <h3 className="text-xl font-semibold">{t.quickTransfer}</h3>
                     <div className="w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
                   </div>
                   
                   <div className="space-y-4">
                     <div className="bg-slate-800 rounded-lg p-4">
-                      <label className="text-sm text-slate-400">Amount</label>
-                      <div className="text-2xl font-bold">XOF</div>
+                      <label className="text-sm text-slate-400">{t.amount}</label>
+                      <div className="text-2xl font-bold">50,000 FCFA</div>
                     </div>
                     
                     <div className="bg-slate-800 rounded-lg p-4">
-                      <label className="text-sm text-slate-400">To Platform</label>
+                      <label className="text-sm text-slate-400">{t.toPlatform}</label>
                       <div className="text-lg font-semibold">1xbet</div>
                     </div>
-                    
-                    {/* <button className="w-full bg-gradient-to-r from-green-500 to-emerald-600 py-3 rounded-lg font-semibold hover:from-green-600 hover:to-emerald-700 transition-all">
-                      Transfer Now
-                    </button> */}
                   </div>
                 </div>
               </div>
@@ -194,16 +829,83 @@ export default function BlaffaLanding() {
         </div>
       </section>
 
+      {/* Betting Platforms Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-800/30">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center space-y-4 mb-16">
+            <h2 className="text-4xl font-bold">{t.supportedPlatforms}</h2>
+            <p className="text-xl text-slate-300">
+              {t.supportedPlatformsDesc}
+            </p>
+          </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {bettingPlatforms.map((platform, index) => (
+              <div key={index} className="bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-all hover:transform hover:scale-105 text-center">
+                <img 
+                  src={platform.logo} 
+                  alt={platform.name}
+                  className="w-16 h-16 mx-auto mb-4 rounded-lg object-cover"
+                />
+                <h3 className="text-lg font-semibold">{platform.name}</h3>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Mobile Networks Section */}
+      <section className="py-20 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="text-center space-y-4 mb-16">
+            <div className="flex items-center justify-center space-x-2 mb-4">
+              <Smartphone className="w-8 h-8 text-blue-400" />
+              <h2 className="text-4xl font-bold">{t.mobileNetworks}</h2>
+            </div>
+            <p className="text-xl text-slate-300">
+              {t.mobileNetworksDesc}
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+            {mobileNetworks.map((network, index) => (
+              <div key={index} className="bg-gradient-to-br from-slate-800 to-slate-900 p-4 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-all hover:transform hover:scale-105">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center space-x-2">
+                    <div className="text-2xl">{network.flag}</div>
+                    <img 
+                      src={network.logo} 
+                      alt={network.name}
+                      className="w-8 h-8 rounded object-cover"
+                    />
+                  </div>
+                  {/* <CreditCard className={`w-5 h-5 ${
+                    network.color === 'orange' ? 'text-orange-400' :
+                    network.color === 'blue' ? 'text-blue-400' :
+                    network.color === 'green' ? 'text-green-400' :
+                    'text-yellow-400'
+                  }`} /> */}
+                  <img 
+                   src={network.color} 
+                      alt={network.name}
+                      className="w-8 h-8 rounded object-cover"
+                  />
+                </div>
+                <h3 className="font-semibold text-lg">{network.name}</h3>
+                <p className="text-sm text-slate-400">{network.country}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Features Section */}
       <section id="features" className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-800/50">
         <div className="max-w-7xl mx-auto">
           <div className="text-center space-y-4 mb-16">
-            <h2 className="text-4xl font-bold">Why Choose Blaffa?</h2>
+            <h2 className="text-4xl font-bold">{t.whyChoose}</h2>
             <p className="text-xl text-slate-300 max-w-3xl mx-auto">
-              {("We've built the most secure, fast, and reliable platform for betting deposits and withdrawals")}
+              {t.whyChooseDesc}
             </p>
           </div>
-
           <div className="grid md:grid-cols-3 gap-8">
             {features.map((feature, index) => (
               <div key={index} className="bg-gradient-to-br from-slate-800 to-slate-900 p-8 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-all hover:transform hover:scale-105">
@@ -222,22 +924,30 @@ export default function BlaffaLanding() {
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
           <div className="text-center space-y-4 mb-16">
-            <h2 className="text-4xl font-bold">Trusted by Professionals</h2>
-            <p className="text-xl text-slate-300">See what our users say about Blaffa</p>
+            <h2 className="text-4xl font-bold">{t.approvedByPros}</h2>
+            <p className="text-xl text-slate-300">{t.testimonialsDesc}</p>
           </div>
-
           <div className="grid md:grid-cols-3 gap-8">
             {testimonials.map((testimonial, index) => (
-              <div key={index} className="bg-gradient-to-br from-slate-800 to-slate-900 p-6 rounded-xl border border-slate-700">
+              <div key={index} className="bg-gradient-to-br from-slate-800 to-slate-900 p-8 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-all hover:transform hover:scale-105">
                 <div className="flex mb-4">
                   {[...Array(testimonial.rating)].map((_, i) => (
                     <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
                   ))}
                 </div>
-                <p className="text-slate-300 mb-6 italic">{testimonial.content}</p>
-                <div>
-                  <div className="font-semibold">{testimonial.name}</div>
-                  <div className="text-sm text-slate-400">{testimonial.role}</div>
+                <p className="text-slate-300 mb-6 leading-relaxed italic">
+                  {testimonial.content}
+                </p>
+                <div className="flex items-center space-x-3">
+                  <img 
+                    src={testimonial.avatar} 
+                    alt={testimonial.name}
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                  <div>
+                    <div className="font-semibold">{testimonial.name}</div>
+                    <div className="text-sm text-slate-400">{testimonial.role}</div>
+                  </div>
                 </div>
               </div>
             ))}
@@ -246,26 +956,27 @@ export default function BlaffaLanding() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-800/50">
+      <section className="py-20 px-4 sm:px-6 lg:px-8 bg-slate-800/30">
         <div className="max-w-4xl mx-auto">
           <div className="text-center space-y-4 mb-16">
-            <h2 className="text-4xl font-bold">Frequently Asked Questions</h2>
-            <p className="text-xl text-slate-300">Everything you need to know about Blaffa</p>
+            <h2 className="text-4xl font-bold">{t.faqTitle}</h2>
+            <p className="text-xl text-slate-300">{t.faqDesc}</p>
           </div>
-
           <div className="space-y-4">
             {faqs.map((faq, index) => (
               <div key={index} className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-xl border border-slate-700 overflow-hidden">
                 <button
-                  className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-slate-700/50 transition-all"
                   onClick={() => setOpenFaq(openFaq === index ? -1 : index)}
+                  className="w-full p-6 text-left flex items-center justify-between hover:bg-slate-700/30 transition-all"
                 >
-                  <span className="font-semibold">{faq.question}</span>
-                  <ChevronDown className={`w-5 h-5 transition-transform ${openFaq === index ? 'rotate-180' : ''}`} />
+                  <span className="font-semibold text-lg">{faq.question}</span>
+                  <ChevronDown className={`w-5 h-5 transition-transform ${
+                    openFaq === index ? 'transform rotate-180' : ''
+                  }`} />
                 </button>
                 {openFaq === index && (
-                  <div className="px-6 pb-4">
-                    <p className="text-slate-300">{faq.answer}</p>
+                  <div className="px-6 pb-6">
+                    <p className="text-slate-300 leading-relaxed">{faq.answer}</p>
                   </div>
                 )}
               </div>
@@ -277,71 +988,72 @@ export default function BlaffaLanding() {
       {/* CTA Section */}
       <section className="py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto text-center">
-          <div className="bg-gradient-to-br from-blue-600 to-purple-700 p-12 rounded-2xl space-y-6">
-            <h2 className="text-4xl font-bold">Ready to Get Started?</h2>
-            <p className="text-xl text-blue-100">
-              Join thousands of users who trust Blaffa for secure, instant betting deposits and withdrawals
+          <div className="bg-gradient-to-br from-slate-800 to-slate-900 p-12 rounded-2xl border border-slate-700">
+            <h2 className="text-4xl font-bold mb-4">{t.readyToStart}</h2>
+            <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
+              {t.ctaDesc}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href='/auth' className="bg-white text-blue-600 px-8 py-4 rounded-lg hover:bg-gray-100 transition-all transform hover:scale-105 font-semibold">
-                Create Free Account
+              <a href='/auth' className="bg-gradient-to-r from-blue-500 to-purple-600 px-8 py-4 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105 font-semibold">
+                {t.createFreeAccount}
               </a>
-              <button className="border border-white/30 px-8 py-4 rounded-lg hover:bg-white/10 transition-all">
-                Contact Sales
-              </button>
+              <a href='/contact' className="border border-slate-600 px-8 py-4 rounded-lg hover:bg-slate-700/50 transition-all font-semibold">
+                {t.contactSales}
+              </a>
             </div>
           </div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="py-12 px-4 sm:px-6 lg:px-8 bg-slate-900 border-t border-slate-700">
+      <footer className="py-16 px-4 sm:px-6 lg:px-8 bg-slate-900 border-t border-slate-700">
         <div className="max-w-7xl mx-auto">
-          <div className="grid md:grid-cols-4 gap-8">
+          <div className="grid md:grid-cols-4 gap-8 mb-12">
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
-                <img src="/logo.png" alt="Blaffa Logo" className="w-15 h-15" >
-              </img>
-                <span className="text-xl font-bold">Blaffa</span>
+                <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center font-bold text-xl">
+                  B
+                </div>
+                <span className="text-2xl font-bold">Blaffa</span>
               </div>
-              <p className="text-slate-400">
-                The most trusted platform for betting deposits and withdrawals worldwide.
+              <p className="text-slate-400 leading-relaxed">
+                {t.footerDesc}
               </p>
             </div>
-
+            
             <div>
-              <h4 className="font-semibold mb-4">Product</h4>
-              <div className="space-y-2 text-slate-400">
-                <div>Features</div>
-                <div>Security</div>
-                <div>Pricing</div>
-                <div>API</div>
-              </div>
+              <h3 className="font-semibold text-lg mb-4">{t.product}</h3>
+              <ul className="space-y-2 text-slate-400">
+                <li><a href="#features" className="hover:text-white transition-colors">{t.features}</a></li>
+                <li><a href="#security" className="hover:text-white transition-colors">{t.security}</a></li>
+                <li><a href="#pricing" className="hover:text-white transition-colors">{t.pricing}</a></li>
+                <li><a href="#api" className="hover:text-white transition-colors">{t.api}</a></li>
+              </ul>
             </div>
-
+            
             <div>
-              <h4 className="font-semibold mb-4">Company</h4>
-              <div className="space-y-2 text-slate-400">
-                {/* <div>About</div>
-                <div>Careers</div>
-                <div>Press</div>
-                <div>Contact</div> */}
-              </div>
+              <h3 className="font-semibold text-lg mb-4">{t.company}</h3>
+              <ul className="space-y-2 text-slate-400">
+                <li><a href="#about" className="hover:text-white transition-colors">{t.about}</a></li>
+                <li><a href="#careers" className="hover:text-white transition-colors">{t.careers}</a></li>
+                <li><a href="#press" className="hover:text-white transition-colors">{t.press}</a></li>
+                <li><a href="#contact" className="hover:text-white transition-colors">{t.contact}</a></li>
+              </ul>
             </div>
-
+            
             <div>
-              <h4 className="font-semibold mb-4">Legal</h4>
-              <div className="space-y-2 text-slate-400">
-                <div>Privacy Policy</div>
-                <div>Terms of Service</div>
-                <div>Compliance</div>
-                <div>Licenses</div>
-              </div>
+              <h3 className="font-semibold text-lg mb-4">{t.legal}</h3>
+              <ul className="space-y-2 text-slate-400">
+                <li><a href="#privacy" className="hover:text-white transition-colors">{t.privacy}</a></li>
+                <li><a href="#terms" className="hover:text-white transition-colors">{t.terms}</a></li>
+                <li><a href="#compliance" className="hover:text-white transition-colors">{t.compliance}</a></li>
+                <li><a href="#licenses" className="hover:text-white transition-colors">{t.licenses}</a></li>
+              </ul>
             </div>
           </div>
-
-          <div className="border-t border-slate-700 mt-12 pt-8 text-center text-slate-400">
-            <p>&copy; 2025 Blaffa. All rights reserved. Licensed and regulated financial service provider.</p>
+          
+          <div className="pt-8 border-t border-slate-700 text-center text-slate-400">
+            <p>{t.copyright}</p>
           </div>
         </div>
       </footer>
