@@ -378,12 +378,114 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { ArrowRight, Shield, Zap, Users, Menu, X, Star, ChevronDown, Smartphone, CreditCard, Globe } from 'lucide-react';
+import { ArrowRight, Shield, Zap, Users, Menu, X, Star, ChevronDown, Smartphone, Globe } from 'lucide-react';
 
 // Adjust the path as necessary
 
 
-const translations = {
+type Translation = {
+  // Navigation
+  getStarted: string;
+
+  // Hero Section
+  approvedBy: string;
+  heroTitle: string;
+  heroTitleHighlight: string;
+  heroTitleEnd: string;
+  heroDescription: string;
+  startNow: string;
+
+  // Stats
+  activeUsers: string;
+  monthlyTransfers: string;
+  uptime: string;
+  networksSupported: string;
+
+  // Quick Transfer
+  quickTransfer: string;
+  amount: string;
+  toPlatform: string;
+
+  // Supported Platforms
+  supportedPlatforms: string;
+  supportedPlatformsDesc: string;
+
+  // Mobile Networks
+  mobileNetworks: string;
+  mobileNetworksDesc: string;
+
+  // Features
+  whyChoose: string;
+  whyChooseDesc: string;
+
+  bankingSecurity: string;
+  bankingSecurityDesc: string;
+
+  instantDeposits: string;
+  instantDepositsDesc: string;
+
+  support247: string;
+  support247Desc: string;
+
+  // Testimonials
+  approvedByPros: string;
+  testimonialsDesc: string;
+
+  testimonial1: string;
+  testimonial2: string;
+  testimonial3: string;
+
+  professionalTrader: string;
+  sportsEnthusiast: string;
+  financeExpert: string;
+
+  // FAQ
+  faqTitle: string;
+  faqDesc: string;
+
+  faq1Q: string;
+  faq1A: string;
+
+  faq2Q: string;
+  faq2A: string;
+
+  faq3Q: string;
+  faq3A: string;
+
+  faq4Q: string;
+  faq4A: string;
+
+  faq5Q: string;
+  faq5A: string;
+
+  // CTA
+  readyToStart: string;
+  ctaDesc: string;
+  createFreeAccount: string;
+  contactSales: string;
+
+  // Footer
+  footerDesc: string;
+  product: string;
+  features: string;
+  security: string;
+  pricing: string;
+  api: string;
+  company: string;
+  about: string;
+  careers: string;
+  press: string;
+  contact: string;
+  legal: string;
+  privacy: string;
+  terms: string;
+  compliance: string;
+  licenses: string;
+  copyright: string;
+};
+type Language = 'en' | 'fr';
+
+const translations: Record<Language, Translation> = {
   en: {
     // Navigation
     getStarted: "Get Started",
@@ -589,12 +691,12 @@ const translations = {
 export default function BlaffaLanding() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
-  const [language, setLanguage] = useState('en');
+  const [language, setLanguage] = useState<Language>('en');
 
   useEffect(() => {
     // Detect browser language
     const browserLang = navigator.language || navigator.languages[0];
-    const detectedLang = browserLang.startsWith('fr') ? 'fr' : 'en';
+    const detectedLang: Language = browserLang.startsWith('fr') ? 'fr' : 'en';
     setLanguage(detectedLang);
 
     const handleScroll = () => setScrollY(window.scrollY);
@@ -603,6 +705,8 @@ export default function BlaffaLanding() {
   }, []);
 
   const t = translations[language];
+
+  
 
   const features = [
     {
