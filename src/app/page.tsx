@@ -412,7 +412,7 @@ const translations = {
     supportedPlatformsDesc: "Easily deposit and withdraw on your favorite platforms",
     
     // Mobile Networks
-    mobileNetworks: "Mobile Money Networks",
+    mobileNetworks: "Mobile Money Networks And Available Countries",
     mobileNetworksDesc: "Pay with your favorite mobile payment networks",
     
     // Features
@@ -512,7 +512,7 @@ const translations = {
     supportedPlatformsDesc: "Déposez et retirez facilement sur vos plateformes préférées",
     
     // Mobile Networks
-    mobileNetworks: "Réseaux Mobile Money",
+    mobileNetworks: "Réseaux Mobile Money et Pays Disponibles",
     mobileNetworksDesc: "Payez avec vos réseaux de paiement mobile favoris",
     
     // Features
@@ -717,9 +717,7 @@ export default function BlaffaLanding() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center font-bold text-xl">
-                B
-              </div>
+              <img src="/logo.png" alt="Blaffa Logo" className="w-15 h-15" ></img>
               <span className="text-2xl font-bold">Blaffa</span>
             </div>
             
@@ -1011,9 +1009,7 @@ export default function BlaffaLanding() {
           <div className="grid md:grid-cols-4 gap-8 mb-12">
             <div className="space-y-4">
               <div className="flex items-center space-x-2">
-                <div className="w-10 h-10 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center font-bold text-xl">
-                  B
-                </div>
+                <img src="/logo.png" alt="Blaffa Logo" className="w-15 h-15" ></img>
                 <span className="text-2xl font-bold">Blaffa</span>
               </div>
               <p className="text-slate-400 leading-relaxed">
