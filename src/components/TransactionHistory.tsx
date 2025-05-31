@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { ArrowDownLeft, ArrowUpRight, RotateCw, X, MoreHorizontal, Pause, Play, Activity, Menu, Copy, CheckCircle, Clock, XCircle, AlertCircle, ChevronRight, Smartphone, Phone, CreditCard, Hash, Calendar, } from 'lucide-react';
+import { ArrowDownLeft, ArrowUpRight,  X,  Activity,  Copy, CheckCircle, Clock, XCircle, AlertCircle, ChevronRight, Smartphone, Phone, CreditCard, Hash, Calendar, } from 'lucide-react';
 //import Footer from '../components/footer';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from './ThemeProvider';
@@ -450,20 +450,20 @@ export default function TransactionHistory() {
   };
   
   // Filter transactions based on current filter
-  // const shouldShowTransaction = (item: HistoricItem | Transaction) => {
-  //   const transaction = 'transaction' in item ? item.transaction : item;
+  const shouldShowTransaction = (item: HistoricItem | Transaction) => {
+    const transaction = 'transaction' in item ? item.transaction : item;
     
-  //   if (!transaction) return false;
+    if (!transaction) return false;
     
-  //   if (activeTab === 'all') {
-  //     return true;
-  //   } else if (activeTab === 'deposits') {
-  //     return transaction.type_trans === 'deposit';
-  //   } else if (activeTab === 'withdrawals') {
-  //     return transaction.type_trans === 'withdrawal';
-  //   }
-  //   return true;
-  // };
+    if (activeTab === 'all') {
+      return true;
+    } else if (activeTab === 'deposits') {
+      return transaction.type_trans === 'deposit';
+    } else if (activeTab === 'withdrawals') {
+      return transaction.type_trans === 'withdrawal';
+    }
+    return true;
+  };
   
   // Fetch transactions from API
   const fetchTransactions = async (pageNumber: number, activeFilter: string) => {
@@ -1042,3 +1042,4 @@ export default function TransactionHistory() {
     </div>
   );
 }
+
