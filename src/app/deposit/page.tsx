@@ -1,0 +1,828 @@
+
+'use client';
+import { useState, useEffect } from 'react';
+//import Head from 'next/head';
+//import axios from 'axios';
+import { useTranslation } from 'react-i18next';
+//import styles from '../styles/Deposits.module.css';
+//import { ClipboardIcon } from 'lucide-react'; // Make sure to install this package
+//import { Transaction } from 'mongodb';
+//import DashboardHeader from '@/components/DashboardHeader';
+import { useTheme } from '@/components/ThemeProvider';
+import { useWebSocket } from '../../context/WebSocketContext';
+import {  Check, CheckCircle, ChevronRight, CreditCard, Phone, Smartphone, XCircle } from 'lucide-react';
+import api from '@/lib/axios';
+import DashboardHeader from '@/components/DashboardHeader';
+
+//import { Transaction } from 'mongodb';
+
+interface Network {
+  id: string;
+  name: string;
+  public_name: string;
+  image?: string;
+}
+
+interface App {
+  id: string;
+  name: string;
+  public_name?: string;
+  image?: string;
+  // Add other properties from the profile page App interface if needed for consistency
+  is_active?: boolean;
+  hash?: string;
+  cashdeskid?: string;
+  cashierpass?: string;
+  order?: string | null;
+  city?: string;
+  street?: string;
+  deposit_tuto_content?: string;
+  deposit_link?: string;
+  withdrawal_tuto_content?: string;
+  withdrawal_link?: string;
+}
+
+// Updated IdLink interface to match the structure from profile/page.tsx
+interface IdLink {
+  id: string;
+  user: string;
+  link: string; // This is the saved bet ID
+  app_name: App; // This should be the full App object
+}
+
+interface WebSocketMessage {
+  type: string;
+  data?: string;
+}
+
+interface Transaction {
+  id: string;
+  amount: number;
+  type_trans: string;
+  status: string;
+  reference: string;
+  created_at: string;
+  network?: Network;
+  app?: App;
+  phone_number?: string;
+  user_app_id?: string;
+  error_message?: string;
+}
+
+interface TransactionDetail {
+  transaction: Transaction;
+}
+
+// interface ErrorResponse {
+
+//   data?: {
+//     [key: string]: string[] | string | undefined;
+//     detail?: string;
+//     message?: string;
+//   };
+//   status?: number;
+// }
+export default function Deposits() {
+  const { t } = useTranslation();
+  const [currentStep, setCurrentStep] = useState<'selectId' | 'selectNetwork' | 'enterDetails'>('selectId');
+  const [selectedId, setSelectedId] = useState<IdLink | null>(null);
+  const [selectedNetwork, setSelectedNetwork] = useState<{ id: string; name: string; public_name?: string; image?: string } | null>(null);
+  const [formData, setFormData] = useState({
+    amount: '',
+    phoneNumber: ''
+  });
+  
+  const [networks, setNetworks] = useState<{ id: string; name: string; public_name?: string; image?: string }[]>([]);
+  const [savedAppIds, setSavedAppIds] = useState<IdLink[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedTransaction, setSelectedTransaction] = useState<TransactionDetail | null>(null);
+  const { theme } = useTheme();
+  const { addMessageHandler } = useWebSocket();
+
+
+  useEffect(() => {
+    const handleTransactionLink = (data: WebSocketMessage) => {
+      if (data.type === 'transaction_link' && data.data) {
+        console.log('Opening transaction link:', data.data);
+        // Try to open in a new tab
+      const newWindow = window.open('', '_blank');
+      if (newWindow) {
+        newWindow.location.href = data.data;
+      } else {
+        // Fallback to direct open if popup is blocked
+        window.open(data.data, '_blank', 'noopener,noreferrer');
+      }
+    }
+  };
+
+
+    const removeHandler = addMessageHandler(handleTransactionLink);
+    return () => removeHandler();
+  }, [addMessageHandler]);
+
+
+  // Fetch networks and saved app IDs on component mount
+  useEffect(() => {
+    const fetchData = async () => {
+      const token = localStorage.getItem('accessToken');
+      if (!token) {
+        setError(t('You must be logged in to access this feature.'));
+        setLoading(false);
+        window.location.href = '/auth';
+        return;
+      }
+
+      try {
+        // Fetch networks
+        const networksResponse = await api.get(`/blaffa/network/`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setNetworks(networksResponse.data);
+
+        // Fetch saved app IDs
+        const savedIdsResponse = await api.get(`/blaffa/id_link`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        
+        let processedData: IdLink[] = [];
+        if (Array.isArray(savedIdsResponse.data)) {
+          processedData = savedIdsResponse.data;
+        } else if (savedIdsResponse.data?.results) {
+          processedData = savedIdsResponse.data.results;
+        } else if (savedIdsResponse.data?.data) {
+          processedData = savedIdsResponse.data.data;
+        }
+        
+        setSavedAppIds(processedData);
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError(t('Failed to load data. Please try again later.'));
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  const handleIdSelect = (idLink: IdLink) => {
+    setSelectedId(idLink);
+    setCurrentStep('selectNetwork');
+  };
+
+  const handleNetworkSelect = (network: { id: string; name: string; public_name?: string; image?: string }) => {
+    setSelectedNetwork(network);
+    setCurrentStep('enterDetails');
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedId || !selectedNetwork) return;
+    
+    setLoading(true);
+    try {
+      const token = localStorage.getItem('accessToken');
+      if (!token) throw new Error('Not authenticated');
+      
+      const response = await api.post(`/blaffa/transaction`, {
+        type_trans: 'deposit',
+        amount: formData.amount,
+        phone_number: formData.phoneNumber,
+        network_id: selectedNetwork.id,
+        app_id: selectedId.app_name?.id,
+        user_app_id: selectedId.link
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      const transaction = response.data;
+      setSelectedTransaction({ transaction });
+      setIsModalOpen(true);
+      
+      setSuccess('Transaction initiated successfully!');
+      // Reset form
+      setCurrentStep('selectId');
+      setSelectedId(null);
+      setSelectedNetwork(null);
+      setFormData({ amount: '', phoneNumber: '' });
+    } catch (err) {
+      console.error('Transaction error:', err);
+      if (
+        typeof err === 'object' &&
+        err !== null &&
+        'response' in err &&
+        typeof (err as { response?: unknown }).response === 'object'
+      ) {
+        const response = (err as { response?: { data?: { detail?: string } } }).response;
+        setError(response?.data?.detail || 'Failed to process transaction');
+      } else {
+        setError('Failed to process transaction');
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const closeTransactionDetails = () => {
+  setIsModalOpen(false);
+  setSelectedTransaction(null);
+};
+
+ const renderStep = () => {
+    switch (currentStep) {
+      case 'selectId':
+        return (
+          <div className="space-y-6">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold  mb-2">{t("Step 1: Select Your Bet ID")}</h2>
+              <p className="text-slate-400">{t("Choisissez l'ID de pari que vous souhaitez utiliser")}</p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {savedAppIds.map((idLink, index) => (
+                <div 
+                  key={idLink.id}
+                  onClick={() => handleIdSelect(idLink)}
+                  className={`group relative overflow-hidden bg-gradient-to-br ${theme.colors.sl_background} backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6 cursor-pointer hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20`}
+                  style={{
+                    animation: `slideInUp 0.6s ease-out ${index * 100}ms both`
+                  }}
+                >
+                  {/* Hover shimmer effect */}
+                  <div className="absolute inset-0 shimmer-effect opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  <div className="relative">
+                    <div className="flex items-center mb-4">
+                      <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500/20 to-blue-600/20 text-purple-400 shadow-lg shadow-purple-500/20 flex items-center justify-center transition-all duration-500 group-hover:scale-110">
+                        <CreditCard className="w-6 h-6" />
+                      </div>
+                      <div className="ml-4">
+                        <div className=" font-semibold group-hover:text-purple-200 transition-colors duration-300">
+                          {idLink.app_name?.public_name || 'Unknown App'}
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className={`${theme.colors.background} rounded-xl p-3 mb-4`}>
+                      <div className="text-slate-400 text-xs mb-1">ID de pari</div>
+                      <div className=" font-mono text-sm truncate">{idLink.link}</div>
+                    </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <span className="text-slate-400 text-sm">Cliquez pour sélectionner</span>
+                      <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-purple-400 group-hover:translate-x-1 transition-all duration-300" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {savedAppIds.length === 0 && (
+              <div className="flex flex-col items-center justify-center py-20 px-6">
+                {/* <div className="bg-gradient-to-br from-slate-800 to-slate-700 rounded-2xl p-6 mb-6 shadow-2xl border border-slate-600/50">
+                  <Activity className="w-12 h-12 text-slate-400 mx-auto" />
+                </div> */}
+                <h3 className="text-xl font-semibold text-white mb-3">Aucun ID de pari trouvé</h3>
+                <p className="text-slate-400 text-center max-w-md leading-relaxed">
+                  Veuillez ajouter un ID de pari dans votre profil pour continuer.
+                </p>
+              </div>
+            )}
+          </div>
+        );
+        
+      case 'selectNetwork':
+        return (
+          <div className="space-y-6">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold  mb-2">{t("Step 2: Select Network")}</h2>
+              <p className="text-slate-400">Choisissez votre réseau de paiement mobile</p>
+            </div>
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {networks.map((network, index) => (
+                <div
+                  key={network.id}
+                  onClick={() => handleNetworkSelect(network)}
+                  className={`group relative overflow-hidden p-6 border rounded-2xl cursor-pointer text-center transition-all duration-500 hover:scale-105 hover:shadow-2xl ${
+                    selectedNetwork?.id === network.id 
+                      ? 'border-purple-500 bg-gradient-to-br from-purple-600/20 to-blue-600/20 shadow-lg shadow-purple-500/20' 
+                    : `border-slate-600/30 bg-gradient-to-br ${theme.colors.s_background} hover:from-slate-600/50 hover:to-slate-500/50 hover:shadow-purple-500/20`}
+                  }`}
+                  style={{
+                    animation: `slideInUp 0.6s ease-out ${index * 100}ms both`
+                  }}
+                >
+                  {/* Hover shimmer effect */}
+                  <div className="absolute inset-0 shimmer-effect opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  <div className="relative">
+                    {network.image ? (
+                      <img src={network.image} alt={network.name} className="h-12 mx-auto mb-4 transition-transform duration-300 group-hover:scale-110" />
+                    ) : (
+                      <div className="h-12 flex items-center justify-center mb-4">
+                        <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-green-500/20 to-emerald-600/20 text-green-400 shadow-lg shadow-green-500/20 flex items-center justify-center transition-all duration-500 group-hover:scale-110">
+                          <Smartphone className="w-6 h-6" />
+                        </div>
+                      </div>
+                    )}
+                    <div className="text-sm font-medium  group-hover:text-purple-200 transition-colors duration-300">
+                      {network.public_name}
+                    </div>
+                    
+                    {selectedNetwork?.id === network.id && (
+                      <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center">
+                        <Check className="w-4 h-4 " />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            <div className="flex justify-center">
+              <button
+                onClick={() => setCurrentStep('selectId')}
+                className="flex items-center text-slate-400 hover:text-white px-6 py-3 rounded-xl transition-all duration-300 group"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                </svg>
+                {t("Back to Bet IDs")}
+              </button>
+            </div>
+          </div>
+        );
+        
+      case 'enterDetails':
+        return (
+          <div className="space-y-6">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold  mb-2">{t("Step 3: Enter Details")}</h2>
+              <p className="text-slate-400">Complétez les informations de votre dépôt</p>
+            </div>
+            
+            {/* Selected Info Card */}
+            <div className={`bg-gradient-to-r ${theme.colors.s_background} backdrop-blur-sm rounded-2xl p-6 border border-slate-600/30`}>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className={`${theme.colors.c_background} rounded-xl p-4`}>
+                  <div className="flex items-center mb-2">
+                    <CreditCard className="w-5 h-5 text-purple-400 mr-2" />
+                    <p className="text-sm text-slate-400">{t("Selected Bet ID")}</p>
+                  </div>
+                  <p className="font-medium  font-mono">{selectedId?.link}</p>
+                  <p className="text-sm text-slate-300 mt-1">{selectedId?.app_name?.public_name}</p>
+                </div>
+                <div className={`${theme.colors.c_background} rounded-xl p-4`}>
+                  <div className="flex items-center mb-2">
+                    <Smartphone className="w-5 h-5 text-green-400 mr-2" />
+                    <p className="text-sm text-slate-400">{t("Network")}</p>
+                  </div>
+                  <p className="font-medium ">{selectedNetwork?.name}</p>
+                </div>
+              </div>
+            </div>
+            
+            {/* Form */}
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-4">
+                <div>
+                  <label htmlFor="amount" className="block text-sm font-medium text-slate-400 mb-2">
+                    {t("Amount")} (FCFA)
+                  </label>
+                  <div className="relative">
+                    <input
+                      type="number"
+                      id="amount"
+                      name="amount"
+                      value={formData.amount}
+                      onChange={handleInputChange}
+                      className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300`}
+                      placeholder="Entrez le montant"
+                      required
+                      min="200"
+                      step="50"
+                    />
+                    <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 text-sm">
+                      FCFA
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <label htmlFor="phoneNumber" className="block text-sm font-medium text-slate-400 mb-2">
+                    {t("Phone Number")}
+                  </label>
+                  <div className="relative">
+                    <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
+                    <input
+                      type="tel"
+                      id="phoneNumber"
+                      name="phoneNumber"
+                      value={formData.phoneNumber}
+                      onChange={handleInputChange}
+                      className={`w-full p-4 pl-12 ${theme.colors.c_background} border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300`}
+                      placeholder="ex: 771234567"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+              
+              <div className="flex flex-col sm:flex-row justify-between gap-4 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setCurrentStep('selectNetwork')}
+                  className="flex items-center justify-center text-slate-400 hover:text-white px-6 py-3 rounded-xl transition-all duration-300 group"
+                >
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                  </svg>
+                  {t("Back")}
+                </button>
+                <button
+                  type="submit"
+                  disabled={loading}
+                  className="px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white rounded-xl transition-all duration-300 font-medium shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 min-w-[140px]"
+                >
+                  {loading ? (
+                    <div className="flex items-center justify-center">
+                      <div className="animate-spin rounded-full h-5 w-5 border-2 border-white/30 border-t-white mr-2"></div>
+                      {t('Processing...')}
+                    </div>
+                  ) : (
+                    t('Submit')
+                  )}
+                </button>
+              </div>
+            </form>
+          </div>
+        );
+    }
+  };
+
+  return (
+    <div className={`min-h-screen bg-gradient-to-br ${theme.colors.a_background} p-4`}>
+      <style>
+        {`
+          @keyframes slideInUp {
+            from {
+              opacity: 0;
+              transform: translateY(20px) scale(0.95);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0) scale(1);
+            }
+          }
+          
+          @keyframes shimmer {
+            0% { background-position: -200px 0; }
+            100% { background-position: calc(200px + 100%) 0; }
+          }
+          
+          @keyframes modalSlideIn {
+            from {
+              opacity: 0;
+              transform: translateY(30px) scale(0.9);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0) scale(1);
+            }
+          }
+          
+          @keyframes backdropFadeIn {
+            from {
+              opacity: 0;
+              backdrop-filter: blur(0px);
+            }
+            to {
+              opacity: 1;
+              backdrop-filter: blur(8px);
+            }
+          }
+          
+          .shimmer-effect {
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            background-size: 200px 100%;
+            animation: shimmer 2s infinite;
+          }
+          
+          .modal-backdrop {
+            animation: backdropFadeIn 0.3s ease-out;
+          }
+          
+          .modal-content {
+            animation: modalSlideIn 0.4s ease-out;
+          }
+        `}
+      </style>
+
+      <div className="max-w-6xl mx-auto">
+        {/* Header Section */}
+        <DashboardHeader/>
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+          <div>
+            <h1 className="text-3xl font-bold  mb-2">{t("Deposit Funds")}</h1>
+            <p className="text-slate-400">Rechargez votre compte en quelques étapes simples</p>
+          </div>
+          
+          <button
+            onClick={() => window.history.back()}
+            className="flex items-center text-white bg-gradient-to-r from-slate-700/50 to-slate-600/50 hover:from-slate-600/50 hover:to-slate-500/50 px-6 py-3 rounded-xl border border-slate-600/30 hover:border-slate-500/50 transition-all duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl group mt-4 md:mt-0"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+            {t("Back")}
+          </button>
+        </div>
+
+        {/* Progress Steps */}
+        <div className="flex justify-between mb-12 relative max-w-2xl mx-auto">
+          {['selectId', 'selectNetwork', 'enterDetails'].map((step, index) => {
+            const stepNum = index + 1;
+            let stepName = '';
+            const currentStepIndex = ['selectId', 'selectNetwork', 'enterDetails'].indexOf(currentStep);
+            
+            switch (step) {
+              case 'selectId': stepName = t('Select Bet ID'); break;
+              case 'selectNetwork': stepName = t('Select Network'); break;
+              case 'enterDetails': stepName = t('Enter Details'); break;
+            }
+            
+            const isCompleted = index < currentStepIndex;
+            const isActive = index === currentStepIndex;
+            
+            return (
+              <div key={step} className="flex flex-col items-center flex-1 relative">
+                <div 
+                  className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-3 transition-all duration-500 ${
+                    isActive 
+                      ? 'bg-gradient-to-br from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/50 scale-110' 
+                      : isCompleted 
+                        ? 'bg-gradient-to-br from-green-500 to-emerald-600 text-white shadow-lg shadow-green-500/50' 
+                        : 'bg-gradient-to-br from-slate-700 to-slate-600 text-slate-400 border border-slate-600/50'
+                  }`}
+                >
+                  {isCompleted ? <Check className="w-6 h-6" /> : stepNum}
+                </div>
+                <span className={`text-sm text-center transition-all duration-300 ${
+                  isActive 
+                    ? 'font-medium text-purple-300' 
+                    : isCompleted 
+                      ? 'text-green-400' 
+                      : 'text-slate-500'
+                }`}>
+                  {stepName}
+                </span>
+                
+                {index < 2 && (
+                  <div className="absolute top-6 left-1/2 w-full h-1 bg-slate-700 -z-10 rounded-full">
+                    {isCompleted && (
+                      <div className="h-full bg-gradient-to-r from-green-500 to-emerald-600 rounded-full transition-all duration-1000" style={{ width: '100%' }}></div>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+        
+        {/* Main Content */}
+        <div className={`bg-gradient-to-r ${theme.colors.s_background} backdrop-blur-sm rounded-3xl shadow-2xl border border-slate-600/50 overflow-hidden`}>
+          <div className="p-8">
+            {/* Alert Messages */}
+            {error && (
+              <div className="mb-6 p-4 bg-gradient-to-r from-red-900/50 to-red-800/50 border border-red-600/50 text-red-300 rounded-2xl backdrop-blur-sm">
+                <div className="flex items-center">
+                  <XCircle className="w-5 h-5 mr-3" />
+                  {error}
+                </div>
+              </div>
+            )}
+            
+            {success && (
+              <div className="mb-6 p-4 bg-gradient-to-r from-green-900/50 to-green-800/50 border border-green-600/50 text-green-300 rounded-2xl backdrop-blur-sm">
+                <div className="flex items-center">
+                  <CheckCircle className="w-5 h-5 mr-3" />
+                  {success}
+                </div>
+              </div>
+            )}
+            
+            {loading && !success && !error ? (
+              <div className="flex justify-center items-center p-20">
+                <div className="relative">
+                  <div className="animate-spin rounded-full h-16 w-16 border-4 border-purple-500/30 border-t-purple-500"></div>
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500/20 to-blue-500/20 animate-pulse"></div>
+                </div>
+              </div>
+            ) : (
+              renderStep()
+            )}
+          </div>
+        </div>
+      </div>
+  
+      {/* Transaction Details Modal */}
+        {isModalOpen && selectedTransaction && (
+          <div className={`fixed inset-0 bg-white bg-opacity-50 flex items-center justify-center p-4 z-50`}>
+            <div className={`${theme.colors.background} rounded-lg shadow-xl w-full max-w-md`}>
+              <div className="p-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-semibold">{t("Transaction Details")}</h3>
+                  <button 
+                    onClick={closeTransactionDetails}
+                    className=""
+                  >
+                    <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+                
+                <div className="space-y-4">
+                  <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
+                    <span className="text-gray-600 dark:text-gray-400">{t("Amount")}</span>
+                    <span className="font-medium">{selectedTransaction.transaction.amount} FCFA</span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
+                    <span className="text-gray-600 dark:text-gray-400">{t("Status")}</span>
+                    <span className={`font-medium ${
+                      selectedTransaction.transaction.status === 'completed' 
+                        ? 'text-green-600 dark:text-green-400'
+                        : selectedTransaction.transaction.status === 'pending'
+                        ? 'text-yellow-600 dark:text-yellow-400'
+                        : 'text-red-600 dark:text-red-400'
+                    }`}>
+                      {selectedTransaction.transaction.status.charAt(0).toUpperCase() + 
+                      selectedTransaction.transaction.status.slice(1)}
+                    </span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
+                    <span className="">{t("Reference")}</span>
+                    <span className="font-medium">{selectedTransaction.transaction.reference}</span>
+                  </div>
+                  
+                  <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
+                    <span className="">{t("Date")}</span>
+                    <span className="font-medium">
+                      {new Date(selectedTransaction.transaction.created_at).toLocaleString('fr-FR')}
+                    </span>
+                  </div>
+
+                  {selectedTransaction.transaction.phone_number && (
+                    <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
+                      <span className="">{t("Phone Number")}</span>
+                      <span className="font-medium">{selectedTransaction.transaction.phone_number}</span>
+                    </div>
+                  )}
+                </div>
+
+                <div className="mt-6 flex justify-end">
+                  <button
+                    onClick={closeTransactionDetails}
+                    className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
+                  >
+                    {t("Close")}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+    </div>
+  );
+}
+
+      {/* Recent transactions section - This could be added if needed */}
+      {/* <div className="mt-8 bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-xl font-bold text-gray-800 dark:text-white">{t('Recent Deposits')}</h2>
+          <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">{t('View your recent deposit transactions')}</p>
+        </div> */}
+        
+        {/* <div className="p-6"> */}
+          {/* Sample transactions - This would be populated from API data */}
+          {/* <div className="space-y-4"> */}
+            {/* Empty state */}
+            {/* <div className="flex flex-col items-center justify-center py-8 text-center">
+              <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-2">{t('No recent deposits')}</h3>
+              <p className="text-gray-500 dark:text-gray-400 max-w-sm">
+                {t('Your recent deposit transactions will appear here once you make your first deposit.')}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div> */}
+
+      {/* FAQ Section */}
+      {/* <div className="mt-8 bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
+        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-xl font-bold text-gray-800 dark:text-white">{t('Frequently Asked Questions')}</h2>
+          <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">{t('Common questions about deposits')}</p>
+        </div>
+        
+        <div className="p-6 space-y-4">
+          <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+            <details className="group">
+              <summary className="flex justify-between items-center p-4 cursor-pointer bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-800 dark:text-white">
+                <span className="font-medium">{t('How long do deposits take to process?')}</span>
+                <svg className="h-5 w-5 text-gray-500 dark:text-gray-400 group-open:rotate-180 transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </summary>
+              <div className="p-4 text-gray-600 dark:text-gray-300">
+                <p>{t('Deposits are typically processed within 5-15 minutes. During high volume periods, it may take up to 30 minutes. If your deposit has not been processed within 1 hour, please contact customer support.')}</p>
+              </div>
+            </details>
+          </div>
+          
+          <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+            <details className="group">
+              <summary className="flex justify-between items-center p-4 cursor-pointer bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-800 dark:text-white">
+                <span className="font-medium">{t('What is the minimum deposit amount?')}</span>
+                <svg className="h-5 w-5 text-gray-500 dark:text-gray-400 group-open:rotate-180 transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </summary>
+              <div className="p-4 text-gray-600 dark:text-gray-300">
+                <p>{t('The minimum deposit amount is 500 XOF. There is no maximum limit for deposits.')}</p>
+              </div>
+            </details>
+          </div>
+          
+          <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
+            <details className="group">
+              <summary className="flex justify-between items-center p-4 cursor-pointer bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-800 dark:text-white">
+                <span className="font-medium">{t('Which payment methods are available?')}</span>
+                <svg className="h-5 w-5 text-gray-500 dark:text-gray-400 group-open:rotate-180 transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </summary>
+              <div className="p-4 text-gray-600 dark:text-gray-300">
+                <p>{t('We currently support MTN Mobile Money and MOOV Money for deposits. Additional payment methods will be added in the future.')}</p>
+              </div>
+            </details>
+          </div>
+        </div>
+      </div> */}
+
+      {/* Support Section */}
+      {/* <div className="mt-8 mb-12">
+        <div className="bg-gradient-to-r from-orange-600 to-orange-600 rounded-2xl shadow-xl overflow-hidden">
+          <div className="md:flex">
+            <div className="p-6 md:p-8 md:w-3/5">
+              <h2 className="text-xl md:text-2xl font-bold text-white mb-2">{t('Need help with your deposit?')}</h2>
+              <p className="text-orange-100 mb-6">{t('Our support team is available 24/7 to assist you with any issues.')}</p>
+              <div className="flex flex-wrap gap-4">
+                <a href="#" className="flex items-center space-x-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                  </svg>
+                  <span>{t('Live Chat')}</span>
+                </a>
+                <a href="mailto:support@example.com" className="flex items-center space-x-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-all">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                  <span>{t('Email Support')}</span>
+                </a>
+              </div>
+            </div>
+            <div className="hidden md:block md:w-2/5 relative">
+              <div className="absolute inset-0 bg-orange-800/20 backdrop-blur-sm"></div>
+              <div className="h-full flex items-center justify-center p-6">
+                <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div> */}
+//     </div>
+//   );
+// }

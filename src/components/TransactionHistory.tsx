@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useEffect, useRef } from 'react';
-import { ArrowDownLeft, ArrowUpRight, RotateCw, X, MoreHorizontal, Pause, Play, Activity, Menu, Copy, } from 'lucide-react';
+import { ArrowDownLeft, ArrowUpRight, RotateCw, X, MoreHorizontal, Pause, Play, Activity, Menu, Copy, CheckCircle, Clock, XCircle, AlertCircle, ChevronRight, Smartphone, Phone, CreditCard, Hash, Calendar, } from 'lucide-react';
 //import Footer from '../components/footer';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from './ThemeProvider';
+import api from '@/lib/axios';
 // Define the App interface
 interface App {
   id: string;
@@ -105,7 +106,7 @@ export default function TransactionHistory() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
+  const [ setHasMore] = useState(true);
   const [selectedTransaction, setSelectedTransaction] = useState<HistoricItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [lastFetchTime, setLastFetchTime] = useState<string | null>(null);
@@ -136,24 +137,25 @@ export default function TransactionHistory() {
   // Format date from ISO string to readable format
   const formatDate = (isoDate: string) => {
     const date = new Date(isoDate);
-    return date.toLocaleDateString('en-US', {
-      day: '2-digit',
-      month: '2-digit',
+    return date.toLocaleDateString('fr-FR', {
+      day: 'numeric',
+      month: 'short',
       year: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
-      hour12: true
-    }).replace(',', '');
+      hour12: false,
+      timeZone: 'UTC'
+    });
   };
   
   // Build API URL based on filters and pagination
   const getApiUrl = (pageNumber: number, activeFilter: string) => {
-    let apiUrl = `https://api.yapson.net/yapson/historic${pageNumber > 1 ? `?page=${pageNumber}` : ''}`;
+    let apiUrl = `/blaffa/historic${pageNumber > 1 ? `?page=${pageNumber}` : ''}`;
     
     if (activeFilter === 'deposits') {
-      apiUrl = `https://api.yapson.net/yapson/historic${pageNumber > 1 ? `?page=${pageNumber}&` : '?'}type=deposit`;
+      apiUrl = `/blaffa/historic${pageNumber > 1 ? `?page=${pageNumber}&` : '?'}type=deposit`;
     } else if (activeFilter === 'withdrawals') {
-      apiUrl = `https://api.yapson.net/yapson/historic${pageNumber > 1 ? `?page=${pageNumber}&` : '?'}type=withdrawal`;
+      apiUrl = `/blaffa/historic${pageNumber > 1 ? `?page=${pageNumber}&` : '?'}type=withdrawal`;
     }
     
     return apiUrl;
@@ -176,15 +178,7 @@ export default function TransactionHistory() {
   };
   
   // Add this function to cycle through filter options
-  const cycleMobileFilter = () => {
-    if (activeTab === 'all') {
-      handleTabChange('deposits');
-    } else if (activeTab === 'deposits') {
-      handleTabChange('withdrawals');
-    } else {
-      handleTabChange('all');
-    }
-  };
+  
   
   // Update the setupWebSocket function with better error handling and fallback
   const setupWebSocket = () => {
@@ -206,7 +200,7 @@ export default function TransactionHistory() {
     cleanupWebSocket();
 
     try {
-      const wsUrl = `wss://api.yapson.net/ws/socket?token=${encodeURIComponent(token)}`;
+      const wsUrl = `wss://api.blaffa.net/ws/socket?token=${encodeURIComponent(token)}`;
       webSocketRef.current = new WebSocket(wsUrl);
 
       // Set connection timeout
@@ -456,20 +450,20 @@ export default function TransactionHistory() {
   };
   
   // Filter transactions based on current filter
-  const shouldShowTransaction = (item: HistoricItem | Transaction) => {
-    const transaction = 'transaction' in item ? item.transaction : item;
+  // const shouldShowTransaction = (item: HistoricItem | Transaction) => {
+  //   const transaction = 'transaction' in item ? item.transaction : item;
     
-    if (!transaction) return false;
+  //   if (!transaction) return false;
     
-    if (activeTab === 'all') {
-      return true;
-    } else if (activeTab === 'deposits') {
-      return transaction.type_trans === 'deposit';
-    } else if (activeTab === 'withdrawals') {
-      return transaction.type_trans === 'withdrawal';
-    }
-    return true;
-  };
+  //   if (activeTab === 'all') {
+  //     return true;
+  //   } else if (activeTab === 'deposits') {
+  //     return transaction.type_trans === 'deposit';
+  //   } else if (activeTab === 'withdrawals') {
+  //     return transaction.type_trans === 'withdrawal';
+  //   }
+  //   return true;
+  // };
   
   // Fetch transactions from API
   const fetchTransactions = async (pageNumber: number, activeFilter: string) => {
@@ -487,20 +481,20 @@ export default function TransactionHistory() {
         return;
       }
       
-      const response = await fetch(apiUrl, {
+      const response = await api.get(apiUrl, {
         headers: {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
       });
       
-      if (!response.ok) {
-        const errorData = await response.json();
+      if (response.status !== 200) {
+        const errorData = await response.data;
         console.error('Error Data:', errorData);
         throw new Error(errorData.message);
       }
       
-      const data = await response.json();
+      const data = response.data;
       console.log('Fetched Transactions:', data);
       
       // Update last fetch time
@@ -538,7 +532,7 @@ export default function TransactionHistory() {
         setTransactions(prev => [...prev, ...newTransactions]);
       }
       
-      setHasMore(data.next !== null);
+      //setHasMore(data.next !== null);
       setError(null);
     } catch (error) {
       console.error('Error fetching transactions:', error);
@@ -633,34 +627,7 @@ export default function TransactionHistory() {
     setPage(1);
     fetchTransactions(1, activeTab);
   }, [activeTab]);
-  
-  // Load more transactions when scrolling to bottom
-  const loadMore = () => {
-    if (!loading && hasMore) {
-      const nextPage = page + 1;
-      setPage(nextPage);
-      fetchTransactions(nextPage, activeTab);
-    }
-  };
-  
-  // Handle tab change
-  const handleTabChange = (tab: string) => {
-    setActiveTab(tab);
-  };
-  
-  // Toggle real-time updates
-  const toggleRealTimeUpdates = () => {
-    const newState = !isRealTimeEnabled;
-    setIsRealTimeEnabled(newState);
-    // Update localStorage preference
-    localStorage.setItem('realTimeEnabled', newState.toString());
-  };
-  
-  // Function to refresh transactions manually
-  const refreshTransactions = () => {
-    setPage(1);
-    fetchTransactions(1, activeTab);
-  };
+ 
   
   // Show transaction details in modal
   const openTransactionDetails = (transaction: HistoricItem) => {
@@ -689,342 +656,384 @@ export default function TransactionHistory() {
       maximumFractionDigits: 0
     }).format(amount);
   };
+
+  const getTransactionTypeIcon = (type: string) => {
+      return type === 'deposit' ? (
+        <ArrowDownLeft className="w-5 h-5" />
+      ) : (
+        <ArrowUpRight className="w-5 h-5" />
+      );
+    };
+  
+    const getStatusIcon = (status: string) => {
+      switch (status) {
+        case 'completed':
+          return <CheckCircle className="w-4 h-4 text-green-500" />;
+        case 'accept':
+          return <CheckCircle className="w-4 h-4 text-green-500" />;
+        case 'pending':
+          return <Clock className="w-4 h-4 text-yellow-500" />;
+        case 'failed':
+          return <XCircle className="w-4 h-4 text-red-500" />;
+        default:
+          return <AlertCircle className="w-4 h-4 text-gray-500" />;
+      }
+    };
+
+  
+    const getStatusBadgeClass = (status: string) => {
+      switch (status) {
+        case 'completed':
+          return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
+        case 'accept':
+          return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
+        case 'pending':
+          return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400';
+        case 'failed':
+          return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400';
+        default:
+          return 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400';
+      }
+    };
   
   // Get status badge class based on transaction status
-  const getStatusBadgeClass = (status: string) => {
-    switch (status.toLowerCase()) {
-      case 'completed':
-      case 'success':
-        return 'text-green-500';
-      case 'pending':
-        return 'text-amber-500';
-      case 'failed':
-      case 'error':
-        return 'text-red-500';
-      default:
-        return 'text-gray-500';
-    }
-  };
+  // const getStatusBadgeClass = (status: string) => {
+  //   switch (status.toLowerCase()) {
+  //     case 'completed':
+  //     case 'success':
+  //       return 'text-green-500';
+  //     case 'pending':
+  //       return 'text-amber-500';
+  //     case 'failed':
+  //     case 'error':
+  //       return 'text-red-500';
+  //     default:
+  //       return 'text-gray-500';
+  //   }
+  // };
   
   // Get transaction type icon based on type
-  const getTransactionTypeIcon = (type: string) => {
-    if (type === 'deposit') {
-      return <ArrowDownLeft className="w-5 h-5 text-orange-500 group-hover:animate-bounce" />;
-    } else if (type === 'withdrawal') {
-      return <ArrowUpRight className="w-5 h-5 text-gray-300 group-hover:animate-pulse" />;
-    }
-    return null;
-  };
+  // const getTransactionTypeIcon = (type: string) => {
+  //   if (type === 'deposit') {
+  //     return <ArrowDownLeft className="w-5 h-5 text-orange-500 group-hover:animate-bounce" />;
+  //   } else if (type === 'withdrawal') {
+  //     return <ArrowUpRight className="w-5 h-5 text-gray-300 group-hover:animate-pulse" />;
+  //   }
+  //   return null;
+  // };
   
   return (
-    <div className={`flex flex-col h-full min-h-screen bg-gradient-to-br ${theme.colors.c_background} ${theme.colors.text} font-sans relative overflow-hidden`}>
+    <div className={`rounded-2xl shadow-sm border border-gray-200 bg-gradient-to-br ${theme.colors.a_background} ${theme.colors.text}`}>
       {/* Background gradient effects */}
       <div className="absolute top-20 -left-10 w-40 h-40 bg-orange-700/20 rounded-full blur-3xl animate-pulse-slow"></div>
       <div className="absolute bottom-20 right-10 w-60 h-60 bg-purple-700/10 rounded-full blur-3xl animate-pulse-slow"></div>
-     <div className="bg-white/10 dark:bg-gray-900/900 shadow-md rounded-2xl p-6 w-full overflow-hidden">
+     <div className={`${theme.colors.c_background} shadow-md rounded-2xl p-6 w-full overflow-hidden`}>
         {/* Header with title and controls */}
-        <div className={`bg-gradient-to-br from-gray-50 ${theme.colors.c_background} p-4 flex flex-col sm:flex-row justify-between items-center mb-2 transition-all duration-500 backdrop-blur-sm border border-gray-700/30 shadow-xl relative overflow-hidden ${animateHeader ? 'animate-fadeIn' : 'opacity-0'}`} style={{animationDelay: '600ms'}}>
-        <div className="absolute -top-10 -right-10 w-20 h-20 bg-orange-500/10 rounded-full blur-xl animate-pulse-slow"></div>
-        
-            <div className="flex flex-col md:flex-row md:items-center justify-between mb-4 md:mb-6 space-y-9 md:space-y-0">
-              {/* Left side - Title and refresh button */}
-              <div className="flex items-center gap-2 group mb-4 md:mb-0">
-                <Activity size={18} className="text-orange-500 opacity-0 group-hover:opacity-100 transition-all duration-500 -translate-x-4 group-hover:translate-x-0" />
-                <h2 className="text-lg font-semibold group-hover:translate-x-1 transition-transform">{t("Transaction History")}</h2>
-                <RotateCw 
-                  size={16} 
-                  className="text-gray-400 cursor-pointer hover:text-gray-700 transition-colors hover:rotate-180 duration-500"
-                  onClick={refreshTransactions}
-                />
-              </div>
-
-              {/* Right side - Navigation tabs with added margin-top */}
-              <div className="hidden md:flex gap-4 text-sm mt-4 md:mt-0 md:ml-8">
-                <button 
-                  className={`${activeTab === 'all' ? 'text-black dark:text-white' : 'text-gray-400'} hover:text-black dark:hover:text-white transition-colors flex items-center gap-1`}
-                  onClick={() => setActiveTab('all')}
-                >
-                  {t("See All ")}
-                  <span className="text-xs text-gray-500">.</span>
-                </button>
-                <button 
-                  className={`${activeTab === 'deposits' ? 'text-black dark:text-white' : 'text-gray-400'} hover:text-black dark:hover:text-white transition-colors flex items-center gap-1`}
-                  onClick={() => handleTabChange('deposits')}
-                >
-                  {t("See Deposits ")}
-                  <span className="text-xs text-gray-500">.</span>
-                </button>
-                <button 
-                  className={`${activeTab === 'withdrawals' ? 'text-black dark:text-white' : 'text-gray-400'} hover:text-black dark:hover:text-white transition-colors flex items-center gap-1`}
-                  onClick={() => handleTabChange('withdrawals')}
-                >
-                  {t("See Withdrawals")} 
-                  <span className="text-xs text-gray-500">.</span>
-                </button>
-              </div>
-            </div>
-
-              <div className="md:hidden">
-                <button 
-                  onClick={cycleMobileFilter}
-                  className="flex items-center justify-between w-full px-3 py-2 bg-gray-800 text-white rounded-lg text-sm"
-                >
-                  <span>
-                    {activeTab === 'all' 
-                      ? t('All Transactions')
-                      : activeTab === 'deposits' 
-                        ? t('Deposits Only') 
-                        : t('Withdrawals Only')
-                    }
-                  </span>
-                  <Menu size={18} className="transition-transform hover:rotate-180 duration-300" />
-                </button>
-              </div>
+        <div className="p-6 border-b border-gray-200">
+          <div className="flex items-center justify-between">
+            <h3 className="text-xl font-semibold">Historique</h3>
+            <a className="text-blue-600 hover:text-blue-700 font-medium flex items-center space-x-1" href="/all_transactions">
+              <span>Voir tout</span>
+              {/* <ChevronRight className="w-4 h-4" /> */}
+            </a>
+          </div>
         </div>
         
         {/* Transaction list */}
-        <div className="space-y-3 pb-4">
-              {loading && page === 1 ? (
-                <div className="flex justify-center items-center py-10">
-                  <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-orange-500"></div>
-                </div>
-              ) : transactions.length === 0 ? (
-                <div className="flex flex-col items-center justify-center py-10 px-4">
-                  <div className="bg-gray-800/50 rounded-full p-4 mb-4">
-                    <Activity className="w-8 h-8 text-gray-400" />
-                  </div>
-                  <h3 className="text-lg font-medium text-gray-400 mb-2">No transactions found</h3>
-                  <p className="text-sm text-gray-500 text-center">
-                    {activeTab === 'all' 
-                      ? t("You haven't made any transactions yet.")
-                      : activeTab === 'deposits'
-                      ? t("No deposits have been made yet.")
-                      : t("No withdrawals have been made yet.")}
-                  </p>
-                </div>
-            ) : ( 
-              transactions.map((item, index) => (
+        <div className="space-y-4">
+          <style>
+            {`
+              @keyframes slideInUp {
+                from {
+                  opacity: 0;
+                  transform: translateY(20px) scale(0.95);
+                }
+                to {
+                  opacity: 1;
+                  transform: translateY(0) scale(1);
+                }
+              }
+              
+              @keyframes shimmer {
+                0% { background-position: -200px 0; }
+                100% { background-position: calc(200px + 100%) 0; }
+              }
+              
+              .shimmer-effect {
+                background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+                background-size: 200px 100%;
+                animation: shimmer 2s infinite;
+              }
+            `}
+          </style>
+
+          {loading && page === 1 ? (
+            <div className="flex justify-center items-center py-16">
+              <div className="relative">
+                <div className="animate-spin rounded-full h-12 w-12 border-4 border-purple-500/30 border-t-purple-500"></div>
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500/20 to-blue-500/20 animate-pulse"></div>
+              </div>
+            </div>
+          ) : transactions.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 px-6">
+              <div className="bg-gradient-to-br from-slate-800 to-slate-700 rounded-2xl p-6 mb-6 shadow-2xl border border-slate-600/50">
+                <Activity className="w-12 h-12 text-slate-400 mx-auto" />
+              </div>
+              <h3 className="text-xl font-semibold text-white mb-3">Aucune transaction trouvée</h3>
+              <p className="text-slate-400 text-center max-w-md leading-relaxed">
+                {activeTab === 'all' 
+                  ? "Your transaction history will appear here once you start making payments."
+                  : activeTab === 'deposits'
+                  ? "No deposits have been recorded yet."
+                  : "No withdrawals have been recorded yet."}
+              </p>
+            </div>
+          ) : (
+            <div className="grid gap-4">
+              {transactions.map((item, index) => (
                 <div
                   key={item.id}
-                  className={`rounded-lg p-3 cursor-pointer transition-all duration-300 hover:shadow-lg hover:shadow-orange-900/10 group animate-fadeIn bg-gradient-to-br ${theme.colors.c_background} ${theme.colors.hover} ${
-                    isNewTransaction[getTransactionKey(item)] ? 'animate-highlight' : ''
-                  }`}
+                  className={`group relative overflow-hidden rounded-2xl bg-gradient-to-r ${theme.colors.s_background} backdrop-blur-sm border border-slate-600/50 hover:border-purple-500/50 transition-all duration-500 cursor-pointer hover:shadow-2xl hover:shadow-purple-500/10`}
                   onClick={() => openTransactionDetails(item)}
-                  style={{ animationDelay: `${(index + 1) * 150}ms` }}
+                  style={{
+                    animation: `slideInUp 0.6s ease-out ${index * 100}ms both`
+                  }}
                 >
-                  <div className="flex justify-between items-start">
-                    <div className="flex items-center">
-                      <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${
-                        item.transaction.type_trans === 'deposit' 
-                          ? 'bg-orange-500/20 text-orange-500' 
-                          : 'bg-gray-700/50 text-gray-300'
-                        } relative overflow-hidden group-hover:scale-110 transition-transform`}>
-                        {getTransactionTypeIcon(item.transaction.type_trans)}
-                        <span className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></span>
-                      </div>
-                      <div className="ml-3 group-hover:translate-x-1 transition-transform">
-                        <div className="flex items-center">
-                          <span className="font-medium dark:text-white">
-                            {item.transaction.type_trans === 'deposit' ? 'Deposit' : 'Withdrawal'}
-                          </span>
-                          <span className={`text-xs ml-2 px-2 py-0.5 rounded-full whitespace-nowrap ${getStatusBadgeClass(item.transaction.status)} group-hover:scale-110 transition-transform relative`}>
-                            {item.transaction.status}
-                            <span className={`absolute -bottom-1 left-0 h-0.5 w-0 ${
-                              item.transaction.status.toLowerCase() === 'pending' 
-                                ? 'bg-amber-500' 
-                                : item.transaction.status.toLowerCase() === 'completed' || item.transaction.status.toLowerCase() === 'success'
-                                  ? 'bg-green-500' 
-                                  : 'bg-red-500'
-                            } group-hover:w-full transition-all duration-300`}></span>
-                          </span>
+                  {/* Hover shimmer effect */}
+                  <div className="absolute inset-0 shimmer-effect opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                  
+                  <div className="relative p-6">
+                    <div className="flex items-center justify-between">
+                      {/* Left Section */}
+                      <div className="flex items-center space-x-4 flex-1">
+                        {/* Icon with enhanced styling */}
+                        <div className={`relative w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 ${
+                          item.transaction.type_trans === 'deposit'
+                            ? 'bg-gradient-to-br from-green-500/20 to-emerald-600/20 text-green-400 shadow-lg shadow-green-500/20'
+                            : 'bg-gradient-to-br from-blue-500/20 to-indigo-600/20 text-blue-400 shadow-lg shadow-blue-500/20'
+                        }`}>
+                          {getTransactionTypeIcon(item.transaction.type_trans)}
+                          <div className={`absolute inset-0 rounded-2xl ${
+                            item.transaction.type_trans === 'deposit' 
+                              ? 'bg-gradient-to-br from-green-500/10 to-emerald-600/10' 
+                              : 'bg-gradient-to-br from-blue-500/10 to-indigo-600/10'
+                          } opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
                         </div>
-                        <div className="text-sm text-gray-500 dark:text-gray-400">
-                          {item.transaction.phone_number}
-                        </div>
-                        <div className="text-xs text-gray-400 dark:text-gray-500">
-                          {formatDate(item.transaction.created_at)}
+
+                        {/* Transaction Details */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center space-x-3 mb-2">
+                            <h3 className="font-semibold text-lg   transition-colors duration-300">
+                              {item.transaction.type_trans === 'deposit' ? t('Deposit') : t('Withdraw')}
+                            </h3>
+                            <div className={`flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-medium transition-all duration-300 ${getStatusBadgeClass(item.transaction.status)} group-hover:scale-105`}>
+                              {getStatusIcon(item.transaction.status)}
+                              <span className="ml-1 capitalize">{item.transaction.status}</span>
+                            </div>
+                          </div>
+                          
+                          <div className="flex items-center space-x-4 text-sm text-slate-400 group-hover:text-slate-300 transition-colors duration-300">
+                            <span className="font-mono">{item.transaction.phone_number}</span>
+                            <span>•</span>
+                            <span>{formatDate(item.transaction.created_at)}</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                    <div className="text-right">
-                      <div className={`font-bold ${
-                        item.transaction.type_trans === 'deposit' 
-                          ? 'text-orange-600 dark:text-orange-400' 
-                          : 'text-blue-600 dark:text-blue-400'
-                      }`}>
-                        {formatAmount(item.transaction.amount)}
+
+                      {/* Right Section */}
+                      <div className="text-right space-y-2">
+                        <div className={`font-bold text-2xl transition-all duration-300 group-hover:scale-105 ${
+                          item.transaction.type_trans === 'deposit'
+                            ? 'text-green-400 group-hover:text-green-300'
+                            : 'text-blue-400 group-hover:text-blue-300'
+                        }`}>
+                          {item.transaction.type_trans === 'deposit' ? '+' : '-'}
+                          {formatAmount(item.transaction.amount)}
+                        </div>
+                        <div className="text-xs text-slate-500 font-mono">
+                          #{item.transaction.reference.substring(0, 12)}...
+                        </div>
                       </div>
-                      <div className="text-xs text-gray-500 dark:text-gray-400 mt-1 group-hover:text-orange-400 transition-colors">
-                        Ref: {item.transaction.reference.substring(0, 8)}...
+
+                      {/* Arrow Icon */}
+                      <div className="ml-4 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-1">
+                        <ChevronRight className="w-5 h-5 text-slate-400" />
                       </div>
                     </div>
                   </div>
+
+                  {/* Gradient border effect on hover */}
+                  <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500/20 via-blue-500/20 to-purple-500/20 blur-sm"></div>
+                  </div>
                 </div>
-              ))
-            )}
-              
-              {/* Loading more indicator */}
-              {loading && page > 1 && (
-                <div className="flex justify-center items-center py-4">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-orange-500"></div>
-                </div>
-              )}
-              
-              {/* Load more button */}
-              {!loading && hasMore && (
-                <div className="flex justify-center mt-4">
-                  <button
-                    onClick={loadMore}
-                    className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition-colors flex items-center gap-2"
-                  >
-                    <MoreHorizontal size={16} />
-                    {t("Load More")}
-                  </button>
-                </div>
-              )}
-              
-              {/* Last updated info */}
-              {lastFetchTime && (
-                <div className="text-xs text-center text-gray-500 mt-4">
-                  {t("Last updated")}: {formatDate(lastFetchTime)}
-                </div>
-              )}
-        </div>
-        
-        {/* WebSocket connection status */}
-        <div className="fixed bottom-4 right-4 flex items-center gap-2 px-3 py-1.5 bg-gray-800/80 rounded-full backdrop-blur-sm text-xs">
-          <div className={`w-2 h-2 rounded-full ${
-            wsStatus === 'connected' ? 'bg-green-500' : 
-            wsStatus === 'error' ? 'bg-red-500' : 'bg-amber-500'
-          } ${wsStatus === 'connected' ? 'animate-pulse' : ''}`}></div>
-          <span className="text-gray-300">
-            {wsStatus === 'connected' ? t('Live Updates') : 
-             wsStatus === 'error' ? t('Connection Error') : t('Connecting...')}
-          </span>
-          <button 
-            onClick={toggleRealTimeUpdates}
-            className="ml-1"
-            title={isRealTimeEnabled ? t('Disable live updates') : t('Enable live updates')}
-          >
-            {isRealTimeEnabled ? 
-              <Pause size={14} className="text-gray-400 hover:text-white transition-colors" /> : 
-              <Play size={14} className="text-gray-400 hover:text-white transition-colors" />
-            }
-          </button>
+              ))}
+            </div>
+          )}
+
+          {/* Load More Indicator */}
+          {loading && page > 1 && (
+            <div className="flex justify-center items-center py-8">
+              <div className="relative">
+                <div className="animate-spin rounded-full h-8 w-8 border-3 border-purple-500/30 border-t-purple-500"></div>
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500/10 to-blue-500/10 animate-pulse"></div>
+              </div>
+            </div>
+          )}
         </div>
         
         {/* Transaction detail modal */}
         {isModalOpen && selectedTransaction && (
-          <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-            <div className={`bg-gradient-to-br ${theme.colors.c_background} rounded-2xl w-full max-w-md p-6 shadow-2xl animate-scaleIn`}>
-              <div className="flex justify-between items-start mb-6">
-                <h3 className="text-lg font-semibold">Transaction Details</h3>
-                <button 
-                  onClick={() => setIsModalOpen(false)}
-                  className="text-gray-500 hover:text-gray-300 transition-colors"
-                >
-                  <X size={20} />
-                </button>
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 modal-backdrop">
+            <div className="bg-gradient-to-br from-slate-800/95 to-slate-700/95 backdrop-blur-xl rounded-3xl w-full max-w-lg shadow-2xl border border-slate-600/50 modal-content">
+              {/* Header */}
+              <div className="relative p-6 pb-0">
+                <div className="flex justify-between items-start mb-6">
+                  <div>
+                    <h3 className="text-2xl font-bold text-white mb-1">Transaction Details</h3>
+                    <p className="text-slate-400 text-sm">Review your transaction information</p>
+                  </div>
+                  <button 
+                    onClick={() => setIsModalOpen(false)}
+                    className="w-10 h-10 rounded-xl bg-slate-700/50 hover:bg-slate-600/50 text-slate-400 hover:text-white transition-all duration-300 flex items-center justify-center group"
+                  >
+                    <X size={20} className="group-hover:rotate-90 transition-transform duration-300" />
+                  </button>
+                </div>
+                
+                {/* Transaction Type & Status Card */}
+                <div className="bg-gradient-to-r from-slate-700/50 to-slate-600/50 backdrop-blur-sm rounded-2xl p-4 border border-slate-600/30">
+                  <div className="flex items-center gap-4">
+                    <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300 ${
+                      selectedTransaction.transaction.type_trans === 'deposit' 
+                        ? 'bg-gradient-to-br from-green-500/20 to-emerald-600/20 text-green-400 shadow-lg shadow-green-500/20' 
+                        : 'bg-gradient-to-br from-blue-500/20 to-indigo-600/20 text-blue-400 shadow-lg shadow-blue-500/20'
+                    }`}>
+                      {getTransactionTypeIcon(selectedTransaction.transaction.type_trans)}
+                    </div>
+                    <div className="flex-1">
+                      <div className="flex items-center gap-3 mb-2">
+                        <h4 className="font-semibold text-xl text-white">
+                          {selectedTransaction.transaction.type_trans === 'deposit' ? 'Deposit' : 'Withdrawal'}
+                        </h4>
+                        <div className={`flex items-center space-x-1 px-3 py-1.5 rounded-full text-sm font-medium ${getStatusBadgeClass(selectedTransaction.transaction.status)}`}>
+                          {getStatusIcon(selectedTransaction.transaction.status)}
+                          <span className="ml-1 capitalize">{selectedTransaction.transaction.status}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center text-slate-400 text-sm">
+                        <Calendar className="w-4 h-4 mr-2" />
+                        {formatDate(selectedTransaction.transaction.created_at)}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
               
-              <div className="space-y-4">
-                {/* Transaction type */}
-                <div className="flex items-center gap-3">
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center ${
-                    selectedTransaction.transaction.type_trans === 'deposit' 
-                      ? 'bg-orange-500/20 text-orange-500' 
-                      : 'bg-gray-700/50 text-gray-300'
-                  }`}>
-                    {getTransactionTypeIcon(selectedTransaction.transaction.type_trans)}
-                  </div>
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium text-lg">
-                        {selectedTransaction.transaction.type_trans === 'deposit' ? 'Deposit' : 'Withdrawal'}
-                      </span>
-                      <span className={`text-xs px-2 py-0.5 rounded-full ${getStatusBadgeClass(selectedTransaction.transaction.status)}`}>
-                        {selectedTransaction.transaction.status}
-                      </span>
+              {/* Amount Section */}
+              <div className="px-6 py-4">
+                <div className="bg-gradient-to-br from-slate-900/50 to-slate-800/50 rounded-2xl p-6 border border-slate-600/30">
+                  <div className="text-center">
+                    <div className="text-slate-400 text-sm mb-2 font-medium">Transaction Amount</div>
+                    <div className={`text-4xl font-bold mb-2 ${
+                      selectedTransaction.transaction.type_trans === 'deposit' 
+                        ? 'text-green-400' 
+                        : 'text-blue-400'
+                    }`}>
+                      {selectedTransaction.transaction.type_trans === 'deposit' ? '+' : '-'}
+                      {formatAmount(selectedTransaction.transaction.amount)}
                     </div>
-                    <div className="text-sm text-gray-500">
-                      {formatDate(selectedTransaction.transaction.created_at)}
+                    <div className="text-slate-500 text-xs">
+                      {selectedTransaction.transaction.type_trans === 'deposit' ? 'Received' : 'Sent'}
                     </div>
                   </div>
                 </div>
-                
-                {/* Amount */}
-                <div className="bg-gray-800/30 p-4 rounded-xl">
-                  <div className="text-sm text-gray-500 mb-1">{t("Amount")}</div>
-                  <div className={`text-2xl font-bold ${
-                    selectedTransaction.transaction.type_trans === 'deposit' 
-                      ? 'text-orange-500' 
-                      : 'text-blue-500'
-                  }`}>
-                    {formatAmount(selectedTransaction.transaction.amount)}
-                  </div>
-                </div>
-                
-                {/* Details list */}
-                <div className="space-y-3">
+              </div>
+              
+              {/* Details Grid */}
+              <div className="px-6 pb-6">
+                <div className="space-y-4">
                   {/* Transaction ID */}
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-500">{t("Transaction ID")}</span>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm">{selectedTransaction.transaction.id}</span>
-                      <button 
-                        onClick={() => copyToClipboard(selectedTransaction.transaction.id.toString())}
-                        className="text-gray-500 hover:text-gray-300"
-                      >
-                        <Copy size={14} />
-                      </button>
+                  <div className="bg-slate-700/30 rounded-xl p-4 border border-slate-600/20">
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center text-slate-400 text-sm font-medium">
+                        <Hash className="w-4 h-4 mr-2" />
+                        Transaction ID
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-white text-sm font-mono">{selectedTransaction.transaction.reference.substring(0, 16)}...</span>
+                        <button 
+                          onClick={() => copyToClipboard(selectedTransaction.id)}
+                          className="w-8 h-8 rounded-lg bg-slate-600/50 hover:bg-slate-500/50 text-slate-400 hover:text-white transition-all duration-300 flex items-center justify-center group"
+                        >
+                          <Copy size={14} className="group-hover:scale-110 transition-transform duration-300" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                   
                   {/* Reference */}
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-500">{t("Reference")}</span>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm">{selectedTransaction.transaction.reference}</span>
-                      <button 
-                        onClick={() => copyToClipboard(selectedTransaction.transaction.reference)}
-                        className="text-gray-500 hover:text-gray-300"
-                      >
-                        <Copy size={14} />
-                      </button>
+                  <div className="bg-slate-700/30 rounded-xl p-4 border border-slate-600/20">
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center text-slate-400 text-sm font-medium">
+                        <CreditCard className="w-4 h-4 mr-2" />
+                        Reference
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="text-white text-sm font-mono">{selectedTransaction.transaction.reference}</span>
+                        <button 
+                          onClick={() => copyToClipboard(selectedTransaction.transaction.reference)}
+                          className="w-8 h-8 rounded-lg bg-slate-600/50 hover:bg-slate-500/50 text-slate-400 hover:text-white transition-all duration-300 flex items-center justify-center group"
+                        >
+                          <Copy size={14} className="group-hover:scale-110 transition-transform duration-300" />
+                        </button>
+                      </div>
                     </div>
                   </div>
                   
                   {/* Phone Number */}
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-500">{t("Phone Number")}</span>
-                    <span className="text-sm">{selectedTransaction.transaction.phone_number}</span>
+                  <div className="bg-slate-700/30 rounded-xl p-4 border border-slate-600/20">
+                    <div className="flex justify-between items-center">
+                      <div className="flex items-center text-slate-400 text-sm font-medium">
+                        <Phone className="w-4 h-4 mr-2" />
+                        Phone Number
+                      </div>
+                      <span className="text-white text-sm font-mono">{selectedTransaction.transaction.phone_number}</span>
+                    </div>
                   </div>
                   
-                  {/* Network */}
+                  {/* Network (if available) */}
                   {selectedTransaction.transaction.network && (
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-500">{t("Network")}</span>
-                      <span className="text-sm">{selectedTransaction.transaction.network.public_name || selectedTransaction.transaction.network.name}</span>
+                    <div className="bg-slate-700/30 rounded-xl p-4 border border-slate-600/20">
+                      <div className="flex justify-between items-center">
+                        <div className="flex items-center text-slate-400 text-sm font-medium">
+                          <Smartphone className="w-4 h-4 mr-2" />
+                          Network
+                        </div>
+                        <span className="text-white text-sm">{selectedTransaction.transaction.network.public_name || selectedTransaction.transaction.network.name}</span>
+                      </div>
                     </div>
                   )}
-                  
-                  {/* Status */}
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-gray-500">{t("Status")}</span>
-                    <span className={`text-sm font-medium ${getStatusBadgeClass(selectedTransaction.transaction.status)}`}>
-                      {selectedTransaction.transaction.status}
-                    </span>
-                  </div>
                 </div>
               </div>
               
-              <div className="mt-6 flex justify-end">
-                <button
-                  onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 bg-gray-700 hover:bg-gray-600 text-white rounded-lg transition-colors"
-                >
-                  {t("Close")}
-                </button>
+              {/* Footer */}
+              <div className="px-6 pb-6">
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setIsModalOpen(false)}
+                    className="flex-1 px-6 py-3 bg-slate-700/50 hover:bg-slate-600/50 text-white rounded-xl transition-all duration-300 font-medium border border-slate-600/30 hover:border-slate-500/50"
+                  >
+                    Close
+                  </button>
+                  <button
+                    onClick={() => copyToClipboard(selectedTransaction.transaction.reference)}
+                    className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white rounded-xl transition-all duration-300 font-medium shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 flex items-center gap-2"
+                  >
+                    <Copy size={16} />
+                    Copy Details
+                  </button>
+                </div>
               </div>
             </div>
           </div>

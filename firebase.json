@@ -1,0 +1,17 @@
+{
+  "hosting": {
+    "public": "build/web",
+    "predeploy": "mkdir -p build/web/.well-known && cp assetlinks.json build/web/.well-known/",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}

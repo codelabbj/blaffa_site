@@ -9,18 +9,19 @@ import { Eye, EyeOff, User, Lock, Mail, ArrowRight, Phone } from 'lucide-react';
 import { initializeApp } from 'firebase/app';
 import { getMessaging, getToken } from 'firebase/messaging';
 import { useTheme } from './ThemeProvider';
+import api from '@/lib/axios';
 
 
-const API_URL = 'https://api..net/auth';
+//const API_URL = `https://api.blaffa.net/auth`;
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAy0fmT-yf9Hy1lqZwIKGO_yRjriZ_Oqo0",
-  authDomain: "yapson-2a432.firebaseapp.com",
-  projectId: "yapson-2a432",
-  storageBucket: "yapson-2a432.firebasestorage.app",
-  messagingSenderId: "261568619785",
-  appId: "1:261568619785:web:f8d634ab6ce9d54f4edfd8",
-  vapidKey: "BKN2lVDVgLZw2MZLYTr0C3a9vh2XbbK9939iSKqwG_mIwq0tI2VogLgyXjaoVJLTL_7bHUVPOSZIUWtCS4oaXUg"
+  apiKey: "AIzaSyCpYf8cR98sJ9Vw12ARlXFUqJyy3PSI1Vg",
+  authDomain: "betpay-509eb.firebaseapp.com",
+  projectId: "betpay-509eb",
+  storageBucket: "betpay-509eb.firebasestorage.app",
+  messagingSenderId: "827338495555",
+  appId: "1:827338495555:web:9949d7c2caffe2b599e6f6",
+  vapidKey: "BFHKpREc3F52Eb4uBMUMmfuQQBj7yd_5IjXK248ZeVKO7axslH2S3s09DEo5r1zwQ3Apz4xZnNiyNBmx3vVNv38"
 };
 
 export default function AuthForm() {
@@ -40,10 +41,10 @@ export default function AuthForm() {
   const [confirmNewPassword, setConfirmNewPassword] = useState(''); // For forgot password confirm new password
   const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   // Add these state variables to your component
-const [showPassword, setShowPassword] = useState(false);
-const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-const [isLoading, setIsLoading] = useState(false);
-const { theme } = useTheme();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const { theme } = useTheme();
 
 
 
@@ -149,24 +150,26 @@ const { theme } = useTheme();
   
   
     try {
-      const res = await axios.post(
-        `${API_URL}/${isLogin ? 'login' : 'registration'}`,
-        payload,
-        { headers: { 'Content-Type': 'application/json' } }
+      const response = await api.post(
+        `/auth/${isLogin ? 'login' : 'registration'}`,
+        payload
       );
   
       if (isLogin) {
-        const { refresh, access } = res.data;
+        const { refresh, access } = response.data;
         localStorage.setItem('refreshToken', refresh);
         localStorage.setItem('accessToken', access);
+
+        // Set up axios default headers
+        api.defaults.headers.common['Authorization'] = `Bearer ${access}`;
         
         // Initialize FCM after successful login
         try {
           const fcmToken = await initializeFCM();
           if (fcmToken) {
             // Optionally send the token to your backend
-            await axios.post(
-              `https://api..net//devices/`,
+            await api.post(
+              `/blaffa/devices/`,
               { registration_id: fcmToken,
                 type: 'web',
                },
@@ -186,7 +189,7 @@ const { theme } = useTheme();
         
         setNotification({ type: 'success', message: t('Login successful! Redirecting to your dashboard...') });
         setTimeout(() => {
-          window.location.href = '/';
+          window.location.href = '/dashboard';
         }, 500);
       } else {
         setNotification({ type: 'success', message: t('Registration successful! Please login.') });
@@ -210,9 +213,7 @@ const { theme } = useTheme();
           return;
         }
         
-        await axios.post(`${API_URL}/send_otp`, { email }, {
-          headers: { 'Content-Type': 'application/json' }
-        });
+        await api.post(`/send_otp`, { email });
         
         setNotification({ type: 'success', message: t('OTP has been sent to your email', 'if you cant see it check your Junk older as well') });
         setForgotPasswordStep(2);
@@ -251,9 +252,7 @@ const { theme } = useTheme();
           confirm_new_password: confirmNewPassword
         };
         
-        await axios.post(`${API_URL}/reset_password`, resetPayload, {
-          headers: { 'Content-Type': 'application/json' }
-        });
+        await api.post(`/reset_password`, resetPayload);
         
         setNotification({ type: 'success', message: t('Password reset successful! Please login with your new password.') });
         // Reset states
@@ -560,10 +559,10 @@ const { theme } = useTheme();
   };
 
   return (
-   <div className={`bg-gradient-to-br ${theme.colors.c_background} backdrop-blur-sm rounded-2xl p-8 shadow-xl`}>
+   <div className={`bg-gradient-to-br ${theme.colors.s_background} backdrop-blur-sm rounded-2xl p-8 shadow-xl`}>
         {/* {!isForgotPassword && (
           <h2 className={`text-2xl font-bold text-center mb-6 ${theme.colors.text}`}>
-            {t("Welcome to Yapson")}
+            {t("Welcome to Blaffa")}
           </h2>
         )} */}
 

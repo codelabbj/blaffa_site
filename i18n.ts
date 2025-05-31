@@ -21,18 +21,22 @@ const resources = {
       "Your trusted partner for secure transactions": "Your trusted partner for secure transactions",
       "Available": "Available",
       "Transaction Smoothness": "Transaction Smoothness",
-      "© 2025 Yapson. All rights reserved.": "© 2025 Yapson. All rights reserved.",
+      "© 2025 Blaffa. All rights reserved .": "© 2025 blaffa. All rights reserved .",
 
 
       
       // Dashboard Header translations
+      "Welcome to our amazing platform" : "Welcome to our amazing platform",
+      "Discover incredible opportunities" : "Discover incredible opportunities",
       "DEPOSIT": "DEPOSIT",
       "WITHDRAW": "WITHDRAW",
       "Transaction History": "Transaction History",
       "Hello": "Hello",
 
+      "theme":"theme",
+
       // AuthForm translations
-      "Welcome to Yapson": "Welcome to Yapson",
+      "Welcome to Blaffa": "Welcome to Blaffa",
       "Login": "Login",
       "Register": "Register",
       "Full Name": "Full Name",
@@ -59,7 +63,19 @@ const resources = {
       "An unexpected error occurred.": "An unexpected error occurred.",
       "if you cant see it check your Junk folder as well": "if you cant see it check your Junk folder as well",
       "Log in": "Log in",
+      "Verify Code":"Verify Code",
+      "Confirm New Password":"Confirm New Password",
+      "OTP verified successfully":"OTP verified successfully",
+      "Create a new password for your account":"Create a new password for your account",
+      "if you cant see it check your Junk older as well":"if you cant see it check your Junk older as well",
+      "Forgot Password":"Forgot Password",
+      "Enter Verification Code":"Enter Verification Code",
+      "We sent a code to your email. Please enter it below.":"We sent a code to your email. Please enter it below.",
+      "Enter your email to receive a verification code":"Enter your email to receive a verification code",
       
+
+      "Send Verification Code" : "Send Verification Code",
+      "Back to Login": "Back to Login",
       
 
 
@@ -76,6 +92,14 @@ const resources = {
       "Mobile Number": "Mobile Number",
       "Update Details": "Update Details",
       "Reset Password": "Reset Password",
+      "Add New Bet ID" : "Add New Bet ID",
+      "App Name" : "App Name",
+      "Select App" : "Select App",
+      "Saved Bet IDs" : "Saved Bet IDs",
+      "User Bet ID" : "User Bet ID",
+      "Enter your bet ID" : "Enter your bet ID",
+      "Add Bet ID" : "Add Bet ID",
+      "No bet IDs saved yet" : "No bet IDs saved yet",
       "Note": "Note",
       "To update your password, enter the old password and the new one you want to use": "To update your password, enter the old password and the new one you want to use",
       "Old Password": "Old Password",
@@ -101,9 +125,13 @@ const resources = {
       "All account data will be immediately erased from our systems." : "All account data will be immediately erased from our systems.",
       "Use strong, unique passwords": "Use strong, unique passwords",
       "Update your password regularly" : "Update your password regularly",
+      "History" : "History",
+      "View All" : "View All",
+      "MY ID": "MY ID",
 
       // Transaction History translations
       "No transactions found": "No transactions found",
+      "You haven't made any transactions yet.":"You haven't made any transactions yet.",
       "Loading transactions...": "Loading transactions...", 
       "Failed to fetch transactions": "Failed to fetch transactions",
       "You must be logged in to view transactions.": "You must be logged in to view transactions.",
@@ -111,7 +139,7 @@ const resources = {
       
       "All": "All",
       "Deposits": "Deposits",
-      "Withdrawals": "Withdrawals",
+      "Withdraw": "Withdraw",
       "See more": "See more",
       "Transaction details": "Transaction details",
       "Payment Method": "Payment Method",
@@ -136,7 +164,13 @@ const resources = {
       "Mark as unread": "Mark as unread",
 
 
+      "Available Coupons": "Available Coupons",
+      "No Coupons Available":"No Coupons Available",
+      "Check back later!":"Check back later!",
+
+
       // Withdraw Page translations
+      "Withdraw Funds":"Withdraw Funds",
       
       "Withdraw from your account": "Withdraw from your account",
       "Please fill in all fields": "Please fill in all fields",
@@ -162,6 +196,19 @@ const resources = {
       "Submit my request": "Submit my request",
 
       //Deposit Page translations
+      "Deposit Funds": "Deposit Funds",
+      "Select Network":"Select Network",
+      "Select Bet ID":"Select Bet ID",
+      "Enter Details":"Enter Details",
+      "Step 1: Select Your Bet ID":"Step 1: Select Your Bet ID",
+      "Step 2: Select Network":"Step 2: Select Network",
+      "Step 3: Enter Details":"Step 3: Enter Details",
+      "Back to Bet IDs":"Back to Bet IDs",
+      "Phone Number":"Phone Number",
+
+      "Submit":"Submit",
+      
+      
       
       "Make deposits to your account": "Make deposits to your account",
       "Make your deposits to your account here": "Make your deposits to your account here",
@@ -170,9 +217,18 @@ const resources = {
       "Your account currency must be in XOF.": "Your account currency must be in XOF.",
       
       "Enter your ID": "Enter your ID",
+      "Enter or select your betting app ID" : "Enter or select your betting app ID",
       "This is your 1xbet user ID": "This is your 1xbet user ID",
+      "Enter your betting app ID or select from saved IDs." : "Enter your betting app ID or select from saved IDs.",
+      "You are entering a new ID. Defaulting to 1xbet app." : "You are entering a new ID. Defaulting to 1xbet app.",
+      "Saved IDs": "Saved IDs",
+      "Selected App": "Select App id",
+      "Betting App ID" : "Betting App ID",
+      "Unknown App" : "Unknown ",
       "Amount": "Amount",
       "Enter deposit amount": "Enter deposit amount",
+
+      "Selected Bet ID":"Selected Bet ID",
       
       "Enter your mobile money number": "Enter your mobile money number",
       "Your mobile money number": "Your mobile money number",
@@ -205,18 +261,28 @@ const resources = {
       "Available": "Disponible",
       "Transaction Smoothness": "Fluidité de la transaction",
       "Processing Time": "Temps de traitement",
-      "© 2025 Yapson. All rights reserved.": "© 2025 Yapson. Tous droits réservés.",
+      "© 2025 Blaffa. All rights reserved .": "© 2025 Blaffa. Tous droits réservés.",
+      "theme": "thème",
 
 
       // Dashboard Header translations
+
       "DEPOSIT": "DÉPOSER",
       "WITHDRAW": "RETIRER",
       "Transaction History": "Historique des transactions",
       "Logout": "Déconnexion",
       "Hello": "Bonjour",
 
+      "History": "Historique",
+      "View All": "Voir tout",
+      "MY ID": "MON ID",
+
+      //Hero
+      "Welcome to our amazing platform" : "Bienvenue sur notre incroyable plateforme",
+      "Discover incredible opportunities" : "Découvrez des opportunités incroyables",
+
       // AuthForm translations
-      "Welcome to Yapson": "Bienvenue sur Yapson",
+      "Welcome to Blaffa": "Bienvenue sur Blaffa",
       "Login": "Connexion",
       "Register": "Inscription",
       "Full Name": "Nom complet",
@@ -244,6 +310,20 @@ const resources = {
       "if you cant see it check your Junk folder as well": "si vous ne le voyez pas, vérifiez également votre dossier indésirable",
       "Log in": "Se connecter",
 
+      "Verify Code":"Vérifier le code",
+      "Confirm New Password":"Confirmez le nouveau mot de passe",
+      "OTP verified successfully":"OTP vérifié avec succès",
+      "Create a new password for your account":"Créez un nouveau mot de passe pour votre compte",
+      "if you cant see it check your Junk older as well":"si vous ne le voyez pas, vérifiez également votre dossier indésirable",
+      "Forgot Password":"Mot de passe oublié",
+      "Enter Verification Code":"Entrez le code de vérification",
+      "We sent a code to your email. Please enter it below.":"Nous avons envoyé un code à votre email. Veuillez l'entrer ci-dessous.",
+      "Enter your email to receive a verification code":"Entrez votre email pour recevoir un code de vérification",
+      
+      "Send Verification Code":"Envoyer le code de vérification",
+      "Back to Login":"Retour à la connexion",
+
+
       // Profile Page translations
       "Profile": "Profil",
       "Edit your personal information here": "Modifiez vos informations personnelles ici",
@@ -257,6 +337,14 @@ const resources = {
       "Mobile Number": "Numéro de téléphone",
       "Update Details": "Mettre à jour les informations",
       "Reset Password": "Réinitialiser le mot de passe",
+      "Add New Bet ID" : "Ajouter un nouvel identifiant de pari",
+      "App Name" : "Nom de l'application",
+      "Select App" : "Sélectionner l'application",
+      "Saved Bet IDs" : "Identifiants de pari enregistrés",
+      "User Bet ID" : "Identifiant de pari utilisateur",
+      "Enter your bet ID" : "Saisir votre identifiant de pari",
+      "Add Bet ID" : "Ajouter un identifiant de pari",
+      "No bet IDs saved yet" : "Aucun identifiant de pari enregistré pour le moment",
       "Note": "Remarque",
       "To update your password, enter the old password and the new one you want to use": "Pour mettre à jour votre mot de passe, entrez l'ancien mot de passe et le nouveau que vous souhaitez utiliser",
       "Old Password": "Ancien mot de passe",
@@ -289,18 +377,22 @@ const resources = {
       "Your password has been updated successfully!": "Votre mot de passe a été mis à jour avec succès !",
       "Your password has been updated successfully.": "Votre mot de passe a été mis à jour avec succès.",
       
+      "Check back later!":"Revoyez plus tard !",
+      "No Coupons Available":"Aucun coupon disponible",
+      "Available Coupons":"Coupons disponibles",
 
 
       // Transaction History translations
       "No transactions found": "Aucune transaction trouvée",
+      "You haven't made any transactions yet." : "Vous n'avez pas encore fait de transactions.",
       "Loading transactions...": "Chargement des transactions...",
       "Failed to fetch transactions": "Échec de la récupération des transactions",
       "You must be logged in to view transactions.": "Vous devez être connecté pour voir les transactions.",
       "Failed to load transactions. Please try again.": "Échec du chargement des transactions. Veuillez réessayer.",
       
       "All": "Tous",
-      "Deposits": "Dépôts",
-      "Withdrawals": "Retraits",
+      "Deposit": "Dépôt",
+      "Withdraw": "Retrait",
       "See more": "Voir plus",
       "Transaction details": "Détails de la transaction",
       "Payment Method": "Méthode de paiement",
@@ -326,6 +418,7 @@ const resources = {
 
 
       // Withdraw Page translations
+      "Phone Number":"Numéro de téléphone",
       "Withdraw from your account": "Retirer de votre compte",
       "Please fill in all fields": "Veuillez remplir tous les champs",
       "Phone numbers do not match": "Les numéros de téléphone ne correspondent pas",
@@ -346,16 +439,40 @@ const resources = {
       "Network": "Réseau",
       "Processing...": "Traitement...",
       "Submit my request": "Soumettre ma demande",
+
+
+      "Withdraw Funds":"Retirer des fonds",
       
       // Deposit Page translations
+      "Deposit Funds":"Déposer des fonds",
+      "Select Bet ID":"Sélectionnez l'ID de pari",
+      "Enter Details":"Entrez les détails",
+      "Select Network":"Sélectionnez le réseau",
+      "Step 1: Select Your Bet ID":"Étape 1 : Sélectionnez votre ID de pari",
+      "Step 3: Enter Details":"Étape 3 : Entrez vos détails",
+      "Step 2: Select Network":"Étape 2 : Sélectionnez votre réseau",
+      "Back to Bet IDs":"Retour aux ID de pari",
+      "Selected Bet ID":"ID de pari sélectionné",
+
+      "Submit":"Soumettre",
       
+
+
       "Make deposits to your account": "Effectuez des dépôts sur votre compte",
       "Make your deposits to your account here": "Effectuez vos dépôts sur votre compte ici",
       
       "IMPORTANT": "IMPORTANT",
       "Your account currency must be in XOF.": "La devise de votre compte doit être en XOF.",
       
+      "Enter your 1xbet user ID": "Entrez votre ID utilisateur 1xbet",
       "Enter your ID": "Entrez votre ID",
+      "Enter or select your betting app ID" : "Entrez ou sélectionnez votre ID de l'application de paris",
+      "Enter your betting app ID or select from saved IDs.":" Entrez votre ID de l'application de paris ou sélectionnez-en un enregistré.",
+      "Selected App": "Sélectionnez l'ID",
+      "Saved IDs": "IDs enregistrés",
+      "Unknown App" : "Appareil inconnu",
+
+
       "This is your 1xbet user ID": "Ceci est votre ID utilisateur 1xbet",
       "Amount": "Montant",
       "Enter deposit amount": "Entrez le montant du dépôt",
@@ -377,30 +494,59 @@ const resources = {
 };
 
 // Skip detection during SSR
-const languageDetector = new LanguageDetector();
-languageDetector.addDetector({
-  name: 'customDetector',
-  lookup: () => {
-    if (typeof window === 'undefined') {
-      return 'en'; // Default language for SSR
+// const languageDetector = new LanguageDetector(null, {
+//   order: ['localStorage', 'navigator'], // Try localStorage first, then browser language
+//   lookupLocalStorage: 'i18nextLng', // Key to store language in localStorage
+//   caches: ['localStorage'], // Only use localStorage for persistence
+ 
+//   //fallbackLng: 'fr', // Default to French if no language is detected
+  
+// });
+export const initializeI18n = () => {
+   // Configuration for i18next
+   const config = {
+    resources,
+    lng: 'fr', // Default language
+    fallbackLng: 'fr', // Fallback language
+    supportedLngs: ['fr', 'en'], // Supported languages with French first
+    interpolation: {
+      escapeValue: false, // React already escapes values
+    },
+    detection: {
+      order: ['localStorage', 'navigator'],
+      lookupLocalStorage: 'i18nextLng',
+      caches: ['localStorage'],
+    },
+  };
+
+  i18n
+    .use(LanguageDetector)
+    .use(initReactI18next)
+    .init(config);
+    // .init({
+    //   resources,
+    //   fallbackLng: 'fr',
+    //   supportedLngs: ['en', 'fr'],
+    //   interpolation: {
+    //     escapeValue: false,
+    //   },
+    //   detection: {
+    //     order: ['localStorage', 'navigator'],
+    //     lookupLocalStorage: 'i18nextLng',
+    //     caches: ['localStorage'],
+    //   },
+    // });
+
+  // Set default language if not set
+  if (typeof window !== 'undefined') {
+    const savedLanguage = localStorage.getItem('i18nextLng');
+    if (!savedLanguage) {
+      i18n.changeLanguage('fr');
+      localStorage.setItem('i18nextLng', 'fr');
     }
-    // Your client-side detection logic here
-    return undefined;
   }
-});
-i18n
-.use(languageDetector)
-.use(initReactI18next).init({
-  resources,
-  lng: 'fr', // Default language
-  fallbackLng: 'fr',
-  detection: {
-    order: ['localStorage', 'cookie', 'navigator', 'htmlTag', 'path', 'subdomain'],
-    caches: ['localStorage', 'cookie'],
-  },
-  interpolation: {
-    escapeValue: false, // React already escapes values
-  },
-});
+
+  return i18n;
+};
 
 export default i18n;

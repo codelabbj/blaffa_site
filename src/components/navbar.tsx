@@ -10,8 +10,8 @@ export default function Nav() {
                 <path d="M7 14c0-2.21 2.239-4 5-4s5 1.79 5 4-2.239 4-5 4-5-1.79-5-4z" fill="currentColor" />
                 <path d="M14 9a2 2 0 100-4 2 2 0 000 4z" fill="currentColor" />
             </svg> */}
-            <Image src="/logo.png" alt="Yapson Logo" width={60} height={60} />
-            <span className="ml-0 text-xl font-bold text-orange-500">Yapson</span>
+            <Image src="/logo.png" alt="blaffa Logo" width={60} height={60} />
+            <span className="ml-0 text-xl font-bold text-orange-500">blaffa</span>
             </div>
             <div className="flex items-center gap-4">
             {/* Theme Toggle Button */}

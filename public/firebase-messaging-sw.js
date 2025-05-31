@@ -14,25 +14,25 @@ importScripts('https://www.gstatic.com/firebasejs/9.0.0/firebase-messaging-compa
 // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 
 // const firebaseConfig = {
-//   apiKey: "AIzaSyAy0fmT-yf9Hy1lqZwIKGO_yRjriZ_Oqo0",
-//   authDomain: "yapson-2a432.firebaseapp.com",
-//   projectId: "yapson-2a432",
-//   storageBucket: "yapson-2a432.firebasestorage.app",
-//   messagingSenderId: "261568619785",
-//   appId: "1:261568619785:web:f8d634ab6ce9d54f4edfd8",
-//   measurementId: "G-6G9LL7077L"
+//   apiKey: "AIzaSyCpYf8cR98sJ9Vw12ARlXFUqJyy3PSI1Vg",
+//   authDomain: "betpay-509eb.firebaseapp.com",
+//   projectId: "betpay-509eb",
+//   storageBucket: "betpay-509eb.firebasestorage.app",
+//   messagingSenderId: "827338495555",
+//   appId: "1:827338495555:web:9949d7c2caffe2b599e6f6",
+//   measurementId: "G-R4KR24GJJY"
 // };
 
 // // Initialize Firebase
 // const app = initializeApp(firebaseConfig);
 // const analytics = getAnalytics(app);
 firebase.initializeApp({
-  apiKey: "AIzaSyAy0fmT-yf9Hy1lqZwIKGO_yRjriZ_Oqo0",
-  authDomain: "yapson-2a432.firebaseapp.com",
-  projectId: "yapson-2a432",
-  storageBucket: "yapson-2a432.firebasestorage.app",
-  messagingSenderId: "261568619785",
-  appId: "1:261568619785:web:f8d634ab6ce9d54f4edfd8",
+  apiKey: "AIzaSyCpYf8cR98sJ9Vw12ARlXFUqJyy3PSI1Vg",
+  authDomain: "betpay-509eb.firebaseapp.com",
+  projectId: "betpay-509eb",
+  storageBucket: "betpay-509eb.firebasestorage.app",
+  messagingSenderId: "827338495555",
+  appId: "1:827338495555:web:9949d7c2caffe2b599e6f6",
 });
 
 // Retrieve an instance of Firebase Messaging so that it can handle background messages.
