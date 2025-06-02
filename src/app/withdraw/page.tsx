@@ -367,7 +367,7 @@ export default function Withdraw() {
                       name="withdrawalCode"
                       value={formData.withdrawalCode}
                       onChange={handleInputChange}
-                      className={`w-full p-4 pl-12 ${theme.colors.c_background} border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300`}
+                      className={`w-full p-4 pl-12 ${theme.colors.c_background} border border-slate-600/50 rounded-xl placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300`}
                       placeholder={t("Enter your withdrawal code")}
                       required
                     />
@@ -386,7 +386,7 @@ export default function Withdraw() {
                       name="phoneNumber"
                       value={formData.phoneNumber}
                       onChange={handleInputChange}
-                      className={`w-full p-4 pl-12 ${theme.colors.c_background} border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300`}
+                      className={`w-full p-4 pl-12 ${theme.colors.c_background} border border-slate-600/50 rounded-xl placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300`}
                       placeholder="ex: 771234567"
                       required
                     />

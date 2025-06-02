@@ -106,7 +106,7 @@ export default function TransactionHistory() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
-  const [ setHasMore] = useState(true);
+ // const [ setHasMore] = useState(true);
   const [selectedTransaction, setSelectedTransaction] = useState<HistoricItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [lastFetchTime, setLastFetchTime] = useState<string | null>(null);
@@ -116,17 +116,19 @@ export default function TransactionHistory() {
   const [animateHeader, setAnimateHeader] = useState(false);
   const {t} = useTranslation();
   const { theme } = useTheme();
-  
+
   interface CustomWebSocket extends WebSocket {
     pingInterval?: NodeJS.Timeout | null;
   }
   
   const webSocketRef = useRef<CustomWebSocket | null>(null);
+
   const wsHealth = useRef({
     lastMessageTime: 0,
     messageCount: 0
   });
   
+
   // WebSocket reference
   const webSocketReconnectAttempts = useRef(0);
   // Transactions map to track unique transactions
@@ -192,7 +194,7 @@ export default function TransactionHistory() {
       setError('Authentication required for real-time updates');
       console.log(error);
       setWsStatus('error');
-      window.location.href = '/';
+      window.location.href = '/auth';
       return;
     }
 

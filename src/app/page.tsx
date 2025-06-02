@@ -323,7 +323,7 @@ export default function BlaffaLanding() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [scrollY, setScrollY] = useState(0);
   const [language, setLanguage] = useState<Language>('fr');
-
+  
   const [openFaq, setOpenFaq] = useState(-1);
 
   const { theme } = useTheme();
@@ -334,16 +334,14 @@ export default function BlaffaLanding() {
   const [isClient, setIsClient] = useState(false);
    
   useEffect(() => {
-    // Detect browser language
-    const browserLang = navigator.language || navigator.languages[0];
-    const detectedLang: Language = browserLang.startsWith('fr') ? 'fr' : 'en';
-    setLanguage(detectedLang);
+    // Set French as the only language
+    i18n.changeLanguage('fr');
+    localStorage.setItem('i18nextLng', 'fr');
 
     const handleScroll = () => setScrollY(window.scrollY);
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-    
-  }, []);
+  }, [i18n]);
 
   useEffect(() => {
     const validateToken = async () => {
@@ -366,7 +364,7 @@ export default function BlaffaLanding() {
 
         // If token is valid, redirect to dashboard
         if (response.status === 200) {
-          router.replace('/dashboard'); // Use replace instead of push to prevent back navigation
+          router.replace('/dashboard');
         }
       } catch (error) {
         // Token validation failed - clear the invalid token
@@ -376,17 +374,9 @@ export default function BlaffaLanding() {
       }
     };
 
-    if (typeof window !== 'undefined') {
-      const savedLang = localStorage.getItem('i18nextLng');
-      if (!savedLang) {
-        i18n.changeLanguage('fr');
-      }
-    }
-    
-
     validateToken();
     setIsClient(true);
-  }, [router, i18n]); // Add router as a dependency
+  }, [router]);
 
   if (isLoading && isClient) {
     return (
@@ -484,7 +474,7 @@ export default function BlaffaLanding() {
       role: t.sportsEnthusiast, 
       content: t.testimonial2,
       rating: 5,
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b332c3ff?w=60&h=60&fit=crop&crop=face"
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=60&h=60&fit=crop&crop=face"
     },
     {
       name: "David Rodriguez",

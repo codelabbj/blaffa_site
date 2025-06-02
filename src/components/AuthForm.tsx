@@ -572,7 +572,7 @@ export default function AuthForm() {
             className={`mb-4 p-3 rounded ${
               notification.type === "success"
                 ? "bg-green-100 text-green-700"
-                : "bg-blue-100 text-blue-700"
+                : "bg-blue-100 text-red-700"
             }`}
           >
             {notification.message.split("\n").map((line, index) => (
