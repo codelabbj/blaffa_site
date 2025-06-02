@@ -13,6 +13,8 @@ import { useWebSocket } from '../../context/WebSocketContext';
 import {  Check, CheckCircle, ChevronRight, CreditCard, Phone, Smartphone, XCircle } from 'lucide-react';
 import api from '@/lib/axios';
 import DashboardHeader from '@/components/DashboardHeader';
+import { CopyIcon } from 'lucide-react';
+
 
 //import { Transaction } from 'mongodb';
 
@@ -26,21 +28,21 @@ interface Network {
 interface App {
   id: string;
   name: string;
-  public_name?: string;
-  image?: string;
-  // Add other properties from the profile page App interface if needed for consistency
-  is_active?: boolean;
-  hash?: string;
-  cashdeskid?: string;
-  cashierpass?: string;
-  order?: string | null;
-  city?: string;
-  street?: string;
-  deposit_tuto_content?: string;
-  deposit_link?: string;
-  withdrawal_tuto_content?: string;
-  withdrawal_link?: string;
+  image: string;
+  is_active: boolean;
+  hash: string;
+  cashdeskid: string;
+  cashierpass: string;
+  order: string | null;
+  city: string;
+  street: string;
+  deposit_tuto_content: string;
+  deposit_link: string;
+  withdrawal_tuto_content: string;
+  withdrawal_link: string;
+  public_name: string;
 }
+
 
 // Updated IdLink interface to match the structure from profile/page.tsx
 interface IdLink {
@@ -85,11 +87,13 @@ interface TransactionDetail {
 export default function Deposits() {
   const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState<'selectId' | 'selectNetwork' | 'enterDetails'>('selectId');
-  const [selectedId, setSelectedId] = useState<IdLink | null>(null);
+  const [selectedPlatform, setSelectedPlatform] = useState<App | null>(null);
+  const [platforms, setPlatforms] = useState<App[]>([]);
   const [selectedNetwork, setSelectedNetwork] = useState<{ id: string; name: string; public_name?: string; image?: string } | null>(null);
   const [formData, setFormData] = useState({
     amount: '',
-    phoneNumber: ''
+    phoneNumber: '',
+    betid: '',
   });
   
   const [networks, setNetworks] = useState<{ id: string; name: string; public_name?: string; image?: string }[]>([]);
@@ -123,6 +127,31 @@ export default function Deposits() {
     return () => removeHandler();
   }, [addMessageHandler]);
 
+  // Fetch networks and saved app IDs on component mount
+  const fetchPlatforms = async () => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) return;
+
+    try {
+      const response = await api.get('/blaffa/app_name', {
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` 
+        },
+      });
+      
+      if (response.status === 200) {
+        const data = response.data;
+        setPlatforms(Array.isArray(data) ? data : []);
+      } else {
+        console.error('Failed to fetch platforms:', response.status);
+        setPlatforms([]);
+      }
+    } catch (error) {
+      console.error('Error fetching platforms:', error);
+      setPlatforms([]);
+    }
+  };
 
   // Fetch networks and saved app IDs on component mount
   useEffect(() => {
@@ -136,27 +165,37 @@ export default function Deposits() {
       }
 
       try {
-        // Fetch networks
-        const networksResponse = await api.get(`/blaffa/network/`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setNetworks(networksResponse.data);
+        setLoading(true);
+        // Fetch all data in parallel
+        const [networksResponse, savedIdsResponse] = await Promise.all([
+          api.get('/blaffa/network/', {
+            headers: { Authorization: `Bearer ${token}` }
+          }),
+          api.get('/blaffa/id_link', {
+            headers: { Authorization: `Bearer ${token}` }
+          }),
+          fetchPlatforms() // Fetch platforms in parallel
+        ]);
 
-        // Fetch saved app IDs
-        const savedIdsResponse = await api.get(`/blaffa/id_link`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        
-        let processedData: IdLink[] = [];
-        if (Array.isArray(savedIdsResponse.data)) {
-          processedData = savedIdsResponse.data;
-        } else if (savedIdsResponse.data?.results) {
-          processedData = savedIdsResponse.data.results;
-        } else if (savedIdsResponse.data?.data) {
-          processedData = savedIdsResponse.data.data;
+        if (networksResponse.status === 200) {
+          const networksData = networksResponse.data;
+          setNetworks(networksData);
         }
-        
-        setSavedAppIds(processedData);
+
+        if (savedIdsResponse.status === 200) {
+          const data = savedIdsResponse.data;
+          let processedData: IdLink[] = [];
+          
+          if (Array.isArray(data)) {
+            processedData = data;
+          } else if (data?.results) {
+            processedData = data.results;
+          } else if (data?.data) {
+            processedData = data.data;
+          }
+          
+          setSavedAppIds(processedData);
+        }
       } catch (err) {
         console.error('Error fetching data:', err);
         setError(t('Failed to load data. Please try again later.'));
@@ -168,8 +207,8 @@ export default function Deposits() {
     fetchData();
   }, []);
 
-  const handleIdSelect = (idLink: IdLink) => {
-    setSelectedId(idLink);
+ const handlePlatformSelect = (platform: App) => {
+    setSelectedPlatform(platform);
     setCurrentStep('selectNetwork');
   };
 
@@ -178,17 +217,46 @@ export default function Deposits() {
     setCurrentStep('enterDetails');
   };
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+  // Save new bet ID
+   const saveBetId = async (betId: string) => {
+    if (!selectedPlatform || !betId) return;
+
+    const token = localStorage.getItem('accessToken');
+    if (!token) return;
+
+    try {
+      const response = await api.post('/blaffa/id_link', {
+        
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          app_name: selectedPlatform.id,
+          link: betId
+        })
+      });
+
+      if (response.status === 201) {
+        const newIdLink = response.data;
+        setSavedAppIds(prev => [...prev, newIdLink]);
+      }
+    } catch (error) {
+      console.error('Error saving bet ID:', error);
+    }
   };
+
+  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const { name, value } = e.target;
+  //   setFormData(prev => ({
+  //     ...prev,
+  //     [name]: value
+  //   }));
+  // };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedId || !selectedNetwork) return;
+    if (!selectedPlatform || !selectedNetwork) return;
     
     setLoading(true);
     try {
@@ -200,8 +268,8 @@ export default function Deposits() {
         amount: formData.amount,
         phone_number: formData.phoneNumber,
         network_id: selectedNetwork.id,
-        app_id: selectedId.app_name?.id,
-        user_app_id: selectedId.link
+         app_id: selectedPlatform.id,
+        user_app_id: formData.betid
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -213,9 +281,9 @@ export default function Deposits() {
       setSuccess('Transaction initiated successfully!');
       // Reset form
       setCurrentStep('selectId');
-      setSelectedId(null);
+      setSelectedPlatform(null);
       setSelectedNetwork(null);
-      setFormData({ amount: '', phoneNumber: '' });
+      setFormData({ amount: '', phoneNumber: '', betid: ''  });
     } catch (err) {
       console.error('Transaction error:', err);
       if (
@@ -242,65 +310,70 @@ export default function Deposits() {
  const renderStep = () => {
     switch (currentStep) {
       case 'selectId':
-        return (
-          <div className="space-y-6">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold  mb-2">{t("Step 1: Select Your Bet ID")}</h2>
-              <p className="text-slate-400">{t("Choisissez l'ID de pari que vous souhaitez utiliser")}</p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {savedAppIds.map((idLink, index) => (
-                <div 
-                  key={idLink.id}
-                  onClick={() => handleIdSelect(idLink)}
-                  className={`group relative overflow-hidden bg-gradient-to-br ${theme.colors.sl_background} backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6 cursor-pointer hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20`}
-                  style={{
-                    animation: `slideInUp 0.6s ease-out ${index * 100}ms both`
-                  }}
-                >
-                  {/* Hover shimmer effect */}
-                  <div className="absolute inset-0 shimmer-effect opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  
-                  <div className="relative">
-                    <div className="flex items-center mb-4">
-                      <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500/20 to-blue-600/20 text-purple-400 shadow-lg shadow-purple-500/20 flex items-center justify-center transition-all duration-500 group-hover:scale-110">
-                        <CreditCard className="w-6 h-6" />
-                      </div>
-                      <div className="ml-4">
-                        <div className=" font-semibold group-hover:text-purple-200 transition-colors duration-300">
-                          {idLink.app_name?.public_name || 'Unknown App'}
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className={`${theme.colors.background} rounded-xl p-3 mb-4`}>
-                      <div className="text-slate-400 text-xs mb-1">ID de pari</div>
-                      <div className=" font-mono text-sm truncate">{idLink.link}</div>
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <span className="text-slate-400 text-sm">Cliquez pour sélectionner</span>
-                      <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-purple-400 group-hover:translate-x-1 transition-all duration-300" />
-                    </div>
+  return (
+    <div className="space-y-6">
+      <div className="text-center mb-8">
+        <h2 className="text-2xl font-bold mb-2">{t("Step 1: Select Your Betting Platform")}</h2>
+        <p className="text-slate-400">{t("Choisissez la plateforme de pari que vous souhaitez utiliser")}</p>
+      </div>
+     
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {platforms.map((platform, index) => (
+          <div
+            key={platform.id}
+            onClick={() => handlePlatformSelect(platform)}
+            className={`group relative overflow-hidden bg-gradient-to-br ${theme.colors.sl_background} backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6 cursor-pointer hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20`}
+            style={{
+              animation: `slideInUp 0.6s ease-out ${index * 100}ms both`
+            }}
+          >
+            {/* Hover shimmer effect */}
+            <div className="absolute inset-0 shimmer-effect opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+           
+            <div className="relative">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500/20 to-blue-600/20 text-purple-400 shadow-lg shadow-purple-500/20 flex items-center justify-center transition-all duration-500 group-hover:scale-110">
+                  {platform.image ? (
+                    <img
+                      src={platform.image}
+                      alt={platform.public_name || platform.name}
+                      className="w-8 h-8 object-contain"
+                    />
+                  ) : (
+                    <CreditCard className="w-6 h-6" />
+                  )}
+                </div>
+                <div className="ml-4">
+                  <div className="font-semibold group-hover:text-purple-200 transition-colors duration-300">
+                    {platform.public_name || platform.name}
                   </div>
                 </div>
-              ))}
-            </div>
-            
-            {savedAppIds.length === 0 && (
-              <div className="flex flex-col items-center justify-center py-20 px-6">
-                {/* <div className="bg-gradient-to-br from-slate-800 to-slate-700 rounded-2xl p-6 mb-6 shadow-2xl border border-slate-600/50">
-                  <Activity className="w-12 h-12 text-slate-400 mx-auto" />
-                </div> */}
-                <h3 className="text-xl font-semibold text-white mb-3">Aucun ID de pari trouvé</h3>
-                <p className="text-slate-400 text-center max-w-md leading-relaxed">
-                  Veuillez ajouter un ID de pari dans votre profil pour continuer.
-                </p>
               </div>
-            )}
+             
+              <div className={`${theme.colors.background} rounded-xl p-3 mb-4`}>
+                <div className="text-slate-400 text-xs mb-1">Plateforme de pari</div>
+                <div className="font-mono text-sm truncate">{platform.public_name || platform.name}</div>
+              </div>
+             
+              <div className="flex items-center justify-between">
+                <span className="text-slate-400 text-sm">Cliquez pour sélectionner</span>
+                <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-purple-400 group-hover:translate-x-1 transition-all duration-300" />
+              </div>
+            </div>
           </div>
-        );
+        ))}
+      </div>
+     
+      {platforms.length === 0 && !loading && (
+        <div className="flex flex-col items-center justify-center py-20 px-6">
+          <h3 className="text-xl font-semibold text-white mb-3">Aucune plateforme de pari trouvée</h3>
+          <p className="text-slate-400 text-center max-w-md leading-relaxed">
+          {t("Aucune plateforme de pari n'est disponible pour le moment.")}
+          </p>
+        </div>
+      )}
+    </div>
+  );
         
       case 'selectNetwork':
         return (
@@ -366,79 +439,112 @@ export default function Deposits() {
         );
         
       case 'enterDetails':
+        const platformBetIds = savedAppIds.filter(id => id.app_name.id === selectedPlatform?.id);
         return (
-          <div className="space-y-6">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold  mb-2">{t("Step 3: Enter Details")}</h2>
-              <p className="text-slate-400">Complétez les informations de votre dépôt</p>
-            </div>
-            
-            {/* Selected Info Card */}
-            <div className={`bg-gradient-to-r ${theme.colors.s_background} backdrop-blur-sm rounded-2xl p-6 border border-slate-600/30`}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className={`${theme.colors.c_background} rounded-xl p-4`}>
-                  <div className="flex items-center mb-2">
-                    <CreditCard className="w-5 h-5 text-purple-400 mr-2" />
-                    <p className="text-sm text-slate-400">{t("Selected Bet ID")}</p>
-                  </div>
-                  <p className="font-medium  font-mono">{selectedId?.link}</p>
-                  <p className="text-sm text-slate-300 mt-1">{selectedId?.app_name?.public_name}</p>
-                </div>
-                <div className={`${theme.colors.c_background} rounded-xl p-4`}>
-                  <div className="flex items-center mb-2">
-                    <Smartphone className="w-5 h-5 text-green-400 mr-2" />
-                    <p className="text-sm text-slate-400">{t("Network")}</p>
-                  </div>
-                  <p className="font-medium ">{selectedNetwork?.name}</p>
-                </div>
-              </div>
-            </div>
-            
-            {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div className="space-y-4">
-                <div>
-                  <label htmlFor="amount" className="block text-sm font-medium text-slate-400 mb-2">
-                    {t("Amount")} (FCFA)
-                  </label>
+      <div className="space-y-6">
+        <div className="flex items-center mb-8">
+          <button 
+            onClick={() => {
+              setSelectedNetwork(null);
+              setCurrentStep('selectNetwork');
+            }}
+            className="group mr-4 p-2 rounded-xl bg-gradient-to-br from-slate-700/50 to-slate-600/50 border border-slate-600/30 text-slate-400 hover:text-purple-400 hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 group-hover:-translate-x-1 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+            </svg>
+          </button>
+          <div>
+            <h2 className="text-2xl font-bold text-white mb-1">{t("Step 3: Enter Details")}</h2>
+            <p className="text-slate-400 text-sm">{t("Remplissez les détails de votre pari")}</p>
+          </div>
+        </div>
+    
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Bet ID Section */}
+              <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6">
+                <label className="block text-sm font-semibold text-purple-200 mb-3">
+                  {t("Bet ID")} ({selectedPlatform?.public_name || selectedPlatform?.name})
+                </label>
+                <div className="space-y-4">
                   <div className="relative">
                     <input
-                      type="number"
-                      id="amount"
-                      name="amount"
-                      value={formData.amount}
-                      onChange={handleInputChange}
-                      className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl  placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300`}
-                      placeholder="Entrez le montant"
-                      required
-                      min="200"
-                      step="50"
+                      type="text"
+                      value={formData.betid}
+                      onChange={(e) => setFormData(prev => ({ ...prev, betid: e.target.value }))}
+                      className="w-full p-4 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300"
+                      placeholder={t("Enter your bet ID")}
                     />
-                    <div className="absolute right-4 top-1/2 transform -translate-y-1/2 text-slate-400 text-sm">
-                      FCFA
+                    <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-500/10 to-blue-500/10 opacity-0 focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                  </div>
+                  
+                  {platformBetIds.length > 0 && (
+                    <div className="mt-4">
+                      <label className="block text-sm font-medium text-slate-300 mb-3">{t("Saved Bet IDs")}</label>
+                      <div className="flex flex-wrap gap-3">
+                        {platformBetIds.map((id, index) => (
+                          <div
+                            key={id.id}
+                            className="group relative overflow-hidden bg-gradient-to-br from-slate-700/50 to-slate-600/50 backdrop-blur-sm border border-slate-600/30 rounded-xl px-4 py-3 text-sm hover:from-slate-600/50 hover:to-slate-500/50 cursor-pointer flex items-center transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20"
+                            style={{
+                              animation: `slideInUp 0.3s ease-out ${index * 50}ms both`
+                            }}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setFormData(prev => ({ ...prev, betid: id.link }));
+                            }}
+                          >
+                            <div className="absolute inset-0 shimmer-effect opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            <span className="mr-3 text-white font-mono truncate relative z-10">{id.link}</span>
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                navigator.clipboard.writeText(id.link);
+                              }}
+                              className="relative z-10 p-1.5 hover:bg-slate-500/30 rounded-lg transition-colors duration-200"
+                            >
+                              <CopyIcon className="h-4 w-4 text-slate-400 hover:text-purple-400 transition-colors duration-200" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                </div>
-                
-                <div>
-                  <label htmlFor="phoneNumber" className="block text-sm font-medium text-slate-400 mb-2">
-                    {t("Phone Number")}
-                  </label>
-                  <div className="relative">
-                    <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
-                    <input
-                      type="tel"
-                      id="phoneNumber"
-                      name="phoneNumber"
-                      value={formData.phoneNumber}
-                      onChange={handleInputChange}
-                      className={`w-full p-4 pl-12 ${theme.colors.c_background} border border-slate-600/50 rounded-xl  placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300`}
-                      placeholder="ex: 771234567"
-                      required
-                    />
-                  </div>
+                  )}
                 </div>
               </div>
+
+              {/* Amount Section */}
+              <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6">
+                <label className="block text-sm font-semibold text-purple-200 mb-3">{t("Amount")}</label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    value={formData.amount}
+                    onChange={(e) => setFormData(prev => ({ ...prev, amount: e.target.value }))}
+                    className="w-full p-4 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300"
+                    placeholder={t("Enter amount")}
+                  />
+                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-500/10 to-blue-500/10 opacity-0 focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                </div>
+              </div>
+
+              {/* Phone Number Section */}
+              <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6">
+                <label className="block text-sm font-semibold text-purple-200 mb-3">{t("Phone Number")}</label>
+                <div className="relative">
+                  <input
+                    type="tel"
+                    value={formData.phoneNumber}
+                    onChange={(e) => setFormData(prev => ({ ...prev, phoneNumber: e.target.value }))}
+                    className="w-full p-4 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300"
+                    placeholder={t("Enter phone number")}
+                  />
+                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-500/10 to-blue-500/10 opacity-0 focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                </div>
+              </div>
+            
+
               
               <div className="flex flex-col sm:flex-row justify-between gap-4 pt-4">
                 <button

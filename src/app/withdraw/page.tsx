@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 // import styles from '../styles/Withdraw.module.css';
 //import DashboardHeader from '@/components/DashboardHeader';
 import { useTheme } from '../../components/ThemeProvider';
-import { Check, CheckCircle, ChevronRight, CreditCard, Key, Phone, Smartphone, XCircle } from 'lucide-react';
+import { Check, CheckCircle, ChevronRight, CopyIcon, CreditCard, Key, Phone, Smartphone, XCircle } from 'lucide-react';
 import api from '@/lib/axios';
 import DashboardHeader from '@/components/DashboardHeader';
 
@@ -78,11 +78,13 @@ interface TransactionDetail {
 export default function Withdraw() {
   const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState<'selectId' | 'selectNetwork' | 'enterDetails'>('selectId');
-  const [selectedId, setSelectedId] = useState<IdLink | null>(null);
+  const [selectedPlatform, setSelectedPlatform] = useState<App | null>(null);
+  const [platforms, setPlatforms] = useState<App[]>([]);
   const [selectedNetwork, setSelectedNetwork] = useState<{ id: string; name: string; public_name?: string; image?: string } | null>(null);
   const [formData, setFormData] = useState({
     withdrawalCode: '',
-    phoneNumber: ''
+    phoneNumber: '',
+    betid: '',
   });
   
   const [networks, setNetworks] = useState<{ id: string; name: string; public_name?: string; image?: string }[]>([]);
@@ -93,6 +95,32 @@ export default function Withdraw() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState<TransactionDetail | null>(null);
   const { theme } = useTheme();
+
+
+  const fetchPlatforms = async () => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) return;
+
+    try {
+      const response = await api.get('/blaffa/app_name', {
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` 
+        },
+      });
+      
+      if (response.status === 200) {
+        const data = response.data;
+        setPlatforms(Array.isArray(data) ? data : []);
+      } else {
+        console.error('Failed to fetch platforms:', response.status);
+        setPlatforms([]);
+      }
+    } catch (error) {
+      console.error('Error fetching platforms:', error);
+      setPlatforms([]);
+    }
+  };
 
   // Fetch networks and saved app IDs on component mount
   useEffect(() => {
@@ -105,28 +133,38 @@ export default function Withdraw() {
         return;
       }
 
-      try {
-        // Fetch networks
-        const networksResponse = await api.get(`/blaffa/network/`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        setNetworks(networksResponse.data);
+     try {
+        setLoading(true);
+        // Fetch all data in parallel
+        const [networksResponse, savedIdsResponse] = await Promise.all([
+            api.get('/blaffa/network/', {
+            headers: { Authorization: `Bearer ${token}` }
+          }),
+          api.get('/blaffa/id_link', {
+            headers: { Authorization: `Bearer ${token}` }
+          }),
+          fetchPlatforms() // Fetch platforms in parallel
+        ]);
 
-        // Fetch saved app IDs
-        const savedIdsResponse = await api.get(`/blaffa/id_link`, {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        
-        let processedData: IdLink[] = [];
-        if (Array.isArray(savedIdsResponse.data)) {
-          processedData = savedIdsResponse.data;
-        } else if (savedIdsResponse.data?.results) {
-          processedData = savedIdsResponse.data.results;
-        } else if (savedIdsResponse.data?.data) {
-          processedData = savedIdsResponse.data.data;
+        if (networksResponse.status === 200) {
+          const networksData = networksResponse.data;
+          setNetworks(networksData);
         }
-        
-        setSavedAppIds(processedData);
+
+        if (savedIdsResponse.status === 200) {
+          const data = savedIdsResponse.data;
+          let processedData: IdLink[] = [];
+          
+          if (Array.isArray(data)) {
+            processedData = data;
+          } else if (data?.results) {
+            processedData = data.results;
+          } else if (data?.data) {
+            processedData = data.data;
+          }
+          
+          setSavedAppIds(processedData);
+        }
       } catch (err) {
         console.error('Error fetching data:', err);
         setError(t('Failed to load data. Please try again later.'));
@@ -138,8 +176,8 @@ export default function Withdraw() {
     fetchData();
   }, []);
 
-  const handleIdSelect = (idLink: IdLink) => {
-    setSelectedId(idLink);
+  const handlePlatformSelect = (platform: App) => {
+    setSelectedPlatform(platform);
     setCurrentStep('selectNetwork');
   };
 
@@ -158,7 +196,7 @@ export default function Withdraw() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedId || !selectedNetwork) return;
+    if (!selectedPlatform || !selectedNetwork) return;
     
     setLoading(true);
     try {
@@ -170,8 +208,8 @@ export default function Withdraw() {
         withdrawal_code: formData.withdrawalCode,
         phone_number: formData.phoneNumber,
         network_id: selectedNetwork.id,
-        app_id: selectedId.app_name?.id,
-        user_app_id: selectedId.link
+        app_id: selectedPlatform.id,
+        user_app_id: formData.betid
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -183,9 +221,9 @@ export default function Withdraw() {
       setSuccess('Withdrawal initiated successfully!');
       // Reset form
       setCurrentStep('selectId');
-      setSelectedId(null);
+      setSelectedPlatform(null);
       setSelectedNetwork(null);
-      setFormData({ withdrawalCode: '', phoneNumber: '' });
+      setFormData({ withdrawalCode: '', phoneNumber: '', betid: '' });
     } catch (err) {
       console.error('Withdrawal error:', err);
       if (axios.isAxiosError(err)) {
@@ -202,19 +240,19 @@ export default function Withdraw() {
 
   const renderStep = () => {
     switch (currentStep) {
-      case 'selectId':
-        return (
+    case 'selectId':
+      return (
           <div className="space-y-6">
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold  mb-2">{t("Step 1: Select Your Bet ID")}</h2>
-              <p className="text-slate-400">{t("Choisissez l'ID de pari que vous souhaitez utiliser")}</p>
+              <h2 className="text-2xl font-bold mb-2">{t("Step 1: Select Your Betting Platform")}</h2>
+              <p className="text-slate-400">{t("Choisissez la plateforme de pari que vous souhaitez utiliser")}</p>
             </div>
-            
+           
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {savedAppIds.map((idLink, index) => (
-                <div 
-                  key={idLink.id}
-                  onClick={() => handleIdSelect(idLink)}
+              {platforms.map((platform, index) => (
+                <div
+                  key={platform.id}
+                  onClick={() => handlePlatformSelect(platform)}
                   className={`group relative overflow-hidden bg-gradient-to-br ${theme.colors.sl_background} backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6 cursor-pointer hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20`}
                   style={{
                     animation: `slideInUp 0.6s ease-out ${index * 100}ms both`
@@ -222,24 +260,32 @@ export default function Withdraw() {
                 >
                   {/* Hover shimmer effect */}
                   <div className="absolute inset-0 shimmer-effect opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  
+                 
                   <div className="relative">
                     <div className="flex items-center mb-4">
                       <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500/20 to-blue-600/20 text-purple-400 shadow-lg shadow-purple-500/20 flex items-center justify-center transition-all duration-500 group-hover:scale-110">
-                        <CreditCard className="w-6 h-6" />
+                        {platform.image ? (
+                          <img
+                            src={platform.image}
+                            alt={platform.public_name || platform.name}
+                            className="w-8 h-8 object-contain"
+                          />
+                        ) : (
+                          <CreditCard className="w-6 h-6" />
+                        )}
                       </div>
                       <div className="ml-4">
                         <div className="font-semibold group-hover:text-purple-200 transition-colors duration-300">
-                          {idLink.app_name?.public_name || idLink.app_name?.name || 'Unknown App'}
+                          {platform.public_name || platform.name}
                         </div>
                       </div>
                     </div>
-                    
+                   
                     <div className={`${theme.colors.background} rounded-xl p-3 mb-4`}>
-                      <div className="text-slate-400 text-xs mb-1">ID de pari</div>
-                      <div className=" font-mono text-sm truncate">{idLink.link}</div>
+                      <div className="text-slate-400 text-xs mb-1">Plateforme de pari</div>
+                      <div className="font-mono text-sm truncate">{platform.public_name || platform.name}</div>
                     </div>
-                    
+                   
                     <div className="flex items-center justify-between">
                       <span className="text-slate-400 text-sm">Cliquez pour sélectionner</span>
                       <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-purple-400 group-hover:translate-x-1 transition-all duration-300" />
@@ -248,17 +294,18 @@ export default function Withdraw() {
                 </div>
               ))}
             </div>
-            
-            {savedAppIds.length === 0 && (
+           
+            {platforms.length === 0 && !loading && (
               <div className="flex flex-col items-center justify-center py-20 px-6">
-                <h3 className="text-xl font-semibold mb-3">Aucun ID de pari trouvé</h3>
+                <h3 className="text-xl font-semibold text-white mb-3">Aucune plateforme de pari trouvée</h3>
                 <p className="text-slate-400 text-center max-w-md leading-relaxed">
-                  Veuillez ajouter un ID de pari dans votre profil pour continuer.
+                {t("Aucune plateforme de pari n'est disponible pour le moment.")}
                 </p>
               </div>
             )}
           </div>
         );
+        
         
       case 'selectNetwork':
         return (
@@ -324,36 +371,80 @@ export default function Withdraw() {
         );
         
       case 'enterDetails':
-        return (
-          <div className="space-y-6">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold mb-2">{t("Step 3: Enter Withdrawal Details")}</h2>
-              <p className="text-slate-400">Complétez les informations de votre retrait</p>
-            </div>
-            
-            {/* Selected Info Card */}
-            <div className={`bg-gradient-to-r ${theme.colors.s_background} backdrop-blur-sm rounded-2xl p-6 border border-slate-600/30`}>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className={`${theme.colors.c_background} rounded-xl p-4`}>
-                  <div className="flex items-center mb-2">
-                    <CreditCard className="w-5 h-5 text-purple-400 mr-2" />
-                    <p className="text-sm text-slate-400">{t("Selected Bet ID")}</p>
+        const platformBetIds = savedAppIds.filter(id => id.app_name.id === selectedPlatform?.id);
+         return (
+      <div className="space-y-6">
+        <div className="flex items-center mb-8">
+          <button 
+            onClick={() => {
+              setSelectedNetwork(null);
+              setCurrentStep('selectNetwork');
+            }}
+            className="group mr-4 p-2 rounded-xl bg-gradient-to-br from-slate-700/50 to-slate-600/50 border border-slate-600/30 text-slate-400 hover:text-purple-400 hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 group-hover:-translate-x-1 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor">
+              <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+            </svg>
+          </button>
+          <div>
+            <h2 className="text-2xl font-bold text-white mb-1">{t("Step 3: Enter Details")}</h2>
+            <p className="text-slate-400 text-sm">{t("Remplissez les détails de votre pari")}</p>
+          </div>
+        </div>
+    
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Bet ID Section */}
+              <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6">
+                <label className="block text-sm font-semibold text-purple-200 mb-3">
+                  {t("Bet ID")} ({selectedPlatform?.public_name || selectedPlatform?.name})
+                </label>
+                <div className="space-y-4">
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={formData.betid}
+                      onChange={(e) => setFormData(prev => ({ ...prev, betid: e.target.value }))}
+                      className="w-full p-4 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300"
+                      placeholder={t("Enter your bet ID")}
+                    />
+                    <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-500/10 to-blue-500/10 opacity-0 focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                   </div>
-                  <p className="font-medium  font-mono">{selectedId?.link}</p>
-                  <p className="text-sm text-slate-300 mt-1">{selectedId?.app_name?.public_name}</p>
-                </div>
-                <div className={`${theme.colors.c_background} rounded-xl p-4`}>
-                  <div className="flex items-center mb-2">
-                    <Smartphone className="w-5 h-5 text-green-400 mr-2" />
-                    <p className="text-sm text-slate-400">{t("Network")}</p>
-                  </div>
-                  <p className="font-medium ">{selectedNetwork?.public_name}</p>
+                  
+                  {platformBetIds.length > 0 && (
+                    <div className="mt-4">
+                      <label className="block text-sm font-medium text-slate-300 mb-3">{t("Saved Bet IDs")}</label>
+                      <div className="flex flex-wrap gap-3">
+                        {platformBetIds.map((id, index) => (
+                          <div
+                            key={id.id}
+                            className="group relative overflow-hidden bg-gradient-to-br from-slate-700/50 to-slate-600/50 backdrop-blur-sm border border-slate-600/30 rounded-xl px-4 py-3 text-sm hover:from-slate-600/50 hover:to-slate-500/50 cursor-pointer flex items-center transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20"
+                            style={{
+                              animation: `slideInUp 0.3s ease-out ${index * 50}ms both`
+                            }}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setFormData(prev => ({ ...prev, betid: id.link }));
+                            }}
+                          >
+                            <div className="absolute inset-0 shimmer-effect opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                            <span className="mr-3 text-white font-mono truncate relative z-10">{id.link}</span>
+                            <button
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                navigator.clipboard.writeText(id.link);
+                              }}
+                              className="relative z-10 p-1.5 hover:bg-slate-500/30 rounded-lg transition-colors duration-200"
+                            >
+                              <CopyIcon className="h-4 w-4 text-slate-400 hover:text-purple-400 transition-colors duration-200" />
+                            </button>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               </div>
-            </div>
-            
-            {/* Form */}
-            <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-4">
                 <div>
                   <label htmlFor="withdrawalCode" className="block text-sm font-medium text-slate-400 mb-2">

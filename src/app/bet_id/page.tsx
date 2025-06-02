@@ -4,10 +4,11 @@ import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import DashboardHeader from '@/components/DashboardHeader';
 import { useTheme } from '@/components/ThemeProvider';
+import { CopyIcon } from 'lucide-react';
 // import axios from 'axios';
 import api from '@/lib/axios';
 
-const BASE_URL = 'https://api.blaffa.net';
+// const BASE_URL = 'https://api.blaffa.net';
 
 interface App {
   id: string;
@@ -353,7 +354,7 @@ return (
                   return (
                     <div 
                       key={item.id}
-                      className="group relative overflow-hidden bg-gradient-to-br from-slate-700/50 to-slate-600/50 backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6 hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20"
+                      className={`group relative overflow-hidden bg-gradient-to-br ${theme.colors.s_background} backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6 hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20`}
                       style={{
                         animation: `slideInUp 0.6s ease-out ${index * 100}ms both`
                       }}
@@ -370,7 +371,7 @@ return (
                               </svg>
                             </div>
                             <div>
-                              <div className="text-white font-semibold group-hover:text-purple-200 transition-colors duration-300">
+                              <div className=" font-semibold group-hover:text-purple-200 transition-colors duration-300">
                                 {appName}
                               </div>
                             </div>
@@ -387,9 +388,20 @@ return (
                           </button>
                         </div>
                         
-                        <div className="bg-slate-800/50 rounded-xl p-3">
+                        <div className={`${theme.colors.c_background} rounded-xl p-3`}>
                           <div className="text-slate-400 text-xs mb-1">ID de pari</div>
-                          <div className="text-white font-mono text-sm truncate">{item.link}</div>
+                          <div className=" font-mono text-sm truncate">{item.link} <button
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            navigator.clipboard.writeText(item.link);
+                            // alert(t('Bet ID copied to clipboard'));
+                          }}
+                          className="p-1 hover:bg-gray-200 rounded"
+                        >
+                          <CopyIcon className="h-4 w-4 text-gray-500" />
+                        </button></div>
+                          
                         </div>
                       </div>
                     </div>
