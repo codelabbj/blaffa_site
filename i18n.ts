@@ -76,6 +76,8 @@ const resources = {
 
       "Send Verification Code" : "Send Verification Code",
       "Back to Login": "Back to Login",
+
+      "OTP has been sent to your email', 'if you cant see it check your Junk older as well":"OTP has been sent to your email', 'if you cant see it check your Junk older as well",
       
 
 
@@ -322,6 +324,8 @@ const resources = {
       
       "Send Verification Code":"Envoyer le code de vérification",
       "Back to Login":"Retour à la connexion",
+
+      "OTP has been sent to your email', 'if you cant see it check your Junk older as well":"OTP a été envoyé à votre email', 'si vous ne le voyez pas, vérifiez également votre dossier indésirable",
 
 
       // Profile Page translations

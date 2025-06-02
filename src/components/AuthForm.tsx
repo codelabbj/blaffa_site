@@ -213,7 +213,7 @@ export default function AuthForm() {
           return;
         }
         
-        await api.post(`/send_otp`, { email });
+        await api.post(`/auth/send_otp`, { email });
         
         setNotification({ type: 'success', message: t('OTP has been sent to your email', 'if you cant see it check your Junk older as well') });
         setForgotPasswordStep(2);
@@ -252,7 +252,7 @@ export default function AuthForm() {
           confirm_new_password: confirmNewPassword
         };
         
-        await api.post(`/reset_password`, resetPayload);
+        await api.post(`/auth/reset_password`, resetPayload);
         
         setNotification({ type: 'success', message: t('Password reset successful! Please login with your new password.') });
         // Reset states
@@ -343,7 +343,7 @@ export default function AuthForm() {
             
             <button
               type="submit"
-              className="w-full bg-green-600 text-white py-3 rounded hover:bg-green-700"
+              className="w-full bg-blue-600 text-white py-3 rounded hover:bg-purple-700"
             >
               {t('Verify Code')}
             </button>
@@ -367,9 +367,9 @@ export default function AuthForm() {
             <div>
               <label className="block text-sm font-medium">{t('New Password')}</label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                {/* <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Lock className="h-5 w-5 text-gray-400" />
-                </div>
+                </div> */}
           <input
             type={showPassword ? "text" : "password"}
             value={newPassword}
@@ -391,9 +391,9 @@ export default function AuthForm() {
             <div>
               <label className="block text-sm font-medium">{t('Confirm New Password')}</label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                {/* <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                   <Lock className="h-5 w-5 text-gray-400" />
-                </div>
+                </div> */}
           <input
             type={showConfirmPassword ? "text" : "password"}
             value={confirmNewPassword}
@@ -414,7 +414,7 @@ export default function AuthForm() {
             
             <button
               type="submit"
-              className={`w-full bg-orange-500 hover:bg-orange-600 text-white font-medium py-3 px-4 rounded-lg flex items-center justify-center transition-all duration-300 relative overflow-hidden group`}
+              className={`w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3 px-4 rounded-lg flex items-center justify-center transition-all duration-300 relative overflow-hidden group`}
               >
               {t('Reset Password')}
             </button>
