@@ -297,7 +297,7 @@ export default function Withdraw() {
            
             {platforms.length === 0 && !loading && (
               <div className="flex flex-col items-center justify-center py-20 px-6">
-                <h3 className="text-xl font-semibold text-white mb-3">Aucune plateforme de pari trouvée</h3>
+                <h3 className="text-xl font-semibold  mb-3">Aucune plateforme de pari trouvée</h3>
                 <p className="text-slate-400 text-center max-w-md leading-relaxed">
                 {t("Aucune plateforme de pari n'est disponible pour le moment.")}
                 </p>
@@ -380,14 +380,14 @@ export default function Withdraw() {
               setSelectedNetwork(null);
               setCurrentStep('selectNetwork');
             }}
-            className="group mr-4 p-2 rounded-xl bg-gradient-to-br from-slate-700/50 to-slate-600/50 border border-slate-600/30 text-slate-400 hover:text-purple-400 hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20"
+            className="group mr-4 p-2 rounded-xl bg-gradient-to-br from-slate-700/50 to-slate-600/50 border border-slate-600/30 text-white hover:text-purple-400 hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 group-hover:-translate-x-1 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
             </svg>
           </button>
           <div>
-            <h2 className="text-2xl font-bold text-white mb-1">{t("Step 3: Enter Details")}</h2>
+            <h2 className="text-2xl font-bold mb-1">{t("Step 3: Enter Details")}</h2>
             <p className="text-slate-400 text-sm">{t("Remplissez les détails de votre pari")}</p>
           </div>
         </div>
