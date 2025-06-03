@@ -440,7 +440,7 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
           {/* Left Column - Personal Info */}
           <div className="lg:col-span-2">
             <div 
-              className={`group relative overflow-hidden bg-gradient-to-br ${theme.colors.s_background} backdrop-blur-sm border border-slate-600/50 rounded-3xl shadow-2xl p-8 mb-8 hover:from-slate-700/80 hover:to-slate-600/80 transition-all duration-500`}
+              className={`group relative overflow-hidden bg-gradient-to-br ${theme.colors.s_background} backdrop-blur-sm border border-slate-600/50 rounded-3xl shadow-2xl p-8 mb-8  transition-all duration-500`}
               style={{
                 animation: `slideInUp 0.6s ease-out`
               }}
@@ -552,7 +552,7 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
 
             {/* Password Section */}
             <div 
-              className={`group relative overflow-hidden bg-gradient-to-br ${theme.colors.s_background} backdrop-blur-sm border border-slate-600/50 rounded-3xl shadow-2xl p-8 mb-8 hover:from-slate-700/80 hover:to-slate-600/80 transition-all duration-500`}
+              className={`group relative overflow-hidden bg-gradient-to-br ${theme.colors.s_background} backdrop-blur-sm border border-slate-600/50 rounded-3xl shadow-2xl p-8 mb-8 transition-all duration-500`}
               style={{
                 animation: `slideInUp 0.6s ease-out 0.1s both`
               }}
