@@ -11,7 +11,7 @@ import { toast } from 'react-toastify'; // Using react-toastify for notification
 import 'react-toastify/dist/ReactToastify.css'; // Import toastify styles
 import api from '@/lib/axios';
 
-const BASE_URL = 'https://api.blaffa.net';
+//const BASE_URL = 'https://api.blaffa.net';
 
 
 export default function Profile() {

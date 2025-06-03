@@ -4,7 +4,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 //import Head from 'next/head';
-import axios from 'axios';
+//import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 // import styles from '../styles/Withdraw.module.css';
 //import DashboardHeader from '@/components/DashboardHeader';
@@ -206,7 +206,6 @@ export default function Withdraw() {
 
       const countryCode = selectedNetwork.country_code?.toLowerCase() || 'ci'; // Default to 'ci' if not specified
     
-      
       const response = await api.post(`/blaffa/transaction?country_code=${countryCode}`, {
         type_trans: 'withdrawal',
         withdriwal_code: formData.withdrawalCode,

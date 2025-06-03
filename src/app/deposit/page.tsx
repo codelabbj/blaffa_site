@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 //import DashboardHeader from '@/components/DashboardHeader';
 import { useTheme } from '@/components/ThemeProvider';
 import { useWebSocket } from '../../context/WebSocketContext';
-import {  Check, CheckCircle, ChevronRight, CreditCard, Phone, Smartphone, XCircle } from 'lucide-react';
+import {  Check, CheckCircle, ChevronRight, CreditCard, Smartphone, XCircle } from 'lucide-react';
 import api from '@/lib/axios';
 import DashboardHeader from '@/components/DashboardHeader';
 import { CopyIcon } from 'lucide-react';
@@ -76,15 +76,15 @@ interface TransactionDetail {
   transaction: Transaction;
 }
 
-interface ApiError extends Error {
-  response?: {
-    status: number;
-    data: {
-      [key: string]: string | string[] | undefined;
-      detail?: string;
-    };
-  };
-}
+// interface ApiError extends Error {
+//   response?: {
+//     status: number;
+//     data: {
+//       [key: string]: string | string[] | undefined;
+//       detail?: string;
+//     };
+//   };
+// }
 
 // interface ErrorResponse {
 
@@ -95,6 +95,24 @@ interface ApiError extends Error {
 //   };
 //   status?: number;
 // }
+function isAxiosError(error: unknown): error is { response?: { status: number; data: any } } {
+  return typeof error === 'object' && error !== null && 'response' in error;
+}
+
+
+interface ApiErrorResponse {
+  status: number;
+  data: {
+    [key: string]: any;
+    detail?: string;
+    message?: string;
+  };
+}
+
+interface ApiError extends Error {
+  response?: ApiErrorResponse;
+}
+
 export default function Deposits() {
   const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState<'selectId' | 'selectNetwork' | 'enterDetails'>('selectId');
@@ -265,6 +283,7 @@ export default function Deposits() {
   //   }));
   // };
 
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedPlatform || !selectedNetwork) return;
@@ -299,8 +318,8 @@ export default function Deposits() {
       setSelectedPlatform(null);
       setSelectedNetwork(null);
       setFormData({ amount: '', phoneNumber: '', betid: ''  });
-    } catch (err) {
-      console.error('Transaction error:', err);
+    } catch (error) {
+      console.error('Transaction error:', error);
   //     if (
   //       typeof err === 'object' &&
   //       err !== null &&
@@ -320,7 +339,7 @@ export default function Deposits() {
   if (typeof error === 'string') {
     setError(error);
   } else if (error && typeof error === 'object' && 'response' in error) {
-    const { status, data } = error.response || {};
+    const { status, data } = (error as ApiError).response || {};
     // Handle the error response
     if (status === 400 && data) {
       const errorMessages = [];
@@ -336,9 +355,9 @@ export default function Deposits() {
     setError('An unexpected error occurred');
   }
 
-  if (error.response) {
+  if (isAxiosError(error) && error.response) {
     const { status, data } = error.response;
-    
+      
     // Handle field-specific validation errors
     if (status === 400 && data) {
       const errorMessages = [];
@@ -386,9 +405,9 @@ export default function Deposits() {
     } else {
       setError(t('An error occurred. Please try again.'));
     }
-  } else if (error.response.request) {
-    // The request was made but no response was received
-    setError(t('Network error. Please check your connection and try again.'));
+  // } else if ((error as ApiError).response) {
+  //   // The request was made but no response was received
+  //   setError(t('Network error. Please check your connection and try again.'));
   } else {
     // Something happened in setting up the request
     setError(t('An error occurred while setting up the request.'));
