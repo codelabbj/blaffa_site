@@ -18,6 +18,7 @@ interface Network {
   id: string;
   name: string;
   public_name?: string;
+  country_code?: string;
   image?: string;
 }
 
@@ -202,8 +203,11 @@ export default function Withdraw() {
     try {
       const token = localStorage.getItem('accessToken');
       if (!token) throw new Error('Not authenticated');
+
+      const countryCode = selectedNetwork.country_code?.toLowerCase() || 'ci'; // Default to 'ci' if not specified
+    
       
-      const response = await api.post(`/blaffa/transaction`, {
+      const response = await api.post(`/blaffa/transaction?country_code=${countryCode}`, {
         type_trans: 'withdrawal',
         withdriwal_code: formData.withdrawalCode,
         phone_number: formData.phoneNumber,
@@ -224,14 +228,55 @@ export default function Withdraw() {
       setSelectedPlatform(null);
       setSelectedNetwork(null);
       setFormData({ withdrawalCode: '', phoneNumber: '', betid: '' });
-    } catch (err) {
+    } catch (err: any) {
       console.error('Withdrawal error:', err);
-      if (axios.isAxiosError(err)) {
-        setError(err.response?.data?.detail || 'Failed to process withdrawal');
-      } else if (err instanceof Error) {
-        setError(err.message || 'Failed to process withdrawal');
+      if (err.response) {
+        const { status, data } = err.response;
+        
+        if (status === 400 && data) {
+          const errorMessages: string[] = [];
+          
+          // Handle field-specific errors
+          if (data.withdrawal_code) {
+            errorMessages.push(`withdrawal_code: ${Array.isArray(data.withdrawal_code) ? data.withdrawal_code[0] : data.withdrawal_code}`);
+          }
+          if (data.phone_number) {
+            errorMessages.push(`Phone: ${Array.isArray(data.phone_number) ? data.phone_number[0] : data.phone_number}`);
+          }
+          if (data.network_id) {
+            errorMessages.push(`Network: ${Array.isArray(data.network_id) ? data.network_id[0] : data.network_id}`);
+          }
+          if (data.user_app_id) {
+            errorMessages.push(`Bet ID: ${Array.isArray(data.user_app_id) ? data.user_app_id[0] : data.user_app_id}`);
+          }
+          
+          // Add any non-field errors
+          if (data.detail) {
+            errorMessages.push(data.detail);
+          }
+          
+          setError(errorMessages.join('\n') || 'Validation error');
+        } else if (status === 401) {
+          setError('Your session has expired. Please log in again.');
+          // Optionally redirect to login
+          // window.location.href = '/auth';
+        } else if (status === 403) {
+          setError('You do not have permission to perform this action.');
+        } else if (status === 404) {
+          setError('The requested resource was not found.');
+        } else if (status === 429) {
+          setError('Too many requests. Please wait a moment and try again.');
+        } else if (status >= 500) {
+          setError('Server error. Please try again later.');
+        } else {
+          setError(data?.detail || 'An error occurred. Please try again.');
+        }
+      } else if (err.request) {
+        // The request was made but no response was received
+        setError('Network error. Please check your connection and try again.');
       } else {
-        setError('Failed to process withdrawal');
+        // Something happened in setting up the request
+        setError('An error occurred while setting up the request: ' + err.message);
       }
     } finally {
       setLoading(false);
