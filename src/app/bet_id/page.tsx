@@ -38,7 +38,9 @@ interface IdLink {
 export default function BetIdsPage() {
   const { t } = useTranslation();
   const { theme } = useTheme();
-  
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
+
   const [savedAppIds, setSavedAppIds] = useState<IdLink[]>([]);
   const [newAppId, setNewAppId] = useState('');
   const [selectedApp, setSelectedApp] = useState('');
@@ -116,15 +118,18 @@ export default function BetIdsPage() {
   // Add new bet ID
   const handleAddBetId = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    setError(null);
+    setSuccess(null);
     
     if (!selectedApp || !newAppId.trim()) {
-      console.log(t('Please select an app and enter a bet ID.'));
+      setError(t('Please select an app and enter a bet ID.'));
       return;
     }
 
     const token = localStorage.getItem('accessToken');
     if (!token) {
-      console.log(t('You must be logged in to add a bet ID.'));
+      setError(t('You must be logged in to add a bet ID.'));
       return;
     }
 
@@ -141,19 +146,82 @@ export default function BetIdsPage() {
         }),
       });
 
-      if (response.status !== 200) {
-        throw new Error(t('Failed to add bet ID'));
-      }
+      // if (response.status !== 200) {
+      //   const errorData = await response.data;
+      //   // Handle validation errors
+      //   if (response.status === 400 && errorData) {
+      //     const errorMessages = Object.entries(errorData)
+      //       .map(([field, errors]) => {
+      //         if (Array.isArray(errors)) {
+      //           return `${field}: ${errors.join(', ')}`;
+      //         }
+      //         return `${field}: ${errors}`;
+      //       })
+      //       .join('\n');
+      //     throw new Error(errorMessages);
+      //   }
+      //   throw new Error(errorData.detail || t('Failed to add bet ID'));
+      // };
 
-      console.log(t('Bet ID added successfully!'));
+      setSuccess(t('Bet ID added successfully!'));
       setNewAppId('');
       setSelectedApp('');
       await fetchBetIds();
     } catch (error: any) {
-      console.error('Error adding bet ID:', error);
+      setError(error.message || t('Failed to add bet ID'));
       console.log(error.message || t('Failed to add bet ID'));
+     // console.error('Error adding bet ID:', error);
+     if (error.response) {
+      const { status, data } = error.response;
+      
+      // Handle field-specific validation errors
+      if (status === 400 && data) {
+        const errorMessages = [];
+        
+        // Check for direct field errors
+        if (data.link) {
+          errorMessages.push(`Bet ID: ${Array.isArray(data.link) ? data.link[0] : data.link}`);
+        }
+        
+        if (data.app_name_id) {
+          errorMessages.push(`App: ${Array.isArray(data.app_name_id) ? data.app_name_id[0] : data.app_name_id}`);
+        }
+        
+        // Check for non-field errors
+        if (data.detail) {
+          errorMessages.push(data.detail);
+        }
+        
+        // If no specific errors found, use a generic message
+        if (errorMessages.length === 0) {
+          errorMessages.push(t('Invalid data. Please check your input.'));
+        }
+        
+        setError(errorMessages.join('\n'));
+        return;
+      }
+      
+      // Handle other error statuses
+      if (status === 401) {
+        setError(t('Your session has expired. Please log in again.'));
+      } else if (status === 403) {
+        setError(t('You do not have permission to perform this action.'));
+      } else if (status === 404) {
+        setError(t('The requested resource was not found.'));
+      } else if (status >= 500) {
+        setError(t('Server error. Please try again later.'));
+      } else {
+        setError(t('An error occurred. Please try again.'));
+      }
+    } else if (error.request) {
+      // The request was made but no response was received
+      setError(t('Network error. Please check your connection and try again.'));
+    } else {
+      // Something happened in setting up the request
+      setError(t('An error occurred. Please try again.'));
     }
-  };
+  }
+};
 
   // Delete bet ID
   const handleDeleteBetId = async (id: string) => {
@@ -174,10 +242,11 @@ export default function BetIdsPage() {
       });
 
       if (response.status !== 200) {
-        throw new Error(t('Failed to delete bet ID'));
+        const errorData = response.data;
+        throw new Error(errorData.message || t('Failed to delete bet ID'));
       }
 
-      console.log(t('Bet ID deleted successfully!'));
+      setSuccess(t('Bet ID deleted successfully!'));
       setSavedAppIds(prev => prev.filter(item => item.id !== id));
     } catch (error: any) {
       console.error('Error deleting bet ID:', error);
@@ -245,6 +314,18 @@ return (
     
     <div className="max-w-6xl mx-auto">
       {/* Header Section */}
+      <div className="p-4">
+        {error && (
+          <div className="mb-4 p-4 bg-red-100 border border-red-400 text-red-700 rounded">
+            {error}
+          </div>
+        )}
+        {success && (
+          <div className="mb-4 p-4 bg-green-100 border border-green-400 text-green-700 rounded">
+            {success}
+          </div>
+        )}
+      </div>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
         <div>
           <h1 className="text-3xl font-bold  mb-2">{t("Betting App IDs")}</h1>

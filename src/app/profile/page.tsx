@@ -40,7 +40,7 @@ export default function Profile() {
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     if (!token) {
-      toast.error(t('You must be logged in to access this page.'));
+      console.error(t('You must be logged in to access this page.'));
       window.location.href = '/'; // Redirect to login/home
       return;
     }
