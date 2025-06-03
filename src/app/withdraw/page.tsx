@@ -81,7 +81,7 @@ export default function Withdraw() {
   const [currentStep, setCurrentStep] = useState<'selectId' | 'selectNetwork' | 'enterDetails'>('selectId');
   const [selectedPlatform, setSelectedPlatform] = useState<App | null>(null);
   const [platforms, setPlatforms] = useState<App[]>([]);
-  const [selectedNetwork, setSelectedNetwork] = useState<{ id: string; name: string; public_name?: string; image?: string } | null>(null);
+  const [selectedNetwork, setSelectedNetwork] = useState<{ id: string; name: string; public_name?: string; country_code?: string; image?: string } | null>(null);
   const [formData, setFormData] = useState({
     withdrawalCode: '',
     phoneNumber: '',
@@ -182,7 +182,7 @@ export default function Withdraw() {
     setCurrentStep('selectNetwork');
   };
 
-  const handleNetworkSelect = (network: { id: string; name: string; public_name?: string; image?: string }) => {
+  const handleNetworkSelect = (network: { id: string; name: string; public_name?: string; country_code?: string; image?: string }) => {
     setSelectedNetwork(network);
     setCurrentStep('enterDetails');
   };
