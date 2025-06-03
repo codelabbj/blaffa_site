@@ -22,6 +22,7 @@ interface Network {
   id: string;
   name: string;
   public_name: string;
+  country_code: string;
   image?: string;
 }
 
@@ -75,6 +76,16 @@ interface TransactionDetail {
   transaction: Transaction;
 }
 
+interface ApiError extends Error {
+  response?: {
+    status: number;
+    data: {
+      [key: string]: string | string[] | undefined;
+      detail?: string;
+    };
+  };
+}
+
 // interface ErrorResponse {
 
 //   data?: {
@@ -89,7 +100,7 @@ export default function Deposits() {
   const [currentStep, setCurrentStep] = useState<'selectId' | 'selectNetwork' | 'enterDetails'>('selectId');
   const [selectedPlatform, setSelectedPlatform] = useState<App | null>(null);
   const [platforms, setPlatforms] = useState<App[]>([]);
-  const [selectedNetwork, setSelectedNetwork] = useState<{ id: string; name: string; public_name?: string; image?: string } | null>(null);
+  const [selectedNetwork, setSelectedNetwork] = useState<{ id: string; name: string; public_name?: string; country_code?: string; image?: string } | null>(null);
   const [formData, setFormData] = useState({
     amount: '',
     phoneNumber: '',
@@ -212,7 +223,7 @@ export default function Deposits() {
     setCurrentStep('selectNetwork');
   };
 
-  const handleNetworkSelect = (network: { id: string; name: string; public_name?: string; image?: string }) => {
+  const handleNetworkSelect = (network: { id: string; name: string; public_name?: string; country_code?: string; image?: string }) => {
     setSelectedNetwork(network);
     setCurrentStep('enterDetails');
   };
@@ -262,13 +273,17 @@ export default function Deposits() {
     try {
       const token = localStorage.getItem('accessToken');
       if (!token) throw new Error('Not authenticated');
+
+      // Get the country code from the selected network
+      const countryCode = selectedNetwork.country_code?.toLowerCase(); // Default to 'ci' if not specified
+    
       
-      const response = await api.post(`/blaffa/transaction`, {
+      const response = await api.post(`/blaffa/transaction?country_code=${countryCode}`, {
         type_trans: 'deposit',
         amount: formData.amount,
         phone_number: formData.phoneNumber,
         network_id: selectedNetwork.id,
-         app_id: selectedPlatform.id,
+        app_id: selectedPlatform.id,
         user_app_id: formData.betid
       }, {
         headers: { Authorization: `Bearer ${token}` }
@@ -286,21 +301,102 @@ export default function Deposits() {
       setFormData({ amount: '', phoneNumber: '', betid: ''  });
     } catch (err) {
       console.error('Transaction error:', err);
-      if (
-        typeof err === 'object' &&
-        err !== null &&
-        'response' in err &&
-        typeof (err as { response?: unknown }).response === 'object'
-      ) {
-        const response = (err as { response?: { data?: { detail?: string } } }).response;
-        setError(response?.data?.detail || 'Failed to process transaction');
-      } else {
-        setError('Failed to process transaction');
+  //     if (
+  //       typeof err === 'object' &&
+  //       err !== null &&
+  //       'response' in err &&
+  //       typeof (err as { response?: unknown }).response === 'object'
+  //     ) {
+  //       const response = (err as { response?: { data?: { detail?: string } } }).response;
+  //       setError(response?.data?.detail || 'Failed to process transaction');
+  //     } else {
+  //       setError('Failed to process transaction');
+  //     }
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
+  if (typeof error === 'string') {
+    setError(error);
+  } else if (error && typeof error === 'object' && 'response' in error) {
+    const { status, data } = error.response || {};
+    // Handle the error response
+    if (status === 400 && data) {
+      const errorMessages = [];
+      if (data.amount) {
+        errorMessages.push(`Amount: ${Array.isArray(data.amount) ? data.amount[0] : data.amount}`);
       }
-    } finally {
-      setLoading(false);
+      // Add more field checks as needed
+      setError(errorMessages.length > 0 ? errorMessages.join('\n') : data.detail || 'Validation error');
+    } else {
+      setError(data?.detail || 'An error occurred');
     }
-  };
+  } else {
+    setError('An unexpected error occurred');
+  }
+
+  if (error.response) {
+    const { status, data } = error.response;
+    
+    // Handle field-specific validation errors
+    if (status === 400 && data) {
+      const errorMessages = [];
+      
+      // Check for field errors
+      if (data.amount) {
+        errorMessages.push(`Amount: ${Array.isArray(data.amount) ? data.amount[0] : data.amount}`);
+      }
+      
+      if (data.phone_number) {
+        errorMessages.push(`Phone: ${Array.isArray(data.phone_number) ? data.phone_number[0] : data.phone_number}`);
+      }
+      
+      if (data.network_id) {
+        errorMessages.push(`Network: ${Array.isArray(data.network_id) ? data.network_id[0] : data.network_id}`);
+      }
+      
+      if (data.user_app_id) {
+        errorMessages.push(`Bet ID: ${Array.isArray(data.user_app_id) ? data.user_app_id[0] : data.user_app_id}`);
+      }
+      
+      // Check for non-field errors
+      if (data.detail) {
+        errorMessages.push(data.detail);
+      }
+      
+      // If no specific errors found, use a generic message
+      if (errorMessages.length === 0) {
+        errorMessages.push(t('Invalid data. Please check your input.'));
+      }
+      
+      setError(errorMessages.join('\n'));
+    } else if (status === 401) {
+      setError(t('Your session has expired. Please log in again.'));
+      // Optionally redirect to login
+      // window.location.href = '/auth';
+    } else if (status === 403) {
+      setError(t('You do not have permission to perform this action.'));
+    } else if (status === 404) {
+      setError(t('The requested resource was not found.'));
+    } else if (status === 429) {
+      setError(t('Too many requests. Please wait a moment and try again.'));
+    } else if (status >= 500) {
+      setError(t('Server error. Please try again later.'));
+    } else {
+      setError(t('An error occurred. Please try again.'));
+    }
+  } else if (error.response.request) {
+    // The request was made but no response was received
+    setError(t('Network error. Please check your connection and try again.'));
+  } else {
+    // Something happened in setting up the request
+    setError(t('An error occurred while setting up the request.'));
+  }
+} finally {
+  setLoading(false);
+}
+};
 
   const closeTransactionDetails = () => {
   setIsModalOpen(false);
