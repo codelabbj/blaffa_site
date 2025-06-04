@@ -292,7 +292,7 @@ export default function Withdraw() {
               <p className="text-slate-400">{t("Choisissez la plateforme de pari que vous souhaitez utiliser")}</p>
             </div>
            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {platforms.map((platform, index) => (
                 <div
                   key={platform.id}
@@ -302,7 +302,7 @@ export default function Withdraw() {
                     animation: `slideInUp 0.6s ease-out ${index * 100}ms both`
                   }}
                 >
-                  {/* Hover shimmer effect */}
+                  
                   <div className="absolute inset-0 shimmer-effect opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                  
                   <div className="relative">
@@ -335,6 +335,25 @@ export default function Withdraw() {
                       <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-purple-400 group-hover:translate-x-1 transition-all duration-300" />
                     </div>
                   </div>
+                </div>
+              ))}
+            </div> */}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {platforms.map((platform) => (
+                <div 
+                  key={platform.id}
+                  onClick={() => handlePlatformSelect(platform)}
+                  className={`p-4 border rounded-lg cursor-pointer ${theme.colors.hover} transition-colors`}
+                >
+                  <div className="font-medium">{platform.public_name || platform.name}</div>
+                  {platform.image && (
+                    <img 
+                      src={platform.image} 
+                      alt={platform.public_name || platform.name}
+                      className="h-10 w-10 object-contain mt-2"
+                    />
+                  )}
                 </div>
               ))}
             </div>
@@ -436,8 +455,8 @@ export default function Withdraw() {
           </div>
         </div>
     
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Bet ID Section */}
+    {/* <form onSubmit={handleSubmit} className="space-y-6">
+      
               <div className={`bg-gradient-to-br ${theme.colors.sl_background} backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6`}>
                 <label className="block text-sm font-semibold text-purple-300 mb-3">
                   {t("Bet ID")} ({selectedPlatform?.public_name || selectedPlatform?.name})
@@ -555,7 +574,103 @@ export default function Withdraw() {
                   )}
                 </button>
               </div>
-            </form>
+            </form> */}
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                  <label className="block text-sm font-medium mb-1">
+                    {t("Bet ID")} ({selectedPlatform?.public_name || selectedPlatform?.name})
+                  </label>
+                  <div className="space-y-2">
+                    <input
+                      type="text"
+                      value={formData.betid}
+                      onChange={(e) => setFormData(prev => ({ ...prev, betid: e.target.value }))}
+                      className="w-full p-2 border rounded"
+                      placeholder={t("Enter your bet ID")}
+                    />
+                    {platformBetIds.length > 0 && (
+                      <div className="mt-2">
+                        <label className="block text-sm text-gray-500 mb-1">{t("Saved Bet IDs")}</label>
+                        <div className="flex flex-wrap gap-2">
+                          {platformBetIds.map((id) => (
+                            <div
+                            key={id.id}
+                            className="px-3 py-1 bg-gray-100 text-black rounded-full text-sm hover:bg-gray-200 cursor-pointer flex items-center"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setFormData(prev => ({ ...prev, betid: id.link }));
+                            }}
+                          >
+                            <span className="mr-2">{id.link}</span>
+                            <button
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  navigator.clipboard.writeText(id.link);
+                                  // alert(t('Bet ID copied to clipboard'));
+                                }}
+                                className="p-1 hover:bg-gray-200 rounded"
+                              >
+                              <CopyIcon className="h-4 w-4 text-gray-500" />
+                            </button>
+                          </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div>
+                  <label htmlFor="withdrawalCode" className="block text-sm font-medium mb-1">
+                    {t("Withdrawal Code")}
+                  </label>
+                  <input
+                    type="text"
+                    id="withdrawalCode"
+                    name="withdrawalCode"
+                    value={formData.withdrawalCode}
+                    onChange={handleInputChange}
+                    className="w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600"
+                    placeholder={t("Enter your withdrawal code")}
+                    required
+                  />
+                </div>
+                
+                <div>
+                  <label htmlFor="phoneNumber" className="block text-sm font-medium mb-1">
+                    {t("Phone Number")}
+                  </label>
+                  <input
+                    type="tel"
+                    id="phoneNumber"
+                    name="phoneNumber"
+                    value={formData.phoneNumber}
+                    onChange={handleInputChange}
+                    className="w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600"
+                    placeholder="e.g., 771234567"
+                    required
+                  />
+                </div>
+                
+                <div className="flex justify-between pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setCurrentStep('selectNetwork')}
+                    className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                  >
+                    ← {t("Back")}
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+                  >
+                    {loading ? t('Processing...') : t('Submit')}
+                  </button>
+                </div>
+              </form>
+
           </div>
         );
     }

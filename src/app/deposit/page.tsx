@@ -593,8 +593,8 @@ export default function Deposits() {
           </div>
         </div>
     
-    <form onSubmit={handleSubmit} className="space-y-6">
-      {/* Bet ID Section */}
+    {/* <form onSubmit={handleSubmit} className="space-y-6">
+      
               <div className={`bg-gradient-to-br ${theme.colors.sl_background} backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6`}>
                 <label className="block text-sm font-semibold text-purple-400 mb-3">
                   {t("Bet ID")} ({selectedPlatform?.public_name || selectedPlatform?.name})
@@ -647,7 +647,7 @@ export default function Deposits() {
                 </div>
               </div>
 
-              {/* Amount Section */}
+             
               <div className={`bg-gradient-to-br ${theme.colors.sl_background} backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6`}>
                 <label className="block text-sm font-semibold text-purple-400 mb-3">{t("Amount")}</label>
                 <div className="relative">
@@ -662,7 +662,7 @@ export default function Deposits() {
                 </div>
               </div>
 
-              {/* Phone Number Section */}
+             
               <div className={`bg-gradient-to-br ${theme.colors.sl_background} backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6`}>
                 <label className="block text-sm font-semibold text-purple-400 mb-3">{t("Phone Number")}</label>
                 <div className="relative">
@@ -705,7 +705,92 @@ export default function Deposits() {
                   )}
                 </button>
               </div>
-            </form>
+            </form> */}
+            <form onSubmit={handleSubmit} className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium mb-1">
+                    {t("Bet ID")} ({selectedPlatform?.public_name || selectedPlatform?.name})
+                  </label>
+                  <div className="space-y-2">
+                    <input
+                      type="text"
+                      value={formData.betid}
+                      onChange={(e) => setFormData(prev => ({ ...prev, betid: e.target.value }))}
+                      className="w-full p-2 border rounded"
+                      placeholder={t("Enter your bet ID")}
+                    />
+                    {platformBetIds.length > 0 && (
+                      <div className="mt-2">
+                        <label className="block text-sm text-gray-500 mb-1">{t("Saved Bet IDs")}</label>
+                        <div className="flex flex-wrap gap-2">
+                          {platformBetIds.map((id) => (
+                            <div
+                            key={id.id}
+                            className="px-3 py-1 bg-gray-100 rounded-full text-black text-sm hover:bg-gray-200 cursor-pointer flex items-center"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setFormData(prev => ({ ...prev, betid: id.link }));
+                            }}
+                          >
+                            <span className="mr-2">{id.link}</span>
+                            <button
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  navigator.clipboard.writeText(id.link);
+                                  // alert(t('Bet ID copied to clipboard'));
+                                }}
+                                className="p-1 hover:bg-gray-200 rounded"
+                              >
+                              <CopyIcon className="h-4 w-4 text-gray-500" />
+                            </button>
+                          </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+  
+                <div>
+                  <label className="block text-sm font-medium mb-1">{t("Amount")}</label>
+                  <input
+                    type="number"
+                    value={formData.amount}
+                    onChange={(e) => setFormData(prev => ({ ...prev, amount: e.target.value }))}
+                    className="w-full p-2 border rounded"
+                    placeholder={t("Enter amount")}
+                  />
+                </div>
+  
+                <div>
+                  <label className="block text-sm font-medium mb-1">{t("Phone Number")}</label>
+                  <input
+                    type="tel"
+                    value={formData.phoneNumber}
+                    onChange={(e) => setFormData(prev => ({ ...prev, phoneNumber: e.target.value }))}
+                    className="w-full p-2 border rounded"
+                    placeholder={t("Enter phone number")}
+                  />
+                </div>
+
+                <div className="flex justify-between pt-2">
+                  <button
+                    type="button"
+                    onClick={() => setCurrentStep('selectNetwork')}
+                    className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                  >
+                    ← {t("Back")}
+                  </button>
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+                  >
+                    {loading ? t('Processing...') : t('Submit')}
+                  </button>
+                </div>
+              </form>
           </div>
         );
     }
