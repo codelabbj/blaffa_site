@@ -146,22 +146,22 @@ export default function BetIdsPage() {
         }),
       });
 
-      // if (response.status !== 200) {
-      //   const errorData = await response.data;
-      //   // Handle validation errors
-      //   if (response.status === 400 && errorData) {
-      //     const errorMessages = Object.entries(errorData)
-      //       .map(([field, errors]) => {
-      //         if (Array.isArray(errors)) {
-      //           return `${field}: ${errors.join(', ')}`;
-      //         }
-      //         return `${field}: ${errors}`;
-      //       })
-      //       .join('\n');
-      //     throw new Error(errorMessages);
-      //   }
-      //   throw new Error(errorData.detail || t('Failed to add bet ID'));
-      // };
+      if (response.status !== 200) {
+        const errorData = await response.data;
+        // Handle validation errors
+        if (response.status === 400 && errorData) {
+          const errorMessages = Object.entries(errorData)
+            .map(([field, errors]) => {
+              if (Array.isArray(errors)) {
+                return `${field}: ${errors.join(', ')}`;
+              }
+              return `${field}: ${errors}`;
+            })
+            .join('\n');
+          throw new Error(errorMessages);
+        }
+        throw new Error(errorData.detail || t('Failed to add bet ID'));
+      };
 
       setSuccess(t('Bet ID added successfully!'));
       setNewAppId('');

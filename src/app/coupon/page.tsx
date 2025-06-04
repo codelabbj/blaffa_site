@@ -25,7 +25,7 @@ const CouponPage = () => {
   const { theme } = useTheme(); // Use the theme from ThemeProvider
 
   // Replace with your actual base URL and token
-  const BASE_URL = 'https://api.blaffa.net';
+ // const BASE_URL = 'https://api.blaffa.net';
 
   useEffect(() => {
     const accessToken = localStorage.getItem('accessToken'); // Retrieve the access token
