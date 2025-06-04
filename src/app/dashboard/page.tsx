@@ -201,6 +201,29 @@ export default function Dashboard() {
         {/**/}
         {/* Transaction History */}
         <TransactionHistory/>
+
+        <div className="relative mb-4">
+          <a 
+            href="https://wa.me/+2250566643821" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            className="group fixed bottom-24 right-6 z-40 flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-green-500 hover:bg-green-600 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 active:scale-95"
+          >
+            {/* Pulsing ring effect */}
+            <div className="absolute inset-0 rounded-full bg-green-400 animate-ping opacity-75"></div>
+            <div className="absolute inset-0 rounded-full bg-green-500 animate-pulse"></div>
+            
+            {/* WhatsApp Icon */}
+            <Image src='/whatsapp.png' width="64" height="64" className="text-white relative z-10 md:w-10 md:h-10" alt='whatsapp' />
+            
+            
+            {/* Tooltip */}
+            <div className="absolute right-full mr-3 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white px-3 py-2 rounded-lg text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
+              Contact us on WhatsApp
+              <div className="absolute top-1/2 left-full transform -translate-y-1/2 border-4 border-transparent border-l-gray-900"></div>
+            </div>
+          </a>
+        </div>
         
         <Footer/>
         

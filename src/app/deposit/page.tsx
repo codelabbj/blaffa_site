@@ -432,7 +432,7 @@ export default function Deposits() {
         <p className="text-slate-400">{t("Choisissez la plateforme de pari que vous souhaitez utiliser")}</p>
       </div>
      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {platforms.map((platform, index) => (
           <div
             key={platform.id}
@@ -442,7 +442,7 @@ export default function Deposits() {
               animation: `slideInUp 0.6s ease-out ${index * 100}ms both`
             }}
           >
-            {/* Hover shimmer effect */}
+           
             <div className="absolute inset-0 shimmer-effect opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
            
             <div className="relative">
@@ -476,9 +476,27 @@ export default function Deposits() {
               </div>
             </div>
           </div>
+          
+        ))}
+      </div> */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {platforms.map((platform) => (
+          <div 
+            key={platform.id}
+            onClick={() => handlePlatformSelect(platform)}
+            className={`p-4 border rounded-lg cursor-pointer ${theme.colors.hover} transition-colors`}
+          >
+            <div className="font-medium">{platform.public_name || platform.name}</div>
+            {platform.image && (
+              <img 
+                src={platform.image} 
+                alt={platform.public_name || platform.name}
+                className="h-10 w-10 object-contain mt-2"
+              />
+            )}
+          </div>
         ))}
       </div>
-     
       {platforms.length === 0 && !loading && (
         <div className="flex flex-col items-center justify-center py-20 px-6">
           <h3 className="text-xl font-semibold text-white mb-3">Aucune plateforme de pari trouvée</h3>
