@@ -781,7 +781,7 @@ export default function TransactionHistory() {
               <div className="bg-gradient-to-br from-slate-800 to-slate-700 rounded-2xl p-6 mb-6 shadow-2xl border border-slate-600/50">
                 <Activity className="w-12 h-12 text-slate-400 mx-auto" />
               </div>
-              <h3 className="text-xl font-semibold text-white mb-3">Aucune transaction trouvée</h3>
+              <h3 className="text-xl font-semibold  mb-3">Aucune transaction trouvée</h3>
               <p className="text-slate-400 text-center max-w-md leading-relaxed">
                 {activeTab === 'all' 
                   ? "Your transaction history will appear here once you start making payments."
@@ -791,85 +791,133 @@ export default function TransactionHistory() {
               </p>
             </div>
           ) : (
-            <div className="grid gap-4">
-              {transactions.map((item, index) => (
-                <div
-                  key={item.id}
-                  className={`group relative overflow-hidden rounded-2xl bg-gradient-to-r ${theme.colors.s_background} backdrop-blur-sm border border-slate-600/50 hover:border-purple-500/50 transition-all duration-500 cursor-pointer hover:shadow-2xl hover:shadow-purple-500/10`}
-                  onClick={() => openTransactionDetails(item)}
-                  style={{
-                    animation: `slideInUp 0.6s ease-out ${index * 100}ms both`
-                  }}
-                >
-                  {/* Hover shimmer effect */}
-                  <div className="absolute inset-0 shimmer-effect opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                  
-                  <div className="relative p-6">
-                    <div className="flex items-center justify-between">
-                      {/* Left Section */}
-                      <div className="flex items-center space-x-4 flex-1">
-                        {/* Icon with enhanced styling */}
-                        <div className={`relative w-14 h-14 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 ${
-                          item.transaction.type_trans === 'deposit'
-                            ? 'bg-gradient-to-br from-green-500/20 to-emerald-600/20 text-green-400 shadow-lg shadow-green-500/20'
-                            : 'bg-gradient-to-br from-blue-500/20 to-indigo-600/20 text-blue-400 shadow-lg shadow-blue-500/20'
-                        }`}>
-                          {getTransactionTypeIcon(item.transaction.type_trans)}
-                          <div className={`absolute inset-0 rounded-2xl ${
-                            item.transaction.type_trans === 'deposit' 
-                              ? 'bg-gradient-to-br from-green-500/10 to-emerald-600/10' 
-                              : 'bg-gradient-to-br from-blue-500/10 to-indigo-600/10'
-                          } opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+            <div className="w-full">
+              <div className="grid gap-4">
+                {transactions.map((item, index) => (
+                  <div
+                    key={item.id}
+                    className={`group relative w-full overflow-hidden rounded-2xl bg-gradient-to-r ${theme.colors.s_background} backdrop-blur-sm border border-slate-600/50 hover:border-purple-500/50 transition-all duration-500 cursor-pointer hover:shadow-2xl hover:shadow-purple-500/10`}
+                    onClick={() => openTransactionDetails(item)}
+                    style={{
+                      animation: `slideInUp 0.6s ease-out ${index * 100}ms both`
+                    }}
+                  >
+                    {/* Hover shimmer effect */}
+                    <div className="absolute inset-0 shimmer-effect opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                    
+                    <div className="relative p-6 w-full">
+                      {/* Desktop Layout */}
+                      <div className="hidden sm:flex items-center w-full">
+                        {/* Left Section - Icon and Details */}
+                        <div className="flex items-center space-x-4 flex-1 min-w-0 pr-4">
+                          {/* Icon with enhanced styling */}
+                          <div className={`relative w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 ${
+                            item.transaction.type_trans === 'deposit'
+                              ? 'bg-gradient-to-br from-green-500/20 to-emerald-600/20 text-green-400 shadow-lg shadow-green-500/20'
+                              : 'bg-gradient-to-br from-blue-500/20 to-indigo-600/20 text-blue-400 shadow-lg shadow-blue-500/20'
+                          }`}>
+                            {getTransactionTypeIcon(item.transaction.type_trans)}
+                            <div className={`absolute inset-0 rounded-2xl ${
+                              item.transaction.type_trans === 'deposit' 
+                                ? 'bg-gradient-to-br from-green-500/10 to-emerald-600/10' 
+                                : 'bg-gradient-to-br from-blue-500/10 to-indigo-600/10'
+                            } opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+                          </div>
+
+                          {/* Transaction Details */}
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center space-x-3 mb-2">
+                              <h3 className="font-semibold text-lg transition-colors duration-300">
+                                {item.transaction.type_trans === 'deposit' ? t('Deposit') : t('Withdraw')}
+                              </h3>
+                              <div className={`flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-medium transition-all duration-300 ${getStatusBadgeClass(item.transaction.status)} group-hover:scale-105`}>
+                                {getStatusIcon(item.transaction.status)}
+                                <span className="ml-1 capitalize">{item.transaction.status}</span>
+                              </div>
+                            </div>
+                            
+                            <div className="flex items-center space-x-4 text-sm text-slate-400 group-hover:text-slate-300 transition-colors duration-300">
+                              <span className="font-mono">{item.transaction.phone_number}</span>
+                              <span>•</span>
+                              <span>{formatDate(item.transaction.created_at)}</span>
+                            </div>
+                          </div>
                         </div>
 
-                        {/* Transaction Details */}
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center space-x-3 mb-2">
-                            <h3 className="font-semibold text-lg   transition-colors duration-300">
+                        {/* Right Section - Amount and Reference */}
+                        <div className="text-right space-y-2 flex-shrink-0">
+                          <div className={`font-bold text-2xl transition-all duration-300 group-hover:scale-105 ${
+                            item.transaction.type_trans === 'deposit'
+                              ? 'text-green-400 group-hover:text-green-300'
+                              : 'text-blue-400 group-hover:text-blue-300'
+                          }`}>
+                            {item.transaction.type_trans === 'deposit' ? '+' : '-'}
+                            {formatAmount(item.transaction.amount)}
+                          </div>
+                          <div className="text-xs text-slate-500 font-mono">
+                            #{item.transaction.reference.substring(0, 12)}...
+                          </div>
+                        </div>
+
+                        {/* Arrow Icon */}
+                        <div className="ml-4 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-1 flex-shrink-0">
+                          <ChevronRight className="w-5 h-5 text-slate-400" />
+                        </div>
+                      </div>
+
+                      {/* Mobile Layout */}
+                      <div className="sm:hidden space-y-4">
+                        {/* Top Row - Icon, Title, Status */}
+                        <div className="flex items-center space-x-3">
+                          <div className={`relative w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 ${
+                            item.transaction.type_trans === 'deposit'
+                              ? 'bg-gradient-to-br from-green-500/20 to-emerald-600/20 text-green-400 shadow-lg shadow-green-500/20'
+                              : 'bg-gradient-to-br from-blue-500/20 to-indigo-600/20 text-blue-400 shadow-lg shadow-blue-500/20'
+                          }`}>
+                            {getTransactionTypeIcon(item.transaction.type_trans)}
+                          </div>
+                          
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-semibold text-lg">
                               {item.transaction.type_trans === 'deposit' ? t('Deposit') : t('Withdraw')}
                             </h3>
-                            <div className={`flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-medium transition-all duration-300 ${getStatusBadgeClass(item.transaction.status)} group-hover:scale-105`}>
-                              {getStatusIcon(item.transaction.status)}
-                              <span className="ml-1 capitalize">{item.transaction.status}</span>
+                          </div>
+                          
+                          <div className={`flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-medium ${getStatusBadgeClass(item.transaction.status)}`}>
+                            {getStatusIcon(item.transaction.status)}
+                            <span className="ml-1 capitalize">{item.transaction.status}</span>
+                          </div>
+                        </div>
+
+                        {/* Bottom Row - Amount, Details */}
+                        <div className="flex items-center justify-between">
+                          <div className="space-y-1">
+                            <div className="text-sm text-slate-400 font-mono">{item.transaction.phone_number}</div>
+                            <div className="text-sm text-slate-400">{formatDate(item.transaction.created_at)}</div>
+                            <div className="text-xs text-slate-500 font-mono">
+                              #{item.transaction.reference.substring(0, 12)}...
                             </div>
                           </div>
                           
-                          <div className="flex items-center space-x-4 text-sm text-slate-400 group-hover:text-slate-300 transition-colors duration-300">
-                            <span className="font-mono">{item.transaction.phone_number}</span>
-                            <span>•</span>
-                            <span>{formatDate(item.transaction.created_at)}</span>
+                          <div className={`font-bold text-xl ${
+                            item.transaction.type_trans === 'deposit'
+                              ? 'text-green-400'
+                              : 'text-blue-400'
+                          }`}>
+                            {item.transaction.type_trans === 'deposit' ? '+' : '-'}
+                            {formatAmount(item.transaction.amount)}
                           </div>
                         </div>
                       </div>
+                    </div>
 
-                      {/* Right Section */}
-                      <div className="text-right space-y-2">
-                        <div className={`font-bold text-2xl transition-all duration-300 group-hover:scale-105 ${
-                          item.transaction.type_trans === 'deposit'
-                            ? 'text-green-400 group-hover:text-green-300'
-                            : 'text-blue-400 group-hover:text-blue-300'
-                        }`}>
-                          {item.transaction.type_trans === 'deposit' ? '+' : '-'}
-                          {formatAmount(item.transaction.amount)}
-                        </div>
-                        <div className="text-xs text-slate-500 font-mono">
-                          #{item.transaction.reference.substring(0, 12)}...
-                        </div>
-                      </div>
-
-                      {/* Arrow Icon */}
-                      <div className="ml-4 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-1">
-                        <ChevronRight className="w-5 h-5 text-slate-400" />
-                      </div>
+                    {/* Gradient border effect on hover */}
+                    <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500/20 via-blue-500/20 to-purple-500/20 blur-sm"></div>
                     </div>
                   </div>
-
-                  {/* Gradient border effect on hover */}
-                  <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-                    <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500/20 via-blue-500/20 to-purple-500/20 blur-sm"></div>
-                  </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           )}
 

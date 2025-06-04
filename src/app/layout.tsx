@@ -81,11 +81,11 @@ export default function RootLayout({
 
   return (
     
-    <html lang={i18n.language}>
+    <html lang={i18n.language} className="overflow-x-hidden">
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
-      <body className="antialiased">
+      <body className="antialiased overflow-x-hidden">
       <I18nextProvider i18n={i18n}>
         <WebSocketProvider>
           <ThemeProvider>

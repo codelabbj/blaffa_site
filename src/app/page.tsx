@@ -516,7 +516,7 @@ export default function BlaffaLanding() {
       <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${
         scrollY > 50 ? `${theme.colors.sl_background} backdrop-blur-md border-b border-slate-700` : 'bg-transparent'
       }`}>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center space-x-2">
               <img src="/logo.png" alt="Blaffa Logo" className="w-15 h-15" ></img>
@@ -572,13 +572,13 @@ export default function BlaffaLanding() {
       {/* Hero Section */}
       <section className="pt-24 pb-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
+          <div className="grid lg:grid-cols-2 gap-12 items-center w-full">
             <div className="space-y-8">
               <div className="space-y-4">
                 <div className={`inline-block bg-blue-500/20 ${theme.colors.text} px-4 py-2 rounded-full text-sm font-medium`}>
                   {t.approvedBy}
                 </div>
-                <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
+                <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
                   {t.heroTitle}
                   <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"> {t.heroTitleHighlight} </span>
                   {t.heroTitleEnd}
@@ -589,13 +589,13 @@ export default function BlaffaLanding() {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <a href='/auth' className="bg-gradient-to-r from-blue-500 to-purple-600 px-8 py-4 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105 flex items-center justify-center space-x-2 font-semibold text-white">
+                <a href='/auth' className="bg-gradient-to-r from-blue-500 to-purple-600 px-8 py-4 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-allv hover:scale-105 flex items-center justify-center space-x-2 font-semibold text-white">
                   <span>{t.startNow}</span>
                   <ArrowRight className="w-5 h-5" />
                 </a>
               </div>
 
-              <div className="flex items-center space-x-8 pt-8">
+              <div className="flex items-center space-x-8 pt-8 flex-wrap">
                 {stats.map((stat, index) => (
                   <div key={index} className="text-center">
                     <div className="text-2xl font-bold text-blue-400">{stat.number}</div>
@@ -643,7 +643,7 @@ export default function BlaffaLanding() {
               {t.supportedPlatformsDesc}
             </p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 w-full">
             {bettingPlatforms.map((platform, index) => (
               <div key={index} className={`bg-gradient-to-br ${theme.colors.s_background} p-6 rounded-xl border border-slate-700 hover:border-blue-500/50 transition-all hover:transform hover:scale-105 text-center`}>
                 <img 

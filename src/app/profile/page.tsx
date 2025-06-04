@@ -309,7 +309,7 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
                   type="text"
                   value={deleteConfirmText}
                   onChange={(e) => setDeleteConfirmText(e.target.value)}
-                  className="w-full p-4 bg-slate-700/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 transition-all duration-300"
+                  className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl  placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-red-500/50 focus:border-red-500/50 transition-all duration-300`}
                   placeholder={formData.email}
                 />
                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none">
@@ -325,14 +325,14 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
                 </div>
               </div>
               <p className="mt-2 text-sm text-slate-400">
-                {t('Please type')} <span className="font-semibold text-white">{formData.email}</span> {t('to confirm')}
+                {t('Please type')} <span className="font-semibold ">{formData.email}</span> {t('to confirm')}
               </p>
             </div>
 
             <div className="flex flex-col md:flex-row gap-4">
               <button
                 onClick={() => setShowDeleteConfirmation(false)}
-                className="bg-gradient-to-r from-slate-700/50 to-slate-600/50 hover:from-slate-600/50 hover:to-slate-500/50 text-white font-medium py-3 px-6 rounded-xl transition-all duration-300 flex-1 flex justify-center items-center border border-slate-600/30 hover:border-slate-500/50 backdrop-blur-sm"
+                className="bg-gradient-to-r from-slate-700/50 to-slate-600/50 hover:from-slate-600/50 hover:to-slate-500/50  font-medium py-3 px-6 rounded-xl transition-all duration-300 flex-1 flex justify-center items-center border border-slate-600/30 hover:border-slate-500/50 backdrop-blur-sm"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 17l-5-5m0 0l5-5m-5 5h12" />
@@ -406,7 +406,7 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
           </div>
           <button
             onClick={() => window.history.back()}
-            className="flex items-center text-white bg-gradient-to-r from-slate-700/50 to-slate-600/50 hover:from-slate-600/50 hover:to-slate-500/50 px-6 py-3 rounded-xl border border-slate-600/30 hover:border-slate-500/50 transition-all duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl group mt-4 md:mt-0"
+            className={`flex items-center bg-gradient-to-r ${theme.colors.s_background} hover:from-slate-600/50 hover:to-slate-500/50 px-6 py-3 rounded-xl border border-slate-600/30 hover:border-slate-500/50 transition-all duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl group mt-4 md:mt-0`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -469,7 +469,19 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleChange}
-                      className="w-full p-4 bg-slate-700/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500/50 transition-all duration-300"
+                      className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300`}
+                    />
+                  </div>
+
+                  <div>
+                    <label htmlFor="lastName" className="block text-sm font-medium  mb-2">
+                      {t("Last Name")}
+                    </label>
+                    <input
+                      type="text"
+                      id="lastName"
+                      name="lastName"
+                      value={formData.lastName}
                     />
                   </div>
 
@@ -483,7 +495,7 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
                       name="lastName"
                       value={formData.lastName}
                       onChange={handleChange}
-                      className="w-full p-4 bg-slate-700/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500/50 transition-all duration-300"
+                      className={`w-full p-4 ${theme.colors.sl_background} border border-slate-600/50 rounded-xl placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300`}
                     />
                   </div>
 
@@ -503,7 +515,7 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        className="w-full pl-12 p-4 bg-slate-700/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300"
+                        className={`w-full pl-12 p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300`}
                       />
                     </div>
                   </div>
@@ -520,7 +532,7 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
                           name="phoneCode"
                           value={formData.phoneCode}
                           onChange={handleChange}
-                          className="w-full p-4 bg-slate-700/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500/50 transition-all duration-300"
+                          className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300`}
                           placeholder="+1"
                         />
                       </div>
@@ -531,7 +543,7 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
                           name="phoneNumber"
                           value={formData.phoneNumber}
                           onChange={handleChange}
-                          className="w-full p-4 bg-slate-700/50 border border-slate-600/50 rounded-xl  placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500/50 transition-all duration-300"
+                          className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl  placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300`}
                         />
                       </div>
                     </div>
@@ -571,7 +583,7 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
                 </div>
 
                 <div className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 backdrop-blur-sm p-5 rounded-2xl mb-8 border border-purple-600/30">
-                  <p className="text-purple-400 text-sm flex items-start">
+                  <p className="text-blue-500 text-sm flex items-start">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
@@ -591,7 +603,7 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
                         name="oldPassword"
                         value={formData.oldPassword}
                         onChange={handleChange}
-                        className="w-full p-4 bg-slate-700/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 pr-12"
+                        className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl  placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 pr-12`}
                       />
                       <button
                         type="button"
@@ -614,7 +626,7 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
                         name="newPassword"
                         value={formData.newPassword}
                         onChange={handleChange}
-                        className="w-full p-4 bg-slate-700/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 pr-12"
+                        className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl  placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 pr-12`}
                       />
                       <button
                         type="button"
@@ -637,7 +649,7 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
                         name="confirmPassword"
                         value={formData.confirmPassword}
                         onChange={handleChange}
-                        className="w-full p-4 bg-slate-700/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 pr-12"
+                        className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl  placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 pr-12`}
                       />
                       <button
                         type="button"

@@ -334,8 +334,8 @@ return (
         
         <button
           onClick={() => window.history.back()}
-          className="flex items-center text-white bg-gradient-to-r from-slate-700/50 to-slate-600/50 hover:from-slate-600/50 hover:to-slate-500/50 px-6 py-3 rounded-xl border border-slate-600/30 hover:border-slate-500/50 transition-all duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl group mt-4 md:mt-0"
-        >
+          className={`flex items-center bg-gradient-to-r ${theme.colors.s_background} hover:from-slate-600/50 hover:to-slate-500/50 px-6 py-3 rounded-xl border border-slate-600/30 hover:border-slate-500/50 transition-all duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl group mt-4 md:mt-0`}
+          >
           <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
           </svg>
@@ -369,7 +369,7 @@ return (
                     <select
                       value={selectedApp}
                       onChange={(e) => setSelectedApp(e.target.value)}
-                      className="w-full p-4 bg-slate-700/50 border border-slate-600/50 rounded-xl  focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 appearance-none cursor-pointer"
+                      className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl  focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 appearance-none cursor-pointer`}
                     >
                       <option value="">{t("Select App")}</option>
                       {apps.map((app) => (
@@ -392,7 +392,7 @@ return (
                     type="text"
                     value={newAppId}
                     onChange={(e) => setNewAppId(e.target.value)}
-                    className="w-full p-4 bg-slate-700/50 border border-slate-600/50 rounded-xl  placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300"
+                    className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl  placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300`}
                     placeholder={t("Enter your bet ID")}
                   />
                 </div>

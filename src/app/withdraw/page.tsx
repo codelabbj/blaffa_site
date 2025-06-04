@@ -424,7 +424,7 @@ export default function Withdraw() {
               setSelectedNetwork(null);
               setCurrentStep('selectNetwork');
             }}
-            className="group mr-4 p-2 rounded-xl bg-gradient-to-br from-slate-700/50 to-slate-600/50 border border-slate-600/30 text-white hover:text-purple-400 hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20"
+            className="group mr-4 p-2 rounded-xl border border-slate-600/30 hover:text-purple-400 hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 group-hover:-translate-x-1 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
@@ -438,8 +438,8 @@ export default function Withdraw() {
     
     <form onSubmit={handleSubmit} className="space-y-6">
       {/* Bet ID Section */}
-              <div className="bg-gradient-to-br from-slate-800/50 to-slate-700/50 backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6">
-                <label className="block text-sm font-semibold text-purple-200 mb-3">
+              <div className={`bg-gradient-to-br ${theme.colors.sl_background} backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6`}>
+                <label className="block text-sm font-semibold text-purple-300 mb-3">
                   {t("Bet ID")} ({selectedPlatform?.public_name || selectedPlatform?.name})
                 </label>
                 <div className="space-y-4">
@@ -448,7 +448,7 @@ export default function Withdraw() {
                       type="text"
                       value={formData.betid}
                       onChange={(e) => setFormData(prev => ({ ...prev, betid: e.target.value }))}
-                      className="w-full p-4 bg-slate-900/50 border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300"
+                      className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300`}
                       placeholder={t("Enter your bet ID")}
                     />
                     <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-500/10 to-blue-500/10 opacity-0 focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
@@ -456,12 +456,12 @@ export default function Withdraw() {
                   
                   {platformBetIds.length > 0 && (
                     <div className="mt-4">
-                      <label className="block text-sm font-medium text-slate-300 mb-3">{t("Saved Bet IDs")}</label>
+                      <label className="block text-sm font-medium text-slate-400 mb-3">{t("Saved Bet IDs")}</label>
                       <div className="flex flex-wrap gap-3">
                         {platformBetIds.map((id, index) => (
                           <div
                             key={id.id}
-                            className="group relative overflow-hidden bg-gradient-to-br from-slate-700/50 to-slate-600/50 backdrop-blur-sm border border-slate-600/30 rounded-xl px-4 py-3 text-sm hover:from-slate-600/50 hover:to-slate-500/50 cursor-pointer flex items-center transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20"
+                            className={`group relative overflow-hidden bg-gradient-to-br ${theme.colors.c_background} backdrop-blur-sm border border-slate-600/30 rounded-xl px-4 py-3 text-sm hover:from-slate-600/50 hover:to-slate-500/50 cursor-pointer flex items-center transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20`}
                             style={{
                               animation: `slideInUp 0.3s ease-out ${index * 50}ms both`
                             }}
@@ -471,7 +471,7 @@ export default function Withdraw() {
                             }}
                           >
                             <div className="absolute inset-0 shimmer-effect opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                            <span className="mr-3 text-white font-mono truncate relative z-10">{id.link}</span>
+                            <span className="mr-3  font-mono truncate relative z-10">{id.link}</span>
                             <button
                               onClick={(e) => {
                                 e.preventDefault();
@@ -631,7 +631,7 @@ export default function Withdraw() {
           
           <button
             onClick={() => window.history.back()}
-            className="flex items-center bg-gradient-to-r from-slate-700/50 to-slate-600/50 hover:from-slate-600/50 hover:to-slate-500/50 px-6 py-3 rounded-xl border border-slate-600/30 hover:border-slate-500/50 transition-all duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl group mt-4 md:mt-0"
+            className={`flex items-center bg-gradient-to-r ${theme.colors.s_background} hover:from-slate-600/50 hover:to-slate-500/50 px-6 py-3 rounded-xl border border-slate-600/30 hover:border-slate-500/50 transition-all duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl group mt-4 md:mt-0`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -664,7 +664,7 @@ export default function Withdraw() {
                       ? 'bg-gradient-to-br from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/50 scale-110' 
                       : isCompleted 
                         ? 'bg-gradient-to-br from-green-500 to-emerald-600 text-white shadow-lg shadow-green-500/50' 
-                        : 'bg-gradient-to-br from-slate-700 to-slate-600 text-slate-400 border border-slate-600/50'
+                        : `bg-gradient-to-br ${theme.colors.s_background} text-slate-400 border border-slate-600/50`
                   }`}
                 >
                   {isCompleted ? <Check className="w-6 h-6" /> : stepNum}

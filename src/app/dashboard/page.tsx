@@ -85,16 +85,53 @@ export default function Dashboard() {
          <Advertisement_Hero />
         </div>
 
-          <div className="grid-cols-1 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             {/* Main Content */}
             <div className="lg:col-span-2 space-y-6">
               {/* Balance Card */}
-              <div className={`relative overflow-hidden bg-gradient-to-br ${theme.colors.a_background} rounded-3xl p-8 text-white`}>
-                <div className="absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
-                <div className="absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-12 -translate-x-12"></div>
+              {/* relative overflow-hidden bg-gradient-to-br ${theme.colors.a_background} rounded-3xl p-8 text-white */}
+              <div className={`md:relative md:overflow-hidden md:bg-gradient-to-br md:${theme.colors.a_background} md:rounded-3xl p-4 md:p-8 md:text-white`}>
+                <div className="hidden md:block absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"></div>
+                <div className="hidden md:block absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-12 -translate-x-12"></div>
               
                 <div className="relative z-10">
-                  <div className="grid grid-cols-4 gap-4">
+                  {/* Mobile Layout (4 buttons in a row with square icons) */}
+                  <div className="flex gap-2 justify-center md:hidden">
+                    {/* Deposit Button */}
+                    <a href="/deposit" className="group relative flex-1 flex flex-col items-center justify-center p-3 transition-all duration-300 active:scale-95">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center mb-2 group-active:scale-90 transition-transform shadow-lg shadow-red-500/25">
+                        <ArrowUpRight size={18} className="text-white drop-shadow-sm" />
+                      </div>
+                      <span className="font-medium text-xs ">{t("Deposit")}</span>
+                    </a>
+                    
+                    {/* Withdraw Button */}
+                    <a href="/withdraw" className="group relative flex-1 flex flex-col items-center justify-center p-3 transition-all duration-300 active:scale-95">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center mb-2 group-active:scale-90 transition-transform shadow-lg shadow-blue-500/25">
+                        <ArrowDownLeft size={18} className="text-white drop-shadow-sm" />
+                      </div>
+                      <span className="font-medium text-xs ">{t("Withdraw")}</span>
+                    </a>
+                    
+                    {/* Coupon Button */}
+                    <a href="/coupon" className="group relative flex-1 flex flex-col items-center justify-center p-3 transition-all duration-300 active:scale-95">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center mb-2 group-active:scale-90 transition-transform shadow-lg shadow-orange-500/25">
+                        <Gift size={18} className="text-white drop-shadow-sm" />
+                      </div>
+                      <span className="font-medium text-xs ">{t("Coupon")}</span>
+                    </a>
+                    
+                    {/* Mon ID Button */}
+                    <a href="/bet_id" className="group relative flex-1 flex flex-col items-center justify-center p-3 transition-all duration-300 active:scale-95">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center mb-2 group-active:scale-90 transition-transform shadow-lg shadow-purple-500/25">
+                        <User size={18} className="text-white drop-shadow-sm" />
+                      </div>
+                      <span className="font-medium text-xs ">{t("Mon ID")}</span>
+                    </a>
+                  </div>
+
+                  {/* Desktop Layout (Grid) - Same as first code */}
+                  <div className="hidden md:grid grid-cols-4 gap-4">
                     {/* Déposer */}
                     <a href="/deposit" className="bg-gradient-to-br from-red-400 to-red-600 backdrop-blur-sm rounded-2xl p-4 hover:bg-white/15 transition-all duration-300 cursor-pointer group border border-white/5 hover:border-white/20">
                       <div className="flex flex-col lg:flex-row lg:items-center lg:gap-3">
