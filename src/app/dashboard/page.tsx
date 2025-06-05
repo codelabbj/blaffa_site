@@ -58,13 +58,13 @@ export default function Dashboard() {
     <div className={`min-h-screen bg-gradient-to-br ${theme.colors.a_background} font-sans relative overflow-hidden`}>
       {/* Background gradient effects */}
       <div className="absolute top-20 -left-10 w-40 h-40 bg-blue-700/20 rounded-full blur-3xl animate-pulse-slow"></div>
-      <div className="absolute bottom-20 right-10 w-60 h-60 bg-purple-700/10 rounded-full blur-3xl animate-pulse-slow"></div>
+      <div className="absolute bottom-20 right-10 w-60 h-60 bg-blue-700/10 rounded-full blur-3xl animate-pulse-slow"></div>
       
       {/* Loading overlay */}
       {isLoading && (
         <div className="absolute inset-0 bg-gray-900/90 z-50 flex items-center justify-center">
           <div className="flex flex-col items-center gap-3">
-            <div className="w-16 h-16 border-4 border-gray-700 border-t-purple-500 rounded-full animate-spin"></div>
+            <div className="w-16 h-16 border-4 border-gray-700 border-t-blue-500 rounded-full animate-spin"></div>
             <p className="text-gray-400">Loading Blaffa...</p>
           </div>
         </div>
@@ -81,7 +81,7 @@ export default function Dashboard() {
           <p className=" ">Gérez vos finances en toute simplicité</p>
         </div>
 
-        <div className={`relative overflow-hidden rounded-3xl p-8 `}>
+        <div className={`relative overflow-hidden rounded-3xl -mx-4 px-4 md:mx-0 md:px-8 py-4 md:py-8 `}>
          <Advertisement_Hero />
         </div>
 
@@ -123,7 +123,7 @@ export default function Dashboard() {
                     
                     {/* Mon ID Button */}
                     <a href="/bet_id" className="group relative flex-1 flex flex-col items-center justify-center p-3 transition-all duration-300 active:scale-95">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-400 to-purple-600 flex items-center justify-center mb-2 group-active:scale-90 transition-transform shadow-lg shadow-purple-500/25">
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center mb-2 group-active:scale-90 transition-transform shadow-lg shadow-blue-500/25">
                         <User size={18} className="text-white drop-shadow-sm" />
                       </div>
                       <span className="font-medium text-xs ">{t("Mon ID")}</span>
@@ -178,13 +178,13 @@ export default function Dashboard() {
                     </a>
                   
                     {/* Mon ID */}
-                    <a href="/bet_id" className="bg-gradient-to-br from-purple-400 to-purple-600 backdrop-blur-sm rounded-2xl p-4 hover:bg-white/15 transition-all duration-300 cursor-pointer group border border-white/5 hover:border-white/20">
+                    <a href="/bet_id" className="bg-gradient-to-br from-blue-400 to-blue-600 backdrop-blur-sm rounded-2xl p-4 hover:bg-white/15 transition-all duration-300 cursor-pointer group border border-white/5 hover:border-white/20">
                       <div className="flex flex-col lg:flex-row lg:items-center lg:gap-3">
                         <div className="relative mb-3 lg:mb-0">
-                          <div className="w-12 h-12 bg-gradient-to-br from-purple-400 to-purple-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-lg shadow-purple-500/25">
+                          <div className="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-lg shadow-blue-500/25">
                             <User className="w-6 h-6 text-white drop-shadow-sm" />
                           </div>
-                          <div className="absolute -top-1 -right-1 w-3 h-3 bg-purple-300 rounded-full opacity-60 group-hover:opacity-80 transition-opacity"></div>
+                          <div className="absolute -top-1 -right-1 w-3 h-3 bg-blue-300 rounded-full opacity-60 group-hover:opacity-80 transition-opacity"></div>
                         </div>
                         <span className="text-sm font-medium text-white/90 group-hover:text-white transition-colors">
                           {t("Mon ID")}

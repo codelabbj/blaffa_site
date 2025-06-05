@@ -534,7 +534,7 @@ export default function BlaffaLanding() {
                 <span className="text-sm">{language === 'en' ? 'FR' : 'EN'}</span>
               </button>
               <ThemeToggle /> 
-              <a href='/auth' className="bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-2 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105 text-white">
+              <a href='/auth' className="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-2 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105 text-white">
                 {t.getStarted}
               </a>
             </div>
@@ -561,7 +561,7 @@ export default function BlaffaLanding() {
                 <span className="text-sm">{language === 'fr' ? 'Français' : 'English'}</span>
               </button>
               <ThemeToggle /> 
-              <a href='/auth' className="w-full bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-2 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all block text-center text-white">
+              <a href='/auth' className="w-full bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-2 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all block text-center text-white">
                 {t.getStarted}
               </a>
             </div>
@@ -580,7 +580,7 @@ export default function BlaffaLanding() {
                 </div>
                 <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold leading-tight">
                   {t.heroTitle}
-                  <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent"> {t.heroTitleHighlight} </span>
+                  <span className="bg-gradient-to-r from-blue-400 to-blue-400 bg-clip-text text-transparent"> {t.heroTitleHighlight} </span>
                   {t.heroTitleEnd}
                 </h1>
                 <p className="text-xl leading-relaxed">
@@ -589,7 +589,7 @@ export default function BlaffaLanding() {
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <a href='/auth' className="bg-gradient-to-r from-blue-500 to-purple-600 px-8 py-4 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-allv hover:scale-105 flex items-center justify-center space-x-2 font-semibold text-white">
+                <a href='/auth' className="bg-gradient-to-r from-blue-500 to-blue-600 px-8 py-4 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-allv hover:scale-105 flex items-center justify-center space-x-2 font-semibold text-white">
                   <span>{t.startNow}</span>
                   <ArrowRight className="w-5 h-5" />
                 </a>
@@ -628,7 +628,7 @@ export default function BlaffaLanding() {
               </div>
               
               <div className="absolute -top-4 -right-4 w-24 h-24 bg-blue-500/20 rounded-full blur-xl"></div>
-              <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-purple-500/20 rounded-full blur-xl"></div>
+              <div className="absolute -bottom-4 -left-4 w-32 h-32 bg-blue-500/20 rounded-full blur-xl"></div>
             </div>
           </div>
         </div>
@@ -799,7 +799,7 @@ export default function BlaffaLanding() {
               {t.ctaDesc}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a href='/auth' className="bg-gradient-to-r from-blue-500 to-purple-600 px-8 py-4 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105 font-semibold text-white">
+              <a href='/auth' className="bg-gradient-to-r from-blue-500 to-blue-600 px-8 py-4 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105 font-semibold text-white">
                 {t.createFreeAccount}
               </a>
               <a href='/contact' className="border border-slate-600 px-8 py-4 rounded-lg hover:bg-slate-700/50 transition-all font-semibold">

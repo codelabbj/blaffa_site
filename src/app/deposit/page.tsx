@@ -428,7 +428,7 @@ export default function Deposits() {
   return (
     <div className="space-y-6">
       <div className="text-center mb-8">
-        <h2 className="text-2xl font-bold mb-2">{t("Step 1: Select Your Betting Platform")}</h2>
+        {/* <h2 className="text-2xl font-bold mb-2">{t("Step 1: Select Your Betting Platform")}</h2> */}
         <p className="text-slate-400">{t("Choisissez la plateforme de pari que vous souhaitez utiliser")}</p>
       </div>
      
@@ -437,7 +437,7 @@ export default function Deposits() {
           <div
             key={platform.id}
             onClick={() => handlePlatformSelect(platform)}
-            className={`group relative overflow-hidden bg-gradient-to-br ${theme.colors.sl_background} backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6 cursor-pointer hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20`}
+            className={`group relative overflow-hidden bg-gradient-to-br ${theme.colors.sl_background} backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6 cursor-pointer hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20`}
             style={{
               animation: `slideInUp 0.6s ease-out ${index * 100}ms both`
             }}
@@ -447,7 +447,7 @@ export default function Deposits() {
            
             <div className="relative">
               <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500/20 to-blue-600/20 text-purple-400 shadow-lg shadow-purple-500/20 flex items-center justify-center transition-all duration-500 group-hover:scale-110">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500/20 to-blue-600/20 text-blue-400 shadow-lg shadow-blue-500/20 flex items-center justify-center transition-all duration-500 group-hover:scale-110">
                   {platform.image ? (
                     <img
                       src={platform.image}
@@ -459,7 +459,7 @@ export default function Deposits() {
                   )}
                 </div>
                 <div className="ml-4">
-                  <div className="font-semibold group-hover:text-purple-200 transition-colors duration-300">
+                  <div className="font-semibold group-hover:text-blue-200 transition-colors duration-300">
                     {platform.public_name || platform.name}
                   </div>
                 </div>
@@ -472,7 +472,7 @@ export default function Deposits() {
              
               <div className="flex items-center justify-between">
                 <span className="text-slate-400 text-sm">Cliquez pour sélectionner</span>
-                <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-purple-400 group-hover:translate-x-1 transition-all duration-300" />
+                <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-blue-400 group-hover:translate-x-1 transition-all duration-300" />
               </div>
             </div>
           </div>
@@ -512,7 +512,7 @@ export default function Deposits() {
         return (
           <div className="space-y-6">
             <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold  mb-2">{t("Step 2: Select Network")}</h2>
+              {/* <h2 className="text-2xl font-bold  mb-2">{t("Step 2: Select Network")}</h2> */}
               <p className="text-slate-400">Choisissez votre réseau de paiement mobile</p>
             </div>
             
@@ -523,8 +523,8 @@ export default function Deposits() {
                   onClick={() => handleNetworkSelect(network)}
                   className={`group relative overflow-hidden p-6 border rounded-2xl cursor-pointer text-center transition-all duration-500 hover:scale-105 hover:shadow-2xl ${
                     selectedNetwork?.id === network.id 
-                      ? 'border-purple-500 bg-gradient-to-br from-purple-600/20 to-blue-600/20 shadow-lg shadow-purple-500/20' 
-                    : `border-slate-600/30 bg-gradient-to-br ${theme.colors.s_background} hover:from-slate-600/50 hover:to-slate-500/50 hover:shadow-purple-500/20`}
+                      ? 'border-blue-500 bg-gradient-to-br from-blue-600/20 to-blue-600/20 shadow-lg shadow-blue-500/20' 
+                    : `border-slate-600/30 bg-gradient-to-br ${theme.colors.s_background} hover:from-slate-600/50 hover:to-slate-500/50 hover:shadow-blue-500/20`}
                   }`}
                   style={{
                     animation: `slideInUp 0.6s ease-out ${index * 100}ms both`
@@ -543,12 +543,12 @@ export default function Deposits() {
                         </div>
                       </div>
                     )}
-                    <div className="text-sm font-medium  group-hover:text-purple-200 transition-colors duration-300">
+                    <div className="text-sm font-medium  group-hover:text-blue-200 transition-colors duration-300">
                       {network.public_name}
                     </div>
                     
                     {selectedNetwork?.id === network.id && (
-                      <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-purple-500 flex items-center justify-center">
+                      <div className="absolute top-2 right-2 w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center">
                         <Check className="w-4 h-4 " />
                       </div>
                     )}
@@ -565,7 +565,7 @@ export default function Deposits() {
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                 </svg>
-                {t("Back to Bet IDs")}
+                {t("Back to Platforms")}
               </button>
             </div>
           </div>
@@ -581,14 +581,14 @@ export default function Deposits() {
               setSelectedNetwork(null);
               setCurrentStep('selectNetwork');
             }}
-            className="group mr-4 p-2 rounded-xl border border-slate-600/30 hover:text-purple-400 hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20"
+            className="group mr-4 p-2 rounded-xl border border-slate-600/30 hover:text-blue-400 hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/20"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 group-hover:-translate-x-1 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
             </svg>
           </button>
           <div>
-            <h2 className="text-2xl font-bold mb-1">{t("Step 3: Enter Details")}</h2>
+            {/* <h2 className="text-2xl font-bold mb-1">{t("Step 3: Enter Details")}</h2> */}
             <p className="text-slate-400 text-sm">{t("Remplissez les détails de votre pari")}</p>
           </div>
         </div>
@@ -596,7 +596,7 @@ export default function Deposits() {
     {/* <form onSubmit={handleSubmit} className="space-y-6">
       
               <div className={`bg-gradient-to-br ${theme.colors.sl_background} backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6`}>
-                <label className="block text-sm font-semibold text-purple-400 mb-3">
+                <label className="block text-sm font-semibold text-blue-400 mb-3">
                   {t("Bet ID")} ({selectedPlatform?.public_name || selectedPlatform?.name})
                 </label>
                 <div className="space-y-4">
@@ -605,10 +605,10 @@ export default function Deposits() {
                       type="text"
                       value={formData.betid}
                       onChange={(e) => setFormData(prev => ({ ...prev, betid: e.target.value }))}
-                      className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300`}
+                      className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300`}
                       placeholder={t("Enter your bet ID")}
                     />
-                    <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-500/10 to-blue-500/10 opacity-0 focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                    <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 to-blue-500/10 opacity-0 focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                   </div>
                   
                   {platformBetIds.length > 0 && (
@@ -618,7 +618,7 @@ export default function Deposits() {
                         {platformBetIds.map((id, index) => (
                           <div
                             key={id.id}
-                            className={`group relative overflow-hidden bg-gradient-to-br ${theme.colors.sl_background} backdrop-blur-sm border border-slate-600/30 rounded-xl px-4 py-3 text-sm hover:from-slate-600/50 hover:to-slate-500/50 cursor-pointer flex items-center transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-purple-500/20`}
+                            className={`group relative overflow-hidden bg-gradient-to-br ${theme.colors.sl_background} backdrop-blur-sm border border-slate-600/30 rounded-xl px-4 py-3 text-sm hover:from-slate-600/50 hover:to-slate-500/50 cursor-pointer flex items-center transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/20`}
                             style={{
                               animation: `slideInUp 0.3s ease-out ${index * 50}ms both`
                             }}
@@ -637,7 +637,7 @@ export default function Deposits() {
                               }}
                               className="relative z-10 p-1.5 hover:bg-slate-500/30 rounded-lg transition-colors duration-200"
                             >
-                              <CopyIcon className="h-4 w-4 text-slate-400 hover:text-purple-400 transition-colors duration-200" />
+                              <CopyIcon className="h-4 w-4 text-slate-400 hover:text-blue-400 transition-colors duration-200" />
                             </button>
                           </div>
                         ))}
@@ -649,31 +649,31 @@ export default function Deposits() {
 
              
               <div className={`bg-gradient-to-br ${theme.colors.sl_background} backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6`}>
-                <label className="block text-sm font-semibold text-purple-400 mb-3">{t("Amount")}</label>
+                <label className="block text-sm font-semibold text-blue-400 mb-3">{t("Amount")}</label>
                 <div className="relative">
                   <input
                     type="number"
                     value={formData.amount}
                     onChange={(e) => setFormData(prev => ({ ...prev, amount: e.target.value }))}
-                    className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300`}
+                    className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300`}
                     placeholder={t("Enter amount")}
                   />
-                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-500/10 to-blue-500/10 opacity-0 focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 to-blue-500/10 opacity-0 focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                 </div>
               </div>
 
              
               <div className={`bg-gradient-to-br ${theme.colors.sl_background} backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6`}>
-                <label className="block text-sm font-semibold text-purple-400 mb-3">{t("Phone Number")}</label>
+                <label className="block text-sm font-semibold text-blue-400 mb-3">{t("Phone Number")}</label>
                 <div className="relative">
                   <input
                     type="tel"
                     value={formData.phoneNumber}
                     onChange={(e) => setFormData(prev => ({ ...prev, phoneNumber: e.target.value }))}
-                    className={`w-full p-4 ${theme.colors.sl_background} border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300`}
+                    className={`w-full p-4 ${theme.colors.sl_background} border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300`}
                     placeholder={t("Enter phone number")}
                   />
-                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-purple-500/10 to-blue-500/10 opacity-0 focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 to-blue-500/10 opacity-0 focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
                 </div>
               </div>
             
@@ -693,7 +693,7 @@ export default function Deposits() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white rounded-xl transition-all duration-300 font-medium shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 min-w-[140px]"
+                  className="px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-500 hover:to-blue-500 text-white rounded-xl transition-all duration-300 font-medium shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 min-w-[140px]"
                 >
                   {loading ? (
                     <div className="flex items-center justify-center">
@@ -796,6 +796,20 @@ export default function Deposits() {
     }
   };
 
+  // Get current step title
+  const getCurrentStepTitle = () => {
+    switch (currentStep) {
+      case 'selectId':
+        return t("Select Your Betting Platform");
+      case 'selectNetwork':
+        return t("Select Network");
+      case 'enterDetails':
+        return t("Enter Details");
+      default:
+        return "";
+    }
+  };
+
   return (
     <div className={`min-h-screen bg-gradient-to-br ${theme.colors.a_background} p-4`}>
       <style>
@@ -874,55 +888,12 @@ export default function Deposits() {
           </button>
         </div>
 
-        {/* Progress Steps */}
-        <div className="flex justify-between mb-12 relative max-w-2xl mx-auto">
-          {['selectId', 'selectNetwork', 'enterDetails'].map((step, index) => {
-            const stepNum = index + 1;
-            let stepName = '';
-            const currentStepIndex = ['selectId', 'selectNetwork', 'enterDetails'].indexOf(currentStep);
-            
-            switch (step) {
-              case 'selectId': stepName = t('Select Bet ID'); break;
-              case 'selectNetwork': stepName = t('Select Network'); break;
-              case 'enterDetails': stepName = t('Enter Details'); break;
-            }
-            
-            const isCompleted = index < currentStepIndex;
-            const isActive = index === currentStepIndex;
-            
-            return (
-              <div key={step} className="flex flex-col items-center flex-1 relative">
-                <div 
-                  className={`w-12 h-12 rounded-2xl flex items-center justify-center mb-3 transition-all duration-500 ${
-                    isActive 
-                      ? 'bg-gradient-to-br from-purple-600 to-blue-600 text-white shadow-lg shadow-purple-500/50 scale-110' 
-                      : isCompleted 
-                        ? 'bg-gradient-to-br from-green-500 to-emerald-600 text-white shadow-lg shadow-green-500/50' 
-                        : `bg-gradient-to-br ${theme.colors.s_background} text-slate-400 border border-slate-600/50`
-                  }`}
-                >
-                  {isCompleted ? <Check className="w-6 h-6" /> : stepNum}
-                </div>
-                <span className={`text-sm text-center transition-all duration-300 ${
-                  isActive 
-                    ? 'font-medium text-purple-300' 
-                    : isCompleted 
-                      ? 'text-green-400' 
-                      : 'text-slate-500'
-                }`}>
-                  {stepName}
-                </span>
-                
-                {index < 2 && (
-                  <div className="absolute top-6 left-1/2 w-full h-1 bg-slate-700 -z-10 rounded-full">
-                    {isCompleted && (
-                      <div className="h-full bg-gradient-to-r from-green-500 to-emerald-600 rounded-full transition-all duration-1000" style={{ width: '100%' }}></div>
-                    )}
-                  </div>
-                )}
-              </div>
-            );
-          })}
+        {/* Simplified Progress Steps - Show only current step */}
+        <div className="text-center mb-12">
+          {/* <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gradient-to-br from-blue-600 to-blue-600 shadow-lg shadow-blue-500/50 mb-4">
+            <div className="w-3 h-3 rounded-full bg-white"></div>
+          </div> */}
+          <h2 className="text-xl font-bold ">{getCurrentStepTitle()}</h2>
         </div>
         
         {/* Main Content */}
@@ -950,8 +921,8 @@ export default function Deposits() {
             {loading && !success && !error ? (
               <div className="flex justify-center items-center p-20">
                 <div className="relative">
-                  <div className="animate-spin rounded-full h-16 w-16 border-4 border-purple-500/30 border-t-purple-500"></div>
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500/20 to-blue-500/20 animate-pulse"></div>
+                  <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500/30 border-t-blue-500"></div>
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 to-blue-500/20 animate-pulse"></div>
                 </div>
               </div>
             ) : (
@@ -960,6 +931,7 @@ export default function Deposits() {
           </div>
         </div>
       </div>
+    
   
       {/* Transaction Details Modal */}
         {isModalOpen && selectedTransaction && (

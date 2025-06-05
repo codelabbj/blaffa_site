@@ -673,30 +673,67 @@ export default function TransactionHistory() {
           return <CheckCircle className="w-4 h-4 text-green-500" />;
         case 'accept':
           return <CheckCircle className="w-4 h-4 text-green-500" />;
+        case 'payment_init_success':
+          return <Clock className="w-4 h-4 text-blue500" />;
         case 'pending':
           return <Clock className="w-4 h-4 text-yellow-500" />;
         case 'failed':
+        case 'error':
           return <XCircle className="w-4 h-4 text-red-500" />;
         default:
           return <AlertCircle className="w-4 h-4 text-gray-500" />;
       }
     };
 
-  
+    const formatStatusText = (status: string) => {
+      const statusMap: Record<string, string> = {
+        completed: 'Completed',
+        payment_init_success: 'Processing',
+        accept: 'Accepted',
+        pending: 'Pending',
+        failed: 'Failed',
+        error: 'Failed'
+      };
+      
+      return statusMap[status.toLowerCase()] || status;
+    };
+
     const getStatusBadgeClass = (status: string) => {
       switch (status) {
         case 'completed':
-          return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
         case 'accept':
           return 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
+        case 'payment_init_success':
+          return 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400';
         case 'pending':
           return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400';
         case 'failed':
+        case 'error':
           return 'bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-400';
         default:
           return 'bg-gray-100 text-gray-800 dark:bg-gray-900/30 dark:text-gray-400';
       }
     };
+
+  //   const StatusBadge = ({ status }: { status: string }) => {
+  //   const statusMap: Record<string, { text: string; className: string }> = {
+  //     completed: { text: 'Completed', className: 'bg-green-500/10 text-green-500' },
+  //     payment_init_success: { text: 'Proccesing', className: 'bg-green-500/10 text-green-500' },
+  //     accept: { text: 'Accepted', className: 'bg-green-500/10 text-green-500' },
+  //     pending: { text: 'Pending', className: 'bg-yellow-500/10 text-yellow-500' },
+  //     failed: { text: 'Failed', className: 'bg-red-500/10 text-red-500' },
+  //     error: { text: 'Failed', className: 'bg-red-500/10 text-red-500' },
+  //     default: { text: status, className: 'bg-gray-500/10 text-gray-500' },
+  //   };
+
+  //   const { text, className } = statusMap[status.toLowerCase()] || statusMap.default;
+
+  //   return (
+  //     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${className}`}>
+  //       {text}
+  //     </span>
+  //   );
+  // }
   
   // Get status badge class based on transaction status
   // const getStatusBadgeClass = (status: string) => {
@@ -728,7 +765,7 @@ export default function TransactionHistory() {
     <div className={`rounded-2xl shadow-sm border border-gray-200 bg-gradient-to-br ${theme.colors.a_background} ${theme.colors.text}`}>
       {/* Background gradient effects */}
       <div className="absolute top-20 -left-10 w-40 h-40 bg-orange-700/20 rounded-full blur-3xl animate-pulse-slow"></div>
-      <div className="absolute bottom-20 right-10 w-60 h-60 bg-purple-700/10 rounded-full blur-3xl animate-pulse-slow"></div>
+      <div className="absolute bottom-20 right-10 w-60 h-60 bg-blue-700/10 rounded-full blur-3xl animate-pulse-slow"></div>
      <div className={`${theme.colors.c_background} shadow-md rounded-2xl p-6 w-full overflow-hidden`}>
         {/* Header with title and controls */}
         <div className="p-6 border-b border-gray-200">
@@ -772,8 +809,8 @@ export default function TransactionHistory() {
           {loading && page === 1 ? (
             <div className="flex justify-center items-center py-16">
               <div className="relative">
-                <div className="animate-spin rounded-full h-12 w-12 border-4 border-purple-500/30 border-t-purple-500"></div>
-                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500/20 to-blue-500/20 animate-pulse"></div>
+                <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500/30 border-t-blue-500"></div>
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 to-blue-500/20 animate-pulse"></div>
               </div>
             </div>
           ) : transactions.length === 0 ? (
@@ -796,7 +833,7 @@ export default function TransactionHistory() {
                 {transactions.map((item, index) => (
                   <div
                     key={item.id}
-                    className={`group relative w-full overflow-hidden rounded-2xl bg-gradient-to-r ${theme.colors.s_background} backdrop-blur-sm border border-slate-600/50 hover:border-purple-500/50 transition-all duration-500 cursor-pointer hover:shadow-2xl hover:shadow-purple-500/10`}
+                    className={`group relative w-full overflow-hidden rounded-2xl bg-gradient-to-r ${theme.colors.s_background} backdrop-blur-sm border border-slate-600/50 hover:border-blue-500/50 transition-all duration-500 cursor-pointer hover:shadow-2xl hover:shadow-blue-500/10`}
                     onClick={() => openTransactionDetails(item)}
                     style={{
                       animation: `slideInUp 0.6s ease-out ${index * 100}ms both`
@@ -832,7 +869,7 @@ export default function TransactionHistory() {
                               </h3>
                               <div className={`flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-medium transition-all duration-300 ${getStatusBadgeClass(item.transaction.status)} group-hover:scale-105`}>
                                 {getStatusIcon(item.transaction.status)}
-                                <span className="ml-1 capitalize">{item.transaction.status}</span>
+                                <span className="ml-1 capitalize">{formatStatusText(item.transaction.status)}</span>
                               </div>
                             </div>
                             
@@ -885,7 +922,7 @@ export default function TransactionHistory() {
                           
                           <div className={`flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-medium ${getStatusBadgeClass(item.transaction.status)}`}>
                             {getStatusIcon(item.transaction.status)}
-                            <span className="ml-1 capitalize">{item.transaction.status}</span>
+                            <span className="ml-1 capitalize">{formatStatusText(item.transaction.status)}</span>
                           </div>
                         </div>
 
@@ -913,7 +950,7 @@ export default function TransactionHistory() {
 
                     {/* Gradient border effect on hover */}
                     <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-purple-500/20 via-blue-500/20 to-purple-500/20 blur-sm"></div>
+                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 via-blue-500/20 to-blue-500/20 blur-sm"></div>
                     </div>
                   </div>
                 ))}
@@ -925,8 +962,8 @@ export default function TransactionHistory() {
           {loading && page > 1 && (
             <div className="flex justify-center items-center py-8">
               <div className="relative">
-                <div className="animate-spin rounded-full h-8 w-8 border-3 border-purple-500/30 border-t-purple-500"></div>
-                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500/10 to-blue-500/10 animate-pulse"></div>
+                <div className="animate-spin rounded-full h-8 w-8 border-3 border-blue-500/30 border-t-blue-500"></div>
+                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/10 to-blue-500/10 animate-pulse"></div>
               </div>
             </div>
           )}
@@ -1078,7 +1115,7 @@ export default function TransactionHistory() {
                   </button>
                   <button
                     onClick={() => copyToClipboard(selectedTransaction.transaction.reference)}
-                    className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white rounded-xl transition-all duration-300 font-medium shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 flex items-center gap-2"
+                    className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-500 hover:to-blue-500 text-white rounded-xl transition-all duration-300 font-medium shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 flex items-center gap-2"
                   >
                     <Copy size={16} />
                     Copy Details

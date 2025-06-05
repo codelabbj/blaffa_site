@@ -50,10 +50,10 @@ const DashboardHeader = () => {
   //         <div className="flex items-center justify-between h-16">
   //           <div className="flex items-center space-x-4">
   //             <div className="flex items-center space-x-2">
-  //               <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+  //               <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
   //                 <Image src="/logo.png" alt="Logo" width={50} height={50} className="rounded-full" />
   //               </div>
-  //               <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+  //               <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-600 bg-clip-text text-transparent">
   //                 Blaffa
   //               </span>
   //             </div>
@@ -81,7 +81,7 @@ const DashboardHeader = () => {
   //                   </span>
   //                 )} */}
   //             </a>
-  //             <a className="w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center relative group" href='/profile'>
+  //             <a className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center relative group" href='/profile'>
   //               <User size={16} className="text-sm text-white font-bold group-hover:scale-110 transition-transform"/>
   //               <div className="absolute inset-0 bg-blue-500 rounded-full animate-ping opacity-75 duration-1000 hidden group-hover:block"></div>
   //             </a>
@@ -102,10 +102,11 @@ const DashboardHeader = () => {
         <div className="flex items-center justify-between h-16 w-full overflow-x-hidden">
           <div className="flex items-center space-x-4 flex-shrink-0">
             <div className="flex items-center space-x-2">
-              <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                <Image src="/logo.png" alt="Logo" width={50} height={50} className="rounded-full" />
-              </div>
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              {/* <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                
+              </div> */}
+              <Image src="/logo.png" alt="Logo" width={40} height={40} className="rounded-full" />
+              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-600 bg-clip-text text-transparent">
                 Blaffa
               </span>
             </div>
@@ -147,7 +148,7 @@ const DashboardHeader = () => {
               )} */}
             </a>
             
-            <a className="w-8 h-8 rounded-full bg-purple-500 flex items-center justify-center relative group" href='/profile'>
+            <a className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center relative group" href='/profile'>
               <User size={16} className="text-sm text-white font-bold group-hover:scale-110 transition-transform"/>
               <div className="absolute inset-0 bg-blue-500 rounded-full animate-ping opacity-75 duration-1000 hidden group-hover:block"></div>
             </a>

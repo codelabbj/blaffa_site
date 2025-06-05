@@ -9,6 +9,7 @@ import { useTranslation } from 'react-i18next';
 //import axios from 'axios';
 import { useTheme } from '../../components/ThemeProvider';
 import api from '@/lib/axios';
+import { ArrowLeft } from 'lucide-react';
 
 const AuthPage: React.FC = () => {
   const { t } = useTranslation();
@@ -68,6 +69,14 @@ const AuthPage: React.FC = () => {
 
   return (
     <div className={`min-h-screen bg-gradient-to-br ${theme.colors.a_background} transition-colors flex flex-col`}>
+
+      <button 
+        onClick={() => router.push('/')}
+        className="absolute top-4 left-4 md:top-6 md:left-6 flex items-center text-white/80 hover:text-white transition-colors z-10"
+      >
+        <ArrowLeft className="w-5 h-5 mr-1" />
+        <span className="text-sm font-medium">{t('Back')}</span>
+      </button>
      
       {/* Main Content - Side by side layout that stacks on mobile */}
       <div className="flex-1 flex flex-col-reverse md:flex-row items-center justify-center px-6 py-8 gap-30">

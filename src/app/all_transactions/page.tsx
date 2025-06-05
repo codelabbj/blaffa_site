@@ -380,7 +380,7 @@ useEffect(() => {
                 })}
                 {loading && hasMore && (
                   <div className="flex justify-center py-4">
-                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-500"></div>
+                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
                   </div>
                 )}
               </div>
@@ -455,7 +455,7 @@ useEffect(() => {
                                 {getTransactionTypeIcon(tx.type_trans)}
                               </div>
                               <div className="ml-3 overflow-hidden">
-                                <div className="text-sm font-medium group-hover:text-purple-200 transition-colors duration-300 truncate">
+                                <div className="text-sm font-medium group-hover:text-blue-200 transition-colors duration-300 truncate">
                                   {tx.type_trans === 'deposit' ? 'Dépôt' : 'Retrait'}
                                 </div>
                                 <div className="text-sm  group-hover:text-slate-300 transition-colors duration-300 truncate">
@@ -474,14 +474,14 @@ useEffect(() => {
                             </div>
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap relative">
-                            <div className="text-sm font-mono group-hover:text-purple-200 transition-colors duration-300 truncate max-w-[150px]">
+                            <div className="text-sm font-mono group-hover:text-blue-200 transition-colors duration-300 truncate max-w-[150px]">
                               {tx.reference}
                             </div>
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap relative">
                             <StatusBadge status={tx.status} />
                           </td>
-                          <td className="px-4 py-3 whitespace-nowrap text-sm group-hover:text-purple-200 transition-colors duration-300 relative">
+                          <td className="px-4 py-3 whitespace-nowrap text-sm group-hover:text-blue-200 transition-colors duration-300 relative">
                             {formatDate(tx.created_at)}
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap text-right text-sm font-medium relative">
@@ -491,7 +491,7 @@ useEffect(() => {
                                 setSelectedTransaction(tx);
                                 setIsModalOpen(true);
                               }}
-                              className="bg-gradient-to-r from-purple-600/80 to-blue-600/80 hover:from-purple-500 hover:to-blue-500  px-3 py-1.5 text-sm rounded-lg transition-all duration-300 shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-105"
+                              className="bg-gradient-to-r from-blue-600/80 to-blue-600/80 hover:from-blue-500 hover:to-blue-500  px-3 py-1.5 text-sm rounded-lg transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-105"
                             >
                               Détails
                             </button>
@@ -503,7 +503,7 @@ useEffect(() => {
                       <tr>
                         <td colSpan={6} className="py-4 text-center">
                           <div className="flex justify-center">
-                            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-500"></div>
+                            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
                           </div>
                         </td>
                       </tr>
@@ -518,7 +518,7 @@ useEffect(() => {
         </div>
        {/* {loading && hasMore && (
           <div className="flex justify-center py-4">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-purple-500"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
           </div>
         )} */}
            
@@ -670,7 +670,7 @@ useEffect(() => {
             <div className="px-6 pb-6">
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white rounded-xl transition-all duration-300 font-medium shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40"
+                className="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-500 hover:to-blue-500 text-white rounded-xl transition-all duration-300 font-medium shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40"
               >
                 Fermer
               </button>

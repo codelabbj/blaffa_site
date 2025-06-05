@@ -343,7 +343,7 @@ export default function AuthForm() {
             
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-3 rounded hover:bg-purple-700"
+              className="w-full bg-blue-600 text-white py-3 rounded hover:bg-blue-700"
             >
               {t('Verify Code')}
             </button>
@@ -560,6 +560,7 @@ export default function AuthForm() {
 
   return (
    <div className={`bg-gradient-to-br ${theme.colors.s_background} backdrop-blur-sm rounded-2xl p-8 shadow-xl`}>
+
         {/* {!isForgotPassword && (
           <h2 className={`text-2xl font-bold text-center mb-6 ${theme.colors.text}`}>
             {t("Welcome to Blaffa")}
@@ -587,7 +588,7 @@ export default function AuthForm() {
               type="button"
               onClick={() => setIsLogin(true)}
               className={`flex-1 py-2 font-medium text-center transition-all ${
-                isLogin ? "bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105 text-white rounded-lg" : "bg-transparent"
+                isLogin ? "bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105 text-white rounded-lg" : "bg-transparent"
               }`}
             >
               {t("Login")}
@@ -596,7 +597,7 @@ export default function AuthForm() {
               type="button"
               onClick={() => setIsLogin(false)}
               className={`flex-1 py-2 font-medium text-center transition-all ${
-                !isLogin ? "text-white bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105 rounded-lg" : "bg-transparent"
+                !isLogin ? "text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105 rounded-lg" : "bg-transparent"
               }`}
             >
               {t("Register")}
@@ -724,57 +725,57 @@ export default function AuthForm() {
               )}
 
               {!isLogin && (
-                <div className="flex gap-4">
-                  <div className="flex-1">
-                    <label className="block text-sm font-medium">
+                <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="flex-1 min-w-0">
+                    <label className="block text-sm font-medium mb-1">
                       {t("Password")}
                     </label>
                     <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-gray-400" />
-                  </div>
-                    <input
-                      type={showPassword ? "text" : "password"}
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      className="bg-gray-700 text-white w-full pl-10 pr-10 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                      placeholder={t("Enter your password")}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                    >
-                      {showPassword ? <EyeOff className="h-5 w-5 text-gray-400" /> : <Eye className="h-5 w-5 text-gray-400" />}
-                    </button>
-                  </div>
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Lock className="h-5 w-5 text-gray-400" />
+                      </div>
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        className="bg-gray-700 text-white w-full pl-10 pr-10 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                        placeholder={t("Enter your password")}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                      >
+                        {showPassword ? <EyeOff className="h-5 w-5 text-gray-400" /> : <Eye className="h-5 w-5 text-gray-400" />}
+                      </button>
+                    </div>
                   </div>
 
-                  <div className="flex-1">
-                    <label className="block text-sm font-medium">
+                  <div className="flex-1 min-w-0">
+                    <label className="block text-sm font-medium mb-1 whitespace-nowrap">
                       {t("Confirm Password")}
                     </label>
                     <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Lock className="h-5 w-5 text-gray-400" />
-                  </div>
-                    <input
-                      type={showConfirmPassword ? "text" : "password"}
-                      value={confirmPassword}
-                      onChange={(e) => setConfirmPassword(e.target.value)}
-                      required
-                      className="bg-gray-700 text-white w-44 pl-10 pr-10 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                      placeholder={t("Confirm your password")}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                     >
-                      {showConfirmPassword ? <EyeOff className="h-5 w-5 text-gray-400" /> : <Eye className="h-5 w-5 text-gray-400" />}
-                    </button>
-                  </div>
+                      <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <Lock className="h-5 w-5 text-gray-400" />
+                      </div>
+                      <input
+                        type={showConfirmPassword ? "text" : "password"}
+                        value={confirmPassword}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        required
+                        className="bg-gray-700 text-white w-full pl-10 pr-10 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                        placeholder={t("Confirm your password")}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                      >
+                        {showConfirmPassword ? <EyeOff className="h-5 w-5 text-gray-400" /> : <Eye className="h-5 w-5 text-gray-400" />}
+                      </button>
+                    </div>
                   </div>
                 </div>
               )}
@@ -795,7 +796,7 @@ export default function AuthForm() {
 
               <button
                 type="submit"
-                className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105 text-white font-medium py-3 px-4 rounded-lg flex items-center justify-center duration-300 ${isLoading ? 'animate-pulse' : ''} relative overflow-hidden group"
+                className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105 text-white font-medium py-3 px-4 rounded-lg flex items-center justify-center duration-300 ${isLoading ? 'animate-pulse' : ''} relative overflow-hidden group"
               >
                 <span className="flex items-center justify-center relative z-10">
                 {isLogin ? (isLoading ? t('Processing...') : t('Log in')) : (isLoading ? t('Processing...') : t('Register'))}
@@ -804,7 +805,7 @@ export default function AuthForm() {
                 </span>
                 
                 {/* Button animation overlay */}
-                <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-500 to-purple-600 px-6 py-2 rounded-lg hover:from-blue-600 hover:to-purple-700 transition-all transform hover:scale-105 duration-300"></span>
+                <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-2 rounded-lg hover:from-blue-600 hover:to-blue-700 transition-all transform hover:scale-105 duration-300"></span>
               
                 
               </button>

@@ -272,10 +272,10 @@ export default function BetIdsPage() {
 
  if (loading) {
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
       <div className="relative">
-        <div className="animate-spin rounded-full h-16 w-16 border-4 border-purple-500/30 border-t-purple-500"></div>
-        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500/20 to-blue-500/20 animate-pulse"></div>
+        <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500/30 border-t-blue-500"></div>
+        <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 to-blue-500/20 animate-pulse"></div>
       </div>
     </div>
   );
@@ -354,7 +354,7 @@ return (
             
             <div className="relative">
               <div className="flex items-center mb-6">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500/20 to-slate-600/20 text-blue-400 shadow-lg shadow-blue-500/20 flex items-center justify-center mr-4">
+                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500/20 to-slate-600/20 text-blue-400 shadow-lg shadow-blue-500/20 flex items-center justify-center mr-4">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
                   </svg>
@@ -400,7 +400,7 @@ return (
                 <div className="flex items-end">
                   <button
                     onClick={handleAddBetId}
-                    className="w-full px-6 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-amber-500 text-white font-medium rounded-xl transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-105"
+                    className="w-full px-6 py-4 bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-500 hover:to-amber-500 text-white font-medium rounded-xl transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-105"
                   >
                     {t("Add Bet ID")}
                   </button>
@@ -435,7 +435,7 @@ return (
                   return (
                     <div 
                       key={item.id}
-                      className={`group relative overflow-hidden bg-gradient-to-br ${theme.colors.s_background} backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6 hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-purple-500/20`}
+                      className={`group relative overflow-hidden bg-gradient-to-br ${theme.colors.s_background} backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6 hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20`}
                       style={{
                         animation: `slideInUp 0.6s ease-out ${index * 100}ms both`
                       }}
@@ -446,13 +446,13 @@ return (
                       <div className="relative">
                         <div className="flex items-center justify-between mb-4">
                           <div className="flex items-center">
-                            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-purple-500/20 to-blue-600/20 text-purple-400 shadow-lg shadow-purple-500/20 flex items-center justify-center mr-3">
+                            <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500/20 to-blue-600/20 text-blue-400 shadow-lg shadow-blue-500/20 flex items-center justify-center mr-3">
                               <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h.01M15 12h.01M12 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                               </svg>
                             </div>
                             <div>
-                              <div className=" font-semibold group-hover:text-purple-200 transition-colors duration-300">
+                              <div className=" font-semibold group-hover:text-blue-200 transition-colors duration-300">
                                 {appName}
                               </div>
                             </div>

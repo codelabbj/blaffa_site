@@ -216,7 +216,7 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
 
   if (showDeleteConfirmation) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
         <style>
           {`
             @keyframes modalSlideIn {
@@ -417,7 +417,7 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
 
         <button
           onClick={handleLogout}
-          className="flex items-center text-white bg-gradient-to-r from-blue-600/80 to-purple-600/80 hover:from-blue-600 hover:to-purple-600 px-6 py-3 rounded-xl border border-blue-500/50 hover:border-purple-400/50 transition-all duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl hover:shadow-blue-500/25 hover:scale-105 group mb-8"
+          className="flex items-center text-white bg-gradient-to-r from-blue-600/80 to-blue-600/80 hover:from-blue-600 hover:to-blue-600 px-6 py-3 rounded-xl border border-blue-500/50 hover:border-blue-400/50 transition-all duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl hover:shadow-blue-500/25 hover:scale-105 group mb-8"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -450,7 +450,7 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
               
               <div className="relative">
                 <div className="flex items-center mb-8">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/20 to-purple-600/20 text-blue-400 shadow-lg shadow-blue-500/20 flex items-center justify-center mr-4 transition-all duration-500 group-hover:scale-110">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/20 to-blue-600/20 text-blue-400 shadow-lg shadow-blue-500/20 flex items-center justify-center mr-4 transition-all duration-500 group-hover:scale-110">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
@@ -552,7 +552,7 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
 
                 <button
                   onClick={handleUpdateDetails}
-                  className="mt-8 px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 text-white rounded-xl transition-all duration-300 font-medium shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 hover:scale-105 flex items-center"
+                  className="mt-8 px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-500 hover:to-blue-500 text-white rounded-xl transition-all duration-300 font-medium shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 hover:scale-105 flex items-center"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />
@@ -574,15 +574,15 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
               
               <div className="relative">
                 <div className="flex items-center mb-8">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500/20 to-blue-600/20 text-purple-400 shadow-lg shadow-purple-500/20 flex items-center justify-center mr-4 transition-all duration-500 group-hover:scale-110">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500/20 to-blue-600/20 text-blue-400 shadow-lg shadow-blue-500/20 flex items-center justify-center mr-4 transition-all duration-500 group-hover:scale-110">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                     </svg>
                   </div>
-                  <h2 className="text-2xl font-bold  group-hover:text-purple-200 transition-colors duration-300">{t("Reset Password")}</h2>
+                  <h2 className="text-2xl font-bold  group-hover:text-blue-200 transition-colors duration-300">{t("Reset Password")}</h2>
                 </div>
 
-                <div className="bg-gradient-to-r from-purple-900/30 to-blue-900/30 backdrop-blur-sm p-5 rounded-2xl mb-8 border border-purple-600/30">
+                <div className="bg-gradient-to-r from-blue-900/30 to-blue-900/30 backdrop-blur-sm p-5 rounded-2xl mb-8 border border-blue-600/30">
                   <p className="text-blue-500 text-sm flex items-start">
                     <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -603,7 +603,7 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
                         name="oldPassword"
                         value={formData.oldPassword}
                         onChange={handleChange}
-                        className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl  placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 pr-12`}
+                        className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl  placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 pr-12`}
                       />
                       <button
                         type="button"
@@ -626,7 +626,7 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
                         name="newPassword"
                         value={formData.newPassword}
                         onChange={handleChange}
-                        className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl  placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 pr-12`}
+                        className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl  placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 pr-12`}
                       />
                       <button
                         type="button"
@@ -649,7 +649,7 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
                         name="confirmPassword"
                         value={formData.confirmPassword}
                         onChange={handleChange}
-                        className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl  placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-500/50 focus:border-purple-500/50 transition-all duration-300 pr-12`}
+                        className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl  placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 pr-12`}
                       />
                       <button
                         type="button"
@@ -664,7 +664,7 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
 
                 <button
                   onClick={handleResetPassword}
-                  className="mt-8 px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white rounded-xl transition-all duration-300 font-medium shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-105 flex items-center"
+                  className="mt-8 px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-500 hover:to-blue-500 text-white rounded-xl transition-all duration-300 font-medium shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-105 flex items-center"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />

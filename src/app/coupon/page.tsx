@@ -107,7 +107,7 @@ const CouponPage = () => {
         <meta name="description" content="View all available coupons" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-4">
         <style>
           {`
             @keyframes slideInUp {
@@ -165,8 +165,8 @@ const CouponPage = () => {
         </style>
         <div className="text-center">
           <div className="relative mb-6">
-            <div className="animate-spin rounded-full h-16 w-16 border-4 border-purple-500/30 border-t-purple-500 mx-auto"></div>
-            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-500/20 to-blue-500/20 animate-pulse"></div>
+            <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500/30 border-t-blue-500 mx-auto"></div>
+            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 to-blue-500/20 animate-pulse"></div>
           </div>
           <p className="text-slate-300 text-lg font-medium">Loading coupons...</p>
         </div>
@@ -182,7 +182,7 @@ if (error) {
         <title>Coupons - blaffa</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900 flex items-center justify-center p-4">
         <style>
           {`
             @keyframes slideInUp {
@@ -226,7 +226,7 @@ if (error) {
                   window.location.href = '/';
                }
             }}
-            className="px-8 py-4 bg-gradient-to-r from-purple-600 to-blue-600 hover:from-purple-500 hover:to-blue-500 text-white rounded-xl transition-all duration-300 font-medium shadow-lg shadow-purple-500/25 hover:shadow-purple-500/40 hover:scale-105"
+            className="px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-500 hover:to-blue-500 text-white rounded-xl transition-all duration-300 font-medium shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-105"
           >
             Try Again
           </button>
@@ -359,7 +359,7 @@ return (
                 {coupons.map((coupon: Coupon, couponIndex: number) => (
                   <div 
                     key={coupon.id} 
-                    className={`group relative overflow-hidden bg-gradient-to-br ${theme.colors.s_background} backdrop-blur-sm border border-slate-600/30 rounded-2xl transition-all duration-500 hover:from-slate-600/50 hover:to-slate-500/50 hover:scale-[1.02] hover:shadow-2xl hover:shadow-purple-500/20`}
+                    className={`group relative overflow-hidden bg-gradient-to-br ${theme.colors.s_background} backdrop-blur-sm border border-slate-600/30 rounded-2xl transition-all duration-500 hover:from-slate-600/50 hover:to-slate-500/50 hover:scale-[1.02] hover:shadow-2xl hover:shadow-blue-500/20`}
                     style={{
                       animation: `slideInUp 0.6s ease-out ${couponIndex * 100}ms both`
                     }}
@@ -368,7 +368,7 @@ return (
                     <div className="absolute inset-0 shimmer-effect opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
                     
                     {/* Coupon Header */}
-                    <div className="relative bg-gradient-to-r from-purple-600/80 to-blue-600/80 backdrop-blur-sm px-6 py-4 border-b border-slate-600/30">
+                    <div className="relative bg-gradient-to-r from-blue-600/80 to-blue-600/80 backdrop-blur-sm px-6 py-4 border-b border-slate-600/30">
                       <div className="flex items-center justify-between text-white">
                         <div>
                           <h3 className="text-lg font-semibold flex items-center">
@@ -379,7 +379,7 @@ return (
                             </div>
                             Coupon #{coupon.id.slice(0, 8)}
                           </h3>
-                          <p className="text-purple-100 text-sm mt-1">Created: {formatDate(coupon.created_at)}</p>
+                          <p className="text-blue-100 text-sm mt-1">Created: {formatDate(coupon.created_at)}</p>
                         </div>
                         <div className="bg-white/20 backdrop-blur-sm px-4 py-2 rounded-xl text-sm font-medium border border-white/10">
                           {coupon.images.length} Image{coupon.images.length !== 1 ? 's' : ''}
@@ -393,7 +393,7 @@ return (
                         {coupon.images.map((imageUrl: string, index: number) => (
                           <div
                             key={index}
-                            className="relative group/image cursor-pointer rounded-xl overflow-hidden bg-slate-800/50 aspect-square border border-slate-600/30 hover:border-purple-500/50 transition-all duration-300"
+                            className="relative group/image cursor-pointer rounded-xl overflow-hidden bg-slate-800/50 aspect-square border border-slate-600/30 hover:border-blue-500/50 transition-all duration-300"
                             onClick={() => handleImageClick(imageUrl)}
                             style={{
                               animation: `slideInUp 0.6s ease-out ${(index + 1) * 100}ms both`
