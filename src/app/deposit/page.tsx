@@ -24,6 +24,7 @@ interface Network {
   public_name: string;
   country_code: string;
   image?: string;
+  otp_required?: boolean;
 }
 
 interface App {
@@ -118,14 +119,15 @@ export default function Deposits() {
   const [currentStep, setCurrentStep] = useState<'selectId' | 'selectNetwork' | 'enterDetails'>('selectId');
   const [selectedPlatform, setSelectedPlatform] = useState<App | null>(null);
   const [platforms, setPlatforms] = useState<App[]>([]);
-  const [selectedNetwork, setSelectedNetwork] = useState<{ id: string; name: string; public_name?: string; country_code?: string; image?: string } | null>(null);
+  const [selectedNetwork, setSelectedNetwork] = useState<{ id: string; name: string; public_name?: string; country_code?: string; image?: string, otp_required?: boolean } | null>(null);
   const [formData, setFormData] = useState({
     amount: '',
     phoneNumber: '',
     betid: '',
+    otp: '' // Add OTP field to form state
   });
   
-  const [networks, setNetworks] = useState<{ id: string; name: string; public_name?: string; image?: string }[]>([]);
+  const [networks, setNetworks] = useState<{ id: string; name: string; public_name?: string; image?: string, otp_required?: boolean }[]>([]);
   const [savedAppIds, setSavedAppIds] = useState<IdLink[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -241,7 +243,7 @@ export default function Deposits() {
     setCurrentStep('selectNetwork');
   };
 
-  const handleNetworkSelect = (network: { id: string; name: string; public_name?: string; country_code?: string; image?: string }) => {
+  const handleNetworkSelect = (network: { id: string; name: string; public_name?: string; country_code?: string; image?: string, otp_required?: boolean }) => {
     setSelectedNetwork(network);
     setCurrentStep('enterDetails');
   };
@@ -296,15 +298,32 @@ export default function Deposits() {
       // Get the country code from the selected network
       const countryCode = selectedNetwork.country_code?.toLowerCase(); // Default to 'ci' if not specified
     
-      
-      const response = await api.post(`/blaffa/transaction?country_code=${countryCode}`, {
+      const transactionData: any = {
         type_trans: 'deposit',
         amount: formData.amount,
-        phone_number: formData.phoneNumber,
-        network_id: selectedNetwork.id,
         app_id: selectedPlatform.id,
+        network_id: selectedNetwork.id,
+        phone_number: formData.phoneNumber,
         user_app_id: formData.betid
-      }, {
+      };
+
+      // const response = await api.post(`/blaffa/transaction?country_code=${countryCode}`, {
+      //   type_trans: 'deposit',
+      //   amount: formData.amount,
+      //   phone_number: formData.phoneNumber,
+      //   network_id: selectedNetwork.id,
+      //   app_id: selectedPlatform.id,
+      //   user_app_id: formData.betid
+      // }, {
+      //   headers: { Authorization: `Bearer ${token}` }
+      // });
+
+      // Add OTP to payload if required
+      if (selectedNetwork.otp_required && formData.otp) {
+        transactionData.otp = formData.otp;
+      }
+
+      const response = await api.post(`/blaffa/transaction?country_code=${countryCode}`, transactionData, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -317,7 +336,7 @@ export default function Deposits() {
       setCurrentStep('selectId');
       setSelectedPlatform(null);
       setSelectedNetwork(null);
-      setFormData({ amount: '', phoneNumber: '', betid: ''  });
+      setFormData({ amount: '', phoneNumber: '', betid: '', otp: '' });
     } catch (error) {
       console.error('Transaction error:', error);
   //     if (
@@ -762,6 +781,25 @@ export default function Deposits() {
                     placeholder={t("Enter amount")}
                   />
                 </div>
+
+                {selectedNetwork?.otp_required && (
+                  <div>
+                    <label className="block text-sm font-medium mb-1">
+                      {t("OTP Code")} <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.otp}
+                      onChange={(e) => setFormData(prev => ({ ...prev, otp: e.target.value }))}
+                      className="w-full p-2 border rounded"
+                      placeholder={t("Enter OTP code")}
+                      required={selectedNetwork?.otp_required}
+                    />
+                    <p className="text-xs text-gray-500 mt-1">
+                      {t("A one-time password has been sent to your phone. Please enter it here.")}
+                    </p>
+                  </div>
+                )}
   
                 <div>
                   <label className="block text-sm font-medium mb-1">{t("Phone Number")}</label>
@@ -784,7 +822,7 @@ export default function Deposits() {
                   </button>
                   <button
                     type="submit"
-                    disabled={loading}
+                    disabled={loading || (selectedNetwork?.otp_required && !formData.otp)}
                     className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
                   >
                     {loading ? t('Processing...') : t('Submit')}
@@ -993,7 +1031,7 @@ export default function Deposits() {
                 <div className="mt-6 flex justify-end">
                   <button
                     onClick={closeTransactionDetails}
-                    className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
+                    className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
                   >
                     {t("Close")}
                   </button>
@@ -1086,11 +1124,11 @@ export default function Deposits() {
 
       {/* Support Section */}
       {/* <div className="mt-8 mb-12">
-        <div className="bg-gradient-to-r from-orange-600 to-orange-600 rounded-2xl shadow-xl overflow-hidden">
+        <div className="bg-gradient-to-r from-blue-600 to-blue-600 rounded-2xl shadow-xl overflow-hidden">
           <div className="md:flex">
             <div className="p-6 md:p-8 md:w-3/5">
               <h2 className="text-xl md:text-2xl font-bold text-white mb-2">{t('Need help with your deposit?')}</h2>
-              <p className="text-orange-100 mb-6">{t('Our support team is available 24/7 to assist you with any issues.')}</p>
+              <p className="text-blue-100 mb-6">{t('Our support team is available 24/7 to assist you with any issues.')}</p>
               <div className="flex flex-wrap gap-4">
                 <a href="#" className="flex items-center space-x-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-all">
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1107,10 +1145,10 @@ export default function Deposits() {
               </div>
             </div>
             <div className="hidden md:block md:w-2/5 relative">
-              <div className="absolute inset-0 bg-orange-800/20 backdrop-blur-sm"></div>
+              <div className="absolute inset-0 bg-blue-800/20 backdrop-blur-sm"></div>
               <div className="h-full flex items-center justify-center p-6">
                 <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-orange-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
                   </svg>
                 </div>

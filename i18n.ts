@@ -202,9 +202,9 @@ const resources = {
       "Select Network":"Select Network",
       "Select Bet ID":"Select Bet ID",
       "Enter Details":"Enter Details",
-      "Step 1: Select Your Betting Platform":"Step 1: Select Your Betting Platform",
-      "Step 2: Select Network":"Step 2: Select Network",
-      "Step 3: Enter Details":"Step 3: Enter Details",
+      "Select Your Betting Platform":"Select Your Betting Platform",
+     
+      
       "Back to Bet IDs":"Back to Bet IDs",
       "Phone Number":"Phone Number",
 
@@ -452,9 +452,8 @@ const resources = {
       "Select Bet ID":"Sélectionnez l'ID de pari",
       "Enter Details":"Entrez les détails",
       "Select Network":"Sélectionnez le réseau",
-      "Step 1: Select Your Betting Platform":"Étape 1 : Sélectionnez votre plateforme de paris",
-      "Step 3: Enter Details":"Étape 3 : Entrez vos détails",
-      "Step 2: Select Network":"Étape 2 : Sélectionnez votre réseau",
+      "Select Your Betting Platform":"Sélectionnez votre plateforme de paris",
+     
       "Back to Bet IDs":"Retour aux ID de pari",
       "Selected Bet ID":"ID de pari sélectionné",
 
