@@ -839,11 +839,11 @@ export default function Deposits() {
   const getCurrentStepTitle = () => {
     switch (currentStep) {
       case 'selectId':
-        return t("Select Your Betting Platform");
+        return t("");
       case 'selectNetwork':
-        return t("Select Network");
+        return t("");
       case 'enterDetails':
-        return t("Enter Details");
+        return t("");
       default:
         return "";
     }
@@ -911,10 +911,10 @@ export default function Deposits() {
         {/* Header Section */}
         <DashboardHeader/>
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-          <div>
+          {/* <div>
             <h1 className="text-3xl font-bold  mb-2">{t("Deposit Funds")}</h1>
             <p className="text-slate-400">Rechargez votre compte en quelques étapes simples</p>
-          </div>
+          </div> */}
           
           <button
             onClick={() => window.history.back()}

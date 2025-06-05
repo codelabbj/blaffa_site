@@ -680,11 +680,11 @@ export default function Withdraw() {
   const getCurrentStepTitle = () => {
     switch (currentStep) {
       case 'selectId':
-        return t("Select Your Betting Platform");
+        return t("");
       case 'selectNetwork':
-        return t("Sélectionnez le réseau");
+        return t("");
       case 'enterDetails':
-        return t("Enter the remaining Details");
+        return t("");
       default:
         return "";
     }
@@ -753,10 +753,10 @@ export default function Withdraw() {
         {/* Header Section */}
         <DashboardHeader/>
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-          <div>
+          {/* <div>
             <h1 className="text-3xl font-bold mb-2">{t("Withdraw Funds")}</h1>
             <p className="text-slate-400">Retirez vos fonds en quelques étapes simples</p>
-          </div>
+          </div> */}
           
           <button
             onClick={() => window.history.back()}

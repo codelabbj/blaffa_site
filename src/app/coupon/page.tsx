@@ -305,13 +305,13 @@ return (
       <div className="max-w-7xl mx-auto">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-          <div>
+          {/* <div>
             <h1 className="text-3xl font-bold  mb-2">{t("Available Coupons")}</h1>
             <p className="text-slate-400">Discover amazing deals and offers</p>
-          </div>
+          </div> */}
           
           <div className="flex items-center gap-4 mt-4 md:mt-0">
-            <button
+            {/* <button
               onClick={() => {
                  const accessToken = localStorage.getItem('accessToken');
                  if (accessToken) {
@@ -327,7 +327,7 @@ return (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
               </svg>
               Refresh
-            </button>
+            </button> */}
             
             <button
               onClick={() => window.history.back()}
@@ -352,7 +352,7 @@ return (
                   </svg>
                 </div>
                 <h3 className="text-xl font-semibold e mb-3">{t("No Coupons Available")}</h3>
-                <p className="text-slate-400 text-center max-w-md leading-relaxed">{t("Check back later for amazing deals and offers!")}</p>
+                {/* <p className="text-slate-400 text-center max-w-md leading-relaxed">{t("Check back later for amazing deals and offers!")}</p> */}
               </div>
             ) : (
               <div className="space-y-6">

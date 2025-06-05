@@ -473,17 +473,6 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
                     />
                   </div>
 
-                  <div>
-                    <label htmlFor="lastName" className="block text-sm font-medium  mb-2">
-                      {t("Last Name")}
-                    </label>
-                    <input
-                      type="text"
-                      id="lastName"
-                      name="lastName"
-                      value={formData.lastName}
-                    />
-                  </div>
 
                   <div>
                     <label htmlFor="lastName" className="block text-sm font-medium  mb-2">

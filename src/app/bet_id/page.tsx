@@ -327,10 +327,10 @@ return (
         )}
       </div>
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-        <div>
+        {/* <div>
           <h1 className="text-3xl font-bold  mb-2">{t("Betting App IDs")}</h1>
           <p className="text-slate-400">Gérez vos identifiants de paris en toute sécurité</p>
-        </div>
+        </div> */}
         
         <button
           onClick={() => window.history.back()}
