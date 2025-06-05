@@ -25,6 +25,7 @@ interface Network {
   country_code: string;
   image?: string;
   otp_required?: boolean;
+  message_init?: string;
 }
 
 interface App {
@@ -119,15 +120,15 @@ export default function Deposits() {
   const [currentStep, setCurrentStep] = useState<'selectId' | 'selectNetwork' | 'enterDetails'>('selectId');
   const [selectedPlatform, setSelectedPlatform] = useState<App | null>(null);
   const [platforms, setPlatforms] = useState<App[]>([]);
-  const [selectedNetwork, setSelectedNetwork] = useState<{ id: string; name: string; public_name?: string; country_code?: string; image?: string, otp_required?: boolean } | null>(null);
+  const [selectedNetwork, setSelectedNetwork] = useState<{ id: string; name: string; public_name?: string; country_code?: string; image?: string, otp_required?: boolean, message_init?: string } | null>(null);
   const [formData, setFormData] = useState({
     amount: '',
     phoneNumber: '',
     betid: '',
-    otp: '' // Add OTP field to form state
+    otp_code: '' // Add OTP field to form state
   });
   
-  const [networks, setNetworks] = useState<{ id: string; name: string; public_name?: string; image?: string, otp_required?: boolean }[]>([]);
+  const [networks, setNetworks] = useState<{ id: string; name: string; public_name?: string; image?: string, otp_required?: boolean, message_init?: string }[]>([]);
   const [savedAppIds, setSavedAppIds] = useState<IdLink[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -243,7 +244,7 @@ export default function Deposits() {
     setCurrentStep('selectNetwork');
   };
 
-  const handleNetworkSelect = (network: { id: string; name: string; public_name?: string; country_code?: string; image?: string, otp_required?: boolean }) => {
+  const handleNetworkSelect = (network: { id: string; name: string; public_name?: string; country_code?: string; image?: string, otp_required?: boolean, message_init?: string }) => {
     setSelectedNetwork(network);
     setCurrentStep('enterDetails');
   };
@@ -304,8 +305,8 @@ export default function Deposits() {
         app_id: selectedPlatform.id,
         network_id: selectedNetwork.id,
         phone_number: formData.phoneNumber,
-        user_app_id: formData.betid
-      };
+        user_app_id: formData.betid,
+        };
 
       // const response = await api.post(`/blaffa/transaction?country_code=${countryCode}`, {
       //   type_trans: 'deposit',
@@ -319,8 +320,8 @@ export default function Deposits() {
       // });
 
       // Add OTP to payload if required
-      if (selectedNetwork.otp_required && formData.otp) {
-        transactionData.otp = formData.otp;
+      if (selectedNetwork.otp_required && formData.otp_code) {
+        transactionData.otp_code = formData.otp_code;
       }
 
       const response = await api.post(`/blaffa/transaction?country_code=${countryCode}`, transactionData, {
@@ -336,7 +337,7 @@ export default function Deposits() {
       setCurrentStep('selectId');
       setSelectedPlatform(null);
       setSelectedNetwork(null);
-      setFormData({ amount: '', phoneNumber: '', betid: '', otp: '' });
+      setFormData({ amount: '', phoneNumber: '', betid: '', otp_code: '' });
     } catch (error) {
       console.error('Transaction error:', error);
   //     if (
@@ -789,14 +790,14 @@ export default function Deposits() {
                     </label>
                     <input
                       type="text"
-                      value={formData.otp}
-                      onChange={(e) => setFormData(prev => ({ ...prev, otp: e.target.value }))}
+                      value={formData.otp_code}
+                      onChange={(e) => setFormData(prev => ({ ...prev, otp_code: e.target.value }))}
                       className="w-full p-2 border rounded"
                       placeholder={t("Enter OTP code")}
                       required={selectedNetwork?.otp_required}
                     />
                     <p className="text-xs text-gray-500 mt-1">
-                      {t("A one-time password has been sent to your phone. Please enter it here.")}
+                      {selectedNetwork?.message_init || t("Veuillez composer *133# puis l'option 1 pour valider le paiement")}
                     </p>
                   </div>
                 )}
@@ -822,7 +823,7 @@ export default function Deposits() {
                   </button>
                   <button
                     type="submit"
-                    disabled={loading || (selectedNetwork?.otp_required && !formData.otp)}
+                    disabled={loading || (selectedNetwork?.otp_required && !formData.otp_code)}
                     className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
                   >
                     {loading ? t('Processing...') : t('Submit')}
