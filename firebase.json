@@ -1,7 +1,7 @@
 {
   "hosting": {
-    "public": "build/web",
-    "predeploy": "mkdir -p build/web/.well-known && cp assetlinks.json build/web/.well-known/",
+    "public": "out",
+    "predeploy": "mkdir -p out/.well-known && cp assetlinks.json out/.well-known/",
     "ignore": [
       "firebase.json",
       "**/.*",
@@ -11,6 +11,26 @@
       {
         "source": "**",
         "destination": "/index.html"
+      }
+    ],
+    "headers": [
+      {
+        "source": "/_next/static/**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=31536000, immutable"
+          }
+        ]
+      },
+      {
+        "source": "/static/**",
+        "headers": [
+          {
+            "key": "Cache-Control",
+            "value": "public, max-age=31536000, immutable"
+          }
+        ]
       }
     ]
   }

@@ -1,0 +1,9 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "bj.codelab.blaffa",
+    "sha256_cert_fingerprints":
+    ["94:EC:F8:37:9C:DB:84:40:57:51:82:EC:98:18:CF:98:DD:2B:77:67:7B:2C:54:83:11:76:19:E3:A6:F2:DD:90", "4D:2E:CC:8F:01:BC:A8:FC:D5:44:5C:FE:07:FB:61:04:B3:7B:D6:8D:65:C3:E1:3A:6B:7C:ED:37:EA:E0:7F:C9", "09:05:B8:94:4D:03:28:DE:BB:42:34:E8:95:2A:68:89:47:6D:1C:1B:1F:3F:AC:59:5A:E2:8C:36:25:7E:BD:B1"]
+  }
+}]
