@@ -1,6 +1,5 @@
-
 'use client';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 //import Head from 'next/head';
 //import axios from 'axios';
 import { useTranslation } from 'react-i18next';
@@ -10,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 //import DashboardHeader from '@/components/DashboardHeader';
 import { useTheme } from '@/components/ThemeProvider';
 import { useWebSocket } from '../../context/WebSocketContext';
-import {  Check, CheckCircle, ChevronRight, CreditCard, Smartphone, XCircle } from 'lucide-react';
+import {  Check, CheckCircle, Smartphone, XCircle } from 'lucide-react';
 import api from '@/lib/axios';
 import DashboardHeader from '@/components/DashboardHeader';
 import { CopyIcon } from 'lucide-react';
@@ -135,6 +134,7 @@ export default function Deposits() {
   const [success, setSuccess] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState<TransactionDetail | null>(null);
+  const [transactionLink, setTransactionLink] = useState<string | null>(null);
   const { theme } = useTheme();
   const { addMessageHandler } = useWebSocket();
 
@@ -142,19 +142,9 @@ export default function Deposits() {
   useEffect(() => {
     const handleTransactionLink = (data: WebSocketMessage) => {
       if (data.type === 'transaction_link' && data.data) {
-        console.log('Opening transaction link:', data.data);
-        // Try to open in a new tab
-      const newWindow = window.open('', '_blank');
-      if (newWindow) {
-        newWindow.location.href = data.data;
-      } else {
-        // Fallback to direct open if popup is blocked
-        window.open(data.data, '_blank', 'noopener,noreferrer');
+        setTransactionLink(data.data); // Save the link for the modal button
       }
-    }
-  };
-
-
+    };
     const removeHandler = addMessageHandler(handleTransactionLink);
     return () => removeHandler();
   }, [addMessageHandler]);
@@ -438,9 +428,10 @@ export default function Deposits() {
 };
 
   const closeTransactionDetails = () => {
-  setIsModalOpen(false);
-  setSelectedTransaction(null);
-};
+    setIsModalOpen(false);
+    setSelectedTransaction(null);
+    setTransactionLink(null); // Reset link when closing modal
+  };
 
  const renderStep = () => {
     switch (currentStep) {
@@ -1028,6 +1019,18 @@ export default function Deposits() {
                     </div>
                   )}
                 </div>
+
+                {/* Add this block for the transaction link button */}
+                {transactionLink && (
+                  <div className="mt-6 flex justify-center">
+                    <button
+                      onClick={() => window.open(transactionLink, '_blank', 'noopener,noreferrer')}
+                      className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+                    >
+                      {t("Click to continue payment")}
+                    </button>
+                  </div>
+                )}
 
                 <div className="mt-6 flex justify-end">
                   <button

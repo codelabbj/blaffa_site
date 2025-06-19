@@ -143,7 +143,7 @@ const resources = {
       "Deposits": "Deposits",
       "Withdraw": "Withdraw",
       "See more": "See more",
-      "Transaction details": "Transaction details",
+      "Transaction Details": "Transaction details",
       "Payment Method": "Payment Method",
       "For deposits": "For deposits",
       "Status": "Status",
@@ -209,6 +209,8 @@ const resources = {
       "Phone Number":"Phone Number",
 
       "Submit":"Submit",
+
+      "Click to continue payment": "Click to continue payment",
       
       
       
@@ -398,7 +400,7 @@ const resources = {
       "Deposit": "Dépôt",
       "Withdraw": "Retrait",
       "See more": "Voir plus",
-      "Transaction details": "Détails de la transaction",
+      "Transaction Details": "Détails de la transaction",
       "Payment Method": "Méthode de paiement",
       "For deposits": "Pour les dépôts",
       "Status": "Statut",
@@ -458,7 +460,10 @@ const resources = {
       "Selected Bet ID":"ID de pari sélectionné",
 
       "Submit":"Soumettre",
-      
+
+      "Deposit to your account": "Déposez sur votre compte",
+      "Deposit to your account here": "Déposez sur votre compte ici",
+      "Click to continue payment": "Cliquez pour continuer le paiement",
 
 
       "Make deposits to your account": "Effectuez des dépôts sur votre compte",
