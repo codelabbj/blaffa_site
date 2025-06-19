@@ -119,15 +119,15 @@ export default function Deposits() {
   const [currentStep, setCurrentStep] = useState<'selectId' | 'selectNetwork' | 'enterDetails'>('selectId');
   const [selectedPlatform, setSelectedPlatform] = useState<App | null>(null);
   const [platforms, setPlatforms] = useState<App[]>([]);
-  const [selectedNetwork, setSelectedNetwork] = useState<{ id: string; name: string; public_name?: string; country_code?: string; image?: string, otp_required?: boolean, message_init?: string } | null>(null);
+  const [selectedNetwork, setSelectedNetwork] = useState<{ id: string; name: string; public_name?: string; country_code?: string; image?: string, otp_required?: boolean, tape_code?: string } | null>(null);
   const [formData, setFormData] = useState({
     amount: '',
     phoneNumber: '',
     betid: '',
-    otp_code: '' // Add OTP field to form state
+    otp_code: '',// Add OTP field to form state
   });
   
-  const [networks, setNetworks] = useState<{ id: string; name: string; public_name?: string; image?: string, otp_required?: boolean, message_init?: string }[]>([]);
+  const [networks, setNetworks] = useState<{ id: string; name: string; public_name?: string; image?: string, otp_required?: boolean, tape_code?: string }[]>([]);
   const [savedAppIds, setSavedAppIds] = useState<IdLink[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -234,8 +234,10 @@ export default function Deposits() {
     setCurrentStep('selectNetwork');
   };
 
-  const handleNetworkSelect = (network: { id: string; name: string; public_name?: string; country_code?: string; image?: string, otp_required?: boolean, message_init?: string }) => {
+  const handleNetworkSelect = (network: { id: string; name: string; public_name?: string; country_code?: string; image?: string, otp_required?: boolean, tape_code?: string }) => {
     setSelectedNetwork(network);
+    console.log(network);
+    
     setCurrentStep('enterDetails');
   };
 
@@ -529,6 +531,7 @@ export default function Deposits() {
             
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               {networks.map((network, index) => (
+                
                 <div
                   key={network.id}
                   onClick={() => handleNetworkSelect(network)}
@@ -788,7 +791,7 @@ export default function Deposits() {
                       required={selectedNetwork?.otp_required}
                     />
                     <p className="text-xs text-gray-500 mt-1">
-                      {selectedNetwork?.message_init || t("Veuillez composer *133# puis l'option 1 pour valider le paiement")}
+                      {selectedNetwork?.tape_code || t("Veuillez composer *133# puis l'option 1 pour valider le paiement")}
                     </p>
                   </div>
                 )}
