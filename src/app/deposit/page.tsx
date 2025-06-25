@@ -12,7 +12,7 @@ import { useWebSocket } from '../../context/WebSocketContext';
 import {  Check, CheckCircle, Smartphone, XCircle } from 'lucide-react';
 import api from '@/lib/axios';
 import DashboardHeader from '@/components/DashboardHeader';
-import { CopyIcon } from 'lucide-react';
+// import { CopyIcon } from 'lucide-react';
 
 
 //import { Transaction } from 'mongodb';
@@ -116,7 +116,7 @@ interface ApiError extends Error {
 
 export default function Deposits() {
   const { t } = useTranslation();
-  const [currentStep, setCurrentStep] = useState<'selectId' | 'selectNetwork' | 'enterDetails'>('selectId');
+  const [currentStep, setCurrentStep] = useState<'selectId' | 'selectNetwork' | 'enterDetails' | 'manageBetId'>('selectId');
   const [selectedPlatform, setSelectedPlatform] = useState<App | null>(null);
   const [platforms, setPlatforms] = useState<App[]>([]);
   const [selectedNetwork, setSelectedNetwork] = useState<{ id: string; name: string; public_name?: string; country_code?: string; image?: string, otp_required?: boolean, tape_code?: string } | null>(null);
@@ -128,7 +128,7 @@ export default function Deposits() {
   });
   
   const [networks, setNetworks] = useState<{ id: string; name: string; public_name?: string; image?: string, otp_required?: boolean, tape_code?: string }[]>([]);
-  const [savedAppIds, setSavedAppIds] = useState<IdLink[]>([]);
+  const [savedAppIds, setSavedAppIds] = useState<IdLink[]>([]); // Used in manageBetId and other steps
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -137,6 +137,7 @@ export default function Deposits() {
   const [transactionLink, setTransactionLink] = useState<string | null>(null);
   const { theme } = useTheme();
   const { addMessageHandler } = useWebSocket();
+  const [selectedBetId, setSelectedBetId] = useState<string | null>(null);
 
 
   useEffect(() => {
@@ -236,9 +237,7 @@ export default function Deposits() {
 
   const handleNetworkSelect = (network: { id: string; name: string; public_name?: string; country_code?: string; image?: string, otp_required?: boolean, tape_code?: string }) => {
     setSelectedNetwork(network);
-    console.log(network);
-    
-    setCurrentStep('enterDetails');
+    setCurrentStep('manageBetId');
   };
 
   // Save new bet ID
@@ -297,8 +296,8 @@ export default function Deposits() {
         app_id: selectedPlatform.id,
         network_id: selectedNetwork.id,
         phone_number: formData.phoneNumber,
-        user_app_id: formData.betid,
-        };
+        user_app_id: selectedBetId,
+      };
 
       // const response = await api.post(`/blaffa/transaction?country_code=${countryCode}`, {
       //   type_trans: 'deposit',
@@ -324,7 +323,7 @@ export default function Deposits() {
       setSelectedTransaction({ transaction });
       setIsModalOpen(true);
       
-      setSuccess('Transaction initiated successfully!');
+      setSuccess(t('Transaction initiated successfully!'));
       // Reset form
       setCurrentStep('selectId');
       setSelectedPlatform(null);
@@ -444,53 +443,14 @@ export default function Deposits() {
         {/* <h2 className="text-2xl font-bold mb-2">{t("Step 1: Select Your Betting Platform")}</h2> */}
         <p className="text-slate-400">{t("Choisissez la plateforme de pari que vous souhaitez utiliser")}</p>
       </div>
-     
-      {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {platforms.map((platform, index) => (
-          <div
-            key={platform.id}
-            onClick={() => handlePlatformSelect(platform)}
-            className={`group relative overflow-hidden bg-gradient-to-br ${theme.colors.sl_background} backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6 cursor-pointer hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20`}
-            style={{
-              animation: `slideInUp 0.6s ease-out ${index * 100}ms both`
-            }}
-          >
-           
-            <div className="absolute inset-0 shimmer-effect opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-           
-            <div className="relative">
-              <div className="flex items-center mb-4">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500/20 to-blue-600/20 text-blue-400 shadow-lg shadow-blue-500/20 flex items-center justify-center transition-all duration-500 group-hover:scale-110">
-                  {platform.image ? (
-                    <img
-                      src={platform.image}
-                      alt={platform.public_name || platform.name}
-                      className="w-8 h-8 object-contain"
-                    />
-                  ) : (
-                    <CreditCard className="w-6 h-6" />
-                  )}
-                </div>
-                <div className="ml-4">
-                  <div className="font-semibold group-hover:text-blue-200 transition-colors duration-300">
-                    {platform.public_name || platform.name}
-                  </div>
-                </div>
-              </div>
-             
-              <div className={`${theme.colors.background} rounded-xl p-3 mb-4`}>
-                <div className="text-slate-400 text-xs mb-1">Plateforme de pari</div>
-                <div className="font-mono text-sm truncate">{platform.public_name || platform.name}</div>
-              </div>
-             
-              <div className="flex items-center justify-between">
-                <span className="text-slate-400 text-sm">Cliquez pour sélectionner</span>
-                <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-blue-400 group-hover:translate-x-1 transition-all duration-300" />
-              </div>
-            </div>
-          </div>
-          
-        ))}
+      {/* Add Bet ID management button */}
+      {/* <div className="flex justify-end mb-4">
+        <button
+          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+          onClick={() => setCurrentStep('manageBetId')}
+        >
+          {t('Ajouter un ID de pari')}
+        </button>
       </div> */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {platforms.map((platform) => (
@@ -520,7 +480,81 @@ export default function Deposits() {
       )}
     </div>
   );
-        
+      case 'manageBetId':
+        // Only show Bet IDs for the selected platform
+        const platformBetIds = savedAppIds.filter(id => id.app_name.id === selectedPlatform?.id);
+        // Function to delete a bet ID
+        const handleDeleteBetId = async (id: string) => {
+          const token = localStorage.getItem('accessToken');
+          if (!token) return;
+          try {
+            await api.delete(`/blaffa/id_link/${id}`, {
+              headers: { Authorization: `Bearer ${token}` }
+            });
+            setSavedAppIds(prev => prev.filter(bet => bet.id !== id));
+          } catch {
+            setError(t('Erreur lors de la suppression de l\'ID de pari.'));
+          }
+        };
+        return (
+          <div className="space-y-6">
+            <div className="flex items-center mb-8">
+              <button 
+                onClick={() => setCurrentStep('selectNetwork')}
+                className="group mr-4 p-2 rounded-xl border border-slate-600/30 hover:text-blue-400 hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/20"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 group-hover:-translate-x-1 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+              <div>
+                <p className="text-slate-400 text-sm">{t("Gérer vos IDs de pari")}</p>
+              </div>
+            </div>
+            <div className="flex flex-col items-center justify-center gap-4">
+              <button
+                className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                onClick={() => window.location.href = '/bet_id'}
+              >
+                {t('Ajouter un ID de pari')}
+              </button>
+            </div>
+            {/* List of saved Bet IDs for the selected platform */}
+            <div className="mt-8">
+              <h4 className="text-lg font-semibold mb-4">{t('Vos IDs de pari enregistrés')}</h4>
+              {platformBetIds.length === 0 ? (
+                <div className="text-gray-400">{t('Aucun ID de pari enregistré.')}</div>
+              ) : (
+                <div className="space-y-2">
+                  {platformBetIds.map((id) => (
+                    <div
+                      key={id.id}
+                      className="flex items-center justify-between rounded-lg px-4 py-2 cursor-pointer hover:bg-blue-100 dark:hover:bg-blue-900 transition"
+                      onClick={() => {
+                        setSelectedBetId(id.link);
+                        setCurrentStep('enterDetails');
+                      }}
+                    >
+                      <div>
+                        <span className="font-mono text-sm mr-2">{id.link}</span>
+                        <span className="text-xs text-gray-500">({id.app_name.public_name || id.app_name.name})</span>
+                      </div>
+                      <button
+                        onClick={e => { e.stopPropagation(); handleDeleteBetId(id.id); }}
+                        className="ml-2 p-1 text-xs text-red-600 hover:text-white bg-red-100 hover:bg-red-600 rounded-full transition"
+                        title={t('Supprimer')}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        );
       case 'selectNetwork':
         return (
           <div className="space-y-6">
@@ -586,14 +620,13 @@ export default function Deposits() {
         );
         
       case 'enterDetails':
-        const platformBetIds = savedAppIds.filter(id => id.app_name.id === selectedPlatform?.id);
         return (
       <div className="space-y-6">
         <div className="flex items-center mb-8">
           <button 
             onClick={() => {
               setSelectedNetwork(null);
-              setCurrentStep('selectNetwork');
+              setCurrentStep('manageBetId');
             }}
             className="group mr-4 p-2 rounded-xl border border-slate-600/30 hover:text-blue-400 hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/20"
           >
@@ -607,223 +640,72 @@ export default function Deposits() {
           </div>
         </div>
     
-    {/* <form onSubmit={handleSubmit} className="space-y-6">
-      
-              <div className={`bg-gradient-to-br ${theme.colors.sl_background} backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6`}>
-                <label className="block text-sm font-semibold text-blue-400 mb-3">
-                  {t("Bet ID")} ({selectedPlatform?.public_name || selectedPlatform?.name})
-                </label>
-                <div className="space-y-4">
-                  <div className="relative">
-                    <input
-                      type="text"
-                      value={formData.betid}
-                      onChange={(e) => setFormData(prev => ({ ...prev, betid: e.target.value }))}
-                      className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300`}
-                      placeholder={t("Enter your bet ID")}
-                    />
-                    <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 to-blue-500/10 opacity-0 focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-                  </div>
-                  
-                  {platformBetIds.length > 0 && (
-                    <div className="mt-4">
-                      <label className="block text-sm font-medium text-slate-400 mb-3">{t("Saved Bet IDs")}</label>
-                      <div className="flex flex-wrap gap-3">
-                        {platformBetIds.map((id, index) => (
-                          <div
-                            key={id.id}
-                            className={`group relative overflow-hidden bg-gradient-to-br ${theme.colors.sl_background} backdrop-blur-sm border border-slate-600/30 rounded-xl px-4 py-3 text-sm hover:from-slate-600/50 hover:to-slate-500/50 cursor-pointer flex items-center transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/20`}
-                            style={{
-                              animation: `slideInUp 0.3s ease-out ${index * 50}ms both`
-                            }}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              setFormData(prev => ({ ...prev, betid: id.link }));
-                            }}
-                          >
-                            <div className="absolute inset-0 shimmer-effect opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                            <span className="mr-3  font-mono truncate relative z-10">{id.link}</span>
-                            <button
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                navigator.clipboard.writeText(id.link);
-                              }}
-                              className="relative z-10 p-1.5 hover:bg-slate-500/30 rounded-lg transition-colors duration-200"
-                            >
-                              <CopyIcon className="h-4 w-4 text-slate-400 hover:text-blue-400 transition-colors duration-200" />
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-             
-              <div className={`bg-gradient-to-br ${theme.colors.sl_background} backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6`}>
-                <label className="block text-sm font-semibold text-blue-400 mb-3">{t("Amount")}</label>
-                <div className="relative">
-                  <input
-                    type="number"
-                    value={formData.amount}
-                    onChange={(e) => setFormData(prev => ({ ...prev, amount: e.target.value }))}
-                    className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300`}
-                    placeholder={t("Enter amount")}
-                  />
-                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 to-blue-500/10 opacity-0 focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-                </div>
-              </div>
-
-             
-              <div className={`bg-gradient-to-br ${theme.colors.sl_background} backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6`}>
-                <label className="block text-sm font-semibold text-blue-400 mb-3">{t("Phone Number")}</label>
-                <div className="relative">
-                  <input
-                    type="tel"
-                    value={formData.phoneNumber}
-                    onChange={(e) => setFormData(prev => ({ ...prev, phoneNumber: e.target.value }))}
-                    className={`w-full p-4 ${theme.colors.sl_background} border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300`}
-                    placeholder={t("Enter phone number")}
-                  />
-                  <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 to-blue-500/10 opacity-0 focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-                </div>
-              </div>
-            
-
-              
-              <div className="flex flex-col sm:flex-row justify-between gap-4 pt-4">
-                <button
-                  type="button"
-                  onClick={() => setCurrentStep('selectNetwork')}
-                  className="flex items-center justify-center text-slate-400 hover:text-white px-6 py-3 rounded-xl transition-all duration-300 group"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                  </svg>
-                  {t("Back")}
-                </button>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-500 hover:to-blue-500 text-white rounded-xl transition-all duration-300 font-medium shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 min-w-[140px]"
-                >
-                  {loading ? (
-                    <div className="flex items-center justify-center">
-                      <div className="animate-spin rounded-full h-5 w-5 border-2 border-white/30 border-t-white mr-2"></div>
-                      {t('Processing...')}
-                    </div>
-                  ) : (
-                    t('Submit')
-                  )}
-                </button>
-              </div>
-            </form> */}
-            <form onSubmit={handleSubmit} className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium mb-1">
-                    {t("Bet ID")} ({selectedPlatform?.public_name || selectedPlatform?.name})
-                  </label>
-                  <div className="space-y-2">
-                    <input
-                      type="text"
-                      value={formData.betid}
-                      onChange={(e) => setFormData(prev => ({ ...prev, betid: e.target.value }))}
-                      className="w-full p-2 border rounded"
-                      placeholder={t("Enter your bet ID")}
-                    />
-                    {platformBetIds.length > 0 && (
-                      <div className="mt-2">
-                        <label className="block text-sm text-gray-500 mb-1">{t("Saved Bet IDs")}</label>
-                        <div className="flex flex-wrap gap-2">
-                          {platformBetIds.map((id) => (
-                            <div
-                            key={id.id}
-                            className="px-3 py-1 bg-gray-100 rounded-full text-black text-sm hover:bg-gray-200 cursor-pointer flex items-center"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              setFormData(prev => ({ ...prev, betid: id.link }));
-                            }}
-                          >
-                            <span className="mr-2">{id.link}</span>
-                            <button
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  navigator.clipboard.writeText(id.link);
-                                  // alert(t('Bet ID copied to clipboard'));
-                                }}
-                                className="p-1 hover:bg-gray-200 rounded"
-                              >
-                              <CopyIcon className="h-4 w-4 text-gray-500" />
-                            </button>
-                          </div>
-                          ))}
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </div>
+    <form onSubmit={handleSubmit} className="space-y-4">
+        <div>
+          <label className="block text-sm font-medium mb-1">{t("Bet ID")}</label>
+          <div className="font-mono text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900 rounded px-3 py-2">
+            {selectedBetId}
+          </div>
+        </div>
   
-                <div>
-                  <label className="block text-sm font-medium mb-1">{t("Amount")}</label>
-                  <input
-                    type="number"
-                    value={formData.amount}
-                    onChange={(e) => setFormData(prev => ({ ...prev, amount: e.target.value }))}
-                    className="w-full p-2 border rounded"
-                    placeholder={t("Enter amount")}
-                  />
-                </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">{t("Amount")}</label>
+          <input
+            type="number"
+            value={formData.amount}
+            onChange={(e) => setFormData(prev => ({ ...prev, amount: e.target.value }))}
+            className="w-full p-2 border rounded"
+            placeholder={t("Enter amount")}
+          />
+        </div>
 
-                {selectedNetwork?.otp_required && (
-                  <div>
-                    <label className="block text-sm font-medium mb-1">
-                      {t("OTP Code")} <span className="text-red-500">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={formData.otp_code}
-                      onChange={(e) => setFormData(prev => ({ ...prev, otp_code: e.target.value }))}
-                      className="w-full p-2 border rounded"
-                      placeholder={t("Enter OTP code")}
-                      required={selectedNetwork?.otp_required}
-                    />
-                    <p className="text-xs text-gray-500 mt-1">
-                      {selectedNetwork?.tape_code || t("Veuillez composer *133# puis l'option 1 pour valider le paiement")}
-                    </p>
-                  </div>
-                )}
+        {selectedNetwork?.otp_required && (
+          <div>
+            <label className="block text-sm font-medium mb-1">
+              {t("OTP Code")} <span className="text-red-500">*</span>
+            </label>
+            <input
+              type="text"
+              value={formData.otp_code}
+              onChange={(e) => setFormData(prev => ({ ...prev, otp_code: e.target.value }))}
+              className="w-full p-2 border rounded"
+              placeholder={t("Enter OTP code")}
+              required={selectedNetwork?.otp_required}
+            />
+            <p className="text-xs text-gray-500 mt-1">
+              {selectedNetwork?.tape_code || t("Veuillez composer *133# puis l'option 1 pour valider le paiement")}
+            </p>
+          </div>
+        )}
   
-                <div>
-                  <label className="block text-sm font-medium mb-1">{t("Phone Number")}</label>
-                  <input
-                    type="tel"
-                    value={formData.phoneNumber}
-                    onChange={(e) => setFormData(prev => ({ ...prev, phoneNumber: e.target.value }))}
-                    className="w-full p-2 border rounded"
-                    placeholder={t("Enter phone number")}
-                  />
-                </div>
+        <div>
+          <label className="block text-sm font-medium mb-1">{t("Phone Number")}</label>
+          <input
+            type="tel"
+            value={formData.phoneNumber}
+            onChange={(e) => setFormData(prev => ({ ...prev, phoneNumber: e.target.value }))}
+            className="w-full p-2 border rounded"
+            placeholder={t("Enter phone number")}
+          />
+        </div>
 
-                <div className="flex justify-between pt-2">
-                  <button
-                    type="button"
-                    onClick={() => setCurrentStep('selectNetwork')}
-                    className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
-                  >
-                    ← {t("Back")}
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={loading || (selectedNetwork?.otp_required && !formData.otp_code)}
-                    className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
-                  >
-                    {loading ? t('Processing...') : t('Submit')}
-                  </button>
-                </div>
-              </form>
+        <div className="flex justify-between pt-2">
+          <button
+            type="button"
+            onClick={() => setCurrentStep('manageBetId')}
+            className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+          >
+            ← {t("Back")}
+          </button>
+          <button
+            type="submit"
+            disabled={loading || (selectedNetwork?.otp_required && !formData.otp_code)}
+            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+          >
+            {loading ? t('Processing...') : t('Submit')}
+          </button>
+        </div>
+      </form>
           </div>
         );
     }
@@ -837,6 +719,8 @@ export default function Deposits() {
       case 'selectNetwork':
         return t("");
       case 'enterDetails':
+        return t("");
+      case 'manageBetId':
         return t("");
       default:
         return "";
@@ -912,7 +796,7 @@ export default function Deposits() {
           
           <button
             onClick={() => window.history.back()}
-           className={`flex items-center bg-gradient-to-r ${theme.colors.s_background} hover:from-slate-600/50 hover:to-slate-500/50 px-6 py-3 rounded-xl border border-slate-600/30 hover:border-slate-500/50 transition-all duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl group mt-4 md:mt-0`}
+            className={`flex items-center bg-gradient-to-r ${theme.colors.s_background} hover:from-slate-600/50 hover:to-slate-500/50 px-6 py-3 rounded-xl border border-slate-600/30 hover:border-slate-500/50 transition-all duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl group mt-4 md:mt-0`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -1050,120 +934,3 @@ export default function Deposits() {
     </div>
   );
 }
-
-      {/* Recent transactions section - This could be added if needed */}
-      {/* <div className="mt-8 bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
-        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-xl font-bold text-gray-800 dark:text-white">{t('Recent Deposits')}</h2>
-          <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">{t('View your recent deposit transactions')}</p>
-        </div> */}
-        
-        {/* <div className="p-6"> */}
-          {/* Sample transactions - This would be populated from API data */}
-          {/* <div className="space-y-4"> */}
-            {/* Empty state */}
-            {/* <div className="flex flex-col items-center justify-center py-8 text-center">
-              <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mb-4">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-gray-500 dark:text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
-              </div>
-              <h3 className="text-lg font-medium text-gray-800 dark:text-white mb-2">{t('No recent deposits')}</h3>
-              <p className="text-gray-500 dark:text-gray-400 max-w-sm">
-                {t('Your recent deposit transactions will appear here once you make your first deposit.')}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div> */}
-
-      {/* FAQ Section */}
-      {/* <div className="mt-8 bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden">
-        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-          <h2 className="text-xl font-bold text-gray-800 dark:text-white">{t('Frequently Asked Questions')}</h2>
-          <p className="text-gray-600 dark:text-gray-400 text-sm mt-1">{t('Common questions about deposits')}</p>
-        </div>
-        
-        <div className="p-6 space-y-4">
-          <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-            <details className="group">
-              <summary className="flex justify-between items-center p-4 cursor-pointer bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-800 dark:text-white">
-                <span className="font-medium">{t('How long do deposits take to process?')}</span>
-                <svg className="h-5 w-5 text-gray-500 dark:text-gray-400 group-open:rotate-180 transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </summary>
-              <div className="p-4 text-gray-600 dark:text-gray-300">
-                <p>{t('Deposits are typically processed within 5-15 minutes. During high volume periods, it may take up to 30 minutes. If your deposit has not been processed within 1 hour, please contact customer support.')}</p>
-              </div>
-            </details>
-          </div>
-          
-          <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-            <details className="group">
-              <summary className="flex justify-between items-center p-4 cursor-pointer bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-800 dark:text-white">
-                <span className="font-medium">{t('What is the minimum deposit amount?')}</span>
-                <svg className="h-5 w-5 text-gray-500 dark:text-gray-400 group-open:rotate-180 transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </summary>
-              <div className="p-4 text-gray-600 dark:text-gray-300">
-                <p>{t('The minimum deposit amount is 500 XOF. There is no maximum limit for deposits.')}</p>
-              </div>
-            </details>
-          </div>
-          
-          <div className="border border-gray-200 dark:border-gray-700 rounded-lg overflow-hidden">
-            <details className="group">
-              <summary className="flex justify-between items-center p-4 cursor-pointer bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 text-gray-800 dark:text-white">
-                <span className="font-medium">{t('Which payment methods are available?')}</span>
-                <svg className="h-5 w-5 text-gray-500 dark:text-gray-400 group-open:rotate-180 transition-transform" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </summary>
-              <div className="p-4 text-gray-600 dark:text-gray-300">
-                <p>{t('We currently support MTN Mobile Money and MOOV Money for deposits. Additional payment methods will be added in the future.')}</p>
-              </div>
-            </details>
-          </div>
-        </div>
-      </div> */}
-
-      {/* Support Section */}
-      {/* <div className="mt-8 mb-12">
-        <div className="bg-gradient-to-r from-blue-600 to-blue-600 rounded-2xl shadow-xl overflow-hidden">
-          <div className="md:flex">
-            <div className="p-6 md:p-8 md:w-3/5">
-              <h2 className="text-xl md:text-2xl font-bold text-white mb-2">{t('Need help with your deposit?')}</h2>
-              <p className="text-blue-100 mb-6">{t('Our support team is available 24/7 to assist you with any issues.')}</p>
-              <div className="flex flex-wrap gap-4">
-                <a href="#" className="flex items-center space-x-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-all">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                  </svg>
-                  <span>{t('Live Chat')}</span>
-                </a>
-                <a href="mailto:support@example.com" className="flex items-center space-x-2 bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg transition-all">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                  </svg>
-                  <span>{t('Email Support')}</span>
-                </a>
-              </div>
-            </div>
-            <div className="hidden md:block md:w-2/5 relative">
-              <div className="absolute inset-0 bg-blue-800/20 backdrop-blur-sm"></div>
-              <div className="h-full flex items-center justify-center p-6">
-                <div className="w-16 h-16 rounded-full bg-white flex items-center justify-center">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z" />
-                  </svg>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div> */}
-//     </div>
-//   );
-// }

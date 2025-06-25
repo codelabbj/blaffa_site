@@ -7,6 +7,7 @@ import { useTheme } from '@/components/ThemeProvider';
 import { CopyIcon } from 'lucide-react';
 // import axios from 'axios';
 import api from '@/lib/axios';
+import React from 'react';
 
 // const BASE_URL = 'https://api.blaffa.net';
 
@@ -35,6 +36,12 @@ interface IdLink {
   app_name: App;
 }
 
+type ConfirmModalData = {
+  Name: string;
+  UserId: number;
+  CurrencyId: number;
+};
+
 export default function BetIdsPage() {
   const { t } = useTranslation();
   const { theme } = useTheme();
@@ -46,6 +53,12 @@ export default function BetIdsPage() {
   const [selectedApp, setSelectedApp] = useState('');
   const [apps, setApps] = useState<App[]>([]);
   const [loading, setLoading] = useState(true);
+  const [modal, setModal] = useState<
+    | null
+    | { type: 'confirm'; data: ConfirmModalData }
+    | { type: 'error'; message: string }
+  >(null);
+  const [pendingBetId, setPendingBetId] = useState<{ appId: string; betId: string } | null>(null);
 
   // Fetch user's saved bet IDs
   const fetchBetIds = async () => {
@@ -115,40 +128,86 @@ export default function BetIdsPage() {
     }
   };
 
-  // Add new bet ID
-  const handleAddBetId = async (e: React.FormEvent) => {
+  // Search user before adding bet ID
+  const handleSearchUserAndAdd = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setError(null);
     setSuccess(null);
-    
+
     if (!selectedApp || !newAppId.trim()) {
-      setError(t('Please select an app and enter a bet ID.'));
+      setError(t('Veuillez sélectionner une application et saisir un ID de pari.'));
       return;
     }
 
     const token = localStorage.getItem('accessToken');
     if (!token) {
-      setError(t('You must be logged in to add a bet ID.'));
+      setError(t('Vous devez être connecté pour ajouter un ID de pari.'));
       return;
     }
 
     try {
-      const response = await api.post(`/blaffa/id_link`, {
-        method: 'POST',
+      // Search user API
+      const searchResponse = await api.get(`/blaffa/search-user?app_id=${selectedApp}&userid=${encodeURIComponent(newAppId.trim())}`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          link: newAppId.trim(),
-          app_name_id: selectedApp
-        }),
       });
+      const searchData = searchResponse.data;
+      if (searchData && searchData.UserId && searchData.UserId !== 0) {
+        // Show confirmation modal
+        setModal({
+          type: 'confirm',
+          data: {
+            Name: searchData.Name,
+            UserId: searchData.UserId,
+            CurrencyId: searchData.CurrencyId,
+          },
+        });
+        setPendingBetId({ appId: selectedApp, betId: newAppId.trim() });
+      } else {
+        // Show error modal
+        setModal({
+          type: 'error',
+          message: t('No account was found with the ID {{betid}}. Make sure it is spelled correctly and try again.', { betid: newAppId.trim() }),
+        });
+      }
+    } catch {
+      setModal({
+        type: 'error',
+        message: t('Échec de la validation de l\'ID de pari. Veuillez réessayer.'),
+      });
+    }
+  };
 
-      if (response.status !== 200) {
+  // Confirm add bet ID after modal
+  const handleConfirmAddBetId = async () => {
+    if (!pendingBetId) return;
+    setModal(null);
+    setError(null);
+    setSuccess(null);
+    const { appId, betId } = pendingBetId;
+    const token = localStorage.getItem('accessToken');
+    if (!token) {
+      setError(t('Vous devez être connecté pour ajouter un ID de pari.'));
+      return;
+    }
+    try {
+      const response = await api.post(
+        `/blaffa/id_link`,
+        {
+          link: betId,
+          app_name_id: appId,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+        }
+      );
+      if (response.status !== 200 && response.status !== 201) {
         const errorData = await response.data;
-        // Handle validation errors
         if (response.status === 400 && errorData) {
           const errorMessages = Object.entries(errorData)
             .map(([field, errors]) => {
@@ -161,67 +220,20 @@ export default function BetIdsPage() {
           throw new Error(errorMessages);
         }
         throw new Error(errorData.detail || t('Failed to add bet ID'));
-      };
-
-      setSuccess(t('Bet ID added successfully!'));
+      }
+      setSuccess(t('ID de pari ajouté avec succès !'));
       setNewAppId('');
       setSelectedApp('');
+      setPendingBetId(null);
       await fetchBetIds();
-    } catch (error: any) {
-      setError(error.message || t('Failed to add bet ID'));
-      console.log(error.message || t('Failed to add bet ID'));
-     // console.error('Error adding bet ID:', error);
-     if (error.response) {
-      const { status, data } = error.response;
-      
-      // Handle field-specific validation errors
-      if (status === 400 && data) {
-        const errorMessages = [];
-        
-        // Check for direct field errors
-        if (data.link) {
-          errorMessages.push(`Bet ID: ${Array.isArray(data.link) ? data.link[0] : data.link}`);
-        }
-        
-        if (data.app_name_id) {
-          errorMessages.push(`App: ${Array.isArray(data.app_name_id) ? data.app_name_id[0] : data.app_name_id}`);
-        }
-        
-        // Check for non-field errors
-        if (data.detail) {
-          errorMessages.push(data.detail);
-        }
-        
-        // If no specific errors found, use a generic message
-        if (errorMessages.length === 0) {
-          errorMessages.push(t('Invalid data. Please check your input.'));
-        }
-        
-        setError(errorMessages.join('\n'));
-        return;
-      }
-      
-      // Handle other error statuses
-      if (status === 401) {
-        setError(t('Your session has expired. Please log in again.'));
-      } else if (status === 403) {
-        setError(t('You do not have permission to perform this action.'));
-      } else if (status === 404) {
-        setError(t('The requested resource was not found.'));
-      } else if (status >= 500) {
-        setError(t('Server error. Please try again later.'));
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        setError(error.message || t('Failed to add bet ID'));
       } else {
-        setError(t('An error occurred. Please try again.'));
+        setError(t('Failed to add bet ID'));
       }
-    } else if (error.request) {
-      // The request was made but no response was received
-      setError(t('Network error. Please check your connection and try again.'));
-    } else {
-      // Something happened in setting up the request
-      setError(t('An error occurred. Please try again.'));
     }
-  }
-};
+  };
 
   // Delete bet ID
   const handleDeleteBetId = async (id: string) => {
@@ -248,9 +260,9 @@ export default function BetIdsPage() {
 
       setSuccess(t('Bet ID deleted successfully!'));
       setSavedAppIds(prev => prev.filter(item => item.id !== id));
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Error deleting bet ID:', error);
-      console.log(error.message || t('Failed to delete bet ID'));
+      console.log(error instanceof Error ? error.message : t('Failed to delete bet ID'));
     }
   };
 
@@ -399,10 +411,10 @@ return (
                 
                 <div className="flex items-end">
                   <button
-                    onClick={handleAddBetId}
+                    onClick={handleSearchUserAndAdd}
                     className="w-full px-6 py-4 bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-500 hover:to-amber-500 text-white font-medium rounded-xl transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-105"
                   >
-                    {t("Add Bet ID")}
+                    {t('Add Bet ID')}
                   </button>
                 </div>
               </div>
@@ -494,6 +506,51 @@ return (
         </div>
       </div>
     </div>
+
+    {/* Modal rendering */}
+    {modal && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-md w-full relative">
+          {modal.type === 'confirm' ? (
+            <>
+              <h3 className="text-xl font-bold mb-4">{t('Confirmer l\'ID de pari')}</h3>
+              <div className="mb-4">
+                <div><span className="font-semibold">{t('Nom de l\'utilisateur')}:</span> {modal.data.Name}</div>
+                <div><span className="font-semibold">{t('ID de pari')}:</span> {modal.data.UserId}</div>
+                <div><span className="font-semibold">{t('Appareil')}:</span> {modal.data.CurrencyId}</div>
+              </div>
+              <div className="flex gap-4 mt-6">
+                <button
+                  className="flex-1 px-4 py-2 bg-gray-200 dark:bg-slate-700 rounded hover:bg-gray-300 dark:hover:bg-slate-600"
+                  onClick={() => { setModal(null); setPendingBetId(null); }}
+                >
+                  {t('Annuler')}
+                </button>
+                <button
+                  className="flex-1 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                  onClick={handleConfirmAddBetId}
+                >
+                  {t('Confirmer')}
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <h3 className="text-xl font-bold mb-4 text-red-600">{t('ID de pari invalide')}</h3>
+              <div className="mb-4 text-slate-700 dark:text-slate-200">{modal.message}</div>
+              <div className="flex justify-end mt-6">
+                <button
+                  className="px-4 py-2 bg-gray-200 dark:bg-slate-700 rounded hover:bg-gray-300 dark:hover:bg-slate-600"
+                  onClick={() => setModal(null)}
+                >
+                  {t('Fermer')}
+                </button>
+              </div>
+            </>
+          )}
+        </div>
+      </div>
+    )}
   </div>
 );
 }
