@@ -308,8 +308,21 @@ const resources = {
       "Please select a network.": "Veuillez sélectionner un réseau.",
       "Wallet links do not match.": "Les liens du portefeuille ne correspondent pas.",
       "Transaction failed. Please try again.": "La transaction a échoué. Veuillez réessayer.",
-      "Back to Crypto": "Back to Crypto",
-      "Back to Cryptos": "Back to Cryptos",
+      "Back to Crypto": "Retour à la crypto",
+      "Back to Cryptos": "Retour aux cryptos",
+
+      // Account Verification Modal translations
+      "Account Verification Required": "Vérification du compte requise",
+      "Upload your image (face)": "Téléchargez votre image (visage)",
+      "Upload your card image (ID card)": "Téléchargez l'image de votre carte (carte d'identité)",
+      "Images uploaded. Please wait for admin verification.": "Images téléchargées. Veuillez attendre la vérification de l'administrateur.",
+      "Failed to upload images. Try again.": "Échec du téléchargement des images. Réessayez.",
+      "Uploading...": "Téléchargement...",
+      "Upload & Submit": "Télécharger et soumettre",
+      "Checking...": "Vérification...",
+      "Verified": "Vérifié",
+      "Not Verified": "Non vérifié",
+      "Success": "Succès",
     },
   },
   fr: {
@@ -623,6 +636,19 @@ const resources = {
       "Transaction failed. Please try again.": "La transaction a échoué. Veuillez réessayer.",
       "Back to Crypto": "Retour à la crypto",
       "Back to Cryptos": "Retour aux cryptos",
+
+      // Account Verification Modal translations
+      "Account Verification Required": "Vérification du compte requise",
+      "Upload your image (face)": "Téléchargez votre image (visage)",
+      "Upload your card image (ID card)": "Téléchargez l'image de votre carte (carte d'identité)",
+      "Images uploaded. Please wait for admin verification.": "Images téléchargées. Veuillez attendre la vérification de l'administrateur.",
+      "Failed to upload images. Try again.": "Échec du téléchargement des images. Réessayez.",
+      "Uploading...": "Téléchargement...",
+      "Upload & Submit": "Télécharger et soumettre",
+      "Checking...": "Vérification...",
+      "Verified": "Vérifié",
+      "Not Verified": "Non vérifié",
+      "Success": "Succès",
     },
   },
 };

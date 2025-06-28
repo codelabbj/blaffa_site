@@ -143,22 +143,55 @@ export default function CryptoPage() {
     }
     try {
       const formData = new FormData();
-      formData.append("user_card[]", userImage);
-      formData.append("user_card[]", cardImage);
+      // Try different field name combinations
+      // Option 1: Both files with same field name (array)
+      // formData.append("user_card[]", userImage);
+      // formData.append("user_card[]", cardImage);
+      
+      // Option 2: Individual field names (matching server response)
+      formData.append("file", userImage);
+      formData.append("image", cardImage);
+      
+      // Option 3: Try with different field names (uncomment if others don't work)
+      // formData.append("user_image", userImage);
+      // formData.append("card_image", cardImage);
+      
+      // Debug: Log FormData contents
+      console.log("FormData contents:");
       for (const pair of formData.entries()) {
-        console.log(pair[0]+ ':', pair[1]);
+        console.log(pair[0] + ':', pair[1]);
       }
+      
       const token = localStorage.getItem("accessToken");
-      await api.post(UPLOAD_API, formData, {
+      
+      // Use fetch directly to avoid axios header conflicts
+      const response = await fetch(UPLOAD_API, {
+        method: 'POST',
         headers: {
           ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
+        body: formData,
       });
+      
+      // Debug: Log response details
+      console.log("Response status:", response.status);
+      console.log("Response headers:", Object.fromEntries(response.headers.entries()));
+      
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error("Error response body:", errorText);
+        throw new Error(`Upload failed: ${response.status} ${response.statusText}`);
+      }
+      
+      const result = await response.json();
+      console.log("Upload response:", result);
+      
       setShowVerifyModal(false);
       setSuccessMessage(t("Images uploaded. Please wait for admin verification."));
       setShowSuccessModal(true);
       setUserVerified(false);
-    } catch {
+    } catch (error) {
+      console.error("Upload error:", error);
       setUploadError(t("Failed to upload images. Try again."));
     } finally {
       setUploading(false);
@@ -177,7 +210,7 @@ export default function CryptoPage() {
       return (
         <span
           className={`${baseClass} ${sizeClass} ${mobileClass} bg-gray-300 animate-spin text-blue-500`}
-          title="Checking..."
+          title={t("Checking...")}
         >
           <ImSpinner2 />
         </span>
@@ -186,7 +219,7 @@ export default function CryptoPage() {
       return (
         <span
           className={`${baseClass} ${sizeClass} ${mobileClass} bg-green-500 text-white`}
-          title="Verified"
+          title={t("Verified")}
         >
           <FaCheckCircle />
         </span>
@@ -194,7 +227,7 @@ export default function CryptoPage() {
     return (
       <span
         className={`${baseClass} ${sizeClass} ${mobileClass} bg-yellow-400 text-white`}
-        title="Not Verified"
+        title={t("Not Verified")}
       >
         <FaExclamationTriangle />
       </span>

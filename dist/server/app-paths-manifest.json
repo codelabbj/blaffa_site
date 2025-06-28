@@ -4,5 +4,6 @@
   "/crypto/page": "app/crypto/page.js",
   "/dashboard/page": "app/dashboard/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/withdraw/page": "app/withdraw/page.js"
+  "/page": "app/page.js",
+  "/profile/page": "app/profile/page.js"
 }

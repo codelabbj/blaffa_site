@@ -569,7 +569,7 @@ const resources = {
             // CryptoTransactionForm translations
             "Please verify your account to buy or sell crypto.": "Veuillez vérifier votre compte pour acheter ou vendre de la crypto.",
             "Buy or Sell": "Acheter ou Vendre",
-            "Select Network": "Sélectionnez le réseau",
+            // "Select Network": "Sélectionnez le réseau",
             "Select a network": "Sélectionnez un réseau",
             "Public Amount": "Montant public",
             "Amount (Local Currency)": "Montant (monnaie locale)",
@@ -585,8 +585,8 @@ const resources = {
             "Wallet link": "Lien du portefeuille",
             "Confirm wallet link": "Confirmez le lien du portefeuille",
             "Confirm your transaction": "Confirmez votre transaction",
-            "Processing...": "Traitement...",
-            "Confirm": "Confirmer",
+            // "Processing...": "Traitement...",
+            // "Confirm": "Confirmer",
             "Sell Wallet Address": "Adresse de vente du portefeuille",
             "Copy": "Copier",
             "Send your crypto to this address to complete the sale.": "Envoyez votre crypto à cette adresse pour finaliser la vente.",
@@ -595,8 +595,20 @@ const resources = {
             "Please select a network.": "Veuillez sélectionner un réseau.",
             "Wallet links do not match.": "Les liens du portefeuille ne correspondent pas.",
             "Transaction failed. Please try again.": "La transaction a échoué. Veuillez réessayer.",
-            "Back to Crypto": "Back to Crypto",
-            "Back to Cryptos": "Back to Cryptos"
+            "Back to Crypto": "Retour à la crypto",
+            "Back to Cryptos": "Retour aux cryptos",
+            // Account Verification Modal translations
+            "Account Verification Required": "Vérification du compte requise",
+            "Upload your image (face)": "Téléchargez votre image (visage)",
+            "Upload your card image (ID card)": "Téléchargez l'image de votre carte (carte d'identité)",
+            "Images uploaded. Please wait for admin verification.": "Images téléchargées. Veuillez attendre la vérification de l'administrateur.",
+            "Failed to upload images. Try again.": "Échec du téléchargement des images. Réessayez.",
+            "Uploading...": "Téléchargement...",
+            "Upload & Submit": "Télécharger et soumettre",
+            "Checking...": "Vérification...",
+            "Verified": "Vérifié",
+            "Not Verified": "Non vérifié",
+            "Success": "Succès"
         }
     },
     fr: {
@@ -846,7 +858,7 @@ const resources = {
             // CryptoTransactionForm translations
             "Please verify your account to buy or sell crypto.": "Veuillez vérifier votre compte pour acheter ou vendre de la crypto.",
             "Buy or Sell": "Acheter ou Vendre",
-            "Select Network": "Sélectionnez le réseau",
+            // "Select Network": "Sélectionnez le réseau",
             "Select a network": "Sélectionnez un réseau",
             "Public Amount": "Montant public",
             "Amount (Local Currency)": "Montant (monnaie locale)",
@@ -862,8 +874,8 @@ const resources = {
             "Wallet link": "Lien du portefeuille",
             "Confirm wallet link": "Confirmez le lien du portefeuille",
             "Confirm your transaction": "Confirmez votre transaction",
-            "Processing...": "Traitement...",
-            "Confirm": "Confirmer",
+            // "Processing...": "Traitement...",
+            // "Confirm": "Confirmer",
             "Sell Wallet Address": "Adresse de vente du portefeuille",
             "Copy": "Copier",
             "Send your crypto to this address to complete the sale.": "Envoyez votre crypto à cette adresse pour finaliser la vente.",
@@ -873,7 +885,19 @@ const resources = {
             "Wallet links do not match.": "Les liens du portefeuille ne correspondent pas.",
             "Transaction failed. Please try again.": "La transaction a échoué. Veuillez réessayer.",
             "Back to Crypto": "Retour à la crypto",
-            "Back to Cryptos": "Retour aux cryptos"
+            "Back to Cryptos": "Retour aux cryptos",
+            // Account Verification Modal translations
+            "Account Verification Required": "Vérification du compte requise",
+            "Upload your image (face)": "Téléchargez votre image (visage)",
+            "Upload your card image (ID card)": "Téléchargez l'image de votre carte (carte d'identité)",
+            "Images uploaded. Please wait for admin verification.": "Images téléchargées. Veuillez attendre la vérification de l'administrateur.",
+            "Failed to upload images. Try again.": "Échec du téléchargement des images. Réessayez.",
+            "Uploading...": "Téléchargement...",
+            "Upload & Submit": "Télécharger et soumettre",
+            "Checking...": "Vérification...",
+            "Verified": "Vérifié",
+            "Not Verified": "Non vérifié",
+            "Success": "Succès"
         }
     }
 };
