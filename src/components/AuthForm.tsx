@@ -111,11 +111,12 @@ export default function AuthForm() {
       }
     } else {
       // Registration validation
+      const sanitizedPhone = phone.replace(/\s+/g, '');
       if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
         setNotification({ type: 'error', message: t('Invalid email address') });
         return;
       }
-      if (!/^\+?\d+$/.test(phone)) {
+      if (!/^\+?\d+$/.test(sanitizedPhone)) {
         setNotification({ type: 'error', message: t('Invalid phone number') });
         return;
       }
@@ -134,13 +135,14 @@ export default function AuthForm() {
       }
     }
   
+    const sanitizedEmailOrPhone = emailOrPhone.replace(/\s+/g, '');
     const payload = isLogin
-      ? { email_or_phone: emailOrPhone, password }
+      ? { email_or_phone: sanitizedEmailOrPhone, password }
       : {
           first_name: fullName.split(' ')[0] || '',
           last_name: fullName.split(' ')[1] || '',
           email,
-          phone,
+          phone: phone.replace(/\s+/g, ''),
           phone_indicative: '+229',
           password,
           re_password: confirmPassword,
@@ -156,9 +158,13 @@ export default function AuthForm() {
       );
   
       if (isLogin) {
-        const { refresh, access } = response.data;
+        console.log('Login response:', response.data);
+        const { refresh, access, data } = response.data;
         localStorage.setItem('refreshToken', refresh);
         localStorage.setItem('accessToken', access);
+        if (data && data.id) {
+          localStorage.setItem('userId', data.id.toString());
+        }
 
         // Set up axios default headers
         api.defaults.headers.common['Authorization'] = `Bearer ${access}`;

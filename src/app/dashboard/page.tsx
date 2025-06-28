@@ -1,4 +1,3 @@
-
 "use client"
 
 import { useState, useEffect } from 'react';
@@ -16,11 +15,12 @@ import {
   ArrowUpRight, 
   Gift, 
   User, 
-  Bell,
+  Coins,
+  // Bell,
   
 } from 'lucide-react';
 import Image from 'next/image'
-import ThemeToggle from '../../components/ThemeToggle';
+//import ThemeToggle from '../../components/ThemeToggle';
 import Advertisement_Hero from '../../components/Advertisement_Hero';
 //import notifications from '../notifications/page'
 
@@ -28,7 +28,7 @@ import Advertisement_Hero from '../../components/Advertisement_Hero';
 export default function Dashboard() {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
-  const [animateHeader, setAnimateHeader] = useState(false);
+  // const [animateHeader, setAnimateHeader] = useState(false);
   const { theme } = useTheme();
 
   
@@ -38,9 +38,10 @@ export default function Dashboard() {
   }, []);
   
   
+  
   // Simulates loading state
   useEffect(() => {
-    setAnimateHeader(true);
+    // setAnimateHeader(true);
     setTimeout(() => {
       setIsLoading(false);
     }, 1000);
@@ -50,7 +51,7 @@ export default function Dashboard() {
     
     // Trigger header animation
     setTimeout(() => {
-      setAnimateHeader(true);
+      // setAnimateHeader(true);
     }, 500);
   }, []);
  
@@ -95,43 +96,51 @@ export default function Dashboard() {
                 <div className="hidden md:block absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-12 -translate-x-12"></div>
               
                 <div className="relative z-10">
-                  {/* Mobile Layout (4 buttons in a row with square icons) */}
-                  <div className="flex gap-2 justify-center md:hidden">
+                  {/* Mobile Layout (5 buttons in a row with square icons) */}
+                  <div className="flex gap-1 justify-center md:hidden">
                     {/* Deposit Button */}
-                    <a href="/deposit" className="group relative flex-1 flex flex-col items-center justify-center p-3 transition-all duration-300 active:scale-95">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center mb-2 group-active:scale-90 transition-transform shadow-lg shadow-red-500/25">
-                        <ArrowUpRight size={18} className="text-white drop-shadow-sm" />
+                    <a href="/deposit" className="group relative flex-1 flex flex-col items-center justify-center p-2 transition-all duration-300 active:scale-95">
+                      <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center mb-1 group-active:scale-90 transition-transform shadow-lg shadow-red-500/25">
+                        <ArrowUpRight size={15} className="text-white drop-shadow-sm" />
                       </div>
-                      <span className="font-medium text-xs ">{t("Deposit")}</span>
+                      <span className="font-medium text-[10px] ">{t("Deposit")}</span>
                     </a>
                     
                     {/* Withdraw Button */}
-                    <a href="/withdraw" className="group relative flex-1 flex flex-col items-center justify-center p-3 transition-all duration-300 active:scale-95">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center mb-2 group-active:scale-90 transition-transform shadow-lg shadow-blue-500/25">
-                        <ArrowDownLeft size={18} className="text-white drop-shadow-sm" />
+                    <a href="/withdraw" className="group relative flex-1 flex flex-col items-center justify-center p-2 transition-all duration-300 active:scale-95">
+                      <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center mb-1 group-active:scale-90 transition-transform shadow-lg shadow-blue-500/25">
+                        <ArrowDownLeft size={15} className="text-white drop-shadow-sm" />
                       </div>
-                      <span className="font-medium text-xs ">{t("Withdraw")}</span>
+                      <span className="font-medium text-[10px] ">{t("Withdraw")}</span>
                     </a>
                     
                     {/* Coupon Button */}
-                    <a href="/coupon" className="group relative flex-1 flex flex-col items-center justify-center p-3 transition-all duration-300 active:scale-95">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center mb-2 group-active:scale-90 transition-transform shadow-lg shadow-orange-500/25">
-                        <Gift size={18} className="text-white drop-shadow-sm" />
+                    <a href="/coupon" className="group relative flex-1 flex flex-col items-center justify-center p-2 transition-all duration-300 active:scale-95">
+                      <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center mb-1 group-active:scale-90 transition-transform shadow-lg shadow-orange-500/25">
+                        <Gift size={15} className="text-white drop-shadow-sm" />
                       </div>
-                      <span className="font-medium text-xs ">{t("Coupon")}</span>
+                      <span className="font-medium text-[10px] ">{t("Coupon")}</span>
+                    </a>
+
+                    {/* Crypto Button */}
+                    <a href="/crypto" className="group relative flex-1 flex flex-col items-center justify-center p-2 transition-all duration-300 active:scale-95">
+                      <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center mb-1 group-active:scale-90 transition-transform shadow-lg shadow-yellow-500/25">
+                        <Coins size={15} className="text-white drop-shadow-sm" />
+                      </div>
+                      <span className="font-medium text-[10px] ">{t("Crypto")}</span>
                     </a>
                     
                     {/* Mon ID Button */}
-                    <a href="/bet_id" className="group relative flex-1 flex flex-col items-center justify-center p-3 transition-all duration-300 active:scale-95">
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center mb-2 group-active:scale-90 transition-transform shadow-lg shadow-blue-500/25">
-                        <User size={18} className="text-white drop-shadow-sm" />
+                    <a href="/bet_id" className="group relative flex-1 flex flex-col items-center justify-center p-2 transition-all duration-300 active:scale-95">
+                      <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center mb-1 group-active:scale-90 transition-transform shadow-lg shadow-blue-500/25">
+                        <User size={15} className="text-white drop-shadow-sm" />
                       </div>
-                      <span className="font-medium text-xs ">{t("Mon ID")}</span>
+                      <span className="font-medium text-[10px] ">{t("Mon ID")}</span>
                     </a>
                   </div>
 
                   {/* Desktop Layout (Grid) - Same as first code */}
-                  <div className="hidden md:grid grid-cols-4 gap-4">
+                  <div className="hidden md:grid grid-cols-5 gap-4">
                     {/* Déposer */}
                     <a href="/deposit" className="bg-gradient-to-br from-red-400 to-red-600 backdrop-blur-sm rounded-2xl p-4 hover:bg-white/15 transition-all duration-300 cursor-pointer group border border-white/5 hover:border-white/20">
                       <div className="flex flex-col lg:flex-row lg:items-center lg:gap-3">
@@ -173,6 +182,21 @@ export default function Dashboard() {
                         </div>
                         <span className="text-sm font-medium text-white/90 group-hover:text-white transition-colors">
                           {t("Coupon")}
+                        </span>
+                      </div>
+                    </a>
+                  
+                    {/* Crypto */}
+                    <a href="/crypto" className="bg-gradient-to-br from-yellow-400 to-yellow-600 backdrop-blur-sm rounded-2xl p-4 hover:bg-white/15 transition-all duration-300 cursor-pointer group border border-white/5 hover:border-white/20">
+                      <div className="flex flex-col lg:flex-row lg:items-center lg:gap-3">
+                        <div className="relative mb-3 lg:mb-0">
+                          <div className="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-lg shadow-yellow-500/25">
+                            <Coins className="w-6 h-6 text-white drop-shadow-sm" />
+                          </div>
+                          <div className="absolute -top-1 -right-1 w-3 h-3 bg-yellow-300 rounded-full opacity-60 group-hover:opacity-80 transition-opacity"></div>
+                        </div>
+                        <span className="text-sm font-medium text-white/90 group-hover:text-white transition-colors">
+                          {t("Crypto")}
                         </span>
                       </div>
                     </a>

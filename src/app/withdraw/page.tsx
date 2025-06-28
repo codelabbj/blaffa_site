@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 // import styles from '../styles/Withdraw.module.css';
 //import DashboardHeader from '@/components/DashboardHeader';
 import { useTheme } from '../../components/ThemeProvider';
-import { Check, CheckCircle, CopyIcon,  Smartphone, XCircle } from 'lucide-react';
+import { Check, CheckCircle, Smartphone, XCircle } from 'lucide-react';
 import api from '@/lib/axios';
 import DashboardHeader from '@/components/DashboardHeader';
 
@@ -78,7 +78,7 @@ interface TransactionDetail {
 
 export default function Withdraw() {
   const { t } = useTranslation();
-  const [currentStep, setCurrentStep] = useState<'selectId' | 'selectNetwork' | 'enterDetails'>('selectId');
+  const [currentStep, setCurrentStep] = useState<'selectId' | 'selectNetwork' | 'manageBetId' | 'enterDetails'>('selectId');
   const [selectedPlatform, setSelectedPlatform] = useState<App | null>(null);
   const [platforms, setPlatforms] = useState<App[]>([]);
   const [selectedNetwork, setSelectedNetwork] = useState<{ id: string; name: string; public_name?: string; country_code?: string; image?: string } | null>(null);
@@ -96,6 +96,8 @@ export default function Withdraw() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState<TransactionDetail | null>(null);
   const { theme } = useTheme();
+  const [selectedBetId, setSelectedBetId] = useState<string | null>(null);
+  const [showInfoDropdown, setShowInfoDropdown] = useState(false);
 
 
   const fetchPlatforms = async () => {
@@ -184,7 +186,7 @@ export default function Withdraw() {
 
   const handleNetworkSelect = (network: { id: string; name: string; public_name?: string; country_code?: string; image?: string }) => {
     setSelectedNetwork(network);
-    setCurrentStep('enterDetails');
+    setCurrentStep('manageBetId');
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -197,7 +199,7 @@ export default function Withdraw() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedPlatform || !selectedNetwork) return;
+    if (!selectedPlatform || !selectedNetwork || !selectedBetId) return;
     
     setLoading(true);
     try {
@@ -209,10 +211,10 @@ export default function Withdraw() {
       const response = await api.post(`/blaffa/transaction?country_code=${countryCode}`, {
         type_trans: 'withdrawal',
         withdriwal_code: formData.withdrawalCode,
-        phone_number: formData.phoneNumber,
+        phone_number: formData.phoneNumber.replace(/\s+/g, ''),
         network_id: selectedNetwork.id,
         app_id: selectedPlatform.id,
-        user_app_id: formData.betid
+        user_app_id: selectedBetId,
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -226,11 +228,13 @@ export default function Withdraw() {
       setCurrentStep('selectId');
       setSelectedPlatform(null);
       setSelectedNetwork(null);
+      setSelectedBetId(null);
       setFormData({ withdrawalCode: '', phoneNumber: '', betid: '' });
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Withdrawal error:', err);
-      if (err.response) {
-        const { status, data } = err.response;
+      if (err && typeof err === 'object' && 'response' in err) {
+        const errorResponse = err as { response: { status: number; data: Record<string, unknown> } };
+        const { status, data } = errorResponse.response;
         
         if (status === 400 && data) {
           const errorMessages: string[] = [];
@@ -251,7 +255,7 @@ export default function Withdraw() {
           
           // Add any non-field errors
           if (data.detail) {
-            errorMessages.push(data.detail);
+            errorMessages.push(data.detail as string);
           }
           
           setError(errorMessages.join('\n') || 'Validation error');
@@ -268,14 +272,15 @@ export default function Withdraw() {
         } else if (status >= 500) {
           setError('Server error. Please try again later.');
         } else {
-          setError(data?.detail || 'An error occurred. Please try again.');
+          setError(data?.detail as string || 'An error occurred. Please try again.');
         }
-      } else if (err.request) {
+      } else if (err && typeof err === 'object' && 'request' in err) {
         // The request was made but no response was received
         setError('Network error. Please check your connection and try again.');
       } else {
         // Something happened in setting up the request
-        setError('An error occurred while setting up the request: ' + err.message);
+        const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred';
+        setError('An error occurred while setting up the request: ' + errorMessage);
       }
     } finally {
       setLoading(false);
@@ -433,246 +438,156 @@ export default function Withdraw() {
           </div>
         );
         
-      case 'enterDetails':
+      case 'manageBetId':
+        // Only show Bet IDs for the selected platform
         const platformBetIds = savedAppIds.filter(id => id.app_name.id === selectedPlatform?.id);
-         return (
-      <div className="space-y-6">
-        <div className="flex items-center mb-8">
-          <button 
-            onClick={() => {
-              setSelectedNetwork(null);
-              setCurrentStep('selectNetwork');
-            }}
-            className="group mr-4 p-2 rounded-xl border border-slate-600/30 hover:text-blue-400 hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/20"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 group-hover:-translate-x-1 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
-            </svg>
-          </button>
-          <div>
-            {/* <h2 className="text-2xl font-bold mb-1">{t("Enter the remaining Details")}</h2> */}
-            <p className="text-slate-400 text-sm">{t("Remplissez les détails de votre pari")}</p>
-          </div>
-        </div>
-    
-    {/* <form onSubmit={handleSubmit} className="space-y-6">
-      
-              <div className={`bg-gradient-to-br ${theme.colors.sl_background} backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6`}>
-                <label className="block text-sm font-semibold text-blue-300 mb-3">
-                  {t("Bet ID")} ({selectedPlatform?.public_name || selectedPlatform?.name})
-                </label>
-                <div className="space-y-4">
-                  <div className="relative">
-                    <input
-                      type="text"
-                      value={formData.betid}
-                      onChange={(e) => setFormData(prev => ({ ...prev, betid: e.target.value }))}
-                      className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300`}
-                      placeholder={t("Enter your bet ID")}
-                    />
-                    <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-blue-500/10 to-blue-500/10 opacity-0 focus-within:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-                  </div>
-                  
-                  {platformBetIds.length > 0 && (
-                    <div className="mt-4">
-                      <label className="block text-sm font-medium text-slate-400 mb-3">{t("Saved Bet IDs")}</label>
-                      <div className="flex flex-wrap gap-3">
-                        {platformBetIds.map((id, index) => (
-                          <div
-                            key={id.id}
-                            className={`group relative overflow-hidden bg-gradient-to-br ${theme.colors.c_background} backdrop-blur-sm border border-slate-600/30 rounded-xl px-4 py-3 text-sm hover:from-slate-600/50 hover:to-slate-500/50 cursor-pointer flex items-center transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/20`}
-                            style={{
-                              animation: `slideInUp 0.3s ease-out ${index * 50}ms both`
-                            }}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              setFormData(prev => ({ ...prev, betid: id.link }));
-                            }}
-                          >
-                            <div className="absolute inset-0 shimmer-effect opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                            <span className="mr-3  font-mono truncate relative z-10">{id.link}</span>
-                            <button
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                navigator.clipboard.writeText(id.link);
-                              }}
-                              className="relative z-10 p-1.5 hover:bg-slate-500/30 rounded-lg transition-colors duration-200"
-                            >
-                              <CopyIcon className="h-4 w-4 text-slate-400 hover:text-blue-400 transition-colors duration-200" />
-                            </button>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="space-y-4">
-                <div>
-                  <label htmlFor="withdrawalCode" className="block text-sm font-medium text-slate-400 mb-2">
-                    {t("Withdrawal Code")}
-                  </label>
-                  <div className="relative">
-                    <Key className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
-                    <input
-                      type="text"
-                      id="withdrawalCode"
-                      name="withdrawalCode"
-                      value={formData.withdrawalCode}
-                      onChange={handleInputChange}
-                      className={`w-full p-4 pl-12 ${theme.colors.c_background} border border-slate-600/50 rounded-xl placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300`}
-                      placeholder={t("Enter your withdrawal code")}
-                      required
-                    />
-                  </div>
-                </div>
-                
-                <div>
-                  <label htmlFor="phoneNumber" className="block text-sm font-medium text-slate-400 mb-2">
-                    {t("Phone Number")}
-                  </label>
-                  <div className="relative">
-                    <Phone className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-slate-400" />
-                    <input
-                      type="tel"
-                      id="phoneNumber"
-                      name="phoneNumber"
-                      value={formData.phoneNumber}
-                      onChange={handleInputChange}
-                      className={`w-full p-4 pl-12 ${theme.colors.c_background} border border-slate-600/50 rounded-xl placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300`}
-                      placeholder="ex: 771234567"
-                      required
-                    />
-                  </div>
-                </div>
-              </div>
-              
-              <div className="flex flex-col sm:flex-row justify-between gap-4 pt-4">
-                <button
-                  type="button"
-                  onClick={() => setCurrentStep('selectNetwork')}
-                  className="flex items-center justify-center text-slate-400 hover:text-white px-6 py-3 rounded-xl transition-all duration-300 group"
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                  </svg>
-                  {t("Back")}
-                </button>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-500 hover:to-blue-500 text-white rounded-xl transition-all duration-300 font-medium shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100 min-w-[140px]"
-                >
-                  {loading ? (
-                    <div className="flex items-center justify-center">
-                      <div className="animate-spin rounded-full h-5 w-5 border-2 border-white/30 border-t-white mr-2"></div>
-                      {t('Processing...')}
-                    </div>
-                  ) : (
-                    t('Submit')
-                  )}
-                </button>
-              </div>
-            </form> */}
-
-            <form onSubmit={handleSubmit} className="space-y-4">
+        // Function to delete a bet ID
+        const handleDeleteBetId = async (id: string) => {
+          const token = localStorage.getItem('accessToken');
+          if (!token) return;
+          try {
+            await api.delete(`/blaffa/id_link/${id}`, {
+              headers: { Authorization: `Bearer ${token}` }
+            });
+            setSavedAppIds(prev => prev.filter(bet => bet.id !== id));
+          } catch {
+            setError(t("Erreur lors de la suppression de l'ID de pari."));
+          }
+        };
+        return (
+          <div className="space-y-6">
+            <div className="flex items-center mb-8">
+              <button 
+                onClick={() => setCurrentStep('selectNetwork')}
+                className="group mr-4 p-2 rounded-xl border border-slate-600/30 hover:text-blue-400 hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/20"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 group-hover:-translate-x-1 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
               <div>
-                  <label className="block text-sm font-medium mb-1">
-                    {t("Bet ID")} ({selectedPlatform?.public_name || selectedPlatform?.name})
-                  </label>
-                  <div className="space-y-2">
-                    <input
-                      type="text"
-                      value={formData.betid}
-                      onChange={(e) => setFormData(prev => ({ ...prev, betid: e.target.value }))}
-                      className="w-full p-2 border rounded"
-                      placeholder={t("Enter your bet ID")}
-                    />
-                    {platformBetIds.length > 0 && (
-                      <div className="mt-2">
-                        <label className="block text-sm text-gray-500 mb-1">{t("Saved Bet IDs")}</label>
-                        <div className="flex flex-wrap gap-2">
-                          {platformBetIds.map((id) => (
-                            <div
-                            key={id.id}
-                            className="px-3 py-1 bg-gray-100 text-black rounded-full text-sm hover:bg-gray-200 cursor-pointer flex items-center"
-                            onClick={(e) => {
-                              e.preventDefault();
-                              setFormData(prev => ({ ...prev, betid: id.link }));
-                            }}
-                          >
-                            <span className="mr-2">{id.link}</span>
-                            <button
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  navigator.clipboard.writeText(id.link);
-                                  // alert(t('Bet ID copied to clipboard'));
-                                }}
-                                className="p-1 hover:bg-gray-200 rounded"
-                              >
-                              <CopyIcon className="h-4 w-4 text-gray-500" />
-                            </button>
-                          </div>
-                          ))}
-                        </div>
+                <p className="text-slate-400 text-sm">{t("Gérer vos IDs de pari")}</p>
+              </div>
+            </div>
+            <div className="flex flex-col items-center justify-center gap-4">
+              <button
+                className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                onClick={() => window.location.href = '/bet_id'}
+              >
+                {t('Ajouter un ID de pari')}
+              </button>
+            </div>
+            {/* List of saved Bet IDs for the selected platform */}
+            <div className="mt-8">
+              <h4 className="text-lg font-semibold mb-4">{t('Vos IDs de pari enregistrés')}</h4>
+              {platformBetIds.length === 0 ? (
+                <div className="text-gray-400">{t('Aucun ID de pari enregistré.')}</div>
+              ) : (
+                <div className="space-y-2">
+                  {platformBetIds.map((id) => (
+                    <div
+                      key={id.id}
+                      className={`flex items-center justify-between  rounded-lg px-4 py-2 cursor-pointer ${theme.colors.hover} transition`}
+                      onClick={() => {
+                        setSelectedBetId(id.link);
+                        setCurrentStep('enterDetails');
+                      }}
+                    >
+                      <div>
+                        <span className="font-mono text-sm mr-2">{id.link}</span>
+                        <span className="text-xs text-gray-500">({id.app_name.public_name || id.app_name.name})</span>
                       </div>
-                    )}
-                  </div>
+                      <button
+                        onClick={e => { e.stopPropagation(); handleDeleteBetId(id.id); }}
+                        className="ml-2 p-1 text-xs text-red-600 hover:text-white bg-red-100 hover:bg-red-600 rounded-full transition"
+                        title={t('Supprimer')}
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                  ))}
                 </div>
-                <div>
-                  <label htmlFor="withdrawalCode" className="block text-sm font-medium mb-1">
-                    {t("Withdrawal Code")}
-                  </label>
-                  <input
-                    type="text"
-                    id="withdrawalCode"
-                    name="withdrawalCode"
-                    value={formData.withdrawalCode}
-                    onChange={handleInputChange}
-                    className="w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600"
-                    placeholder={t("Enter your withdrawal code")}
-                    required
-                  />
-                </div>
-                
-                <div>
-                  <label htmlFor="phoneNumber" className="block text-sm font-medium mb-1">
-                    {t("Phone Number")}
-                  </label>
-                  <input
-                    type="tel"
-                    id="phoneNumber"
-                    name="phoneNumber"
-                    value={formData.phoneNumber}
-                    onChange={handleInputChange}
-                    className="w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600"
-                    placeholder="e.g., 771234567"
-                    required
-                  />
-                </div>
-                
-                <div className="flex justify-between pt-2">
-                  <button
-                    type="button"
-                    onClick={() => setCurrentStep('selectNetwork')}
-                    className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
-                  >
-                    ← {t("Back")}
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
-                  >
-                    {loading ? t('Processing...') : t('Submit')}
-                  </button>
-                </div>
-              </form>
-
+              )}
+            </div>
           </div>
         );
+    case 'enterDetails':
+      return (
+        <div className="space-y-6">
+          <div className="flex items-center mb-8">
+            <button 
+              onClick={() => {
+                setSelectedNetwork(null);
+                setCurrentStep('selectNetwork');
+              }}
+              className="group mr-4 p-2 rounded-xl border border-slate-600/30 hover:text-blue-400 hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/20"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 group-hover:-translate-x-1 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+              </svg>
+            </button>
+            <div>
+              <p className="text-slate-400 text-sm">{t("Remplissez les détails de votre pari")}</p>
+            </div>
+          </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium mb-1">{t("Bet ID")}</label>
+              <div className="font-mono text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900 rounded px-3 py-2">
+                {selectedBetId}
+              </div>
+            </div>
+            <div>
+              <label htmlFor="withdrawalCode" className="block text-sm font-medium mb-1">
+                {t("Withdrawal Code")}
+              </label>
+              <input
+                type="text"
+                id="withdrawalCode"
+                name="withdrawalCode"
+                value={formData.withdrawalCode}
+                onChange={handleInputChange}
+                className="w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600"
+                placeholder={t("Enter your withdrawal code")}
+                required
+              />
+            </div>
+            <div>
+              <label htmlFor="phoneNumber" className="block text-sm font-medium mb-1">
+                {t("Phone Number")}
+              </label>
+              <input
+                type="tel"
+                id="phoneNumber"
+                name="phoneNumber"
+                value={formData.phoneNumber}
+                onChange={handleInputChange}
+                className="w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600"
+                placeholder="e.g., 771234567"
+                required
+              />
+            </div>
+            <div className="flex justify-between pt-2">
+              <button
+                type="button"
+                onClick={() => setCurrentStep('manageBetId')}
+                className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+              >
+                ← {t("Back")}
+              </button>
+              <button
+                type="submit"
+                disabled={loading}
+                className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+              >
+                {loading ? t('Processing...') : t('Submit')}
+              </button>
+            </div>
+          </form>
+        </div>
+      );
     }
   };
 
@@ -682,6 +597,8 @@ export default function Withdraw() {
       case 'selectId':
         return t("");
       case 'selectNetwork':
+        return t("");
+      case 'manageBetId':
         return t("");
       case 'enterDetails':
         return t("");
@@ -733,6 +650,17 @@ export default function Withdraw() {
             }
           }
           
+          @keyframes flash {
+            0%, 50% {
+              opacity: 1;
+              transform: scale(1);
+            }
+            25%, 75% {
+              opacity: 0.7;
+              transform: scale(1.05);
+            }
+          }
+          
           .shimmer-effect {
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
             background-size: 200px 100%;
@@ -745,6 +673,10 @@ export default function Withdraw() {
           
           .modal-content {
             animation: modalSlideIn 0.4s ease-out;
+          }
+          
+          .flash-animation {
+            animation: flash 2s infinite;
           }
         `}
       </style>
@@ -767,6 +699,108 @@ export default function Withdraw() {
             </svg>
             {t("Back")}
           </button>
+        </div>
+
+        {/* Information Icon with Dropdown */}
+        <div className="mb-6">
+          <div className="flex items-center justify-start">
+            <button
+              onClick={() => setShowInfoDropdown(!showInfoDropdown)}
+              className="group relative flex items-center space-x-2 bg-slate-700/50 hover:bg-slate-600/50 px-4 py-2 rounded-xl border border-slate-600/30 transition-all duration-300"
+            >
+              <div className="w-6 h-6 rounded-full bg-blue-500 flex items-center justify-center">
+                <span className="text-white font-bold text-sm">?</span>
+              </div>
+              <span className="text-slate-300 group-hover:text-white font-medium text-sm">Comment retirer</span>
+            </button>
+          </div>
+          
+          {/* Dropdown Content - Now in normal page flow */}
+          {showInfoDropdown && (
+            <div className="mt-3 w-full max-w-2xl">
+              <div className="bg-slate-800/80 border border-slate-600/50 rounded-xl p-4">
+                <div className="space-y-3">
+                  {/* Header */}
+                  <div className="mb-3">
+                    <h3 className="text-lg font-semibold text-white mb-1">Comment retirer vos gains ?</h3>
+                    <p className="text-slate-300 text-sm">Suivez ces étapes simples</p>
+                  </div>
+                  
+                  {/* Steps */}
+                  <div className="space-y-2">
+                    <div className="flex items-start space-x-3 p-2 rounded-lg bg-slate-700/50">
+                      <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <span className="text-white font-bold text-xs">1</span>
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-white text-sm">Plateforme de pari</h4>
+                        <p className="text-slate-300 text-xs">Sélectionnez votre plateforme</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start space-x-3 p-2 rounded-lg bg-slate-700/50">
+                      <div className="w-5 h-5 rounded-full bg-green-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <span className="text-white font-bold text-xs">2</span>
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-white text-sm">Réseau mobile</h4>
+                        <p className="text-slate-300 text-xs">Choisissez votre opérateur</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start space-x-3 p-2 rounded-lg bg-slate-700/50">
+                      <div className="w-5 h-5 rounded-full bg-purple-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <span className="text-white font-bold text-xs">3</span>
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-white text-sm">ID de pari</h4>
+                        <p className="text-slate-300 text-xs">Ajoutez votre ID enregistré</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-start space-x-3 p-2 rounded-lg bg-slate-700/50">
+                      <div className="w-5 h-5 rounded-full bg-orange-500 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <span className="text-white font-bold text-xs">4</span>
+                      </div>
+                      <div>
+                        <h4 className="font-medium text-white text-sm">Détails finaux</h4>
+                        <p className="text-slate-300 text-xs">Code + numéro de téléphone</p>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Tips Section */}
+                  <div className="mt-3 p-3 rounded-lg bg-slate-700/50">
+                    <h4 className="font-medium text-emerald-300 text-sm mb-2">💡 Conseils :</h4>
+                    <div className="space-y-1">
+                      <div className="flex items-center space-x-2">
+                        <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full"></div>
+                        <span className="text-slate-300 text-xs">Vérifiez votre code de retrait</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full"></div>
+                        <span className="text-slate-300 text-xs">Numéro de téléphone actif</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <div className="w-1.5 h-1.5 bg-emerald-400 rounded-full"></div>
+                        <span className="text-slate-300 text-xs">Gardez votre référence</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Action Button */}
+                  <div className="flex justify-end pt-2">
+                    <button
+                      onClick={() => setShowInfoDropdown(false)}
+                      className="px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors duration-300"
+                    >
+                      Compris !
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Simplified Progress Steps - Show only current step */}

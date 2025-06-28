@@ -360,7 +360,7 @@ return (
         <div className="p-8 space-y-8">
           
           {/* Add New Bet ID Section */}
-          <div className={`group relative overflow-hidden bg-gradient-to-br ${theme.colors.background} backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6 transition-all duration-500 hover:from-slate-600/50 hover:to-slate-500/50`}>
+          <div className={`group relative overflow-hidden bg-gradient-to-br ${theme.colors.background} backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6 transition-all duration-500`}>
             {/* Hover shimmer effect */}
             <div className="absolute inset-0 shimmer-effect opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
             
@@ -510,7 +510,7 @@ return (
     {/* Modal rendering */}
     {modal && (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-        <div className="bg-white dark:bg-slate-800 rounded-2xl shadow-2xl p-8 max-w-md w-full relative">
+        <div className={`bg-gradient-to-r ${theme.colors.a_background} rounded-2xl shadow-2xl p-8 max-w-md w-full relative`}>
           {modal.type === 'confirm' ? (
             <>
               <h3 className="text-xl font-bold mb-4">{t('Confirmer l\'ID de pari')}</h3>
@@ -521,7 +521,7 @@ return (
               </div>
               <div className="flex gap-4 mt-6">
                 <button
-                  className="flex-1 px-4 py-2 bg-gray-200 dark:bg-slate-700 rounded hover:bg-gray-300 dark:hover:bg-slate-600"
+                  className="flex-1 px-4 py-2 bg-gray-400 dark:bg-slate-700 rounded hover:bg-gray-300 dark:hover:bg-slate-600"
                   onClick={() => { setModal(null); setPendingBetId(null); }}
                 >
                   {t('Annuler')}

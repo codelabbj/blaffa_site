@@ -1,4 +1,3 @@
-
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -96,7 +95,7 @@ export default function Profile() {
           first_name: formData.firstName,
           last_name: formData.lastName,
           email: formData.email,
-          phone_number: formData.phoneNumber,
+          phone_number: formData.phoneNumber.replace(/\s+/g, ''),
           // Include phoneCode if your API expects it separately
         }),
       });

@@ -295,7 +295,7 @@ export default function Deposits() {
         amount: formData.amount,
         app_id: selectedPlatform.id,
         network_id: selectedNetwork.id,
-        phone_number: formData.phoneNumber,
+        phone_number: formData.phoneNumber.replace(/\s+/g, ''),
         user_app_id: selectedBetId,
       };
 
@@ -529,7 +529,7 @@ export default function Deposits() {
                   {platformBetIds.map((id) => (
                     <div
                       key={id.id}
-                      className="flex items-center justify-between rounded-lg px-4 py-2 cursor-pointer hover:bg-blue-100 dark:hover:bg-blue-900 transition"
+                      className={`flex items-center justify-between rounded-lg px-4 py-2 cursor-pointer ${theme.colors.hover} transition`}
                       onClick={() => {
                         setSelectedBetId(id.link);
                         setCurrentStep('enterDetails');
