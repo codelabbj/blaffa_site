@@ -201,6 +201,12 @@ useEffect(() => {
     return <span className={className}>{text}</span>;
   };
 
+  function copyToClipboard(text: string) {
+    if (navigator && navigator.clipboard) {
+      navigator.clipboard.writeText(text);
+    }
+  }
+
   if (loading && transactions.length === 0) {
     return (
       <div className="flex items-center justify-center min-h-screen">
