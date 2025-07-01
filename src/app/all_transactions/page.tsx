@@ -1,8 +1,7 @@
-
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { ArrowDownLeft, ArrowUpRight, RotateCw, X, Copy, Smartphone, Phone, CreditCard, Hash, Calendar, Activity, ChevronRight } from 'lucide-react';
+import { ArrowDownLeft, ArrowUpRight, RotateCw, X, Copy, Smartphone, Phone, CreditCard, Hash, Calendar, Activity } from 'lucide-react';
 import { useTheme } from '../../components/ThemeProvider'; // Adjust path as needed
 import axios from 'axios'
 import api from '@/lib/axios';
@@ -180,23 +179,24 @@ useEffect(() => {
   };
 
   const getTransactionTypeIcon = (type: string) => {
-    if (type === 'deposit') {
+    if (type === 'deposit' || type === 'buy') {
       return <ArrowDownLeft size={16} />;
     }
     return <ArrowUpRight size={16} />;
   };
 
-  const StatusBadge = ({ status }: { status: string }) => {
+  const StatusBadge = ({ status, type_trans }: { status: string, type_trans: string }) => {
+    if ((type_trans === 'sale' || type_trans === 'buy') && status === 'payment_init_success') {
+      return <span className="bg-green-500/10 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded">payment_init_success</span>;
+    }
     const statusMap: Record<string, { text: string; className: string }> = {
       completed: { text: 'Terminé', className: 'bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300' },
-      payment_init_success: { text: 'Traitement', className: 'bg-green-500/10 text-green-500' },
       accept: { text: 'accepter', className: 'bg-green-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300' },
       pending: { text: 'En cours', className: 'bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300' },
       failed: { text: 'Échoué', className: 'bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300' },
       error: { text: 'Échoué', className: 'bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300' },
       default: { text: status, className: 'bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300' },
     };
-
     const { text, className } = statusMap[status.toLowerCase()] || statusMap.default;
     return <span className={className}>{text}</span>;
   };
@@ -224,10 +224,6 @@ useEffect(() => {
         </div>
       </div>
     );
-  }
-
-  function copyToClipboard(reference: string): void {
-    throw new Error('Function not implemented.');
   }
 
  return (
@@ -345,7 +341,7 @@ useEffect(() => {
                           </div>
                           <div>
                             <div className="font-medium ">
-                              {tx.type_trans === 'deposit' ? 'Dépôt' : 'Retrait'}
+                              {tx.type_trans === 'deposit' ? 'Dépôt' : tx.type_trans === 'withdrawal' ? 'Retrait' : tx.type_trans === 'buy' ? 'Achat' : tx.type_trans === 'sale' ? 'Vente' : tx.type_trans}
                             </div>
                             <div className="text-sm ">
                               {tx.phone_number}
@@ -364,7 +360,7 @@ useEffect(() => {
                         </div>
                       </div>
                       <div className="mt-3 pt-3 border-t border-slate-700/50 flex justify-between items-center">
-                        <StatusBadge status={tx.status} />
+                        <StatusBadge status={tx.status} type_trans={tx.type_trans} />
                         <button
                           onClick={() => {
                             setSelectedTransaction(tx);
@@ -479,7 +475,7 @@ useEffect(() => {
                             </div>
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap relative">
-                            <StatusBadge status={tx.status} />
+                            <StatusBadge status={tx.status} type_trans={tx.type_trans} />
                           </td>
                           <td className="px-4 py-3 whitespace-nowrap text-sm group-hover:text-blue-200 transition-colors duration-300 relative">
                             {formatDate(tx.created_at)}
@@ -556,9 +552,9 @@ useEffect(() => {
                   <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                       <h4 className="font-semibold text-xl text-white">
-                        {selectedTransaction.type_trans === 'deposit' ? 'Dépôt' : 'Retrait'}
+                        {selectedTransaction.type_trans === 'deposit' ? 'Dépôt' : selectedTransaction.type_trans === 'withdrawal' ? 'Retrait' : selectedTransaction.type_trans === 'buy' ? 'Achat' : selectedTransaction.type_trans === 'sale' ? 'Vente' : selectedTransaction.type_trans}
                       </h4>
-                      <StatusBadge status={selectedTransaction.status} />
+                      <StatusBadge status={selectedTransaction.status} type_trans={selectedTransaction.type_trans} />
                     </div>
                     <div className="flex items-center text-slate-400 text-sm">
                       <Calendar className="w-4 h-4 mr-2" />

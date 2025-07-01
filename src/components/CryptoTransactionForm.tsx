@@ -4,13 +4,6 @@ import { FaPhoneAlt, FaMoneyBillWave, FaWallet, FaCheckCircle } from 'react-icon
 import api from '@/lib/axios';
 import { useTranslation } from 'react-i18next';
 
-// Simple country code/flag list (expand as needed)
-const COUNTRIES = [
-  { code: '+229', name: 'Benin', flag: '🇧🇯' },
-  { code: '+226', name: 'Burkina Faso', flag: '🇧🇫' },
-  { code: '+225', name: 'Côte d\'Ivoire', flag: '🇨🇮' },
-];
-
 const API_URL = 'https://api.blaffa.net/blaffa/transaction'; // Replace with your real base URL
 
 interface Crypto {
@@ -36,7 +29,6 @@ export default function CryptoTransactionForm({ isVerified, crypto }: { isVerifi
   const { theme } = useTheme();
   const [amount, setAmount] = useState('');
   const [calculatedCrypto, setCalculatedCrypto] = useState('');
-  const [country, setCountry] = useState(COUNTRIES[0]);
   const [phone, setPhone] = useState('');
   const [confirmPhone, setConfirmPhone] = useState('');
   const [walletLink, setWalletLink] = useState('');
@@ -116,11 +108,12 @@ export default function CryptoTransactionForm({ isVerified, crypto }: { isVerifi
         type_trans: transactionType === 'buy' ? 'buy' : 'sale',
         total_crypto: calculatedCrypto,
         crypto_id: String(crypto.id),
-        phone_number: country.code + phone.replace(/\s+/g, ''),
+        phone_number: phone.replace(/\s+/g, ''),
         network_id: selectedNetwork.id,
+        amount: amount,
       };
       if (transactionType === 'buy') {
-        payload.Wallet_link = walletLink;
+        payload.wallet_link = walletLink;
       }
       const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
       const headers: Record<string, string> = {
@@ -229,31 +222,19 @@ export default function CryptoTransactionForm({ isVerified, crypto }: { isVerifi
           {t('You will get')}: <span className="font-bold">{calculatedCrypto} {crypto.symbol}</span>
         </div>
       )}
-      {/* Phone number input with country flag */}
-      <div className="mb-4 flex gap-2 items-center">
-        <select
-          className={`p-3 rounded-lg border transition-colors
-            ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-600 text-slate-100' : 'bg-white border-slate-300 text-slate-900'}`}
-          value={country.code}
-          onChange={e => setCountry(COUNTRIES.find(c => c.code === e.target.value) || COUNTRIES[0])}
-        >
-          {COUNTRIES.map(c => (
-            <option key={c.code} value={c.code}>{c.flag} {c.code}</option>
-          ))}
-        </select>
-        <div className="relative flex-1">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
-            <FaPhoneAlt />
-          </span>
-          <input
-            type="tel"
-            className={`w-full p-3 pl-10 rounded-lg border focus:ring-2 focus:ring-blue-400 transition-colors
-              ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-600 text-slate-100 placeholder-slate-400' : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400'}`}
-            placeholder={t('Phone number')}
-            value={phone}
-            onChange={e => setPhone(e.target.value)}
-          />
-        </div>
+      {/* Phone number input */}
+      <div className="mb-4 relative">
+        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
+          <FaPhoneAlt />
+        </span>
+        <input
+          type="tel"
+          className={`w-full p-3 pl-10 rounded-lg border focus:ring-2 focus:ring-blue-400 transition-colors
+            ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-600 text-slate-100 placeholder-slate-400' : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400'}`}
+          placeholder={t('Phone number')}
+          value={phone}
+          onChange={e => setPhone(e.target.value)}
+        />
       </div>
       {/* Confirm phone number input */}
       <div className="mb-4 relative">
@@ -357,7 +338,7 @@ export default function CryptoTransactionForm({ isVerified, crypto }: { isVerifi
             <div className="mb-2">Type: <span className="font-semibold">{transactionType?.toUpperCase()}</span></div>
             <div className="mb-2">Crypto: <span className="font-semibold">{crypto.name}</span></div>
             <div className="mb-2">Amount: <span className="font-semibold">{calculatedCrypto} {crypto.symbol}</span></div>
-            <div className="mb-2">Phone: <span className="font-semibold">{country.flag} {country.code} {phone}</span></div>
+            <div className="mb-2">Phone: <span className="font-semibold">{phone}</span></div>
             <div className="mb-2">Network: <span className="font-semibold">{selectedNetwork?.public_name || selectedNetwork?.name}</span></div>
             {transactionType === 'buy' && (
               <div className="mb-2">Wallet Link: <span className="font-semibold break-all">{walletLink}</span></div>

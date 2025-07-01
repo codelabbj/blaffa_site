@@ -102,18 +102,12 @@ type HistoricItem = {
 
 export default function TransactionHistory() {
   const [transactions, setTransactions] = useState<HistoricItem[]>([]);
-  const [activeTab, setActiveTab] = useState('all');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
  // const [ setHasMore] = useState(true);
   const [selectedTransaction, setSelectedTransaction] = useState<HistoricItem | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [lastFetchTime, setLastFetchTime] = useState<string | null>(null);
-  const [isRealTimeEnabled, setIsRealTimeEnabled] = useState(true);
-  const [isNewTransaction, setIsNewTransaction] = useState<Record<string, boolean>>({});
-  const [wsStatus, setWsStatus] = useState('disconnected');
-  const [animateHeader, setAnimateHeader] = useState(false);
   const {t} = useTranslation();
   const { theme } = useTheme();
 
@@ -184,16 +178,10 @@ export default function TransactionHistory() {
   
   // Update the setupWebSocket function with better error handling and fallback
   const setupWebSocket = () => {
-    if (!isRealTimeEnabled) {
-      cleanupWebSocket();
-      return;
-    }
-
     const token = localStorage.getItem('accessToken');
     if (!token) {
       setError('Authentication required for real-time updates');
       console.log(error);
-      setWsStatus('error');
       window.location.href = '/auth';
       return;
     }
@@ -215,8 +203,6 @@ export default function TransactionHistory() {
       webSocketRef.current.onopen = () => {
         clearTimeout(connectionTimeout);
         console.log('WebSocket connected successfully');
-        setWsStatus('connected');
-        setError(null);
         webSocketReconnectAttempts.current = 0;
         startPingInterval();
       };
@@ -236,7 +222,6 @@ export default function TransactionHistory() {
     } catch (error) {
       console.error('WebSocket setup failed:', error);
       setError(error instanceof Error ? error.message : 'Failed to establish connection');
-      setWsStatus('error');
       handleConnectionFailure('Failed to initialize WebSocket');
     }
   };
@@ -250,7 +235,6 @@ export default function TransactionHistory() {
     if (reconnectTimeoutRef.current) {
       clearTimeout(reconnectTimeoutRef.current);
     }
-    setWsStatus('disconnected');
   };
 
   const startPingInterval = () => {
@@ -276,7 +260,6 @@ export default function TransactionHistory() {
 
   const handleConnectionFailure = (message: string) => {
     console.error(message);
-    setWsStatus('error');
     setError(message);
     
     // Implement exponential backoff
@@ -284,9 +267,7 @@ export default function TransactionHistory() {
     webSocketReconnectAttempts.current++;
 
     reconnectTimeoutRef.current = setTimeout(() => {
-      if (isRealTimeEnabled) {
-        setupWebSocket();
-      }
+      setupWebSocket();
     }, backoffDelay);
   };
 
@@ -323,7 +304,6 @@ export default function TransactionHistory() {
           }
       }
 
-      setLastFetchTime(new Date().toISOString());
     } catch (error) {
       console.error('Error processing message:', error);
     }
@@ -335,7 +315,7 @@ export default function TransactionHistory() {
     const reason = getCloseReason(event.code);
     console.log(`WebSocket closed: ${reason}`);
 
-    if (isRealTimeEnabled && event.code !== 1000) {
+    if (event.code !== 1000) {
       handleConnectionFailure(reason);
     }
   };
@@ -370,12 +350,6 @@ export default function TransactionHistory() {
     if (shouldShowTransaction(transaction)) {
       // Check if we already have this transaction
       if (!transactionsMapRef.current.has(key)) {
-        // Mark as new for animation
-        setIsNewTransaction(prev => ({
-          ...prev,
-          [key]: true
-        }));
-        
         // Create a proper HistoricItem
         const historicItem: HistoricItem = {
           id: transaction.id,
@@ -389,15 +363,6 @@ export default function TransactionHistory() {
         
         // Add to state (at the beginning)
         setTransactions(prev => [historicItem, ...prev]);
-        
-        // Remove animation after 5 seconds
-        setTimeout(() => {
-          setIsNewTransaction(prev => {
-            const updated = { ...prev };
-            delete updated[key];
-            return updated;
-          });
-        }, 5000);
       }
     }
   };
@@ -434,21 +399,6 @@ export default function TransactionHistory() {
         transactionsMapRef.current.set(key, updatedItem);
       }
     }
-    
-    // Highlight the updated transaction
-    setIsNewTransaction(prev => ({
-      ...prev,
-      [key]: true
-    }));
-    
-    // Remove highlight after 5 seconds
-    setTimeout(() => {
-      setIsNewTransaction(prev => {
-        const updated = { ...prev };
-        delete updated[key];
-        return updated;
-      });
-    }, 5000);
   };
   
   // Filter transactions based on current filter
@@ -457,13 +407,6 @@ export default function TransactionHistory() {
     
     if (!transaction) return false;
     
-    if (activeTab === 'all') {
-      return true;
-    } else if (activeTab === 'deposits') {
-      return transaction.type_trans === 'deposit';
-    } else if (activeTab === 'withdrawals') {
-      return transaction.type_trans === 'withdrawal';
-    }
     return true;
   };
   
@@ -499,9 +442,6 @@ export default function TransactionHistory() {
       const data = response.data;
       console.log('Fetched Transactions:', data);
       
-      // Update last fetch time
-      setLastFetchTime(new Date().toISOString());
-      
       // Process the fetched transactions
       if (pageNumber === 1) {
         // Reset the transactions map for first page
@@ -534,7 +474,6 @@ export default function TransactionHistory() {
         setTransactions(prev => [...prev, ...newTransactions]);
       }
       
-      //setHasMore(data.next !== null);
       setError(null);
     } catch (error) {
       console.error('Error fetching transactions:', error);
@@ -558,12 +497,7 @@ export default function TransactionHistory() {
   
   // Initial fetch and WebSocket setup
   useEffect(() => {
-    // Trigger animation
-    setTimeout(() => {
-      setAnimateHeader(true);
-    }, 500);
-    
-    fetchTransactions(page, activeTab);
+    fetchTransactions(page, 'all');
     
     // Setup WebSocket connection
     setupWebSocket();
@@ -619,16 +553,11 @@ export default function TransactionHistory() {
     return () => clearTimeout(verifyConnectionTimeout);
   }, []);
   
-  // Update WebSocket when real-time setting changes
-  useEffect(() => {
-    setupWebSocket();
-  }, [isRealTimeEnabled]);
-  
   // Reset page when tab changes to refetch from the beginning
   useEffect(() => {
     setPage(1);
-    fetchTransactions(1, activeTab);
-  }, [activeTab]);
+    fetchTransactions(1, 'all');
+  }, []);
  
   
   // Show transaction details in modal
@@ -686,9 +615,9 @@ export default function TransactionHistory() {
     };
 
     const formatStatusText = (status: string) => {
+      if (status === 'payment_init_success') return 'payment_init_success';
       const statusMap: Record<string, string> = {
         completed: 'Completed',
-        payment_init_success: 'Processing',
         accept: 'Accepted',
         pending: 'Pending',
         failed: 'Failed',
@@ -715,52 +644,6 @@ export default function TransactionHistory() {
       }
     };
 
-  //   const StatusBadge = ({ status }: { status: string }) => {
-  //   const statusMap: Record<string, { text: string; className: string }> = {
-  //     completed: { text: 'Completed', className: 'bg-green-500/10 text-green-500' },
-  //     payment_init_success: { text: 'Proccesing', className: 'bg-green-500/10 text-green-500' },
-  //     accept: { text: 'Accepted', className: 'bg-green-500/10 text-green-500' },
-  //     pending: { text: 'Pending', className: 'bg-yellow-500/10 text-yellow-500' },
-  //     failed: { text: 'Failed', className: 'bg-red-500/10 text-red-500' },
-  //     error: { text: 'Failed', className: 'bg-red-500/10 text-red-500' },
-  //     default: { text: status, className: 'bg-gray-500/10 text-gray-500' },
-  //   };
-
-  //   const { text, className } = statusMap[status.toLowerCase()] || statusMap.default;
-
-  //   return (
-  //     <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${className}`}>
-  //       {text}
-  //     </span>
-  //   );
-  // }
-  
-  // Get status badge class based on transaction status
-  // const getStatusBadgeClass = (status: string) => {
-  //   switch (status.toLowerCase()) {
-  //     case 'completed':
-  //     case 'success':
-  //       return 'text-green-500';
-  //     case 'pending':
-  //       return 'text-amber-500';
-  //     case 'failed':
-  //     case 'error':
-  //       return 'text-red-500';
-  //     default:
-  //       return 'text-gray-500';
-  //   }
-  // };
-  
-  // Get transaction type icon based on type
-  // const getTransactionTypeIcon = (type: string) => {
-  //   if (type === 'deposit') {
-  //     return <ArrowDownLeft className="w-5 h-5 text-orange-500 group-hover:animate-bounce" />;
-  //   } else if (type === 'withdrawal') {
-  //     return <ArrowUpRight className="w-5 h-5 text-gray-300 group-hover:animate-pulse" />;
-  //   }
-  //   return null;
-  // };
-  
   return (
     <div className={`rounded-2xl shadow-sm border border-gray-200 bg-gradient-to-br ${theme.colors.a_background} ${theme.colors.text}`}>
       {/* Background gradient effects */}
@@ -820,11 +703,7 @@ export default function TransactionHistory() {
               </div>
               <h3 className="text-xl font-semibold  mb-3">Aucune transaction trouvée</h3>
               <p className="text-slate-400 text-center max-w-md leading-relaxed">
-                {activeTab === 'all' 
-                  ? "Your transaction history will appear here once you start making payments."
-                  : activeTab === 'deposits'
-                  ? "No deposits have been recorded yet."
-                  : "No withdrawals have been recorded yet."}
+                Your transaction history will appear here once you start making payments.
               </p>
             </div>
           ) : (
@@ -865,11 +744,11 @@ export default function TransactionHistory() {
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center space-x-3 mb-2">
                               <h3 className="font-semibold text-lg transition-colors duration-300">
-                                {item.transaction.type_trans === 'deposit' ? t('Deposit') : t('Withdraw')}
+                                {item.transaction.type_trans === 'deposit' ? t('Deposit') : item.transaction.type_trans === 'withdrawal' ? t('Withdraw') : item.transaction.type_trans === 'buy' ? t('Buy') : item.transaction.type_trans === 'sale' ? t('Sale') : item.transaction.type_trans}
                               </h3>
                               <div className={`flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-medium transition-all duration-300 ${getStatusBadgeClass(item.transaction.status)} group-hover:scale-105`}>
                                 {getStatusIcon(item.transaction.status)}
-                                <span className="ml-1 capitalize">{formatStatusText(item.transaction.status)}</span>
+                                <span className="ml-1 capitalize">{item.transaction.status === 'payment_init_success' ? 'payment_init_success' : formatStatusText(item.transaction.status)}</span>
                               </div>
                             </div>
                             
@@ -916,13 +795,13 @@ export default function TransactionHistory() {
                           
                           <div className="flex-1 min-w-0">
                             <h3 className="font-semibold text-lg">
-                              {item.transaction.type_trans === 'deposit' ? t('Deposit') : t('Withdraw')}
+                              {item.transaction.type_trans === 'deposit' ? t('Deposit') : item.transaction.type_trans === 'withdrawal' ? t('Withdraw') : item.transaction.type_trans === 'buy' ? t('Buy') : item.transaction.type_trans === 'sale' ? t('Sale') : item.transaction.type_trans}
                             </h3>
                           </div>
                           
                           <div className={`flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-medium ${getStatusBadgeClass(item.transaction.status)}`}>
                             {getStatusIcon(item.transaction.status)}
-                            <span className="ml-1 capitalize">{formatStatusText(item.transaction.status)}</span>
+                            <span className="ml-1 capitalize">{item.transaction.status === 'payment_init_success' ? 'payment_init_success' : formatStatusText(item.transaction.status)}</span>
                           </div>
                         </div>
 
@@ -1001,11 +880,11 @@ export default function TransactionHistory() {
                     <div className="flex-1">
                       <div className="flex items-center gap-3 mb-2">
                         <h4 className="font-semibold text-xl text-white">
-                          {selectedTransaction.transaction.type_trans === 'deposit' ? 'Deposit' : 'Withdrawal'}
+                          {selectedTransaction.transaction.type_trans === 'deposit' ? 'Deposit' : selectedTransaction.transaction.type_trans === 'withdrawal' ? 'Withdrawal' : selectedTransaction.transaction.type_trans === 'buy' ? 'Buy' : selectedTransaction.transaction.type_trans === 'sale' ? 'Sale' : selectedTransaction.transaction.type_trans}
                         </h4>
                         <div className={`flex items-center space-x-1 px-3 py-1.5 rounded-full text-sm font-medium ${getStatusBadgeClass(selectedTransaction.transaction.status)}`}>
                           {getStatusIcon(selectedTransaction.transaction.status)}
-                          <span className="ml-1 capitalize">{selectedTransaction.transaction.status}</span>
+                          <span className="ml-1 capitalize">{selectedTransaction.transaction.status === 'payment_init_success' ? 'payment_init_success' : formatStatusText(selectedTransaction.transaction.status)}</span>
                         </div>
                       </div>
                       <div className="flex items-center text-slate-400 text-sm">
