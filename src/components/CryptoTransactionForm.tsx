@@ -59,6 +59,7 @@ export default function CryptoTransactionForm({ isVerified, crypto }: { isVerifi
         // Optionally handle error
       }
     };
+    
     fetchNetworks();
   }, []);
 
