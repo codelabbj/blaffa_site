@@ -107,6 +107,12 @@ export default function CryptoTransactionForm({ isVerified, crypto }: { isVerifi
       setError('Wallet links do not match.');
       return;
     }
+    const sanitizedPhone = phone.replace(/\s+/g, '');
+    const sanitizedConfirmPhone = confirmPhone.replace(/\s+/g, '');
+    if (!sanitizedPhone || sanitizedPhone !== sanitizedConfirmPhone) {
+      setError('Please fill all fields and confirm your phone number.');
+      return;
+    }
     setError('');
     setModal('confirm');
   };
@@ -197,13 +203,17 @@ export default function CryptoTransactionForm({ isVerified, crypto }: { isVerifi
       if (data && data.transaction_link) {
         window.open(data.transaction_link, '_blank', 'noopener,noreferrer');
       }
-      setShowHashModal(false);
-      setHash('');
+      // Show success message for 2 seconds before closing modal
+      setTimeout(() => {
+        setShowHashModal(false);
+        setApiResult(null);
+        setHash('');
+        setModal(null);
+      }, 2000);
     } catch {
       setError('Transaction failed. Please try again.');
     } finally {
       setLoading(false);
-      setModal(null);
     }
   };
 
@@ -385,20 +395,29 @@ export default function CryptoTransactionForm({ isVerified, crypto }: { isVerifi
       <button
         className="w-full py-3 rounded-lg font-bold text-lg flex items-center justify-center gap-2 transition bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white shadow-lg active:scale-95"
         onClick={() => {
-          const sanitizedPhone = phone.replace(/\s+/g, '');
-          const sanitizedConfirmPhone = confirmPhone.replace(/\s+/g, '');
-          if (!amount || !sanitizedPhone || sanitizedPhone !== sanitizedConfirmPhone) {
-            setError('Please fill all fields and confirm your phone number.');
+          if (!amount) {
+            setError('Please fill all fields.');
             return;
           }
           if (!selectedNetwork) {
             setError('Please select a network.');
             return;
           }
-          setError('');
           if (transactionType === 'buy') {
+            if (!walletLink || !confirmWalletLink || walletLink !== confirmWalletLink) {
+              setError('Please fill all fields and confirm your wallet link.');
+              return;
+            }
+            setError('');
             setModal('wallet');
           } else {
+            const sanitizedPhone = phone.replace(/\s+/g, '');
+            const sanitizedConfirmPhone = confirmPhone.replace(/\s+/g, '');
+            if (!sanitizedPhone || sanitizedPhone !== sanitizedConfirmPhone) {
+              setError('Please fill all fields and confirm your phone number.');
+              return;
+            }
+            setError('');
             setModal('confirm');
           }
         }}
