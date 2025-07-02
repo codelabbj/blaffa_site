@@ -3,6 +3,7 @@ import { useTheme } from './ThemeProvider';
 import { FaPhoneAlt, FaMoneyBillWave, FaWallet, FaCheckCircle } from 'react-icons/fa';
 import api from '@/lib/axios';
 import { useTranslation } from 'react-i18next';
+import { useWebSocket } from '@/context/WebSocketContext';
 
 const API_URL = 'https://api.blaffa.net/blaffa/transaction'; // Replace with your real base URL
 
@@ -27,21 +28,21 @@ interface Network {
 export default function CryptoTransactionForm({ isVerified, crypto }: { isVerified: boolean; crypto: Crypto }) {
   const { t } = useTranslation();
   const { theme } = useTheme();
-  const [amount, setAmount] = useState('');
-  const [calculatedCrypto, setCalculatedCrypto] = useState('');
+  const { addMessageHandler } = useWebSocket();
+  const [amount, setAmount] = useState(''); // For buy: local currency, for sell: crypto amount
+  const [calculatedValue, setCalculatedValue] = useState(''); // For buy: crypto, for sell: local currency
   const [phone, setPhone] = useState('');
   const [confirmPhone, setConfirmPhone] = useState('');
   const [walletLink, setWalletLink] = useState('');
   const [confirmWalletLink, setConfirmWalletLink] = useState('');
   const [transactionType, setTransactionType] = useState<'buy' | 'sell' | null>(null);
-  const [showTypeModal, setShowTypeModal] = useState(false);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [showWalletModal, setShowWalletModal] = useState(false);
+  const [modal, setModal] = useState<'type' | 'wallet' | 'confirm' | null>('type');
   const [loading, setLoading] = useState(false);
   const [apiResult, setApiResult] = useState<Record<string, string> | null>(null);
   const [error, setError] = useState('');
   const [networks, setNetworks] = useState<Network[]>([]);
   const [selectedNetwork, setSelectedNetwork] = useState<Network | null>(null);
+  const [transactionLink, setTransactionLink] = useState<string | null>(null);
 
   // Fetch networks on mount
   useEffect(() => {
@@ -63,24 +64,38 @@ export default function CryptoTransactionForm({ isVerified, crypto }: { isVerifi
     fetchNetworks();
   }, []);
 
-  // Calculate crypto amount when amount or crypto changes
+  // Calculate value when amount, crypto, or transactionType changes
   useEffect(() => {
-    if (!amount || isNaN(Number(amount))) {
-      setCalculatedCrypto('');
+    if (!amount || isNaN(Number(amount)) || !transactionType) {
+      setCalculatedValue('');
       return;
     }
-    setCalculatedCrypto((Number(amount) / Number(crypto.public_amount)).toFixed(2));
-  }, [amount, crypto]);
+    if (transactionType === 'buy') {
+      setCalculatedValue((Number(amount) / Number(crypto.public_amount)).toFixed(2));
+    } else if (transactionType === 'sell') {
+      setCalculatedValue((Number(amount) * Number(crypto.public_amount)).toFixed(2));
+    }
+  }, [amount, crypto, transactionType]);
+
+  // Listen for transaction_link from websocket
+  useEffect(() => {
+    type WebSocketMessage = { type: string; data?: string };
+    const handler = (data: WebSocketMessage) => {
+      if (data.type === 'transaction_link' && data.data) {
+        setTransactionLink(data.data);
+      }
+    };
+    const removeHandler = addMessageHandler(handler);
+    return () => removeHandler();
+  }, [addMessageHandler]);
 
   // Handle transaction type selection
   const handleTypeSelect = (type: 'buy' | 'sell') => {
     setTransactionType(type);
-    setShowTypeModal(false);
-    if (type === 'buy') {
-      setShowWalletModal(true);
-    } else {
-      setShowConfirmModal(true);
-    }
+    setModal(null); // Close modal, show form
+    setAmount('');
+    setCalculatedValue('');
+    setError('');
   };
 
   // Handle confirmation for buy (after wallet link)
@@ -90,8 +105,7 @@ export default function CryptoTransactionForm({ isVerified, crypto }: { isVerifi
       return;
     }
     setError('');
-    setShowWalletModal(false);
-    setShowConfirmModal(true);
+    setModal('confirm');
   };
 
   // Handle API call
@@ -107,11 +121,11 @@ export default function CryptoTransactionForm({ isVerified, crypto }: { isVerifi
       }
       const payload: Record<string, string> = {
         type_trans: transactionType === 'buy' ? 'buy' : 'sale',
-        total_crypto: calculatedCrypto,
+        total_crypto: transactionType === 'buy' ? calculatedValue : amount, // For buy: calculated crypto, for sell: entered crypto
         crypto_id: String(crypto.id),
         phone_number: phone.replace(/\s+/g, ''),
         network_id: selectedNetwork.id,
-        amount: amount,
+        amount: transactionType === 'buy' ? amount : calculatedValue, // For buy: entered amount (local), for sell: calculated local
       };
       if (transactionType === 'buy') {
         payload.wallet_link = walletLink;
@@ -128,12 +142,14 @@ export default function CryptoTransactionForm({ isVerified, crypto }: { isVerifi
       });
       const data = await res.json();
       setApiResult(data as Record<string, string>);
+      if (data && data.transaction_link) {
+        window.open(data.transaction_link, '_blank', 'noopener,noreferrer');
+      }
     } catch {
       setError('Transaction failed. Please try again.');
     } finally {
       setLoading(false);
-      setShowConfirmModal(false);
-      setShowWalletModal(false);
+      setModal(null);
     }
   };
 
@@ -150,6 +166,25 @@ export default function CryptoTransactionForm({ isVerified, crypto }: { isVerifi
     );
   }
 
+  // Show transaction type modal first
+  if (modal === 'type') {
+    return (
+      <Modal onClose={() => setModal(null)} theme={theme}>
+        <div className="p-4">
+          <h3 className="text-lg font-bold mb-4 text-center">{t('Are you buying or selling?')}</h3>
+          <div className="flex gap-4">
+            <button className="flex-1 bg-gradient-to-r from-green-500 to-green-700 text-white py-2 rounded-lg font-bold text-lg shadow-md hover:from-green-600 hover:to-green-800 transition flex items-center justify-center gap-2" onClick={() => handleTypeSelect('buy')}>
+              <FaWallet /> {t('Buy')}
+            </button>
+            <button className="flex-1 bg-gradient-to-r from-red-500 to-red-700 text-white py-2 rounded-lg font-bold text-lg shadow-md hover:from-red-600 hover:to-red-800 transition flex items-center justify-center gap-2" onClick={() => handleTypeSelect('sell')}>
+              <FaWallet /> {t('Sell')}
+            </button>
+          </div>
+        </div>
+      </Modal>
+    );
+  }
+
   return (
     <div
       className="max-w-lg mx-auto rounded-2xl shadow-2xl p-6 mt-8 backdrop-blur-md border"
@@ -161,7 +196,11 @@ export default function CryptoTransactionForm({ isVerified, crypto }: { isVerifi
       }}
     >
       <h2 className="text-2xl font-extrabold mb-6 text-center" style={{ color: theme.colors.primary }}>
-        {t('Buy or Sell')} {crypto.name}
+        {transactionType === 'buy'
+          ? `${t('Buy')} ${crypto.name}`
+          : transactionType === 'sell'
+            ? `${t('Sell')} ${crypto.name}`
+            : `${t('Buy or Sell')} ${crypto.name}`}
       </h2>
       {/* Network selection */}
       <div className="mb-4">
@@ -199,9 +238,11 @@ export default function CryptoTransactionForm({ isVerified, crypto }: { isVerifi
           <div className="text-blue-500 text-sm font-mono">{t('Public Amount')}: {crypto.public_amount} XOF</div>
         </div>
       </div>
-      {/* Amount input */}
+      {/* Amount input (dynamic) */}
       <div className="mb-4 relative">
-        <label className="block mb-1 font-medium">{t('Amount (Local Currency)')}</label>
+        <label className="block mb-1 font-medium">
+          {transactionType === 'buy' ? t('Amount (Local Currency)') : t('Amount (Crypto)')}
+        </label>
         <div className="relative">
           <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
             <FaMoneyBillWave />
@@ -213,14 +254,16 @@ export default function CryptoTransactionForm({ isVerified, crypto }: { isVerifi
             value={amount}
             onChange={e => setAmount(e.target.value)}
             min="0"
-            placeholder={t('Enter amount')}
+            placeholder={transactionType === 'buy' ? t('Enter amount') : t('Enter crypto amount')}
           />
         </div>
       </div>
-      {/* Calculated crypto amount */}
-      {calculatedCrypto && (
-        <div className="mb-4 text-green-600 dark:text-green-400 text-center text-lg font-semibold">
-          {t('You will get')}: <span className="font-bold">{calculatedCrypto} {crypto.symbol}</span>
+      {/* Calculated value display (dynamic) */}
+      {calculatedValue && (
+        <div className={`mb-4 ${transactionType === 'buy' ? 'text-green-600 dark:text-green-400' : 'text-blue-600 dark:text-blue-400'} text-center text-lg font-semibold`}>
+          {transactionType === 'buy'
+            ? <>{t('You will get')}: <span className="font-bold">{calculatedValue} {crypto.symbol}</span></>
+            : <>{t('You will receive')}: <span className="font-bold">{calculatedValue} XOF</span></>}
         </div>
       )}
       {/* Phone number input */}
@@ -268,33 +311,20 @@ export default function CryptoTransactionForm({ isVerified, crypto }: { isVerifi
             return;
           }
           setError('');
-          setShowTypeModal(true);
+          if (transactionType === 'buy') {
+            setModal('wallet');
+          } else {
+            setModal('confirm');
+          }
         }}
         disabled={loading}
       >
         <FaCheckCircle /> {t('Continue')}
       </button>
 
-      {/* Transaction type modal */}
-      {showTypeModal && (
-        <Modal onClose={() => setShowTypeModal(false)} theme={theme}>
-          <div className="p-4">
-            <h3 className="text-lg font-bold mb-4 text-center">{t('Are you buying or selling?')}</h3>
-            <div className="flex gap-4">
-              <button className="flex-1 bg-gradient-to-r from-green-500 to-green-700 text-white py-2 rounded-lg font-bold text-lg shadow-md hover:from-green-600 hover:to-green-800 transition flex items-center justify-center gap-2" onClick={() => handleTypeSelect('buy')}>
-                <FaWallet /> {t('Buy')}
-              </button>
-              <button className="flex-1 bg-gradient-to-r from-red-500 to-red-700 text-white py-2 rounded-lg font-bold text-lg shadow-md hover:from-red-600 hover:to-red-800 transition flex items-center justify-center gap-2" onClick={() => handleTypeSelect('sell')}>
-                <FaWallet /> {t('Sell')}
-              </button>
-            </div>
-          </div>
-        </Modal>
-      )}
-
       {/* Wallet link modal for buy */}
-      {showWalletModal && (
-        <Modal onClose={() => setShowWalletModal(false)} theme={theme}>
+      {modal === 'wallet' && (
+        <Modal onClose={() => setModal(null)} theme={theme}>
           <div className="p-4">
             <h3 className="text-lg font-bold mb-2 text-center">{t('Enter your wallet link')}</h3>
             <div className="relative mb-2">
@@ -332,13 +362,17 @@ export default function CryptoTransactionForm({ isVerified, crypto }: { isVerifi
       )}
 
       {/* Confirmation modal */}
-      {showConfirmModal && (
-        <Modal onClose={() => setShowConfirmModal(false)} theme={theme}>
+      {modal === 'confirm' && (
+        <Modal onClose={() => setModal(null)} theme={theme}>
           <div className="p-4">
             <h3 className="text-lg font-bold mb-2 text-center">{t('Confirm your transaction')}</h3>
             <div className="mb-2">Type: <span className="font-semibold">{transactionType?.toUpperCase()}</span></div>
             <div className="mb-2">Crypto: <span className="font-semibold">{crypto.name}</span></div>
-            <div className="mb-2">Amount: <span className="font-semibold">{calculatedCrypto} {crypto.symbol}</span></div>
+            <div className="mb-2">Amount: <span className="font-semibold">{
+              transactionType === 'sell'
+                ? `${calculatedValue} XOF`
+                : `${calculatedValue} ${crypto.symbol}`
+            }</span></div>
             <div className="mb-2">Phone: <span className="font-semibold">{phone}</span></div>
             <div className="mb-2">Network: <span className="font-semibold">{selectedNetwork?.public_name || selectedNetwork?.name}</span></div>
             {transactionType === 'buy' && (
@@ -375,6 +409,27 @@ export default function CryptoTransactionForm({ isVerified, crypto }: { isVerifi
             </div>
           )}
         </div>
+      )}
+
+      {/* Transaction Link Modal */}
+      {transactionLink && (
+        <Modal onClose={() => setTransactionLink(null)} theme={theme}>
+          <div className="p-6 flex flex-col items-center">
+            <h3 className="text-lg font-bold mb-4 text-center">{t('Continue Payment')}</h3>
+            <button
+              onClick={() => window.open(transactionLink, '_blank', 'noopener,noreferrer')}
+              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors font-bold text-lg shadow-md"
+            >
+              {t('Click to continue payment')}
+            </button>
+            {/* <button
+              onClick={() => setTransactionLink(null)}
+              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+            >
+              {t('Close')}
+            </button> */}
+          </div>
+        </Modal>
       )}
     </div>
   );

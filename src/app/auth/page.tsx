@@ -5,14 +5,15 @@ import React, { useEffect } from 'react';
 import AuthForm from '../../components/AuthForm';
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useTranslation } from 'react-i18next';
+//import { useTranslation } from 'react-i18next';
 //import axios from 'axios';
 import { useTheme } from '../../components/ThemeProvider';
 import api from '@/lib/axios';
-import { ArrowLeft } from 'lucide-react';
+// import { ArrowLeft } from 'lucide-react'; // No longer used
+import { Player } from '@lottiefiles/react-lottie-player';
+// const { t } = useTranslation(); // No longer used
 
 const AuthPage: React.FC = () => {
-  const { t } = useTranslation();
   const [isClient, setIsClient] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
@@ -53,6 +54,11 @@ const AuthPage: React.FC = () => {
     setIsClient(true);
   }, [router]); // Add router as a dependency
 
+  if (typeof window !== 'undefined' && localStorage.getItem('accessToken')) {
+    router.replace('/dashboard');
+    return null;
+  }
+
   if (isLoading && isClient) {
     return (
       <div className={`min-h-screen ${theme.colors.background} flex items-center justify-center`}>
@@ -68,21 +74,27 @@ const AuthPage: React.FC = () => {
   }
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br ${theme.colors.a_background} transition-colors flex flex-col`}>
-
-      <button 
-        onClick={() => router.push('/')}
-        className="absolute top-4 left-4 md:top-6 md:left-6 flex items-center text-white/80 hover:text-white transition-colors z-10"
-      >
-        <ArrowLeft className="w-5 h-5 mr-1" />
-        <span className="text-sm font-medium">{t('Back')}</span>
-      </button>
-     
-      {/* Main Content - Side by side layout that stacks on mobile */}
-      <div className="flex-1 flex flex-col-reverse md:flex-row items-center justify-center px-6 py-8 gap-30">
-        
-        {/* Login Form - Right side on desktop, top on mobile */}
-        <div className="w-full md:w-1/2 lg:w-4/12 max-w-md mb-8 md:mb-0">
+    <div className={`min-h-screen bg-gradient-to-br ${theme.colors.a_background} transition-colors flex flex-col md:flex-row`}>
+      {/* Left Side: Animation/Illustration */}
+      <div className="hidden md:flex w-1/2 items-center justify-center bg-gradient-to-br from-blue-900 to-blue-700 p-8 relative">
+        <div className="w-full max-w-md flex flex-col items-center">
+          <Player
+            autoplay
+            loop
+            src="https://assets2.lottiefiles.com/packages/lf20_49rdyysj.json"
+            style={{ height: '320px', width: '320px' }}
+          />
+          <h2 className="text-2xl font-bold text-white mt-8 text-center">Achetez, vendez des cryptomonnaies et pariez instantanément</h2>
+          <p className="text-white/80 mt-4 text-center">
+            Achetez, vendez et échangez vos cryptomonnaies en toute sécurité et simplicité.<br/>
+            Déposez et retirez instantanément sur vos plateformes de paris préférées.<br/>
+            Profitez de la meilleure expérience de trading crypto et de paris en ligne avec Blaffa.
+          </p>
+        </div>
+      </div>
+      {/* Right Side: Auth Form */}
+      <div className="flex-1 flex flex-col items-center justify-center px-6 py-8 bg-transparent">
+        <div className="w-full max-w-md">
           <AuthForm />
           {/* Trust indicators */}
           <div className="mt-4 text-center">
@@ -92,7 +104,6 @@ const AuthPage: React.FC = () => {
           </div>
         </div>
       </div>
-      {/* <Footer /> */}
     </div>
   );
 }

@@ -7,7 +7,6 @@ import { useTheme } from '../components/ThemeProvider';
 import ThemeToggle from '../components/ThemeToggle';
 // import axios from 'axios';
 import { useRouter } from 'next/navigation';
-import api from '@/lib/axios';
 //import LanguageSwitcher from '../components/LanguageSwitcher';
 
 
@@ -329,10 +328,8 @@ export default function BlaffaLanding() {
   const { theme } = useTheme();
   const { i18n } = useTranslation();
 
-  const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
-  const [isClient, setIsClient] = useState(false);
-   
+
   useEffect(() => {
     // Set French as the only language
     i18n.changeLanguage('fr');
@@ -344,63 +341,15 @@ export default function BlaffaLanding() {
   }, [i18n]);
 
   useEffect(() => {
-    const validateToken = async () => {
-      try {
-        setIsLoading(true);
-        const token = localStorage.getItem('accessToken');
-        
-        // If no token exists, allow user to stay on homepage
-        if (!token) {
-          setIsLoading(false);
-          return;
-        }
-
-        // Verify token with backend
-        const response = await api.get('/auth/me', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        // If token is valid, redirect to dashboard
-        if (response.status === 200) {
-          router.replace('/dashboard');
-        }
-      } catch (error) {
-        // Token validation failed - clear the invalid token
-        console.error('Token validation failed:', error);
-        localStorage.removeItem('accessToken');
-        setIsLoading(false);
-      }
-    };
-
-    validateToken();
-    setIsClient(true);
+    const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+    if (!token) {
+      router.replace('/auth');
+    }
   }, [router]);
 
-  if (isLoading && isClient) {
-    return (
-      <div className={`min-h-screen ${theme.colors.background} flex items-center justify-center`}>
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary"></div>
-      </div>
-    );
+  if (typeof window !== 'undefined' && !localStorage.getItem('accessToken')) {
+    return null;
   }
-
-  // Only render the full content when on the client and not loading
-  // if (!isClient) {
-  //   return <div className="min-h-screen"></div>; // Simple placeholder during SSR
-  // }
-
-  // useEffect(() => {
-  //   if (typeof window !== 'undefined') {
-  //     const savedLang = localStorage.getItem('i18nextLng');
-  //     if (!savedLang) {
-  //       i18n.changeLanguage('fr');
-  //     }
-  //   }
-  // }, [i18n]);
-
-  
 
   const t = translations[language];
 
@@ -507,8 +456,6 @@ export default function BlaffaLanding() {
       answer: t.faq5A
     }
   ];
-
-  // const [openFaq, setOpenFaq] = useState(-1);
 
   return (
     <div className={`min-h-screen bg-gradient-to-br ${theme.colors.a_background} transition-all duration-300`}>

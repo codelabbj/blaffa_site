@@ -86,45 +86,46 @@ export default function CryptoPage() {
     }
     // Force language to French
     i18n.changeLanguage('fr');
-    // Log current language and translation for 'Back'
     // eslint-disable-next-line no-console
     console.log('Current language:', i18n.language, 'Back:', t('Back'));
   }, [i18n.language]);
 
-  // Check user verification status
-  const checkUserStatus = async (uid: string) => {
-    setStatusLoading(true);
-    try {
-      const token = localStorage.getItem("accessToken");
-      const response = await fetch(CHECK_USER_STATUS_API, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({ user_id: uid }),
-      });
-      const data = await response.json();
-      // Accept both is_verified and is_verify for compatibility
-      const verified = data.is_verified ?? data.is_verify ?? false;
-      setUserVerified(!!verified);
-      return !!verified;
-    } catch {
-      setUserVerified(false);
-      return false;
-    } finally {
-      setStatusLoading(false);
-    }
-  };
+  // Check user verification status ONCE per mount, when userId is available
+  useEffect(() => {
+    if (!userId) return;
+    let isMounted = true;
+    const checkStatus = async () => {
+      setStatusLoading(true);
+      try {
+        const token = localStorage.getItem("accessToken");
+        const response = await fetch(CHECK_USER_STATUS_API, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({ user_id: userId }),
+        });
+        const data = await response.json();
+        const verified = data.is_verified ?? data.is_verify ?? false;
+        if (isMounted) setUserVerified(!!verified);
+      } catch {
+        if (isMounted) setUserVerified(false);
+      } finally {
+        if (isMounted) setStatusLoading(false);
+      }
+    };
+    checkStatus();
+    return () => { isMounted = false; };
+  }, [userId]);
 
   // When user selects a crypto
-  const handleCryptoSelect = async (crypto: Crypto) => {
+  const handleCryptoSelect = (crypto: Crypto) => {
     if (!userId) {
       setError(t("User ID not found. Please log in."));
       return;
     }
-    const verified = await checkUserStatus(userId);
-    if (verified) {
+    if (userVerified) {
       setSelectedCrypto(crypto);
     } else {
       setShowVerifyModal(true);
