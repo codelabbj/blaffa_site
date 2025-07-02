@@ -142,6 +142,7 @@ const resources = {
       "All": "All",
       "Deposits": "Deposits",
       "Withdraw": "Withdraw",
+      "Sale": "Sale",
       "See more": "See more",
       "Transaction Details": "Transaction details",
       "Payment Method": "Payment Method",
@@ -474,8 +475,9 @@ const resources = {
       "Failed to load transactions. Please try again.": "Échec du chargement des transactions. Veuillez réessayer.",
       
       "All": "Tous",
-      "Deposit": "Dépôt",
+      "Deposits": "Dépôts",
       "Withdraw": "Retrait",
+      "Sale": "Vente",
       "See more": "Voir plus",
       "Transaction Details": "Détails de la transaction",
       "Payment Method": "Méthode de paiement",

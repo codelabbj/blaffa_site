@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from './ThemeProvider';
-import { FaPhoneAlt, FaMoneyBillWave, FaWallet, FaCheckCircle } from 'react-icons/fa';
+import { FaPhoneAlt, FaMoneyBillWave, FaWallet, FaCheckCircle, FaCopy } from 'react-icons/fa';
 import api from '@/lib/axios';
 import { useTranslation } from 'react-i18next';
 import { useWebSocket } from '@/context/WebSocketContext';
@@ -13,6 +13,7 @@ interface Crypto {
   symbol: string;
   public_amount: number;
   logo?: string;
+  sale_adress?: string;
 }
 
 interface Network {
@@ -43,6 +44,8 @@ export default function CryptoTransactionForm({ isVerified, crypto }: { isVerifi
   const [networks, setNetworks] = useState<Network[]>([]);
   const [selectedNetwork, setSelectedNetwork] = useState<Network | null>(null);
   const [transactionLink, setTransactionLink] = useState<string | null>(null);
+  const [hash, setHash] = useState('');
+  const [showHashModal, setShowHashModal] = useState(false);
 
   // Fetch networks on mount
   useEffect(() => {
@@ -110,26 +113,27 @@ export default function CryptoTransactionForm({ isVerified, crypto }: { isVerifi
 
   // Handle API call
   const handleConfirm = async () => {
-    setLoading(true);
     setError('');
     setApiResult(null);
-    try {
       if (!selectedNetwork) {
         setError('Please select a network.');
-        setLoading(false);
+      return;
+    }
+    if (transactionType === 'sell') {
+      setShowHashModal(true);
         return;
       }
+    setLoading(true);
+    try {
       const payload: Record<string, string> = {
-        type_trans: transactionType === 'buy' ? 'buy' : 'sale',
-        total_crypto: transactionType === 'buy' ? calculatedValue : amount, // For buy: calculated crypto, for sell: entered crypto
+        type_trans: 'buy',
+        total_crypto: calculatedValue,
         crypto_id: String(crypto.id),
         phone_number: phone.replace(/\s+/g, ''),
         network_id: selectedNetwork.id,
-        amount: transactionType === 'buy' ? amount : calculatedValue, // For buy: entered amount (local), for sell: calculated local
+        amount: amount,
+        wallet_link: walletLink,
       };
-      if (transactionType === 'buy') {
-        payload.wallet_link = walletLink;
-      }
       const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
       const headers: Record<string, string> = {
         'Content-Type': 'application/json',
@@ -156,6 +160,51 @@ export default function CryptoTransactionForm({ isVerified, crypto }: { isVerifi
   // Copy to clipboard
   const handleCopy = (text: string) => {
     navigator.clipboard.writeText(text);
+  };
+
+  // Add a function to handle hash submission for sell
+  const handleHashSubmit = async () => {
+    setLoading(true);
+    setError('');
+    setApiResult(null);
+    if (!selectedNetwork) {
+      setError('Please select a network.');
+      setLoading(false);
+      return;
+    }
+    try {
+      const payload: Record<string, string> = {
+        type_trans: 'sale',
+        total_crypto: amount,
+        crypto_id: String(crypto.id),
+        phone_number: phone.replace(/\s+/g, ''),
+        network_id: selectedNetwork.id,
+        amount: calculatedValue,
+        hash,
+      };
+      const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
+      const headers: Record<string, string> = {
+        'Content-Type': 'application/json',
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+      };
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      setApiResult(data as Record<string, string>);
+      if (data && data.transaction_link) {
+        window.open(data.transaction_link, '_blank', 'noopener,noreferrer');
+      }
+      setShowHashModal(false);
+      setHash('');
+    } catch {
+      setError('Transaction failed. Please try again.');
+    } finally {
+      setLoading(false);
+      setModal(null);
+    }
   };
 
   if (!isVerified) {
@@ -267,6 +316,40 @@ export default function CryptoTransactionForm({ isVerified, crypto }: { isVerifi
         </div>
       )}
       {/* Phone number input */}
+      {transactionType === 'buy' ? (
+        <>
+          {/* Wallet link input */}
+          <div className="mb-4 relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
+              <FaWallet />
+            </span>
+            <input
+              type="text"
+              className={`w-full p-3 pl-10 rounded-lg border focus:ring-2 focus:ring-blue-400 transition-colors
+                ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-600 text-slate-100 placeholder-slate-400' : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400'}`}
+              placeholder={t('Wallet link')}
+              value={walletLink}
+              onChange={e => setWalletLink(e.target.value)}
+            />
+          </div>
+          {/* Confirm wallet link input */}
+          <div className="mb-4 relative">
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
+              <FaWallet />
+            </span>
+            <input
+              type="text"
+              className={`w-full p-3 pl-10 rounded-lg border focus:ring-2 focus:ring-blue-400 transition-colors
+                ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-600 text-slate-100 placeholder-slate-400' : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400'}`}
+              placeholder={t('Confirm wallet link')}
+              value={confirmWalletLink}
+              onChange={e => setConfirmWalletLink(e.target.value)}
+            />
+          </div>
+        </>
+      ) : (
+        <>
+          {/* Phone number input (for sell) */}
       <div className="mb-4 relative">
         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
           <FaPhoneAlt />
@@ -280,7 +363,7 @@ export default function CryptoTransactionForm({ isVerified, crypto }: { isVerifi
           onChange={e => setPhone(e.target.value)}
         />
       </div>
-      {/* Confirm phone number input */}
+          {/* Confirm phone number input (for sell) */}
       <div className="mb-4 relative">
         <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
           <FaPhoneAlt />
@@ -294,6 +377,8 @@ export default function CryptoTransactionForm({ isVerified, crypto }: { isVerifi
           onChange={e => setConfirmPhone(e.target.value)}
         />
       </div>
+        </>
+      )}
       {/* Error message */}
       {error && <div className="mb-4 text-red-500 text-center font-medium">{t(error)}</div>}
       {/* Action button */}
@@ -323,34 +408,34 @@ export default function CryptoTransactionForm({ isVerified, crypto }: { isVerifi
       </button>
 
       {/* Wallet link modal for buy */}
-      {modal === 'wallet' && (
+      {modal === 'wallet' && transactionType === 'buy' && (
         <Modal onClose={() => setModal(null)} theme={theme}>
           <div className="p-4">
-            <h3 className="text-lg font-bold mb-2 text-center">{t('Enter your wallet link')}</h3>
+            <h3 className="text-lg font-bold mb-2 text-center">{t('Enter your phone number')}</h3>
             <div className="relative mb-2">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
-                <FaWallet />
+                <FaPhoneAlt />
               </span>
               <input
-                type="text"
+                type="tel"
                 className={`w-full p-3 pl-10 rounded-lg border focus:ring-2 focus:ring-blue-400 transition-colors
                   ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-600 text-slate-100 placeholder-slate-400' : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400'}`}
-                placeholder={t('Wallet link')}
-                value={walletLink}
-                onChange={e => setWalletLink(e.target.value)}
+                placeholder={t('Phone number')}
+                value={phone}
+                onChange={e => setPhone(e.target.value)}
               />
             </div>
             <div className="relative mb-2">
               <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
-                <FaWallet />
+                <FaPhoneAlt />
               </span>
               <input
-                type="text"
+                type="tel"
                 className={`w-full p-3 pl-10 rounded-lg border focus:ring-2 focus:ring-blue-400 transition-colors
                   ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-600 text-slate-100 placeholder-slate-400' : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400'}`}
-                placeholder={t('Confirm wallet link')}
-                value={confirmWalletLink}
-                onChange={e => setConfirmWalletLink(e.target.value)}
+                placeholder={t('Confirm phone number')}
+                value={confirmPhone}
+                onChange={e => setConfirmPhone(e.target.value)}
               />
             </div>
             {error && <div className="mb-2 text-red-500 text-center">{t(error)}</div>}
@@ -428,6 +513,51 @@ export default function CryptoTransactionForm({ isVerified, crypto }: { isVerifi
             >
               {t('Close')}
             </button> */}
+          </div>
+        </Modal>
+      )}
+
+      {/* New modal for sell after confirm */}
+      {showHashModal && transactionType === 'sell' && (
+        <Modal onClose={() => setShowHashModal(false)} theme={theme}>
+          <div className="p-4">
+            <h3 className="text-lg font-bold mb-2 text-center">{t('Adresse de vente')}</h3>
+            <div className="mb-2 relative flex items-center">
+              <input
+                type="text"
+                className="w-full p-3 rounded-lg border focus:ring-2 focus:ring-blue-400 transition-colors font-mono"
+                value={crypto.sale_adress || ''}
+                readOnly
+              />
+              <button
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-blue-500 hover:text-blue-700"
+                onClick={() => handleCopy(crypto.sale_adress || '')}
+                title={t('Copier')}
+              >
+                <FaCopy />
+              </button>
+            </div>
+            <div className="text-sm text-gray-500 mb-4">Copiez l&apos;adresse de vente pour vendre votre crypto.</div>
+            <div className="mb-4 relative">
+              <input
+                type="text"
+                className="w-full p-3 rounded-lg border focus:ring-2 focus:ring-blue-400 transition-colors"
+                placeholder={t('Entrez le hash de la transaction')}
+                value={hash}
+                onChange={e => setHash(e.target.value)}
+              />
+            </div>
+            {error && <div className="mb-2 text-red-500 text-center font-medium">{t(error)}</div>}
+            {apiResult && (
+              <div className="mb-2 text-green-600 text-center font-medium">{t('Votre vente a été soumise avec succès!')}</div>
+            )}
+            <button
+              className="w-full bg-gradient-to-r from-green-500 to-green-700 text-white py-2 rounded-lg font-bold text-lg shadow-md hover:from-green-600 hover:to-green-800 transition mt-2 flex items-center justify-center gap-2"
+              onClick={handleHashSubmit}
+              disabled={loading || !hash}
+            >
+              {loading ? t('Traitement...') : <FaCheckCircle />} {t('OK')}
+            </button>
           </div>
         </Modal>
       )}

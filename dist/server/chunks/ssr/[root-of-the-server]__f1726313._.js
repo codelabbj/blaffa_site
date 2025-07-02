@@ -782,7 +782,7 @@ function Deposits() {
                 amount: formData.amount,
                 app_id: selectedPlatform.id,
                 network_id: selectedNetwork.id,
-                phone_number: formData.phoneNumber,
+                phone_number: formData.phoneNumber.replace(/\s+/g, ''),
                 user_app_id: selectedBetId
             };
             // const response = await api.post(`/blaffa/transaction?country_code=${countryCode}`, {
