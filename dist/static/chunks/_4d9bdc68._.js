@@ -595,8 +595,12 @@ const resources = {
             "Your buy request has been submitted!": "Votre demande d'achat a été soumise !",
             "Please fill all fields and confirm your phone number.": "Veuillez remplir tous les champs et confirmer votre numéro de téléphone.",
             "Please select a network.": "Veuillez sélectionner un réseau.",
-            "Wallet links do not match.": "Les liens du portefeuille ne correspondent pas.",
-            "Transaction failed. Please try again.": "La transaction a échoué. Veuillez réessayer.",
+            "Wallet links do not match.": "Wallet links do not match.",
+            "Please fill all fields and confirm your phone number.": "Please fill all fields and confirm your phone number.",
+            "Please select a network.": "Please select a network.",
+            "Transaction failed. Please try again.": "Transaction failed. Please try again.",
+            "Please fill all fields.": "Please fill all fields.",
+            "Please fill all fields and confirm your wallet link.": "Please fill all fields and confirm your wallet link.",
             "Back to Crypto": "Retour à la crypto",
             "Back to Cryptos": "Retour aux cryptos",
             // Account Verification Modal translations
@@ -610,7 +614,11 @@ const resources = {
             "Checking...": "Vérification...",
             "Verified": "Vérifié",
             "Not Verified": "Non vérifié",
-            "Success": "Succès"
+            "Success": "Succès",
+            // Buy/Sell modal translations
+            "Choose Transaction Type": "Choose Transaction Type",
+            "Buy Crypto": "Buy Crypto",
+            "Sell Crypto": "Sell Crypto"
         }
     },
     fr: {
@@ -886,7 +894,11 @@ const resources = {
             "Please fill all fields and confirm your phone number.": "Veuillez remplir tous les champs et confirmer votre numéro de téléphone.",
             "Please select a network.": "Veuillez sélectionner un réseau.",
             "Wallet links do not match.": "Les liens du portefeuille ne correspondent pas.",
+            "Please fill all fields and confirm your phone number.": "Veuillez remplir tous les champs et confirmer votre numéro de téléphone.",
+            "Please select a network.": "Veuillez sélectionner un réseau.",
             "Transaction failed. Please try again.": "La transaction a échoué. Veuillez réessayer.",
+            "Please fill all fields.": "Veuillez remplir tous les champs.",
+            "Please fill all fields and confirm your wallet link.": "Veuillez remplir tous les champs et confirmer votre lien de portefeuille.",
             "Back to Crypto": "Retour à la crypto",
             "Back to Cryptos": "Retour aux cryptos",
             // Account Verification Modal translations
@@ -900,7 +912,11 @@ const resources = {
             "Checking...": "Vérification...",
             "Verified": "Vérifié",
             "Not Verified": "Non vérifié",
-            "Success": "Succès"
+            "Success": "Succès",
+            // Buy/Sell modal translations
+            "Choose Transaction Type": "Choisissez le type de transaction",
+            "Buy Crypto": "Acheter de la crypto",
+            "Sell Crypto": "Vendre de la crypto"
         }
     }
 };

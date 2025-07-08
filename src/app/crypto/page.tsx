@@ -41,15 +41,18 @@ export default function CryptoPage() {
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
   const [selectedCrypto, setSelectedCrypto] = useState<Crypto | null>(null);
+  const [showTypeModal, setShowTypeModal] = useState(true); // Show Buy/Sell modal first
+  const [typeTrans, setTypeTrans] = useState<string | null>(null); // 'buy' or 'sale'
 
   useEffect(() => {
-    // Fetch cryptos
+    // Fetch cryptos only if typeTrans is selected
     const fetchCryptos = async () => {
+      if (!typeTrans) return;
       setLoading(true);
       setError(null);
       try {
         const token = localStorage.getItem("accessToken");
-        const response = await api.get(CRYPTO_API, {
+        const response = await api.get(CRYPTO_API + `?type_trans=${typeTrans}`, {
           headers: {
             "Content-Type": "application/json",
             ...(token ? { Authorization: `Bearer ${token}` } : {}),
@@ -88,7 +91,7 @@ export default function CryptoPage() {
     i18n.changeLanguage('fr');
     // eslint-disable-next-line no-console
     console.log('Current language:', i18n.language, 'Back:', t('Back'));
-  }, [i18n.language]);
+  }, [i18n.language, typeTrans]);
 
   // Check user verification status ONCE per mount, when userId is available
   useEffect(() => {
@@ -237,6 +240,34 @@ export default function CryptoPage() {
 
   return (
     <div className={`min-h-screen bg-gradient-to-br ${theme.colors.a_background} p-2 sm:p-4 flex flex-col items-center`}>
+      {/* Buy/Sell Modal */}
+      {showTypeModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-2 sm:px-0">
+          <div className={`bg-gradient-to-r ${theme.colors.a_background} rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-xs sm:max-w-md relative flex flex-col items-center`}>
+            <h2 className="text-lg sm:text-xl font-bold mb-4 text-center">{t("Choose Transaction Type")}</h2>
+            <div className="flex flex-col gap-4 w-full">
+              <button
+                className="w-full px-6 py-3 bg-green-600 text-white rounded-lg text-lg font-semibold hover:bg-green-700 transition-all"
+                onClick={() => {
+                  setTypeTrans('buy');
+                  setShowTypeModal(false);
+                }}
+              >
+                {t("Buy Crypto")}
+              </button>
+              <button
+                className="w-full px-6 py-3 bg-yellow-500 text-white rounded-lg text-lg font-semibold hover:bg-yellow-600 transition-all"
+                onClick={() => {
+                  setTypeTrans('sale');
+                  setShowTypeModal(false);
+                }}
+              >
+                {t("Sell Crypto")}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       <button
         onClick={() => window.history.back()}
         className={`fixed top-3 left-3 z-50 w-10 h-10 flex items-center justify-center rounded-full shadow-md
@@ -252,7 +283,8 @@ export default function CryptoPage() {
           <div className="flex justify-center sm:justify-end w-full sm:w-auto relative">{renderStatusButton()}</div>
         </div>
         {error && <div className="mb-4 p-3 sm:p-4 bg-red-100 border border-red-400 text-red-700 rounded text-sm sm:text-base">{error}</div>}
-        {selectedCrypto ? (
+        {/* Only show crypto list if typeTrans is selected and modal is closed */}
+        {typeTrans && !showTypeModal && (selectedCrypto ? (
           <>
             <button
               className={
@@ -268,10 +300,13 @@ export default function CryptoPage() {
               <FaArrowLeft className="text-lg sm:mr-2" />
               <span className="hidden sm:inline">{t('Back to Cryptos')}</span>
             </button>
-            <CryptoTransactionForm
-              isVerified={userVerified === true}
-              crypto={selectedCrypto}
-            />
+            { (typeTrans === 'buy' || typeTrans === 'sale') && (
+              <CryptoTransactionForm
+                isVerified={userVerified === true}
+                crypto={selectedCrypto}
+                typeTrans={typeTrans}
+              />
+            ) }
           </>
         ) : loading ? (
           <div className="flex items-center justify-center min-h-[200px] sm:min-h-[300px]">
@@ -292,7 +327,7 @@ export default function CryptoPage() {
               </div>
             ))}
           </div>
-        )}
+        ))}
 
         {/* Verification Modal */}
         {showVerifyModal && !userVerified && (

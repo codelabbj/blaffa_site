@@ -135,7 +135,7 @@ var _s = __turbopack_context__.k.signature();
 ;
 ;
 const API_URL = 'https://api.blaffa.net/blaffa/transaction'; // Replace with your real base URL
-function CryptoTransactionForm({ isVerified, crypto }) {
+function CryptoTransactionForm({ isVerified, crypto, typeTrans }) {
     _s();
     const { t } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$i18next$2f$dist$2f$es$2f$useTranslation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTranslation"])();
     const { theme } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ThemeProvider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"])();
@@ -146,8 +146,9 @@ function CryptoTransactionForm({ isVerified, crypto }) {
     const [confirmPhone, setConfirmPhone] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
     const [walletLink, setWalletLink] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
     const [confirmWalletLink, setConfirmWalletLink] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
-    const [transactionType, setTransactionType] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
-    const [modal, setModal] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('type');
+    // Remove transactionType/modal state, use typeTrans prop
+    const transactionType = typeTrans;
+    const [modal, setModal] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [apiResult, setApiResult] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const [error, setError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
@@ -189,7 +190,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
             }
             if (transactionType === 'buy') {
                 setCalculatedValue((Number(amount) / Number(crypto.public_amount)).toFixed(2));
-            } else if (transactionType === 'sell') {
+            } else if (transactionType === 'sale') {
                 setCalculatedValue((Number(amount) * Number(crypto.public_amount)).toFixed(2));
             }
         }
@@ -216,24 +217,16 @@ function CryptoTransactionForm({ isVerified, crypto }) {
     }["CryptoTransactionForm.useEffect"], [
         addMessageHandler
     ]);
-    // Handle transaction type selection
-    const handleTypeSelect = (type)=>{
-        setTransactionType(type);
-        setModal(null); // Close modal, show form
-        setAmount('');
-        setCalculatedValue('');
-        setError('');
-    };
     // Handle confirmation for buy (after wallet link)
     const handleWalletConfirm = ()=>{
         if (!walletLink || walletLink !== confirmWalletLink) {
-            setError('Wallet links do not match.');
+            setError(t('Wallet links do not match.'));
             return;
         }
         const sanitizedPhone = phone.replace(/\s+/g, '');
         const sanitizedConfirmPhone = confirmPhone.replace(/\s+/g, '');
         if (!sanitizedPhone || sanitizedPhone !== sanitizedConfirmPhone) {
-            setError('Please fill all fields and confirm your phone number.');
+            setError(t('Please fill all fields and confirm your phone number.'));
             return;
         }
         setError('');
@@ -244,10 +237,10 @@ function CryptoTransactionForm({ isVerified, crypto }) {
         setError('');
         setApiResult(null);
         if (!selectedNetwork) {
-            setError('Please select a network.');
+            setError(t('Please select a network.'));
             return;
         }
-        if (transactionType === 'sell') {
+        if (transactionType === 'sale') {
             setShowHashModal(true);
             return;
         }
@@ -280,7 +273,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                 window.open(data.transaction_link, '_blank', 'noopener,noreferrer');
             }
         } catch  {
-            setError('Transaction failed. Please try again.');
+            setError(t('Transaction failed. Please try again.'));
         } finally{
             setLoading(false);
             setModal(null);
@@ -296,7 +289,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
         setError('');
         setApiResult(null);
         if (!selectedNetwork) {
-            setError('Please select a network.');
+            setError(t('Please select a network.'));
             setLoading(false);
             return;
         }
@@ -335,7 +328,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                 setModal(null);
             }, 2000);
         } catch  {
-            setError('Transaction failed. Please try again.');
+            setError(t('Transaction failed. Please try again.'));
         } finally{
             setLoading(false);
         }
@@ -346,83 +339,31 @@ function CryptoTransactionForm({ isVerified, crypto }) {
             children: t('Please verify your account to buy or sell crypto.')
         }, void 0, false, {
             fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-            lineNumber: 222,
+            lineNumber: 220,
             columnNumber: 7
         }, this);
     }
     // Show transaction type modal first
-    if (modal === 'type') {
-        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Modal, {
-            onClose: ()=>setModal(null),
-            theme: theme,
-            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "p-4",
-                children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                        className: "text-lg font-bold mb-4 text-center",
-                        children: t('Are you buying or selling?')
-                    }, void 0, false, {
-                        fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                        lineNumber: 233,
-                        columnNumber: 11
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "flex gap-4",
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                className: "flex-1 bg-gradient-to-r from-green-500 to-green-700 text-white py-2 rounded-lg font-bold text-lg shadow-md hover:from-green-600 hover:to-green-800 transition flex items-center justify-center gap-2",
-                                onClick: ()=>handleTypeSelect('buy'),
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fa$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FaWallet"], {}, void 0, false, {
-                                        fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                        lineNumber: 236,
-                                        columnNumber: 15
-                                    }, this),
-                                    " ",
-                                    t('Buy')
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                lineNumber: 235,
-                                columnNumber: 13
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                className: "flex-1 bg-gradient-to-r from-red-500 to-red-700 text-white py-2 rounded-lg font-bold text-lg shadow-md hover:from-red-600 hover:to-red-800 transition flex items-center justify-center gap-2",
-                                onClick: ()=>handleTypeSelect('sell'),
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fa$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FaWallet"], {}, void 0, false, {
-                                        fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                        lineNumber: 239,
-                                        columnNumber: 15
-                                    }, this),
-                                    " ",
-                                    t('Sell')
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                lineNumber: 238,
-                                columnNumber: 13
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                        lineNumber: 234,
-                        columnNumber: 11
-                    }, this)
-                ]
-            }, void 0, true, {
-                fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                lineNumber: 232,
-                columnNumber: 9
-            }, this)
-        }, void 0, false, {
-            fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-            lineNumber: 231,
-            columnNumber: 7
-        }, this);
-    }
+    // Remove transactionType/modal state, use typeTrans prop
+    // if (modal === 'type') {
+    //   return (
+    //     <Modal onClose={() => setModal(null)} theme={theme}>
+    //       <div className="p-4">
+    //         <h3 className="text-lg font-bold mb-4 text-center">{t('Are you buying or selling?')}</h3>
+    //         <div className="flex gap-4">
+    //           <button className="flex-1 bg-gradient-to-r from-green-500 to-green-700 text-white py-2 rounded-lg font-bold text-lg shadow-md hover:from-green-600 hover:to-green-800 transition flex items-center justify-center gap-2" onClick={() => handleTypeSelect('buy')}>
+    //             <FaWallet /> {t('Buy')}
+    //           </button>
+    //           <button className="flex-1 bg-gradient-to-r from-red-500 to-red-700 text-white py-2 rounded-lg font-bold text-lg shadow-md hover:from-red-600 hover:to-red-800 transition flex items-center justify-center gap-2" onClick={() => handleTypeSelect('sell')}>
+    //             <FaWallet /> {t('Sell')}
+    //           </button>
+    //         </div>
+    //       </div>
+    //     </Modal>
+    //   );
+    // }
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "max-w-lg mx-auto rounded-2xl shadow-2xl p-6 mt-8 backdrop-blur-md border",
+        className: "bg-gradient-to-r rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-xs sm:max-w-md relative mx-auto mt-8",
         style: {
             background: theme.mode === 'dark' ? 'linear-gradient(135deg, rgba(30,41,59,0.85) 60%, rgba(51,65,85,0.85) 100%)' : 'linear-gradient(135deg, rgba(255,255,255,0.85) 60%, rgba(226,232,240,0.85) 100%)',
             borderColor: theme.mode === 'dark' ? '#334155' : '#e5e7eb'
@@ -433,10 +374,10 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                 style: {
                     color: theme.colors.primary
                 },
-                children: transactionType === 'buy' ? `${t('Buy')} ${crypto.name}` : transactionType === 'sell' ? `${t('Sell')} ${crypto.name}` : `${t('Buy or Sell')} ${crypto.name}`
+                children: transactionType === 'buy' ? `${t('Buy')} ${crypto.name}` : transactionType === 'sale' ? `${t('Sell')} ${crypto.name}` : `${t('Buy or Sell')} ${crypto.name}`
             }, void 0, false, {
                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                lineNumber: 257,
+                lineNumber: 256,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -447,7 +388,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                         children: t('Select Network')
                     }, void 0, false, {
                         fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                        lineNumber: 266,
+                        lineNumber: 265,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
@@ -464,7 +405,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                 children: t('Select a network')
                             }, void 0, false, {
                                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                lineNumber: 276,
+                                lineNumber: 275,
                                 columnNumber: 11
                             }, this),
                             networks.map((net)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -472,13 +413,13 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                     children: net.public_name || net.name
                                 }, net.id, false, {
                                     fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                    lineNumber: 278,
+                                    lineNumber: 277,
                                     columnNumber: 13
                                 }, this))
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                        lineNumber: 267,
+                        lineNumber: 266,
                         columnNumber: 9
                     }, this),
                     selectedNetwork && selectedNetwork.image && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -490,7 +431,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                 className: "w-8 h-8 rounded"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                lineNumber: 283,
+                                lineNumber: 282,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -498,19 +439,19 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                 children: selectedNetwork.public_name || selectedNetwork.name
                             }, void 0, false, {
                                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                lineNumber: 284,
+                                lineNumber: 283,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                        lineNumber: 282,
+                        lineNumber: 281,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                lineNumber: 265,
+                lineNumber: 264,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -522,7 +463,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                         className: "w-14 h-14 rounded-full border-2 border-blue-400 shadow-md"
                     }, void 0, false, {
                         fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                        lineNumber: 289,
+                        lineNumber: 288,
                         columnNumber: 25
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -536,13 +477,13 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                         children: crypto.symbol
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                        lineNumber: 293,
+                                        lineNumber: 292,
                                         columnNumber: 13
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                lineNumber: 291,
+                                lineNumber: 290,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -555,19 +496,19 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                lineNumber: 297,
+                                lineNumber: 296,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                        lineNumber: 290,
+                        lineNumber: 289,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                lineNumber: 288,
+                lineNumber: 287,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -578,7 +519,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                         children: transactionType === 'buy' ? t('Amount (Local Currency)') : t('Amount (Crypto)')
                     }, void 0, false, {
                         fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                        lineNumber: 302,
+                        lineNumber: 301,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -588,12 +529,12 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                 className: "absolute left-3 top-1/2 -translate-y-1/2 text-blue-400",
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fa$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FaMoneyBillWave"], {}, void 0, false, {
                                     fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                    lineNumber: 307,
+                                    lineNumber: 306,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                lineNumber: 306,
+                                lineNumber: 305,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -606,19 +547,19 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                 placeholder: transactionType === 'buy' ? t('Enter amount') : t('Enter crypto amount')
                             }, void 0, false, {
                                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                lineNumber: 309,
+                                lineNumber: 308,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                        lineNumber: 305,
+                        lineNumber: 304,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                lineNumber: 301,
+                lineNumber: 300,
                 columnNumber: 7
             }, this),
             calculatedValue && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -636,7 +577,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                            lineNumber: 324,
+                            lineNumber: 323,
                             columnNumber: 38
                         }, this)
                     ]
@@ -652,14 +593,14 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                            lineNumber: 325,
+                            lineNumber: 324,
                             columnNumber: 42
                         }, this)
                     ]
                 }, void 0, true)
             }, void 0, false, {
                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                lineNumber: 322,
+                lineNumber: 321,
                 columnNumber: 9
             }, this),
             transactionType === 'buy' ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
@@ -671,12 +612,12 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                 className: "absolute left-3 top-1/2 -translate-y-1/2 text-blue-400",
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fa$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FaWallet"], {}, void 0, false, {
                                     fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                    lineNumber: 334,
+                                    lineNumber: 333,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                lineNumber: 333,
+                                lineNumber: 332,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -688,13 +629,13 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                 onChange: (e)=>setWalletLink(e.target.value)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                lineNumber: 336,
+                                lineNumber: 335,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                        lineNumber: 332,
+                        lineNumber: 331,
                         columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -704,12 +645,12 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                 className: "absolute left-3 top-1/2 -translate-y-1/2 text-blue-400",
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fa$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FaWallet"], {}, void 0, false, {
                                     fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                    lineNumber: 348,
+                                    lineNumber: 347,
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                lineNumber: 347,
+                                lineNumber: 346,
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -721,13 +662,13 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                 onChange: (e)=>setConfirmWalletLink(e.target.value)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                lineNumber: 350,
+                                lineNumber: 349,
                                 columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                        lineNumber: 346,
+                        lineNumber: 345,
                         columnNumber: 11
                     }, this)
                 ]
@@ -740,31 +681,31 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                 className: "absolute left-3 top-1/2 -translate-y-1/2 text-blue-400",
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fa$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FaPhoneAlt"], {}, void 0, false, {
                                     fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                    lineNumber: 365,
-                                    columnNumber: 11
+                                    lineNumber: 364,
+                                    columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                lineNumber: 364,
-                                columnNumber: 9
+                                lineNumber: 363,
+                                columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                 type: "tel",
                                 className: `w-full p-3 pl-10 rounded-lg border focus:ring-2 focus:ring-blue-400 transition-colors
-            ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-600 text-slate-100 placeholder-slate-400' : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400'}`,
+                ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-600 text-slate-100 placeholder-slate-400' : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400'}`,
                                 placeholder: t('Phone number'),
                                 value: phone,
                                 onChange: (e)=>setPhone(e.target.value)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                lineNumber: 367,
-                                columnNumber: 9
+                                lineNumber: 366,
+                                columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                        lineNumber: 363,
-                        columnNumber: 7
+                        lineNumber: 362,
+                        columnNumber: 11
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "mb-4 relative",
@@ -773,31 +714,31 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                 className: "absolute left-3 top-1/2 -translate-y-1/2 text-blue-400",
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fa$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FaPhoneAlt"], {}, void 0, false, {
                                     fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                    lineNumber: 379,
-                                    columnNumber: 11
+                                    lineNumber: 378,
+                                    columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                lineNumber: 378,
-                                columnNumber: 9
+                                lineNumber: 377,
+                                columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                 type: "tel",
                                 className: `w-full p-3 pl-10 rounded-lg border focus:ring-2 focus:ring-blue-400 transition-colors
-            ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-600 text-slate-100 placeholder-slate-400' : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400'}`,
+                ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-600 text-slate-100 placeholder-slate-400' : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400'}`,
                                 placeholder: t('Confirm phone number'),
                                 value: confirmPhone,
                                 onChange: (e)=>setConfirmPhone(e.target.value)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                lineNumber: 381,
-                                columnNumber: 9
+                                lineNumber: 380,
+                                columnNumber: 13
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                        lineNumber: 377,
-                        columnNumber: 7
+                        lineNumber: 376,
+                        columnNumber: 11
                     }, this)
                 ]
             }, void 0, true),
@@ -806,23 +747,23 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                 children: t(error)
             }, void 0, false, {
                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                lineNumber: 393,
+                lineNumber: 392,
                 columnNumber: 17
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                 className: "w-full py-3 rounded-lg font-bold text-lg flex items-center justify-center gap-2 transition bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white shadow-lg active:scale-95",
                 onClick: ()=>{
                     if (!amount) {
-                        setError('Please fill all fields.');
+                        setError(t('Please fill all fields.'));
                         return;
                     }
                     if (!selectedNetwork) {
-                        setError('Please select a network.');
+                        setError(t('Please select a network.'));
                         return;
                     }
                     if (transactionType === 'buy') {
                         if (!walletLink || !confirmWalletLink || walletLink !== confirmWalletLink) {
-                            setError('Please fill all fields and confirm your wallet link.');
+                            setError(t('Please fill all fields and confirm your wallet link.'));
                             return;
                         }
                         setError('');
@@ -831,7 +772,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                         const sanitizedPhone = phone.replace(/\s+/g, '');
                         const sanitizedConfirmPhone = confirmPhone.replace(/\s+/g, '');
                         if (!sanitizedPhone || sanitizedPhone !== sanitizedConfirmPhone) {
-                            setError('Please fill all fields and confirm your phone number.');
+                            setError(t('Please fill all fields and confirm your phone number.'));
                             return;
                         }
                         setError('');
@@ -842,7 +783,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fa$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FaCheckCircle"], {}, void 0, false, {
                         fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                        lineNumber: 426,
+                        lineNumber: 425,
                         columnNumber: 9
                     }, this),
                     " ",
@@ -850,7 +791,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                lineNumber: 395,
+                lineNumber: 394,
                 columnNumber: 7
             }, this),
             modal === 'wallet' && transactionType === 'buy' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Modal, {
@@ -864,7 +805,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                             children: t('Enter your phone number')
                         }, void 0, false, {
                             fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                            lineNumber: 433,
+                            lineNumber: 432,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -874,12 +815,12 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                     className: "absolute left-3 top-1/2 -translate-y-1/2 text-blue-400",
                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fa$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FaPhoneAlt"], {}, void 0, false, {
                                         fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                        lineNumber: 436,
+                                        lineNumber: 435,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                    lineNumber: 435,
+                                    lineNumber: 434,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -891,13 +832,13 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                     onChange: (e)=>setPhone(e.target.value)
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                    lineNumber: 438,
+                                    lineNumber: 437,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                            lineNumber: 434,
+                            lineNumber: 433,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -907,12 +848,12 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                     className: "absolute left-3 top-1/2 -translate-y-1/2 text-blue-400",
                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fa$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FaPhoneAlt"], {}, void 0, false, {
                                         fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                        lineNumber: 449,
+                                        lineNumber: 448,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                    lineNumber: 448,
+                                    lineNumber: 447,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -924,13 +865,13 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                     onChange: (e)=>setConfirmPhone(e.target.value)
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                    lineNumber: 451,
+                                    lineNumber: 450,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                            lineNumber: 447,
+                            lineNumber: 446,
                             columnNumber: 13
                         }, this),
                         error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -938,7 +879,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                             children: t(error)
                         }, void 0, false, {
                             fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                            lineNumber: 460,
+                            lineNumber: 459,
                             columnNumber: 23
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -947,7 +888,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fa$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FaCheckCircle"], {}, void 0, false, {
                                     fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                    lineNumber: 462,
+                                    lineNumber: 461,
                                     columnNumber: 15
                                 }, this),
                                 " ",
@@ -955,18 +896,18 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                            lineNumber: 461,
+                            lineNumber: 460,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                    lineNumber: 432,
+                    lineNumber: 431,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                lineNumber: 431,
+                lineNumber: 430,
                 columnNumber: 9
             }, this),
             modal === 'confirm' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Modal, {
@@ -980,7 +921,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                             children: t('Confirm your transaction')
                         }, void 0, false, {
                             fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                            lineNumber: 472,
+                            lineNumber: 471,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -992,8 +933,26 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                     children: transactionType?.toUpperCase()
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                    lineNumber: 473,
+                                    lineNumber: 472,
                                     columnNumber: 41
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/src/components/CryptoTransactionForm.tsx",
+                            lineNumber: 472,
+                            columnNumber: 13
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "mb-2",
+                            children: [
+                                "Crypto: ",
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                    className: "font-semibold",
+                                    children: crypto.name
+                                }, void 0, false, {
+                                    fileName: "[project]/src/components/CryptoTransactionForm.tsx",
+                                    lineNumber: 473,
+                                    columnNumber: 43
                                 }, this)
                             ]
                         }, void 0, true, {
@@ -1004,10 +963,10 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "mb-2",
                             children: [
-                                "Crypto: ",
+                                "Amount: ",
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                     className: "font-semibold",
-                                    children: crypto.name
+                                    children: transactionType === 'sale' ? `${calculatedValue} XOF` : `${calculatedValue} ${crypto.symbol}`
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/CryptoTransactionForm.tsx",
                                     lineNumber: 474,
@@ -1022,37 +981,19 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "mb-2",
                             children: [
-                                "Amount: ",
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                    className: "font-semibold",
-                                    children: transactionType === 'sell' ? `${calculatedValue} XOF` : `${calculatedValue} ${crypto.symbol}`
-                                }, void 0, false, {
-                                    fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                    lineNumber: 475,
-                                    columnNumber: 43
-                                }, this)
-                            ]
-                        }, void 0, true, {
-                            fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                            lineNumber: 475,
-                            columnNumber: 13
-                        }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "mb-2",
-                            children: [
                                 "Phone: ",
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                     className: "font-semibold",
                                     children: phone
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                    lineNumber: 480,
+                                    lineNumber: 479,
                                     columnNumber: 42
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                            lineNumber: 480,
+                            lineNumber: 479,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1064,13 +1005,13 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                     children: selectedNetwork?.public_name || selectedNetwork?.name
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                    lineNumber: 481,
+                                    lineNumber: 480,
                                     columnNumber: 44
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                            lineNumber: 481,
+                            lineNumber: 480,
                             columnNumber: 13
                         }, this),
                         transactionType === 'buy' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1082,13 +1023,13 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                     children: walletLink
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                    lineNumber: 483,
+                                    lineNumber: 482,
                                     columnNumber: 50
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                            lineNumber: 483,
+                            lineNumber: 482,
                             columnNumber: 15
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1098,7 +1039,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                             children: [
                                 loading ? t('Processing...') : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fa$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FaCheckCircle"], {}, void 0, false, {
                                     fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                    lineNumber: 486,
+                                    lineNumber: 485,
                                     columnNumber: 47
                                 }, this),
                                 " ",
@@ -1106,18 +1047,18 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                            lineNumber: 485,
+                            lineNumber: 484,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                    lineNumber: 471,
+                    lineNumber: 470,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                lineNumber: 470,
+                lineNumber: 469,
                 columnNumber: 9
             }, this),
             apiResult && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1126,7 +1067,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                     background: theme.mode === 'dark' ? 'linear-gradient(135deg, rgba(30,41,59,0.95) 60%, rgba(51,65,85,0.95) 100%)' : 'linear-gradient(135deg, rgba(255,255,255,0.95) 60%, rgba(226,232,240,0.95) 100%)'
                 },
                 children: [
-                    transactionType === 'sell' && apiResult?.wallet_address && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                    transactionType === 'sale' && apiResult?.wallet_address && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "mb-2 font-bold",
@@ -1136,7 +1077,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                lineNumber: 503,
+                                lineNumber: 502,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1144,7 +1085,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                 children: apiResult.wallet_address
                             }, void 0, false, {
                                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                lineNumber: 504,
+                                lineNumber: 503,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1153,7 +1094,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                 children: t('Copy')
                             }, void 0, false, {
                                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                lineNumber: 505,
+                                lineNumber: 504,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1161,7 +1102,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                 children: t('Send your crypto to this address to complete the sale.')
                             }, void 0, false, {
                                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                lineNumber: 506,
+                                lineNumber: 505,
                                 columnNumber: 15
                             }, this)
                         ]
@@ -1173,20 +1114,20 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                 className: "text-2xl"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                lineNumber: 511,
+                                lineNumber: 510,
                                 columnNumber: 15
                             }, this),
                             t('Your buy request has been submitted!')
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                        lineNumber: 510,
+                        lineNumber: 509,
                         columnNumber: 13
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                lineNumber: 494,
+                lineNumber: 493,
                 columnNumber: 9
             }, this),
             transactionLink && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Modal, {
@@ -1200,7 +1141,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                             children: t('Continue Payment')
                         }, void 0, false, {
                             fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                            lineNumber: 522,
+                            lineNumber: 521,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1209,21 +1150,21 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                             children: t('Click to continue payment')
                         }, void 0, false, {
                             fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                            lineNumber: 523,
+                            lineNumber: 522,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                    lineNumber: 521,
+                    lineNumber: 520,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                lineNumber: 520,
+                lineNumber: 519,
                 columnNumber: 9
             }, this),
-            showHashModal && transactionType === 'sell' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Modal, {
+            showHashModal && transactionType === 'sale' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(Modal, {
                 onClose: ()=>setShowHashModal(false),
                 theme: theme,
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1234,7 +1175,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                             children: t('Adresse de vente')
                         }, void 0, false, {
                             fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                            lineNumber: 543,
+                            lineNumber: 542,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1247,7 +1188,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                     readOnly: true
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                    lineNumber: 545,
+                                    lineNumber: 544,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1256,18 +1197,18 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                     title: t('Copier'),
                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fa$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FaCopy"], {}, void 0, false, {
                                         fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                        lineNumber: 556,
+                                        lineNumber: 555,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                    lineNumber: 551,
+                                    lineNumber: 550,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                            lineNumber: 544,
+                            lineNumber: 543,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1275,7 +1216,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                             children: "Copiez l'adresse de vente pour vendre votre crypto."
                         }, void 0, false, {
                             fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                            lineNumber: 559,
+                            lineNumber: 558,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1288,12 +1229,12 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                                 onChange: (e)=>setHash(e.target.value)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                lineNumber: 561,
+                                lineNumber: 560,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                            lineNumber: 560,
+                            lineNumber: 559,
                             columnNumber: 13
                         }, this),
                         error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1301,7 +1242,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                             children: t(error)
                         }, void 0, false, {
                             fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                            lineNumber: 569,
+                            lineNumber: 568,
                             columnNumber: 23
                         }, this),
                         apiResult && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1309,7 +1250,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                             children: t('Votre vente a été soumise avec succès!')
                         }, void 0, false, {
                             fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                            lineNumber: 571,
+                            lineNumber: 570,
                             columnNumber: 15
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1319,7 +1260,7 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                             children: [
                                 loading ? t('Traitement...') : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fa$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FaCheckCircle"], {}, void 0, false, {
                                     fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                                    lineNumber: 578,
+                                    lineNumber: 577,
                                     columnNumber: 47
                                 }, this),
                                 " ",
@@ -1327,28 +1268,28 @@ function CryptoTransactionForm({ isVerified, crypto }) {
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                            lineNumber: 573,
+                            lineNumber: 572,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                    lineNumber: 542,
+                    lineNumber: 541,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                lineNumber: 541,
+                lineNumber: 540,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-        lineNumber: 248,
+        lineNumber: 247,
         columnNumber: 5
     }, this);
 }
-_s(CryptoTransactionForm, "fJ7WFCLLDZn7ZUrCe87QSgPkk3o=", false, function() {
+_s(CryptoTransactionForm, "UboVuC8CXOumJ8jiM8n+w4JCW50=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$i18next$2f$dist$2f$es$2f$useTranslation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTranslation"],
         __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ThemeProvider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"],
@@ -1376,19 +1317,19 @@ function Modal({ children, onClose, theme }) {
                     children: "×"
                 }, void 0, false, {
                     fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-                    lineNumber: 600,
+                    lineNumber: 599,
                     columnNumber: 9
                 }, this),
                 children
             ]
         }, void 0, true, {
             fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-            lineNumber: 591,
+            lineNumber: 590,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/components/CryptoTransactionForm.tsx",
-        lineNumber: 590,
+        lineNumber: 589,
         columnNumber: 5
     }, this);
 }
@@ -1448,16 +1389,19 @@ function CryptoPage() {
     const [showSuccessModal, setShowSuccessModal] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [successMessage, setSuccessMessage] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])("");
     const [selectedCrypto, setSelectedCrypto] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [showTypeModal, setShowTypeModal] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(true); // Show Buy/Sell modal first
+    const [typeTrans, setTypeTrans] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null); // 'buy' or 'sale'
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "CryptoPage.useEffect": ()=>{
-            // Fetch cryptos
+            // Fetch cryptos only if typeTrans is selected
             const fetchCryptos = {
                 "CryptoPage.useEffect.fetchCryptos": async ()=>{
+                    if (!typeTrans) return;
                     setLoading(true);
                     setError(null);
                     try {
                         const token = localStorage.getItem("accessToken");
-                        const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$axios$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].get(CRYPTO_API, {
+                        const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$axios$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].get(CRYPTO_API + `?type_trans=${typeTrans}`, {
                             headers: {
                                 "Content-Type": "application/json",
                                 ...token ? {
@@ -1505,7 +1449,8 @@ function CryptoPage() {
             console.log('Current language:', i18n.language, 'Back:', t('Back'));
         }
     }["CryptoPage.useEffect"], [
-        i18n.language
+        i18n.language,
+        typeTrans
     ]);
     // Check user verification status ONCE per mount, when userId is available
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
@@ -1631,12 +1576,12 @@ function CryptoPage() {
             title: t("Checking..."),
             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$im$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["ImSpinner2"], {}, void 0, false, {
                 fileName: "[project]/src/app/crypto/page.tsx",
-                lineNumber: 216,
+                lineNumber: 219,
                 columnNumber: 11
             }, this)
         }, void 0, false, {
             fileName: "[project]/src/app/crypto/page.tsx",
-            lineNumber: 212,
+            lineNumber: 215,
             columnNumber: 9
         }, this);
         if (userVerified === true) return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1644,12 +1589,12 @@ function CryptoPage() {
             title: t("Verified"),
             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fa$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FaCheckCircle"], {}, void 0, false, {
                 fileName: "[project]/src/app/crypto/page.tsx",
-                lineNumber: 225,
+                lineNumber: 228,
                 columnNumber: 11
             }, this)
         }, void 0, false, {
             fileName: "[project]/src/app/crypto/page.tsx",
-            lineNumber: 221,
+            lineNumber: 224,
             columnNumber: 9
         }, this);
         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1657,18 +1602,75 @@ function CryptoPage() {
             title: t("Not Verified"),
             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fa$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FaExclamationTriangle"], {}, void 0, false, {
                 fileName: "[project]/src/app/crypto/page.tsx",
-                lineNumber: 233,
+                lineNumber: 236,
                 columnNumber: 9
             }, this)
         }, void 0, false, {
             fileName: "[project]/src/app/crypto/page.tsx",
-            lineNumber: 229,
+            lineNumber: 232,
             columnNumber: 7
         }, this);
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: `min-h-screen bg-gradient-to-br ${theme.colors.a_background} p-2 sm:p-4 flex flex-col items-center`,
         children: [
+            showTypeModal && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-2 sm:px-0",
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: `bg-gradient-to-r ${theme.colors.a_background} rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-xs sm:max-w-md relative flex flex-col items-center`,
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                            className: "text-lg sm:text-xl font-bold mb-4 text-center",
+                            children: t("Choose Transaction Type")
+                        }, void 0, false, {
+                            fileName: "[project]/src/app/crypto/page.tsx",
+                            lineNumber: 247,
+                            columnNumber: 13
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "flex flex-col gap-4 w-full",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    className: "w-full px-6 py-3 bg-green-600 text-white rounded-lg text-lg font-semibold hover:bg-green-700 transition-all",
+                                    onClick: ()=>{
+                                        setTypeTrans('buy');
+                                        setShowTypeModal(false);
+                                    },
+                                    children: t("Buy Crypto")
+                                }, void 0, false, {
+                                    fileName: "[project]/src/app/crypto/page.tsx",
+                                    lineNumber: 249,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    className: "w-full px-6 py-3 bg-yellow-500 text-white rounded-lg text-lg font-semibold hover:bg-yellow-600 transition-all",
+                                    onClick: ()=>{
+                                        setTypeTrans('sale');
+                                        setShowTypeModal(false);
+                                    },
+                                    children: t("Sell Crypto")
+                                }, void 0, false, {
+                                    fileName: "[project]/src/app/crypto/page.tsx",
+                                    lineNumber: 258,
+                                    columnNumber: 15
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/src/app/crypto/page.tsx",
+                            lineNumber: 248,
+                            columnNumber: 13
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/src/app/crypto/page.tsx",
+                    lineNumber: 246,
+                    columnNumber: 11
+                }, this)
+            }, void 0, false, {
+                fileName: "[project]/src/app/crypto/page.tsx",
+                lineNumber: 245,
+                columnNumber: 9
+            }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                 onClick: ()=>window.history.back(),
                 className: `fixed top-3 left-3 z-50 w-10 h-10 flex items-center justify-center rounded-full shadow-md
@@ -1681,12 +1683,12 @@ function CryptoPage() {
                     className: "text-xl"
                 }, void 0, false, {
                     fileName: "[project]/src/app/crypto/page.tsx",
-                    lineNumber: 247,
+                    lineNumber: 278,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/crypto/page.tsx",
-                lineNumber: 240,
+                lineNumber: 271,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1700,7 +1702,7 @@ function CryptoPage() {
                                 children: t("Cryptocurrencies")
                             }, void 0, false, {
                                 fileName: "[project]/src/app/crypto/page.tsx",
-                                lineNumber: 251,
+                                lineNumber: 282,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1708,13 +1710,13 @@ function CryptoPage() {
                                 children: renderStatusButton()
                             }, void 0, false, {
                                 fileName: "[project]/src/app/crypto/page.tsx",
-                                lineNumber: 252,
+                                lineNumber: 283,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/crypto/page.tsx",
-                        lineNumber: 250,
+                        lineNumber: 281,
                         columnNumber: 9
                     }, this),
                     error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1722,10 +1724,10 @@ function CryptoPage() {
                         children: error
                     }, void 0, false, {
                         fileName: "[project]/src/app/crypto/page.tsx",
-                        lineNumber: 254,
+                        lineNumber: 285,
                         columnNumber: 19
                     }, this),
-                    selectedCrypto ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                    typeTrans && !showTypeModal && (selectedCrypto ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                 className: `mb-4 flex items-center gap-2 rounded-lg shadow-sm font-semibold transition-all
@@ -1742,7 +1744,7 @@ function CryptoPage() {
                                         className: "text-lg sm:mr-2"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/crypto/page.tsx",
-                                        lineNumber: 268,
+                                        lineNumber: 300,
                                         columnNumber: 15
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1750,22 +1752,23 @@ function CryptoPage() {
                                         children: t('Back to Cryptos')
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/crypto/page.tsx",
-                                        lineNumber: 269,
+                                        lineNumber: 301,
                                         columnNumber: 15
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/crypto/page.tsx",
-                                lineNumber: 257,
+                                lineNumber: 289,
                                 columnNumber: 13
                             }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$CryptoTransactionForm$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                            (typeTrans === 'buy' || typeTrans === 'sale') && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$CryptoTransactionForm$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                                 isVerified: userVerified === true,
-                                crypto: selectedCrypto
+                                crypto: selectedCrypto,
+                                typeTrans: typeTrans
                             }, void 0, false, {
                                 fileName: "[project]/src/app/crypto/page.tsx",
-                                lineNumber: 271,
-                                columnNumber: 13
+                                lineNumber: 304,
+                                columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true) : loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1774,12 +1777,12 @@ function CryptoPage() {
                             className: "animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-4 border-blue-500/30 border-t-blue-500"
                         }, void 0, false, {
                             fileName: "[project]/src/app/crypto/page.tsx",
-                            lineNumber: 278,
+                            lineNumber: 313,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/crypto/page.tsx",
-                        lineNumber: 277,
+                        lineNumber: 312,
                         columnNumber: 11
                     }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6",
@@ -1793,7 +1796,7 @@ function CryptoPage() {
                                         className: "w-10 h-10 sm:w-12 sm:h-12 object-contain mb-3 sm:mb-4 rounded-full border border-slate-300 bg-white"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/crypto/page.tsx",
-                                        lineNumber: 288,
+                                        lineNumber: 323,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1801,7 +1804,7 @@ function CryptoPage() {
                                         children: crypto.name
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/crypto/page.tsx",
-                                        lineNumber: 289,
+                                        lineNumber: 324,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1809,7 +1812,7 @@ function CryptoPage() {
                                         children: crypto.symbol
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/crypto/page.tsx",
-                                        lineNumber: 290,
+                                        lineNumber: 325,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1820,20 +1823,20 @@ function CryptoPage() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/crypto/page.tsx",
-                                        lineNumber: 291,
+                                        lineNumber: 326,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, crypto.id, true, {
                                 fileName: "[project]/src/app/crypto/page.tsx",
-                                lineNumber: 283,
+                                lineNumber: 318,
                                 columnNumber: 15
                             }, this))
                     }, void 0, false, {
                         fileName: "[project]/src/app/crypto/page.tsx",
-                        lineNumber: 281,
+                        lineNumber: 316,
                         columnNumber: 11
-                    }, this),
+                    }, this)),
                     showVerifyModal && !userVerified && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm px-2 sm:px-0",
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1844,7 +1847,7 @@ function CryptoPage() {
                                     children: t("Account Verification Required")
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/crypto/page.tsx",
-                                    lineNumber: 301,
+                                    lineNumber: 336,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -1858,7 +1861,7 @@ function CryptoPage() {
                                                     children: t("Upload your image (face)")
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/crypto/page.tsx",
-                                                    lineNumber: 304,
+                                                    lineNumber: 339,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1868,7 +1871,7 @@ function CryptoPage() {
                                                     className: "w-full text-xs sm:text-sm border rounded p-2"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/crypto/page.tsx",
-                                                    lineNumber: 305,
+                                                    lineNumber: 340,
                                                     columnNumber: 19
                                                 }, this),
                                                 userImage && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1879,18 +1882,18 @@ function CryptoPage() {
                                                         className: "h-20 w-20 object-cover rounded shadow"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/crypto/page.tsx",
-                                                        lineNumber: 313,
+                                                        lineNumber: 348,
                                                         columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/crypto/page.tsx",
-                                                    lineNumber: 312,
+                                                    lineNumber: 347,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/crypto/page.tsx",
-                                            lineNumber: 303,
+                                            lineNumber: 338,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1901,7 +1904,7 @@ function CryptoPage() {
                                                     children: t("Upload your card image (ID card)")
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/crypto/page.tsx",
-                                                    lineNumber: 318,
+                                                    lineNumber: 353,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1911,7 +1914,7 @@ function CryptoPage() {
                                                     className: "w-full text-xs sm:text-sm border rounded p-2"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/crypto/page.tsx",
-                                                    lineNumber: 319,
+                                                    lineNumber: 354,
                                                     columnNumber: 19
                                                 }, this),
                                                 cardImage && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1922,18 +1925,18 @@ function CryptoPage() {
                                                         className: "h-20 w-20 object-cover rounded shadow"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/crypto/page.tsx",
-                                                        lineNumber: 327,
+                                                        lineNumber: 362,
                                                         columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/crypto/page.tsx",
-                                                    lineNumber: 326,
+                                                    lineNumber: 361,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/crypto/page.tsx",
-                                            lineNumber: 317,
+                                            lineNumber: 352,
                                             columnNumber: 17
                                         }, this),
                                         uploadError && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1941,7 +1944,7 @@ function CryptoPage() {
                                             children: uploadError
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/crypto/page.tsx",
-                                            lineNumber: 331,
+                                            lineNumber: 366,
                                             columnNumber: 33
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1955,7 +1958,7 @@ function CryptoPage() {
                                                     children: t("Cancel")
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/crypto/page.tsx",
-                                                    lineNumber: 333,
+                                                    lineNumber: 368,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1965,30 +1968,30 @@ function CryptoPage() {
                                                     children: uploading ? t("Uploading...") : t("Upload & Submit")
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/crypto/page.tsx",
-                                                    lineNumber: 341,
+                                                    lineNumber: 376,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/crypto/page.tsx",
-                                            lineNumber: 332,
+                                            lineNumber: 367,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/crypto/page.tsx",
-                                    lineNumber: 302,
+                                    lineNumber: 337,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/crypto/page.tsx",
-                            lineNumber: 300,
+                            lineNumber: 335,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/crypto/page.tsx",
-                        lineNumber: 299,
+                        lineNumber: 334,
                         columnNumber: 11
                     }, this),
                     showSuccessModal && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2001,7 +2004,7 @@ function CryptoPage() {
                                     children: t("Success")
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/crypto/page.tsx",
-                                    lineNumber: 358,
+                                    lineNumber: 393,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2009,7 +2012,7 @@ function CryptoPage() {
                                     children: successMessage
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/crypto/page.tsx",
-                                    lineNumber: 359,
+                                    lineNumber: 394,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2020,39 +2023,39 @@ function CryptoPage() {
                                         children: t("Close")
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/crypto/page.tsx",
-                                        lineNumber: 361,
+                                        lineNumber: 396,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/crypto/page.tsx",
-                                    lineNumber: 360,
+                                    lineNumber: 395,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/crypto/page.tsx",
-                            lineNumber: 357,
+                            lineNumber: 392,
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/crypto/page.tsx",
-                        lineNumber: 356,
+                        lineNumber: 391,
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/crypto/page.tsx",
-                lineNumber: 249,
+                lineNumber: 280,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/crypto/page.tsx",
-        lineNumber: 239,
+        lineNumber: 242,
         columnNumber: 5
     }, this);
 }
-_s(CryptoPage, "R52TfOMdU/JU7nofoeZDrG96mM0=", false, function() {
+_s(CryptoPage, "qk8MixmudqccMIZ39BHpXQENpnE=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$i18next$2f$dist$2f$es$2f$useTranslation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTranslation"],
         __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ThemeProvider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"]

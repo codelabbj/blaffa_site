@@ -638,6 +638,10 @@
     left: 50%;
   }
 
+  .left-2 {
+    left: calc(var(--spacing) * 2);
+  }
+
   .left-3 {
     left: calc(var(--spacing) * 3);
   }
@@ -984,6 +988,10 @@
 
   .max-h-full {
     max-height: 100%;
+  }
+
+  .min-h-\[100px\] {
+    min-height: 100px;
   }
 
   .min-h-\[200px\] {
@@ -4644,6 +4652,12 @@
       .hover\:bg-white\/75:hover {
         background-color: color-mix(in oklab, var(--color-white) 75%, transparent);
       }
+    }
+  }
+
+  @media (hover: hover) {
+    .hover\:bg-yellow-600:hover {
+      background-color: var(--color-yellow-600);
     }
   }
 
