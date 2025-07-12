@@ -69,8 +69,13 @@ const CouponPage = () => {
       }
 
       const data = await response.data;
-      if (Array.isArray(data.results)) {
+      console.log('API Response:', data); // Debug log
+      
+      if (data && data.results && Array.isArray(data.results)) {
          setCoupons(data.results);
+      } else if (Array.isArray(data)) {
+         // Handle case where response is directly an array
+         setCoupons(data);
       } else {
          console.error('API response results is not an array:', data);
          setCoupons([]);
@@ -181,46 +186,54 @@ const CouponPage = () => {
                     {/* Main Content */}
           <div className={`bg-gradient-to-r ${theme.colors.s_background} backdrop-blur-sm rounded-3xl shadow-2xl border border-slate-600/50 overflow-hidden`}>
             <div className="p-8">
-              {coupons.length === 0 ? (
+              {!coupons || coupons.length === 0 ? (
                 <div className={`rounded-2xl shadow p-6 text-center bg-gradient-to-br ${theme.colors.s_background}`} style={{ borderRadius: '1rem' }}>
                   <div className=" font-semibold">Aucun coupon disponible.</div>
                 </div>
               ) : (
                 <div className="flex flex-col gap-6">
-                  {coupons.map((coupon, idx) => (
-                    <div key={idx} className={`rounded-2xl shadow p-6 bg-gradient-to-br ${theme.colors.s_background}`} style={{ borderRadius: '1rem' }}>
-                      <div className="flex flex-col gap-4">
-                        {/* App Row */}
-                        <div className="flex justify-between items-center">
-                          <span className="font-bold text-base text-white">App</span>
-                          <span className="text-base text-white">{coupon.bet_app?.public_name || coupon.bet_app?.name || 'Unknown'}</span>
-                        </div>
-                        {/* Code Row */}
-                        <div className="flex justify-between items-center">
-                          <span className="font-bold text-base text-white">Code</span>
-                          <span className="flex items-center gap-2">
-                            <span className="text-base tracking-widest text-white">{coupon.code || coupon.id.slice(0, 8)}</span>
-                            <button
-                              onClick={() => handleCopy(coupon.code || coupon.id.slice(0, 8))}
-                              className="p-1 rounded hover:bg-gray-200"
-                              aria-label="Copy code"
-                            >
-                              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" strokeWidth="2"/>
-                                <rect x="3" y="3" width="13" height="13" rx="2" stroke="currentColor" strokeWidth="2"/>
-                              </svg>
-                            </button>
-                            {copied && <span className="text-xs text-green-600 ml-1">Copied!</span>}
-                          </span>
-                        </div>
-                        {/* Date Row */}
-                        <div className="flex justify-between items-center">
-                          <span className="font-bold text-base text-white">Date</span>
-                          <span className="text-base text-white">{coupon.created_at ? coupon.created_at.slice(0, 10) : ''}</span>
+                  {coupons.map((coupon, idx) => {
+                    // Defensive check for coupon object
+                    if (!coupon) {
+                      console.warn('Undefined coupon at index:', idx);
+                      return null;
+                    }
+                    
+                    return (
+                      <div key={coupon.id || idx} className={`rounded-2xl shadow p-6 bg-gradient-to-br ${theme.colors.s_background}`} style={{ borderRadius: '1rem' }}>
+                        <div className="flex flex-col gap-4">
+                          {/* App Row */}
+                          <div className="flex justify-between items-center">
+                            <span className="font-bold text-base text-white">App</span>
+                            <span className="text-base text-white">{coupon.bet_app?.public_name || coupon.bet_app?.name || 'Unknown'}</span>
+                          </div>
+                          {/* Code Row */}
+                          <div className="flex justify-between items-center">
+                            <span className="font-bold text-base text-white">Code</span>
+                            <span className="flex items-center gap-2">
+                              <span className="text-base tracking-widest text-white">{coupon.code || (coupon.id ? coupon.id.slice(0, 8) : 'N/A')}</span>
+                              <button
+                                onClick={() => handleCopy(coupon.code || (coupon.id ? coupon.id.slice(0, 8) : 'N/A'))}
+                                className="p-1 rounded hover:bg-gray-200"
+                                aria-label="Copy code"
+                              >
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                  <rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" strokeWidth="2"/>
+                                  <rect x="3" y="3" width="13" height="13" rx="2" stroke="currentColor" strokeWidth="2"/>
+                                </svg>
+                              </button>
+                              {copied && <span className="text-xs text-green-600 ml-1">Copied!</span>}
+                            </span>
+                          </div>
+                          {/* Date Row */}
+                          <div className="flex justify-between items-center">
+                            <span className="font-bold text-base text-white">Date</span>
+                            <span className="text-base text-white">{coupon.created_at ? coupon.created_at.slice(0, 10) : 'N/A'}</span>
+                          </div>
                         </div>
                       </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               )}
             </div>
