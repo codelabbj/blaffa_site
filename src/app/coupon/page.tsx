@@ -129,7 +129,7 @@ const CouponPage = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h2 className="text-2xl font-bold text-white mb-4">Error Loading Coupons</h2>
+            <h2 className="text-2xl font-bold mb-4">Error Loading Coupons</h2>
             <p className="text-slate-400 mb-6 leading-relaxed">{error}</p>
             <button
               onClick={() => {
@@ -166,7 +166,7 @@ const CouponPage = () => {
           {/* Header Section */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
             <div>
-              <h1 className="text-3xl font-bold text-white mb-2">{t("Available Coupons")}</h1>
+              <h1 className="text-3xl font-bold mb-2">{t("Available Coupons")}</h1>
               <p className="text-slate-400">Discover amazing deals and offers</p>
             </div>
             
@@ -204,14 +204,14 @@ const CouponPage = () => {
                         <div className="flex flex-col gap-4">
                           {/* App Row */}
                           <div className="flex justify-between items-center">
-                            <span className="font-bold text-base text-white">App</span>
-                            <span className="text-base text-white">{coupon.bet_app?.public_name || coupon.bet_app?.name || 'Unknown'}</span>
+                            <span className="font-bold text-base ">App</span>
+                            <span className="text-base ">{coupon.bet_app?.public_name || coupon.bet_app?.name || 'Unknown'}</span>
                           </div>
                           {/* Code Row */}
                           <div className="flex justify-between items-center">
-                            <span className="font-bold text-base text-white">Code</span>
+                            <span className="font-bold text-base">Code</span>
                             <span className="flex items-center gap-2">
-                              <span className="text-base tracking-widest text-white">{coupon.code || (coupon.id ? coupon.id.slice(0, 8) : 'N/A')}</span>
+                              <span className="text-base tracking-widest ">{coupon.code || (coupon.id ? coupon.id.slice(0, 8) : 'N/A')}</span>
                               <button
                                 onClick={() => handleCopy(coupon.code || (coupon.id ? coupon.id.slice(0, 8) : 'N/A'))}
                                 className="p-1 rounded hover:bg-gray-200"
@@ -227,8 +227,8 @@ const CouponPage = () => {
                           </div>
                           {/* Date Row */}
                           <div className="flex justify-between items-center">
-                            <span className="font-bold text-base text-white">Date</span>
-                            <span className="text-base text-white">{coupon.created_at ? coupon.created_at.slice(0, 10) : 'N/A'}</span>
+                            <span className="font-bold text-base ">Date</span>
+                            <span className="text-base ">{coupon.created_at ? coupon.created_at.slice(0, 10) : 'N/A'}</span>
                           </div>
                         </div>
                       </div>
