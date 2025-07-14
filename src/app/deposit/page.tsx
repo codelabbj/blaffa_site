@@ -671,7 +671,7 @@ export default function Deposits() {
           />
           {/* Min/Max deposit info */}
           {selectedPlatform && (
-            <div className="mt-2 text-xs">
+            <div className="mt-2 text-xs flex flex-wrap gap-2 items-center">
               <span className={
                 formData.amount && Number(formData.amount) < Number(selectedPlatform.minimun_deposit)
                   ? 'text-red-500 font-semibold'
@@ -680,7 +680,11 @@ export default function Deposits() {
                 {t('Minimum deposit')}: {selectedPlatform.minimun_deposit} FCFA
               </span>
               <span className="mx-2">|</span>
-              <span className="text-gray-500">
+              <span className={
+                formData.amount && Number(formData.amount) > Number(selectedPlatform.max_deposit)
+                  ? 'text-red-500 font-semibold'
+                  : 'text-gray-500'
+              }>
                 {t('Maximum deposit')}: {selectedPlatform.max_deposit} FCFA
               </span>
             </div>
