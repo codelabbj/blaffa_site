@@ -43,6 +43,8 @@ interface App {
   withdrawal_tuto_content: string;
   withdrawal_link: string;
   public_name: string;
+  minimun_deposit?: string;
+  max_deposit?: string;
 }
 
 
@@ -443,32 +445,42 @@ export default function Deposits() {
         {/* <h2 className="text-2xl font-bold mb-2">{t("Step 1: Select Your Betting Platform")}</h2> */}
         <p className="text-slate-400">{t("Choisissez la plateforme de pari que vous souhaitez utiliser")}</p>
       </div>
-      {/* Add Bet ID management button */}
-      {/* <div className="flex justify-end mb-4">
-        <button
-          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-          onClick={() => setCurrentStep('manageBetId')}
-        >
-          {t('Ajouter un ID de pari')}
-        </button>
-      </div> */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {platforms.map((platform) => (
-          <div 
-            key={platform.id}
-            onClick={() => handlePlatformSelect(platform)}
-            className={`p-4 border rounded-lg cursor-pointer ${theme.colors.hover} transition-colors`}
-          >
-            <div className="font-medium">{platform.public_name || platform.name}</div>
-            {platform.image && (
-              <img 
-                src={platform.image} 
-                alt={platform.public_name || platform.name}
-                className="h-10 w-10 object-contain mt-2"
-              />
-            )}
-          </div>
-        ))}
+      <div className="w-full flex justify-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full max-w-5xl">
+          {platforms.map((platform) => {
+            const isActive = selectedPlatform?.id === platform.id;
+            return (
+              <div
+                key={platform.id}
+                onClick={() => handlePlatformSelect(platform)}
+                className={`cursor-pointer bg-gradient-to-br ${theme.colors.s_background} border rounded-2xl shadow-md flex flex-col items-center p-6 group hover:scale-[1.03] transition-all duration-300
+                  ${isActive ? 'border-blue-500 ring-2 ring-blue-400 bg-blue-50 dark:bg-blue-900/30 shadow-blue-200 dark:shadow-blue-900' : 'border-slate-600/30 hover:shadow-xl hover:border-blue-500'}`}
+                style={{ minWidth: 0, position: 'relative' }}
+              >
+                {isActive && (
+                  <div className="absolute top-3 right-3 bg-blue-500 rounded-full p-1 shadow-lg">
+                    <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                )}
+                {platform.image && (
+                  <img
+                    src={platform.image}
+                    alt={platform.public_name || platform.name}
+                    className="h-14 w-14 object-contain mb-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow"
+                  />
+                )}
+                <div className="font-semibold text-lg text-center group-hover:text-blue-500 truncate w-full">
+                  {platform.public_name || platform.name}
+                </div>
+                {/* {platform.city && (
+                  <div className="text-xs text-gray-500 mt-1 truncate w-full text-center">{platform.city}</div>
+                )} */}
+              </div>
+            );
+          })}
+        </div>
       </div>
       {platforms.length === 0 && !loading && (
         <div className="flex flex-col items-center justify-center py-20 px-6">
@@ -657,6 +669,22 @@ export default function Deposits() {
             className="w-full p-2 border rounded"
             placeholder={t("Enter amount")}
           />
+          {/* Min/Max deposit info */}
+          {selectedPlatform && (
+            <div className="mt-2 text-xs">
+              <span className={
+                formData.amount && Number(formData.amount) < Number(selectedPlatform.minimun_deposit)
+                  ? 'text-red-500 font-semibold'
+                  : 'text-gray-500'
+              }>
+                {t('Minimum deposit')}: {selectedPlatform.minimun_deposit} FCFA
+              </span>
+              <span className="mx-2">|</span>
+              <span className="text-gray-500">
+                {t('Maximum deposit')}: {selectedPlatform.max_deposit} FCFA
+              </span>
+            </div>
+          )}
         </div>
 
         {selectedNetwork?.otp_required && (

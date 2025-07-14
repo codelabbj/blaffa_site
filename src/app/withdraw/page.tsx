@@ -297,70 +297,39 @@ export default function Withdraw() {
               <p className="text-slate-400">{t("Choisissez la plateforme de pari que vous souhaitez utiliser")}</p>
             </div>
            
-            {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {platforms.map((platform, index) => (
-                <div
-                  key={platform.id}
-                  onClick={() => handlePlatformSelect(platform)}
-                  className={`group relative overflow-hidden bg-gradient-to-br ${theme.colors.sl_background} backdrop-blur-sm border border-slate-600/30 rounded-2xl p-6 cursor-pointer hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-500 hover:scale-105 hover:shadow-2xl hover:shadow-blue-500/20`}
-                  style={{
-                    animation: `slideInUp 0.6s ease-out ${index * 100}ms both`
-                  }}
-                >
-                  
-                  <div className="absolute inset-0 shimmer-effect opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-                 
-                  <div className="relative">
-                    <div className="flex items-center mb-4">
-                      <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500/20 to-blue-600/20 text-blue-400 shadow-lg shadow-blue-500/20 flex items-center justify-center transition-all duration-500 group-hover:scale-110">
-                        {platform.image ? (
-                          <img
-                            src={platform.image}
-                            alt={platform.public_name || platform.name}
-                            className="w-8 h-8 object-contain"
-                          />
-                        ) : (
-                          <CreditCard className="w-6 h-6" />
-                        )}
-                      </div>
-                      <div className="ml-4">
-                        <div className="font-semibold group-hover:text-blue-200 transition-colors duration-300">
-                          {platform.public_name || platform.name}
+            <div className="w-full flex justify-center">
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full max-w-5xl">
+                {platforms.map((platform) => {
+                  const isActive = selectedPlatform?.id === platform.id;
+                  return (
+                    <div
+                      key={platform.id}
+                      onClick={() => handlePlatformSelect(platform)}
+                      className={`cursor-pointer bg-gradient-to-br ${theme.colors.s_background} border rounded-2xl shadow-md flex flex-col items-center p-6 group hover:scale-[1.03] transition-all duration-300
+                        ${isActive ? 'border-blue-500 ring-2 ring-blue-400 bg-blue-50 dark:bg-blue-900/30 shadow-blue-200 dark:shadow-blue-900' : 'border-slate-600/30 hover:shadow-xl hover:border-blue-500'}`}
+                      style={{ minWidth: 0, position: 'relative' }}
+                    >
+                      {isActive && (
+                        <div className="absolute top-3 right-3 bg-blue-500 rounded-full p-1 shadow-lg">
+                          <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
                         </div>
+                      )}
+                      {platform.image && (
+                        <img
+                          src={platform.image}
+                          alt={platform.public_name || platform.name}
+                          className="h-14 w-14 object-contain mb-4 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 shadow"
+                        />
+                      )}
+                      <div className="font-semibold text-lg text-center group-hover:text-blue-500 truncate w-full">
+                        {platform.public_name || platform.name}
                       </div>
                     </div>
-                   
-                    <div className={`${theme.colors.background} rounded-xl p-3 mb-4`}>
-                      <div className="text-slate-400 text-xs mb-1">Plateforme de pari</div>
-                      <div className="font-mono text-sm truncate">{platform.public_name || platform.name}</div>
-                    </div>
-                   
-                    <div className="flex items-center justify-between">
-                      <span className="text-slate-400 text-sm">Cliquez pour sélectionner</span>
-                      <ChevronRight className="w-5 h-5 text-slate-400 group-hover:text-blue-400 group-hover:translate-x-1 transition-all duration-300" />
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div> */}
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {platforms.map((platform) => (
-                <div 
-                  key={platform.id}
-                  onClick={() => handlePlatformSelect(platform)}
-                  className={`p-4 border rounded-lg cursor-pointer ${theme.colors.hover} transition-colors`}
-                >
-                  <div className="font-medium">{platform.public_name || platform.name}</div>
-                  {platform.image && (
-                    <img 
-                      src={platform.image} 
-                      alt={platform.public_name || platform.name}
-                      className="h-10 w-10 object-contain mt-2"
-                    />
-                  )}
-                </div>
-              ))}
+                  );
+                })}
+              </div>
             </div>
            
             {platforms.length === 0 && !loading && (
