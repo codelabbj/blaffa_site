@@ -538,6 +538,17 @@ export default function Withdraw() {
                 required
               />
             </div>
+            {selectedPlatform?.withdrawal_link && (
+              <div className="flex justify-center pt-2">
+                <button
+                  type="button"
+                  onClick={() => window.open(selectedPlatform.withdrawal_link, '_blank')}
+                  className="px-4 py-2 text-sm text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-200"
+                >
+                  {t("Comment obtenir un code de retrait ?")}
+                </button>
+              </div>
+            )}
             <div className="flex justify-between pt-2">
               <button
                 type="button"
@@ -671,7 +682,7 @@ export default function Withdraw() {
         </div>
 
         {/* Information Icon with Dropdown */}
-        <div className="mb-6">
+        {/* <div className="mb-6">
           <div className="flex items-center justify-start">
             <button
               onClick={() => setShowInfoDropdown(!showInfoDropdown)}
@@ -684,18 +695,18 @@ export default function Withdraw() {
             </button>
           </div>
           
-          {/* Dropdown Content - Now in normal page flow */}
+          
           {showInfoDropdown && (
             <div className="mt-3 w-full max-w-2xl">
               <div className="bg-slate-800/80 border border-slate-600/50 rounded-xl p-4">
                 <div className="space-y-3">
-                  {/* Header */}
+                  
                   <div className="mb-3">
                     <h3 className="text-lg font-semibold text-white mb-1">Comment retirer vos gains ?</h3>
                     <p className="text-slate-300 text-sm">Suivez ces étapes simples</p>
                   </div>
                   
-                  {/* Steps */}
+                  
                   <div className="space-y-2">
                     <div className="flex items-start space-x-3 p-2 rounded-lg bg-slate-700/50">
                       <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -738,7 +749,7 @@ export default function Withdraw() {
                     </div>
                   </div>
                   
-                  {/* Tips Section */}
+                  
                   <div className="mt-3 p-3 rounded-lg bg-slate-700/50">
                     <h4 className="font-medium text-emerald-300 text-sm mb-2">💡 Conseils :</h4>
                     <div className="space-y-1">
@@ -757,7 +768,7 @@ export default function Withdraw() {
                     </div>
                   </div>
                   
-                  {/* Action Button */}
+                  
                   <div className="flex justify-end pt-2">
                     <button
                       onClick={() => setShowInfoDropdown(false)}
@@ -770,7 +781,7 @@ export default function Withdraw() {
               </div>
             </div>
           )}
-        </div>
+        </div> */}
 
         {/* Simplified Progress Steps - Show only current step */}
         <div className="text-center mb-12">
