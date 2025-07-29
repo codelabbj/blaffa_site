@@ -1970,6 +1970,16 @@
     background-color: var(--color-blue-800);
   }
 
+  .bg-blue-800\/50 {
+    background-color: #193cb880;
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .bg-blue-800\/50 {
+      background-color: color-mix(in oklab, var(--color-blue-800) 50%, transparent);
+    }
+  }
+
   .bg-blue-900 {
     background-color: var(--color-blue-900);
   }
