@@ -12,12 +12,18 @@ import api from '@/lib/axios';
 // import { ArrowLeft } from 'lucide-react'; // No longer used
 import { Player } from '@lottiefiles/react-lottie-player';
 // const { t } = useTranslation(); // No longer used
+import { Download } from 'lucide-react'; // Add this import
 
 const AuthPage: React.FC = () => {
   const [isClient, setIsClient] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter();
   const { theme } = useTheme();
+
+  // Add this function inside your component
+  const handleMenuItemClick = (callback: () => void) => {
+    callback();
+  };
 
   useEffect(() => {
     const validateToken = async () => {
@@ -96,6 +102,21 @@ const AuthPage: React.FC = () => {
       <div className="flex-1 flex flex-col items-center justify-center px-6 py-8 bg-transparent">
         <div className="w-full max-w-md">
           <AuthForm />
+          <br></br>
+          <br></br>
+          <button
+            onClick={() => handleMenuItemClick(() => {
+              window.location.href = 'https://api.blaffa.net/download_apk';
+            })}
+            className="flex px-3 py-2 items-center gap-2 bg-gray-900 hover:bg-gray-800 transition-colors text-left group rounded-lg max-w-fit mt-4 ml-30"
+          >
+            <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center group-hover:bg-blue-500/30 transition-colors">
+              <Download size={16} className="text-blue-500" />
+            </div>
+            <span className="text-gray-400 group-hover:text-white transition-colors text-sm whitespace-nowrap">
+              {"Télécharger l'application"}
+            </span>
+          </button>
           {/* Trust indicators */}
           <div className="mt-4 text-center">
             <div className="flex items-center justify-center space-x-2">
