@@ -1,7 +1,12 @@
 {
   "/auth/page": "app/auth/page.js",
   "/dashboard/page": "app/dashboard/page.js",
+  "/deposit/page": "app/deposit/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
+<<<<<<< HEAD
   "/page": "app/page.js",
   "/profile/page": "app/profile/page.js"
+=======
+  "/withdraw/page": "app/withdraw/page.js"
+>>>>>>> 04fda861e87c241ddce1578ed83a3effea323bab
 }

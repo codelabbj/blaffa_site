@@ -446,7 +446,7 @@ export default function Deposits() {
         <p className="text-slate-400">{t("Choisissez la plateforme de pari que vous souhaitez utiliser")}</p>
       </div>
       <div className="w-full flex justify-center">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full max-w-5xl">
+        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full max-w-5xl">
           {platforms.map((platform) => {
             const isActive = selectedPlatform?.id === platform.id;
             return (
