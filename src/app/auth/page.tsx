@@ -114,7 +114,7 @@ const AuthPage: React.FC = () => {
               <Download size={16} className="text-blue-500" />
             </div>
             <span className="text-gray-400 group-hover:text-white transition-colors text-sm whitespace-nowrap">
-              {"Télécharger l'application"}
+              {"Télécharger l'application ANDROID"}
             </span>
           </button>
           {/* Trust indicators */}
