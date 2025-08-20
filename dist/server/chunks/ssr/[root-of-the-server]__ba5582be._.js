@@ -566,7 +566,7 @@ function AuthForm() {
                                             onChange: (e)=>setEmail(e.target.value),
                                             required: true,
                                             placeholder: t("Enter your email or phone"),
-                                            className: "bg-gray-700 text-white w-full pl-10 pr-3 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                                            className: "bg-gray-700 text-white w-full pl-10 pr-3 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all placeholder:text-sm sm:placeholder:text-base"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/AuthForm.tsx",
                                             lineNumber: 304,
@@ -1091,7 +1091,7 @@ function AuthForm() {
                                             onChange: (e)=>setEmailOrPhone(e.target.value),
                                             required: true,
                                             placeholder: t("Enter your email or phone"),
-                                            className: "bg-gray-700 text-white w-full pl-10 pr-3 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                                            className: "bg-gray-700 text-white w-full pl-10 pr-3 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-sm sm:placeholder:text-base"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/AuthForm.tsx",
                                             lineNumber: 650,
@@ -1143,7 +1143,7 @@ function AuthForm() {
                                                     onChange: (e)=>setEmail(e.target.value),
                                                     required: true,
                                                     placeholder: t("Enter your email"),
-                                                    className: "bg-gray-700 text-white w-full pl-10 pr-3 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                                                    className: "bg-gray-700 text-white w-full pl-10 pr-3 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-sm sm:placeholder:text-base"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/AuthForm.tsx",
                                                     lineNumber: 670,
@@ -1194,7 +1194,7 @@ function AuthForm() {
                                                     onChange: (e)=>setPhone(e.target.value),
                                                     required: true,
                                                     placeholder: t("Enter your phone number"),
-                                                    className: "bg-gray-700 text-white w-full pl-10 pr-3 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                                                    className: "bg-gray-700 text-white w-full pl-10 pr-3 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-sm sm:placeholder:text-base"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/AuthForm.tsx",
                                                     lineNumber: 688,
@@ -1246,7 +1246,7 @@ function AuthForm() {
                                             value: password,
                                             onChange: (e)=>setPassword(e.target.value),
                                             placeholder: t("Enter your password"),
-                                            className: "bg-gray-700 text-white w-full pl-10 pr-10 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                                            className: "bg-gray-700 text-white w-full pl-10 pr-10 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-sm sm:placeholder:text-base"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/AuthForm.tsx",
                                             lineNumber: 711,
@@ -1322,7 +1322,7 @@ function AuthForm() {
                                                     value: password,
                                                     onChange: (e)=>setPassword(e.target.value),
                                                     required: true,
-                                                    className: "bg-gray-700 text-white w-full pl-10 pr-10 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all",
+                                                    className: "bg-gray-700 text-white w-full pl-10 pr-10 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-sm sm:placeholder:text-base",
                                                     placeholder: t("Enter your password")
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/AuthForm.tsx",
@@ -1396,7 +1396,7 @@ function AuthForm() {
                                                     value: confirmPassword,
                                                     onChange: (e)=>setConfirmPassword(e.target.value),
                                                     required: true,
-                                                    className: "bg-gray-700 text-white w-full pl-10 pr-10 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all",
+                                                    className: "bg-gray-700 text-white w-full pl-10 pr-10 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-sm sm:placeholder:text-base",
                                                     placeholder: t("Confirm your password")
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/AuthForm.tsx",
@@ -1718,7 +1718,7 @@ const AuthPage = ()=>{
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                     className: "text-gray-400 group-hover:text-white transition-colors text-sm whitespace-nowrap",
-                                    children: "Télécharger l'application"
+                                    children: "Télécharger l'application ANDROID"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/auth/page.tsx",
                                     lineNumber: 116,

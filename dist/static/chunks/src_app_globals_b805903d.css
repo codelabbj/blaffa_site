@@ -4277,6 +4277,11 @@
     scale: var(--tw-scale-x) var(--tw-scale-y);
   }
 
+  .placeholder\:text-sm::placeholder {
+    font-size: var(--text-sm);
+    line-height: var(--tw-leading, var(--text-sm--line-height));
+  }
+
   @media (hover: hover) {
     .hover\:scale-105:hover {
       --tw-scale-x: 105%;
@@ -5260,6 +5265,13 @@
     .sm\:text-xl {
       font-size: var(--text-xl);
       line-height: var(--tw-leading, var(--text-xl--line-height));
+    }
+  }
+
+  @media (width >= 40rem) {
+    .sm\:placeholder\:text-base::placeholder {
+      font-size: var(--text-base);
+      line-height: var(--tw-leading, var(--text-base--line-height));
     }
   }
 

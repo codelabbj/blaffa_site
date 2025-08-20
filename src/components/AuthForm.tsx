@@ -307,7 +307,7 @@ export default function AuthForm() {
                   onChange={(e) => setEmail(e.target.value)}
                   required
                   placeholder={t("Enter your email or phone")}
-                    className="bg-gray-700 text-white w-full pl-10 pr-3 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all"
+                  className="bg-gray-700 text-white w-full pl-10 pr-3 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-all placeholder:text-sm sm:placeholder:text-base"
                   />
               </div>
             </div>
@@ -653,7 +653,7 @@ export default function AuthForm() {
                       onChange={(e) => setEmailOrPhone(e.target.value)}
                       required
                       placeholder={t("Enter your email or phone")}
-                      className="bg-gray-700 text-white w-full pl-10 pr-3 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                      className="bg-gray-700 text-white w-full pl-10 pr-3 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-sm sm:placeholder:text-base"
                     />
                 </div>
                 </div>
@@ -673,7 +673,7 @@ export default function AuthForm() {
                     onChange={(e) => setEmail(e.target.value)}
                     required
                     placeholder={t("Enter your email")}
-                    className="bg-gray-700 text-white w-full pl-10 pr-3 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                    className="bg-gray-700 text-white w-full pl-10 pr-3 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-sm sm:placeholder:text-base"
                   />
                 </div>
                   </div>
@@ -691,7 +691,7 @@ export default function AuthForm() {
                     onChange={(e) => setPhone(e.target.value)}
                     required
                     placeholder={t("Enter your phone number")}
-                    className="bg-gray-700 text-white w-full pl-10 pr-3 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                    className="bg-gray-700 text-white w-full pl-10 pr-3 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-sm sm:placeholder:text-base"
                   />
                 </div>
                    
@@ -713,7 +713,7 @@ export default function AuthForm() {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder={t("Enter your password")}
-                    className="bg-gray-700 text-white w-full pl-10 pr-10 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                    className="bg-gray-700 text-white w-full pl-10 pr-10 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-sm sm:placeholder:text-base"
                   />
                   <button
                     type="button"
@@ -745,7 +745,7 @@ export default function AuthForm() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         required
-                        className="bg-gray-700 text-white w-full pl-10 pr-10 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                        className="bg-gray-700 text-white w-full pl-10 pr-10 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-sm sm:placeholder:text-base"
                         placeholder={t("Enter your password")}
                       />
                       <button
@@ -771,7 +771,7 @@ export default function AuthForm() {
                         value={confirmPassword}
                         onChange={(e) => setConfirmPassword(e.target.value)}
                         required
-                        className="bg-gray-700 text-white w-full pl-10 pr-10 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                        className="bg-gray-700 text-white w-full pl-10 pr-10 py-3 rounded-lg border border-gray-600 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all placeholder:text-sm sm:placeholder:text-base"
                         placeholder={t("Confirm your password")}
                       />
                       <button
