@@ -2150,6 +2150,20 @@
     }
   }
 
+  .bg-orange-800 {
+    background-color: var(--color-orange-800);
+  }
+
+  .bg-orange-800\/50 {
+    background-color: #9f2d0080;
+  }
+
+  @supports (color: color-mix(in lab, red, red)) {
+    .bg-orange-800\/50 {
+      background-color: color-mix(in oklab, var(--color-orange-800) 50%, transparent);
+    }
+  }
+
   .bg-purple-100 {
     background-color: var(--color-purple-100);
   }

@@ -38,6 +38,8 @@ interface App {
   deposit_link?: string;
   withdrawal_tuto_content?: string;
   withdrawal_link?: string;
+  why_withdrawal_fail?: string;
+  // why_withdrawal_fail_link?: string;
 }
 
 // Updated IdLink interface to match the structure from deposit/page.tsx
@@ -97,7 +99,7 @@ export default function Withdraw() {
   const [selectedTransaction, setSelectedTransaction] = useState<TransactionDetail | null>(null);
   const { theme } = useTheme();
   const [selectedBetId, setSelectedBetId] = useState<string | null>(null);
-  const [showInfoDropdown, setShowInfoDropdown] = useState(false);
+  // const [showInfoDropdown, setShowInfoDropdown] = useState(false);
 
 
   const fetchPlatforms = async () => {
@@ -539,7 +541,7 @@ export default function Withdraw() {
               />
             </div>
             {selectedPlatform?.withdrawal_link && (
-              <div className="flex justify-center pt-2">
+              <div className="flex flex-col items-center gap-3 pt-2">
                 <button
                   type="button"
                   onClick={() => window.open(selectedPlatform.withdrawal_link, '_blank')}
@@ -549,6 +551,18 @@ export default function Withdraw() {
                     <span className="text-white font-bold text-sm">?</span>
                   </div> */}
                   {t("Comment obtenir un code de retrait ?")}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    // If platform has a specific link for why withdrawal fails, use it
+                    // Otherwise, you can set a default URL here
+                    const url = selectedPlatform?.why_withdrawal_fail;
+                    window.open(url, '_blank');
+                  }}
+                  className="group relative flex items-center space-x-2 bg-blue-800/50 hover:bg-slate-600/50 px-4 py-2 rounded-xl border border-slate-600/30 transition-all duration-300"
+                >
+                  {selectedPlatform?.why_withdrawal_fail || t("Pourquoi le retrait échoue ?")}
                 </button>
               </div>
             )}
