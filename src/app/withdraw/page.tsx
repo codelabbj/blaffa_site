@@ -142,7 +142,7 @@ export default function Withdraw() {
         setLoading(true);
         // Fetch all data in parallel
         const [networksResponse, savedIdsResponse] = await Promise.all([
-            api.get('/blaffa/network/', {
+            api.get('/blaffa/network/?type=withdrawal', {
             headers: { Authorization: `Bearer ${token}` }
           }),
           api.get('/blaffa/id_link', {

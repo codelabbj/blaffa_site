@@ -193,7 +193,7 @@ export default function Deposits() {
         setLoading(true);
         // Fetch all data in parallel
         const [networksResponse, savedIdsResponse] = await Promise.all([
-          api.get('/blaffa/network/', {
+          api.get('/blaffa/network/?type=deposit', {
             headers: { Authorization: `Bearer ${token}` }
           }),
           api.get('/blaffa/id_link', {
