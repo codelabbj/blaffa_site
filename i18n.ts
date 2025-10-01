@@ -197,6 +197,30 @@ const resources = {
       "Network": "Network",
       "Processing...": "Processing...",
       "Submit my request": "Submit my request",
+      
+      // New withdraw page translations
+      "Amount": "Amount",
+      "Enter amount to withdraw": "Enter amount to withdraw",
+      "Transaction Summary": "Transaction Summary",
+      "Amount to withdraw": "Amount to withdraw",
+      "Fee": "Fee",
+      "You will receive": "You will receive",
+      "City": "City",
+      "Street": "Street",
+      "Remplissez les détails de votre pari": "Fill in your bet details",
+      "Gérer vos IDs de pari": "Manage your bet IDs",
+      "Ajouter un ID de pari": "Add a bet ID",
+      "Vos IDs de pari enregistrés": "Your saved bet IDs",
+      "Aucun ID de pari enregistré.": "No bet ID saved.",
+      "Supprimer": "Delete",
+      "Choisissez la plateforme de pari que vous souhaitez utiliser": "Choose the betting platform you want to use",
+      "Aucune plateforme de pari trouvée": "No betting platform found",
+      "Aucune plateforme de pari n'est disponible pour le moment.": "No betting platform is available at the moment.",
+      "Choisissez votre réseau de paiement mobile": "Choose your mobile payment network",
+      "Back to Platforms": "Back to Platforms",
+      "Comment obtenir un code de retrait ?": "How to get a withdrawal code?",
+      "Pourquoi le retrait échoue ?": "Why does withdrawal fail?",
+      // "Back": "Back",
 
       //Deposit Page translations
       "Deposit Funds": "Deposit Funds",
@@ -230,7 +254,7 @@ const resources = {
       "Selected App": "Select App id",
       "Betting App ID" : "Betting App ID",
       "Unknown App" : "Unknown ",
-      "Amount": "Amount",
+      // "Amount": "Amount",
       "Enter deposit amount": "Enter deposit amount",
 
       "Selected Bet ID":"Selected Bet ID",
@@ -531,6 +555,30 @@ const resources = {
       "Network": "Réseau",
       "Processing...": "Traitement...",
       "Submit my request": "Soumettre ma demande",
+      
+      // New withdraw page translations
+      "Amount": "Montant",
+      "Enter amount to withdraw": "Entrez le montant à retirer",
+      "Transaction Summary": "Résumé de la transaction",
+      "Amount to withdraw": "Montant à retirer",
+      "Fee": "Frais",
+      "You will receive": "Vous recevrez",
+      "City": "Ville",
+      "Street": "Rue",
+      "Remplissez les détails de votre pari": "Remplissez les détails de votre pari",
+      "Gérer vos IDs de pari": "Gérer vos IDs de pari",
+      "Ajouter un ID de pari": "Ajouter un ID de pari",
+      "Vos IDs de pari enregistrés": "Vos IDs de pari enregistrés",
+      "Aucun ID de pari enregistré.": "Aucun ID de pari enregistré.",
+      "Supprimer": "Supprimer",
+      "Choisissez la plateforme de pari que vous souhaitez utiliser": "Choisissez la plateforme de pari que vous souhaitez utiliser",
+      "Aucune plateforme de pari trouvée": "Aucune plateforme de pari trouvée",
+      "Aucune plateforme de pari n'est disponible pour le moment.": "Aucune plateforme de pari n'est disponible pour le moment.",
+      "Choisissez votre réseau de paiement mobile": "Choisissez votre réseau de paiement mobile",
+      "Back to Platforms": "Retour aux plateformes",
+      "Comment obtenir un code de retrait ?": "Comment obtenir un code de retrait ?",
+      "Pourquoi le retrait échoue ?": "Pourquoi le retrait échoue ?",
+      // "Back": "Retour",
 
 
       "Withdraw Funds":"Retirer des fonds",
@@ -568,7 +616,7 @@ const resources = {
 
 
       "This is your 1xbet user ID": "Ceci est votre ID utilisateur 1xbet",
-      "Amount": "Montant",
+      // "Amount": "Montant",
       "Enter deposit amount": "Entrez le montant du dépôt",
       
       "Enter your mobile money number": "Entrez votre numéro de mobile money",

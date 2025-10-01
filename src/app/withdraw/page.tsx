@@ -20,6 +20,8 @@ interface Network {
   public_name?: string;
   country_code?: string;
   image?: string;
+  with_fee?: boolean;
+  fee_percent?: number;
 }
 
 interface App {
@@ -83,14 +85,15 @@ export default function Withdraw() {
   const [currentStep, setCurrentStep] = useState<'selectId' | 'selectNetwork' | 'manageBetId' | 'enterDetails'>('selectId');
   const [selectedPlatform, setSelectedPlatform] = useState<App | null>(null);
   const [platforms, setPlatforms] = useState<App[]>([]);
-  const [selectedNetwork, setSelectedNetwork] = useState<{ id: string; name: string; public_name?: string; country_code?: string; image?: string } | null>(null);
+  const [selectedNetwork, setSelectedNetwork] = useState<Network | null>(null);
   const [formData, setFormData] = useState({
     withdrawalCode: '',
     phoneNumber: '',
     betid: '',
+    amount: '',
   });
   
-  const [networks, setNetworks] = useState<{ id: string; name: string; public_name?: string; image?: string }[]>([]);
+  const [networks, setNetworks] = useState<Network[]>([]);
   const [savedAppIds, setSavedAppIds] = useState<IdLink[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -186,7 +189,7 @@ export default function Withdraw() {
     setCurrentStep('selectNetwork');
   };
 
-  const handleNetworkSelect = (network: { id: string; name: string; public_name?: string; country_code?: string; image?: string }) => {
+  const handleNetworkSelect = (network: Network) => {
     setSelectedNetwork(network);
     setCurrentStep('manageBetId');
   };
@@ -199,9 +202,32 @@ export default function Withdraw() {
     }));
   };
 
+  // Calculate fee and net amount
+  const calculateFeeAndNetAmount = () => {
+    const amount = parseFloat(formData.amount) || 0;
+    if (!selectedNetwork?.with_fee || !selectedNetwork?.fee_percent) {
+      return {
+        originalAmount: amount,
+        feeAmount: 0,
+        netAmount: amount
+      };
+    }
+    
+    const feeAmount = (amount * selectedNetwork.fee_percent) / 100;
+    const netAmount = amount - feeAmount;
+    
+    return {
+      originalAmount: amount,
+      feeAmount,
+      netAmount
+    };
+  };
+
+  const { originalAmount, feeAmount, netAmount } = calculateFeeAndNetAmount();
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedPlatform || !selectedNetwork || !selectedBetId) return;
+    if (!selectedPlatform || !selectedNetwork || !selectedBetId || !formData.amount) return;
     
     setLoading(true);
     try {
@@ -217,6 +243,7 @@ export default function Withdraw() {
         network_id: selectedNetwork.id,
         app_id: selectedPlatform.id,
         user_app_id: selectedBetId,
+        amount: parseFloat(formData.amount), // Send original amount, not fee-deducted amount
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
@@ -231,7 +258,7 @@ export default function Withdraw() {
       setSelectedPlatform(null);
       setSelectedNetwork(null);
       setSelectedBetId(null);
-      setFormData({ withdrawalCode: '', phoneNumber: '', betid: '' });
+      setFormData({ withdrawalCode: '', phoneNumber: '', betid: '', amount: '' });
     } catch (err: unknown) {
       console.error('Withdrawal error:', err);
       if (err && typeof err === 'object' && 'response' in err) {
@@ -503,15 +530,48 @@ export default function Withdraw() {
               <p className="text-slate-400 text-sm">{t("Remplissez les détails de votre pari")}</p>
             </div>
           </div>
+          
+          {/* App Location Information */}
+          {selectedPlatform && (selectedPlatform.city || selectedPlatform.street) && (
+            <div className={`bg-gradient-to-r ${theme.colors.s_background} border border-slate-600/30 rounded-xl p-4 mb-6`}>
+              <div className="flex justify-between items-center">
+                <div className="flex items-center space-x-2">
+                  <span className="text-slate-400 dark:text-slate-500 text-sm">{t("City")}:</span>
+                  <span className="text-slate-900 dark:text-white font-medium">{selectedPlatform.city || 'N/A'}</span>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-slate-400 dark:text-slate-500 text-sm">{t("Street")}:</span>
+                  <span className="text-slate-900 dark:text-white font-medium">{selectedPlatform.street || 'N/A'}</span>
+                </div>
+              </div>
+            </div>
+          )}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium mb-1">{t("Bet ID")}</label>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t("Bet ID")}</label>
               <div className="font-mono text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900 rounded px-3 py-2">
                 {selectedBetId}
               </div>
             </div>
             <div>
-              <label htmlFor="withdrawalCode" className="block text-sm font-medium mb-1">
+              <label htmlFor="amount" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+                {t("Amount")}
+              </label>
+              <input
+                type="number"
+                id="amount"
+                name="amount"
+                value={formData.amount}
+                onChange={handleInputChange}
+                className="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400"
+                placeholder={t("Enter amount to withdraw")}
+                required
+                min="0"
+                step="0.01"
+              />
+            </div>
+            <div>
+              <label htmlFor="withdrawalCode" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                 {t("Withdrawal Code")}
               </label>
               <input
@@ -520,13 +580,13 @@ export default function Withdraw() {
                 name="withdrawalCode"
                 value={formData.withdrawalCode}
                 onChange={handleInputChange}
-                className="w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600"
+                className="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400"
                 placeholder={t("Enter your withdrawal code")}
                 required
               />
             </div>
             <div>
-              <label htmlFor="phoneNumber" className="block text-sm font-medium mb-1">
+              <label htmlFor="phoneNumber" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
                 {t("Phone Number")}
               </label>
               <input
@@ -535,17 +595,59 @@ export default function Withdraw() {
                 name="phoneNumber"
                 value={formData.phoneNumber}
                 onChange={handleInputChange}
-                className="w-full p-2 border rounded-md dark:bg-gray-700 dark:border-gray-600"
+                className="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400"
                 placeholder="e.g., 771234567"
                 required
               />
             </div>
+            
+            {/* Fee Calculation Display */}
+            {formData.amount && selectedNetwork && (
+              <div className={`bg-gradient-to-r ${theme.colors.s_background} border border-slate-300 dark:border-slate-600/30 rounded-xl p-4 space-y-3`}>
+                <h4 className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">{t("Transaction Summary")}</h4>
+                
+                <div className="space-y-2">
+                  <div className="flex justify-between items-center">
+                    <span className="text-slate-600 dark:text-slate-400 text-sm">{t("Amount to withdraw")}:</span>
+                    <span className="text-slate-900 dark:text-white font-medium">{originalAmount.toFixed(2)} FCFA</span>
+                  </div>
+                  
+                  {selectedNetwork.with_fee && selectedNetwork.fee_percent && (
+                    <>
+                      <div className="flex justify-between items-center">
+                        <span className="text-slate-600 dark:text-slate-400 text-sm">
+                          {t("Fee")} ({selectedNetwork.fee_percent}%):
+                        </span>
+                        <span className="text-red-600 dark:text-red-400 font-medium">-{feeAmount.toFixed(2)} FCFA</span>
+                      </div>
+                      
+                      <div className="border-t border-slate-300 dark:border-slate-600/30 pt-2">
+                        <div className="flex justify-between items-center">
+                          <span className="text-slate-700 dark:text-slate-300 font-medium">{t("You will receive")}:</span>
+                          <span className="text-green-600 dark:text-green-400 font-bold text-lg">{netAmount.toFixed(2)} FCFA</span>
+                        </div>
+                      </div>
+                    </>
+                  )}
+                  
+                  {!selectedNetwork.with_fee && (
+                    <div className="border-t border-slate-300 dark:border-slate-600/30 pt-2">
+                      <div className="flex justify-between items-center">
+                        <span className="text-slate-700 dark:text-slate-300 font-medium">{t("You will receive")}:</span>
+                        <span className="text-green-600 dark:text-green-400 font-bold text-lg">{originalAmount.toFixed(2)} FCFA</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+            
             {selectedPlatform?.withdrawal_link && (
               <div className="flex flex-col items-center gap-3 pt-2">
                 <button
                   type="button"
                   onClick={() => window.open(selectedPlatform.withdrawal_link, '_blank')}
-                  className="group relative flex items-center space-x-2 bg-blue-800/50 hover:bg-slate-600/50 px-4 py-2 rounded-xl border border-slate-600/30 transition-all duration-300"
+                  className={`group relative flex items-center space-x-2 bg-gradient-to-r ${theme.colors.s_background} hover:from-slate-600/50 hover:to-slate-500/50 px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-600/30 transition-all duration-300 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white`}
                 >
                   {/* <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
                     <span className="text-white font-bold text-sm">?</span>
@@ -560,7 +662,7 @@ export default function Withdraw() {
                     const url = selectedPlatform?.why_withdrawal_fail;
                     window.open(url, '_blank');
                   }}
-                  className="group relative flex items-center space-x-2 bg-blue-800/50 hover:bg-slate-600/50 px-4 py-2 rounded-xl border border-slate-600/30 transition-all duration-300"
+                  className={`group relative flex items-center space-x-2 bg-gradient-to-r ${theme.colors.s_background} hover:from-slate-600/50 hover:to-slate-500/50 px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-600/30 transition-all duration-300 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white`}
                 >
                   {selectedPlatform?.why_withdrawal_fail || t("Pourquoi le retrait échoue ?")}
                 </button>
@@ -570,7 +672,7 @@ export default function Withdraw() {
               <button
                 type="button"
                 onClick={() => setCurrentStep('manageBetId')}
-                className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                className="px-4 py-2 text-sm text-slate-600 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200"
               >
                 ← {t("Back")}
               </button>

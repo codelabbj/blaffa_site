@@ -86,7 +86,7 @@ const ThemeProvider = ({ children })=>{
     // Set theme mode and save to localStorage
     const setTheme = (mode)=>{
         setThemeMode(mode);
-        if ("TURBOPACK compile-time truthy", 1) {
+        if ("object" !== 'undefined' && mounted) {
             localStorage.setItem('theme', mode);
             applyTheme(mode);
         }
@@ -97,8 +97,16 @@ const ThemeProvider = ({ children })=>{
     };
     // Apply theme to document
     const applyTheme = (mode)=>{
+        if ("TURBOPACK compile-time falsy", 0) {
+            "TURBOPACK unreachable";
+        } // Guard for SSR
         const root = document.documentElement;
         const currentTheme = themes[mode];
+        // Guard against undefined theme
+        if (!currentTheme || !currentTheme.colors || !currentTheme.values) {
+            console.warn(`Theme '${mode}' not found or incomplete`);
+            return;
+        }
         // Apply color variables
         Object.entries(currentTheme.colors).forEach(([key, value])=>{
             if (typeof value === 'string' && value.startsWith('#')) {
@@ -149,9 +157,15 @@ const ThemeProvider = ({ children })=>{
     if (!mounted) {
         return null;
     }
+    // Ensure we have a valid theme before rendering
+    const currentTheme = themes[themeMode];
+    if (!currentTheme) {
+        console.error(`Invalid theme mode: ${themeMode}`);
+        return null;
+    }
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(ThemeContext.Provider, {
         value: {
-            theme: themes[themeMode],
+            theme: currentTheme,
             setTheme,
             toggleTheme
         },
@@ -160,12 +174,12 @@ const ThemeProvider = ({ children })=>{
             children: children
         }, void 0, false, {
             fileName: "[project]/src/components/ThemeProvider.tsx",
-            lineNumber: 260,
+            lineNumber: 275,
             columnNumber: 7
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/components/ThemeProvider.tsx",
-        lineNumber: 259,
+        lineNumber: 274,
         columnNumber: 5
     }, this);
 };
@@ -503,6 +517,29 @@ const resources = {
             "Network": "Network",
             "Processing...": "Processing...",
             "Submit my request": "Submit my request",
+            // New withdraw page translations
+            "Amount": "Amount",
+            "Enter amount to withdraw": "Enter amount to withdraw",
+            "Transaction Summary": "Transaction Summary",
+            "Amount to withdraw": "Amount to withdraw",
+            "Fee": "Fee",
+            "You will receive": "You will receive",
+            "City": "City",
+            "Street": "Street",
+            "Remplissez les détails de votre pari": "Fill in your bet details",
+            "Gérer vos IDs de pari": "Manage your bet IDs",
+            "Ajouter un ID de pari": "Add a bet ID",
+            "Vos IDs de pari enregistrés": "Your saved bet IDs",
+            "Aucun ID de pari enregistré.": "No bet ID saved.",
+            "Supprimer": "Delete",
+            "Choisissez la plateforme de pari que vous souhaitez utiliser": "Choose the betting platform you want to use",
+            "Aucune plateforme de pari trouvée": "No betting platform found",
+            "Aucune plateforme de pari n'est disponible pour le moment.": "No betting platform is available at the moment.",
+            "Choisissez votre réseau de paiement mobile": "Choose your mobile payment network",
+            "Back to Platforms": "Back to Platforms",
+            "Comment obtenir un code de retrait ?": "How to get a withdrawal code?",
+            "Pourquoi le retrait échoue ?": "Why does withdrawal fail?",
+            // "Back": "Back",
             //Deposit Page translations
             "Deposit Funds": "Deposit Funds",
             "Select Network": "Select Network",
@@ -526,7 +563,7 @@ const resources = {
             "Selected App": "Select App id",
             "Betting App ID": "Betting App ID",
             "Unknown App": "Unknown ",
-            "Amount": "Amount",
+            // "Amount": "Amount",
             "Enter deposit amount": "Enter deposit amount",
             "Selected Bet ID": "Selected Bet ID",
             "Enter your mobile money number": "Enter your mobile money number",
@@ -798,6 +835,29 @@ const resources = {
             "Network": "Réseau",
             "Processing...": "Traitement...",
             "Submit my request": "Soumettre ma demande",
+            // New withdraw page translations
+            "Amount": "Montant",
+            "Enter amount to withdraw": "Entrez le montant à retirer",
+            "Transaction Summary": "Résumé de la transaction",
+            "Amount to withdraw": "Montant à retirer",
+            "Fee": "Frais",
+            "You will receive": "Vous recevrez",
+            "City": "Ville",
+            "Street": "Rue",
+            "Remplissez les détails de votre pari": "Remplissez les détails de votre pari",
+            "Gérer vos IDs de pari": "Gérer vos IDs de pari",
+            "Ajouter un ID de pari": "Ajouter un ID de pari",
+            "Vos IDs de pari enregistrés": "Vos IDs de pari enregistrés",
+            "Aucun ID de pari enregistré.": "Aucun ID de pari enregistré.",
+            "Supprimer": "Supprimer",
+            "Choisissez la plateforme de pari que vous souhaitez utiliser": "Choisissez la plateforme de pari que vous souhaitez utiliser",
+            "Aucune plateforme de pari trouvée": "Aucune plateforme de pari trouvée",
+            "Aucune plateforme de pari n'est disponible pour le moment.": "Aucune plateforme de pari n'est disponible pour le moment.",
+            "Choisissez votre réseau de paiement mobile": "Choisissez votre réseau de paiement mobile",
+            "Back to Platforms": "Retour aux plateformes",
+            "Comment obtenir un code de retrait ?": "Comment obtenir un code de retrait ?",
+            "Pourquoi le retrait échoue ?": "Pourquoi le retrait échoue ?",
+            // "Back": "Retour",
             "Withdraw Funds": "Retirer des fonds",
             // Deposit Page translations
             "Deposit Funds": "Déposer des fonds",
@@ -823,7 +883,7 @@ const resources = {
             "Saved IDs": "IDs enregistrés",
             "Unknown App": "Appareil inconnu",
             "This is your 1xbet user ID": "Ceci est votre ID utilisateur 1xbet",
-            "Amount": "Montant",
+            // "Amount": "Montant",
             "Enter deposit amount": "Entrez le montant du dépôt",
             "Enter your mobile money number": "Entrez votre numéro de mobile money",
             "Your mobile money number": "Votre numéro de mobile money",

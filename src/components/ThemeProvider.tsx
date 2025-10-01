@@ -185,7 +185,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   // Set theme mode and save to localStorage
   const setTheme = (mode: ThemeMode) => {
     setThemeMode(mode);
-    if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined' && mounted) {
       localStorage.setItem('theme', mode);
       applyTheme(mode);
     }
@@ -198,8 +198,16 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   // Apply theme to document
   const applyTheme = (mode: ThemeMode) => {
+    if (typeof window === 'undefined') return; // Guard for SSR
+    
     const root = document.documentElement;
     const currentTheme = themes[mode];
+    
+    // Guard against undefined theme
+    if (!currentTheme || !currentTheme.colors || !currentTheme.values) {
+      console.warn(`Theme '${mode}' not found or incomplete`);
+      return;
+    }
     
     // Apply color variables
     Object.entries(currentTheme.colors).forEach(([key, value]) => {
@@ -255,8 +263,15 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     return null;
   }
 
+  // Ensure we have a valid theme before rendering
+  const currentTheme = themes[themeMode];
+  if (!currentTheme) {
+    console.error(`Invalid theme mode: ${themeMode}`);
+    return null;
+  }
+
   return (
-    <ThemeContext.Provider value={{ theme: themes[themeMode], setTheme, toggleTheme }}>
+    <ThemeContext.Provider value={{ theme: currentTheme, setTheme, toggleTheme }}>
       <div className={`${themeMode}-theme`}>
         {children}
       </div>
