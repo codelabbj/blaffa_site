@@ -243,6 +243,7 @@ export default function Withdraw() {
         network_id: selectedNetwork.id,
         app_id: selectedPlatform.id,
         user_app_id: selectedBetId,
+        source:'web',
         amount: parseFloat(formData.amount), // Send original amount, not fee-deducted amount
       }, {
         headers: { Authorization: `Bearer ${token}` }

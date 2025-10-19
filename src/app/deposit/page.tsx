@@ -299,6 +299,7 @@ export default function Deposits() {
         network_id: selectedNetwork.id,
         phone_number: formData.phoneNumber.replace(/\s+/g, ''),
         user_app_id: selectedBetId,
+        source:'web',
       };
 
       // const response = await api.post(`/blaffa/transaction?country_code=${countryCode}`, {
