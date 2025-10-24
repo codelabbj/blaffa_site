@@ -41,6 +41,8 @@ interface App {
   withdrawal_tuto_content?: string;
   withdrawal_link?: string;
   why_withdrawal_fail?: string;
+  minimum_withdrawal?: number;
+  maximum_withdrawal?: number;
   // why_withdrawal_fail_link?: string;
 }
 
@@ -91,6 +93,12 @@ export default function Withdraw() {
     phoneNumber: '',
     betid: '',
     amount: '',
+  });
+  
+  const [validationErrors, setValidationErrors] = useState({
+    amount: '',
+    withdrawalCode: '',
+    phoneNumber: '',
   });
   
   const [networks, setNetworks] = useState<Network[]>([]);
@@ -200,6 +208,88 @@ export default function Withdraw() {
       ...prev,
       [name]: value
     }));
+    
+    // Clear validation error when user starts typing
+    if (validationErrors[name as keyof typeof validationErrors]) {
+      setValidationErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
+  };
+
+  // Validation function for amount
+  const validateAmount = (amount: string): string => {
+    if (!amount || amount.trim() === '') {
+      return 'Le montant est requis';
+    }
+    
+    const numAmount = parseFloat(amount);
+    if (isNaN(numAmount)) {
+      return 'Veuillez saisir un montant valide';
+    }
+    
+    if (numAmount <= 0) {
+      return 'Le montant doit être supérieur à 0';
+    }
+    
+    // Use API-provided limits from selected platform, fallback to defaults
+    const minAmount = selectedPlatform?.minimum_withdrawal || 100;
+    const maxAmount = selectedPlatform?.maximum_withdrawal || 1000000;
+    
+    if (numAmount < minAmount) {
+      return `Le montant minimum est ${minAmount} FCFA`;
+    }
+    
+    if (numAmount > maxAmount) {
+      return `Le montant maximum est ${maxAmount} FCFA`;
+    }
+    
+    return '';
+  };
+
+  // Validation function for withdrawal code
+  const validateWithdrawalCode = (code: string): string => {
+    if (!code || code.trim() === '') {
+      return 'Le code de retrait est requis';
+    }
+    
+    if (code.trim().length < 3) {
+      return 'Le code de retrait doit contenir au moins 3 caractères';
+    }
+    
+    return '';
+  };
+
+  // Validation function for phone number
+  const validatePhoneNumber = (phone: string): string => {
+    if (!phone || phone.trim() === '') {
+      return 'Le numéro de téléphone est requis';
+    }
+    
+    // Remove spaces and check if it's a valid phone number format
+    const cleanPhone = phone.replace(/\s+/g, '');
+    const phoneRegex = /^[0-9]{8,12}$/; // 8-12 digits
+    
+    if (!phoneRegex.test(cleanPhone)) {
+      return 'Veuillez saisir un numéro de téléphone valide (8-12 chiffres)';
+    }
+    
+    return '';
+  };
+
+  // Validate all form fields
+  const validateForm = (): boolean => {
+    const errors = {
+      amount: validateAmount(formData.amount),
+      withdrawalCode: validateWithdrawalCode(formData.withdrawalCode),
+      phoneNumber: validatePhoneNumber(formData.phoneNumber),
+    };
+    
+    setValidationErrors(errors);
+    
+    // Return true if no errors
+    return !Object.values(errors).some(error => error !== '');
   };
 
   // Calculate fee and net amount
@@ -227,7 +317,13 @@ export default function Withdraw() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedPlatform || !selectedNetwork || !selectedBetId || !formData.amount) return;
+    
+    // Validate form before submission
+    if (!validateForm()) {
+      return;
+    }
+    
+    if (!selectedPlatform || !selectedNetwork || !selectedBetId) return;
     
     setLoading(true);
     try {
@@ -253,13 +349,14 @@ export default function Withdraw() {
       setSelectedTransaction({ transaction });
       setIsModalOpen(true);
       
-      setSuccess('Withdrawal initiated successfully!');
+      setSuccess('Retrait initié avec succès !');
       // Reset form
       setCurrentStep('selectId');
       setSelectedPlatform(null);
       setSelectedNetwork(null);
       setSelectedBetId(null);
       setFormData({ withdrawalCode: '', phoneNumber: '', betid: '', amount: '' });
+      setValidationErrors({ amount: '', withdrawalCode: '', phoneNumber: '' });
     } catch (err: unknown) {
       console.error('Withdrawal error:', err);
       if (err && typeof err === 'object' && 'response' in err) {
@@ -549,14 +646,14 @@ export default function Withdraw() {
           )}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t("Bet ID")}</label>
+              <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t("ID de pari")}</label>
               <div className="font-mono text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900 rounded px-3 py-2">
                 {selectedBetId}
               </div>
             </div>
             <div>
               <label htmlFor="amount" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-                {t("Amount")}
+                {t("Montant")} <span className="text-red-500">*</span>
               </label>
               <input
                 type="number"
@@ -564,16 +661,44 @@ export default function Withdraw() {
                 name="amount"
                 value={formData.amount}
                 onChange={handleInputChange}
-                className="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400"
-                placeholder={t("Enter amount to withdraw")}
+                className={`w-full p-2 border rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 ${
+                  validationErrors.amount 
+                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                    : 'border-slate-300 dark:border-slate-600 focus:border-blue-500 focus:ring-blue-500'
+                }`}
+                placeholder={`Saisissez le montant à retirer (${selectedPlatform?.minimum_withdrawal || 100} - ${selectedPlatform?.maximum_withdrawal || 1000000} FCFA)`}
                 required
-                min="0"
+                min={selectedPlatform?.minimum_withdrawal || 100}
+                max={selectedPlatform?.maximum_withdrawal || 1000000}
                 step="0.01"
               />
+              {validationErrors.amount && (
+                <p className="mt-1 text-sm text-red-500">{validationErrors.amount}</p>
+              )}
+              {/* Min/Max withdrawal info */}
+              {selectedPlatform && (
+                <div className="mt-2 text-xs flex flex-wrap gap-2 items-center">
+                  <span className={
+                    formData.amount && Number(formData.amount) < Number(selectedPlatform.minimum_withdrawal || 100)
+                      ? 'text-red-500 font-semibold'
+                      : 'text-gray-500'
+                  }>
+                    {t('Minimum withdrawal')}: {selectedPlatform.minimum_withdrawal || 100} FCFA
+                  </span>
+                  <span className="mx-2">|</span>
+                  <span className={
+                    formData.amount && Number(formData.amount) > Number(selectedPlatform.maximum_withdrawal || 1000000)
+                      ? 'text-red-500 font-semibold'
+                      : 'text-gray-500'
+                  }>
+                    {t('Maximum withdrawal')}: {selectedPlatform.maximum_withdrawal || 1000000} FCFA
+                  </span>
+                </div>
+              )}
             </div>
             <div>
               <label htmlFor="withdrawalCode" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-                {t("Withdrawal Code")}
+                {t("Code de retrait")} <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
@@ -581,14 +706,21 @@ export default function Withdraw() {
                 name="withdrawalCode"
                 value={formData.withdrawalCode}
                 onChange={handleInputChange}
-                className="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400"
-                placeholder={t("Enter your withdrawal code")}
+                className={`w-full p-2 border rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 ${
+                  validationErrors.withdrawalCode 
+                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                    : 'border-slate-300 dark:border-slate-600 focus:border-blue-500 focus:ring-blue-500'
+                }`}
+                placeholder="Saisissez votre code de retrait"
                 required
               />
+              {validationErrors.withdrawalCode && (
+                <p className="mt-1 text-sm text-red-500">{validationErrors.withdrawalCode}</p>
+              )}
             </div>
             <div>
               <label htmlFor="phoneNumber" className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-                {t("Phone Number")}
+                {t("Numéro de téléphone")} <span className="text-red-500">*</span>
               </label>
               <input
                 type="tel"
@@ -596,10 +728,17 @@ export default function Withdraw() {
                 name="phoneNumber"
                 value={formData.phoneNumber}
                 onChange={handleInputChange}
-                className="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400"
-                placeholder="e.g., 771234567"
+                className={`w-full p-2 border rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 ${
+                  validationErrors.phoneNumber 
+                    ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                    : 'border-slate-300 dark:border-slate-600 focus:border-blue-500 focus:ring-blue-500'
+                }`}
+                placeholder="ex: 771234567"
                 required
               />
+              {validationErrors.phoneNumber && (
+                <p className="mt-1 text-sm text-red-500">{validationErrors.phoneNumber}</p>
+              )}
             </div>
             
             {/* Fee Calculation Display */}

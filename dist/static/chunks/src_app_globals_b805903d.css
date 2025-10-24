@@ -4942,6 +4942,10 @@
     }
   }
 
+  .focus\:border-blue-500:focus {
+    border-color: var(--color-blue-500);
+  }
+
   .focus\:border-blue-500\/50:focus {
     border-color: #3080ff80;
   }
@@ -4950,6 +4954,10 @@
     .focus\:border-blue-500\/50:focus {
       border-color: color-mix(in oklab, var(--color-blue-500) 50%, transparent);
     }
+  }
+
+  .focus\:border-red-500:focus {
+    border-color: var(--color-red-500);
   }
 
   .focus\:border-red-500\/50:focus {

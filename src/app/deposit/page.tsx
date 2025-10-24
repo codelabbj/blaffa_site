@@ -45,6 +45,8 @@ interface App {
   public_name: string;
   minimun_deposit?: string;
   max_deposit?: string;
+  minimum_deposit?: number;
+  maximum_deposit?: number;
 }
 
 
@@ -127,6 +129,12 @@ export default function Deposits() {
     phoneNumber: '',
     betid: '',
     otp_code: '',// Add OTP field to form state
+  });
+  
+  const [validationErrors, setValidationErrors] = useState({
+    amount: '',
+    phoneNumber: '',
+    otp_code: '',
   });
   
   const [networks, setNetworks] = useState<{ id: string; name: string; public_name?: string; image?: string, otp_required?: boolean, tape_code?: string }[]>([]);
@@ -271,17 +279,107 @@ export default function Deposits() {
     }
   };
 
-  // const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const { name, value } = e.target;
-  //   setFormData(prev => ({
-  //     ...prev,
-  //     [name]: value
-  //   }));
-  // };
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+    
+    // Clear validation error when user starts typing
+    if (validationErrors[name as keyof typeof validationErrors]) {
+      setValidationErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }));
+    }
+  };
+
+  // Validation function for amount
+  const validateAmount = (amount: string): string => {
+    if (!amount || amount.trim() === '') {
+      return 'Le montant est requis';
+    }
+    
+    const numAmount = parseFloat(amount);
+    if (isNaN(numAmount)) {
+      return 'Veuillez saisir un montant valide';
+    }
+    
+    if (numAmount <= 0) {
+      return 'Le montant doit être supérieur à 0';
+    }
+    
+    // Use API-provided limits from selected platform, fallback to defaults
+    const minAmount = selectedPlatform?.minimum_deposit || parseFloat(selectedPlatform?.minimun_deposit || '100');
+    const maxAmount = selectedPlatform?.maximum_deposit || parseFloat(selectedPlatform?.max_deposit || '1000000');
+    
+    if (numAmount < minAmount) {
+      return `Le montant minimum est ${minAmount} FCFA`;
+    }
+    
+    if (numAmount > maxAmount) {
+      return `Le montant maximum est ${maxAmount} FCFA`;
+    }
+    
+    return '';
+  };
+
+  // Validation function for phone number
+  const validatePhoneNumber = (phone: string): string => {
+    if (!phone || phone.trim() === '') {
+      return 'Le numéro de téléphone est requis';
+    }
+    
+    // Remove spaces and check if it's a valid phone number format
+    const cleanPhone = phone.replace(/\s+/g, '');
+    const phoneRegex = /^[0-9]{8,12}$/; // 8-12 digits
+    
+    if (!phoneRegex.test(cleanPhone)) {
+      return 'Veuillez saisir un numéro de téléphone valide (8-12 chiffres)';
+    }
+    
+    return '';
+  };
+
+  // Validation function for OTP code
+  const validateOtpCode = (otp: string): string => {
+    if (selectedNetwork?.otp_required) {
+      if (!otp || otp.trim() === '') {
+        return 'Le code OTP est requis';
+      }
+      
+      if (otp.trim().length < 4) {
+        return 'Le code OTP doit contenir au moins 4 caractères';
+      }
+    }
+    
+    return '';
+  };
+
+  // Validate all form fields
+  const validateForm = (): boolean => {
+    const errors = {
+      amount: validateAmount(formData.amount),
+      phoneNumber: validatePhoneNumber(formData.phoneNumber),
+      otp_code: validateOtpCode(formData.otp_code),
+    };
+    
+    setValidationErrors(errors);
+    
+    // Return true if no errors
+    return !Object.values(errors).some(error => error !== '');
+  };
 
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate form before submission
+    if (!validateForm()) {
+      return;
+    }
+    
     if (!selectedPlatform || !selectedNetwork) return;
     
     setLoading(true);
@@ -326,12 +424,13 @@ export default function Deposits() {
       setSelectedTransaction({ transaction });
       setIsModalOpen(true);
       
-      setSuccess(t('Transaction initiated successfully!'));
+      setSuccess('Transaction initiée avec succès !');
       // Reset form
       setCurrentStep('selectId');
       setSelectedPlatform(null);
       setSelectedNetwork(null);
       setFormData({ amount: '', phoneNumber: '', betid: '', otp_code: '' });
+      setValidationErrors({ amount: '', phoneNumber: '', otp_code: '' });
     } catch (error) {
       console.error('Transaction error:', error);
   //     if (
@@ -655,38 +754,52 @@ export default function Deposits() {
     
     <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium mb-1">{t("Bet ID")}</label>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">{t("ID de pari")}</label>
           <div className="font-mono text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900 rounded px-3 py-2">
             {selectedBetId}
           </div>
         </div>
   
         <div>
-          <label className="block text-sm font-medium mb-1">{t("Amount")}</label>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+            {t("Montant")} <span className="text-red-500">*</span>
+          </label>
           <input
             type="number"
+            name="amount"
             value={formData.amount}
-            onChange={(e) => setFormData(prev => ({ ...prev, amount: e.target.value }))}
-            className="w-full p-2 border rounded"
-            placeholder={t("Enter amount")}
+            onChange={handleInputChange}
+            className={`w-full p-2 border rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 ${
+              validationErrors.amount 
+                ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                : 'border-slate-300 dark:border-slate-600 focus:border-blue-500 focus:ring-blue-500'
+            }`}
+            placeholder={`Saisissez le montant à déposer (${selectedPlatform?.minimum_deposit || selectedPlatform?.minimun_deposit || 100} - ${selectedPlatform?.maximum_deposit || selectedPlatform?.max_deposit || 1000000} FCFA)`}
+            required
+            min={selectedPlatform?.minimum_deposit || selectedPlatform?.minimun_deposit || 100}
+            max={selectedPlatform?.maximum_deposit || selectedPlatform?.max_deposit || 1000000}
+            step="0.01"
           />
+          {validationErrors.amount && (
+            <p className="mt-1 text-sm text-red-500">{validationErrors.amount}</p>
+          )}
           {/* Min/Max deposit info */}
           {selectedPlatform && (
             <div className="mt-2 text-xs flex flex-wrap gap-2 items-center">
               <span className={
-                formData.amount && Number(formData.amount) < Number(selectedPlatform.minimun_deposit)
+                formData.amount && Number(formData.amount) < Number(selectedPlatform.minimum_deposit || selectedPlatform.minimun_deposit || 100)
                   ? 'text-red-500 font-semibold'
                   : 'text-gray-500'
               }>
-                {t('Minimum deposit')}: {selectedPlatform.minimun_deposit} FCFA
+                {t('Minimum deposit')}: {selectedPlatform.minimum_deposit || selectedPlatform.minimun_deposit || 100} FCFA
               </span>
               <span className="mx-2">|</span>
               <span className={
-                formData.amount && Number(formData.amount) > Number(selectedPlatform.max_deposit)
+                formData.amount && Number(formData.amount) > Number(selectedPlatform.maximum_deposit || selectedPlatform.max_deposit || 1000000)
                   ? 'text-red-500 font-semibold'
                   : 'text-gray-500'
               }>
-                {t('Maximum deposit')}: {selectedPlatform.max_deposit} FCFA
+                {t('Maximum deposit')}: {selectedPlatform.maximum_deposit || selectedPlatform.max_deposit || 1000000} FCFA
               </span>
             </div>
           )}
@@ -694,32 +807,51 @@ export default function Deposits() {
 
         {selectedNetwork?.otp_required && (
           <div>
-            <label className="block text-sm font-medium mb-1">
-              {t("OTP Code")} <span className="text-red-500">*</span>
+            <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+              {t("Code OTP")} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
+              name="otp_code"
               value={formData.otp_code}
-              onChange={(e) => setFormData(prev => ({ ...prev, otp_code: e.target.value }))}
-              className="w-full p-2 border rounded"
-              placeholder={t("Enter OTP code")}
+              onChange={handleInputChange}
+              className={`w-full p-2 border rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 ${
+                validationErrors.otp_code 
+                  ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                  : 'border-slate-300 dark:border-slate-600 focus:border-blue-500 focus:ring-blue-500'
+              }`}
+              placeholder="Saisissez le code OTP"
               required={selectedNetwork?.otp_required}
             />
-            <p className="text-xs text-gray-500 mt-1">
+            {validationErrors.otp_code && (
+              <p className="mt-1 text-sm text-red-500">{validationErrors.otp_code}</p>
+            )}
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
               {selectedNetwork?.tape_code || t("Veuillez composer *133# puis l'option 1 pour valider le paiement")}
             </p>
           </div>
         )}
   
         <div>
-          <label className="block text-sm font-medium mb-1">{t("Phone Number")}</label>
+          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
+            {t("Numéro de téléphone")} <span className="text-red-500">*</span>
+          </label>
           <input
             type="tel"
+            name="phoneNumber"
             value={formData.phoneNumber}
-            onChange={(e) => setFormData(prev => ({ ...prev, phoneNumber: e.target.value }))}
-            className="w-full p-2 border rounded"
-            placeholder={t("Enter phone number")}
+            onChange={handleInputChange}
+            className={`w-full p-2 border rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 ${
+              validationErrors.phoneNumber 
+                ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
+                : 'border-slate-300 dark:border-slate-600 focus:border-blue-500 focus:ring-blue-500'
+            }`}
+            placeholder="ex: 771234567"
+            required
           />
+          {validationErrors.phoneNumber && (
+            <p className="mt-1 text-sm text-red-500">{validationErrors.phoneNumber}</p>
+          )}
         </div>
 
         <div className="flex justify-between pt-2">
