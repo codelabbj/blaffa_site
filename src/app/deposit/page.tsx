@@ -158,7 +158,7 @@ export default function Deposits() {
     if (!token) return;
 
     try {
-      const response = await api.get('/blaffa/app_name', {
+      const response = await api.get('/blaffa/app_name?operation_type=deposit', {
         headers: { 
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}` 

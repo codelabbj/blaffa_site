@@ -110,7 +110,7 @@ export default function Withdraw() {
     if (!token) return;
 
     try {
-      const response = await api.get('/blaffa/app_name', {
+      const response = await api.get('/blaffa/app_name?operation_type=withdrawal', {
         headers: { 
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}` 
