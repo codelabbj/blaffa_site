@@ -1,8 +1,7 @@
 {
-  "/_not-found/page": "app/_not-found/page.js",
-  "/bet_id/page": "app/bet_id/page.js",
+  "/auth/page": "app/auth/page.js",
   "/dashboard/page": "app/dashboard/page.js",
-  "/deposit/page": "app/deposit/page.js",
   "/favicon.ico/route": "app/favicon.ico/route.js",
-  "/page": "app/page.js"
+  "/page": "app/page.js",
+  "/privacy-policy/page": "app/privacy-policy/page.js"
 }
