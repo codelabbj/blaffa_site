@@ -56,7 +56,7 @@ export default function BetIdsPage() {
   const [modal, setModal] = useState<
     | null
     | { type: 'confirm'; data: ConfirmModalData }
-    | { type: 'error'; message: string }
+    | { type: 'error'; message: string; title?: string }
   >(null);
   const [pendingBetId, setPendingBetId] = useState<{ appId: string; betId: string } | null>(null);
 
@@ -155,6 +155,16 @@ export default function BetIdsPage() {
       });
       const searchData = searchResponse.data;
       if (searchData && searchData.UserId && searchData.UserId !== 0) {
+        // Check if CurrencyId is 27
+        if (searchData.CurrencyId !== 27) {
+          // Show error modal if CurrencyId is not 27
+          setModal({
+            type: 'error',
+            title: t('Compte non trouvé'),
+            message: t('Aucun compte n\'a été trouvé avec l\'ID {{betid}} ou votre compte n\'est pas configuré en Franc CFA (XOF - Afrique de l\'Ouest). Assurez-vous que l\'identifiant est correct et que votre compte est bien rattaché à la zone XOF, puis réessayez.', { betid: newAppId.trim() }),
+          });
+          return;
+        }
         // Show confirmation modal
         setModal({
           type: 'confirm',
@@ -169,12 +179,14 @@ export default function BetIdsPage() {
         // Show error modal
         setModal({
           type: 'error',
-          message: t('No account was found with the ID {{betid}}. Make sure it is spelled correctly and try again.', { betid: newAppId.trim() }),
+          title: t('Compte non trouvé'),
+          message: t('Aucun compte n\'a été trouvé avec l\'ID {{betid}}. Assurez-vous que l\'identifiant est correct et réessayez.', { betid: newAppId.trim() }),
         });
       }
     } catch {
       setModal({
         type: 'error',
+        title: t('Erreur de validation'),
         message: t('Échec de la validation de l\'ID de pari. Veuillez réessayer.'),
       });
     }
@@ -510,7 +522,7 @@ return (
     {/* Modal rendering */}
     {modal && (
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
-        <div className={`bg-gradient-to-r ${theme.colors.a_background} rounded-2xl shadow-2xl p-8 max-w-md w-full relative`}>
+        <div className={`${modal.type === 'error' ? 'bg-white' : `bg-gradient-to-r ${theme.colors.a_background}`} rounded-2xl shadow-2xl p-8 max-w-md w-full relative`}>
           {modal.type === 'confirm' ? (
             <>
               <h3 className="text-xl font-bold mb-4">{t('Confirmer l\'ID de pari')}</h3>
@@ -536,14 +548,14 @@ return (
             </>
           ) : (
             <>
-              <h3 className="text-xl font-bold mb-4 text-red-600">{t('ID de pari invalide')}</h3>
-              <div className="mb-4 text-slate-700 dark:text-slate-200">{modal.message}</div>
+              <h3 className="text-xl font-bold mb-4 text-gray-900">{modal.title || t('ID de pari invalide')}</h3>
+              <div className="mb-4 text-gray-700">{modal.message}</div>
               <div className="flex justify-end mt-6">
                 <button
-                  className="px-4 py-2 bg-gray-200 dark:bg-slate-700 rounded hover:bg-gray-300 dark:hover:bg-slate-600"
+                  className="px-4 py-2 text-blue-600 hover:text-blue-700 font-medium"
                   onClick={() => setModal(null)}
                 >
-                  {t('Fermer')}
+                  {t('Quitter')}
                 </button>
               </div>
             </>

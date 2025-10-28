@@ -15,6 +15,9 @@ import {
   ArrowUpRight, 
   Gift, 
   Coins,
+  MessageCircle,
+  X,
+  Send,
   // Bell,
   
 } from 'lucide-react';
@@ -27,6 +30,7 @@ import Advertisement_Hero from '../../components/Advertisement_Hero';
 export default function Dashboard() {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
+  const [isContactMenuOpen, setIsContactMenuOpen] = useState(false);
   // const [animateHeader, setAnimateHeader] = useState(false);
   const { theme } = useTheme();
 
@@ -56,6 +60,19 @@ export default function Dashboard() {
  
   return (
     <div className={`min-h-screen bg-gradient-to-br ${theme.colors.a_background} font-sans relative overflow-hidden`}>
+      <style jsx>{`
+        @keyframes slideIn {
+          from {
+            opacity: 0;
+            transform: translateY(10px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
+      
       {/* Background gradient effects */}
       <div className="absolute top-20 -left-10 w-40 h-40 bg-blue-700/20 rounded-full blur-3xl animate-pulse-slow"></div>
       <div className="absolute bottom-20 right-10 w-60 h-60 bg-blue-700/10 rounded-full blur-3xl animate-pulse-slow"></div>
@@ -78,7 +95,7 @@ export default function Dashboard() {
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Bienvenue sur Blaffa</h1>
-          <p className=" ">Gérez vos finances en toute simplicité</p>
+          <p className=" ">Télécharger l'application mobile</p>
         </div>
 
         <div className={`relative overflow-hidden rounded-3xl -mx-4 px-4 md:mx-0 md:px-8 py-4 md:py-8 `}>
@@ -196,27 +213,55 @@ export default function Dashboard() {
         {/* Transaction History */}
         <TransactionHistory/>
 
-        <div className="relative mb-4">
-          <a 
-            href="https://wa.me/+2250566643821" 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="group fixed bottom-24 right-6 z-40 flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-green-500 hover:bg-green-600 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 active:scale-95"
-          >
-            {/* Pulsing ring effect */}
-            <div className="absolute inset-0 rounded-full bg-green-400 animate-ping opacity-75"></div>
-            <div className="absolute inset-0 rounded-full bg-green-500 animate-pulse"></div>
-            
-            {/* WhatsApp Icon */}
-            <Image src='/whatsapp.png' width="64" height="64" className="text-white relative z-10 md:w-10 md:h-10" alt='whatsapp' />
-            
-            
-            {/* Tooltip */}
-            <div className="absolute right-full mr-3 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white px-3 py-2 rounded-lg text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap">
-              Contact us on WhatsApp
-              <div className="absolute top-1/2 left-full transform -translate-y-1/2 border-4 border-transparent border-l-gray-900"></div>
+        {/* Floating Contact Button */}
+        <div className="fixed bottom-24 right-6 z-40">
+          {/* Expanded Menu */}
+          {isContactMenuOpen && (
+            <div className="absolute bottom-20 right-0 flex flex-col-reverse gap-3 mb-2">
+              {/* Telegram Button */}
+              <a
+                href="https://t.me/manosservice"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 bg-white hover:bg-blue-50 rounded-full px-4 py-2 shadow-lg transition-all duration-300 animate-[slideIn_0.3s_ease-out] transform hover:scale-105"
+                onClick={() => setIsContactMenuOpen(false)}
+              >
+                <span className="text-sm font-medium text-gray-700">Telegram</span>
+                <div className="w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center shadow-md">
+                  <Send className="w-6 h-6 text-white" />
+                </div>
+              </a>
+              
+              {/* WhatsApp Button */}
+              <a
+                href="https://wa.me/+2250566643821"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 bg-white hover:bg-green-50 rounded-full px-4 py-2 shadow-lg transition-all duration-300 animate-[slideIn_0.3s_ease-out_0.1s_backwards] transform hover:scale-105"
+                onClick={() => setIsContactMenuOpen(false)}
+              >
+                <span className="text-sm font-medium text-gray-700">WhatsApp</span>
+                <div className="w-12 h-12 bg-green-500 rounded-full flex items-center justify-center shadow-md">
+                  <Image src='/whatsapp.png' width="24" height="24" className="w-6 h-6" alt='whatsapp' />
+                </div>
+              </a>
             </div>
-          </a>
+          )}
+          
+          {/* Main FAB Button */}
+          <button
+            onClick={() => setIsContactMenuOpen(!isContactMenuOpen)}
+            className="group flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-blue-600 hover:bg-blue-700 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 active:scale-95"
+          >
+            {/* Icon rotates when menu opens */}
+            <div className={`transform transition-transform duration-300 ${isContactMenuOpen ? 'rotate-90' : 'rotate-0'}`}>
+              {isContactMenuOpen ? (
+                <X className="w-8 h-8 text-white" />
+              ) : (
+                <MessageCircle className="w-8 h-8 text-white" />
+              )}
+            </div>
+          </button>
         </div>
         
         <Footer/>

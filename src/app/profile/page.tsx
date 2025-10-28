@@ -34,6 +34,7 @@ export default function Profile() {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
+  const [isUpdate, setIsUpdate] = useState(false);
 
   // Fetch user profile, apps, and saved app IDs on mount
   useEffect(() => {
@@ -60,6 +61,9 @@ export default function Profile() {
           phoneNumber: profileData.phone_number || '',
           // Assuming phoneCode is part of profileData if needed
         }));
+        
+        // Set isUpdate state based on the is_update field from API
+        setIsUpdate(profileData.is_update === true);
 
       } catch (error: unknown) {
         console.error('Error fetching profile data:', error);
@@ -454,7 +458,17 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                     </svg>
                   </div>
-                  <h2 className="text-2xl font-bold  group-hover:text-blue-200 transition-colors duration-300">{t("Personal Information")}</h2>
+                  <div>
+                    <h2 className="text-2xl font-bold  group-hover:text-blue-200 transition-colors duration-300">{t("Personal Information")}</h2>
+                    {isUpdate && (
+                      <p className="text-sm text-yellow-400 mt-1 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        {t("Profile is read-only")}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -468,7 +482,8 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
                       name="firstName"
                       value={formData.firstName}
                       onChange={handleChange}
-                      className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300`}
+                      disabled={isUpdate}
+                      className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 ${isUpdate ? 'cursor-not-allowed opacity-60' : ''}`}
                     />
                   </div>
 
@@ -483,7 +498,8 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
                       name="lastName"
                       value={formData.lastName}
                       onChange={handleChange}
-                      className={`w-full p-4 ${theme.colors.sl_background} border border-slate-600/50 rounded-xl placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300`}
+                      disabled={isUpdate}
+                      className={`w-full p-4 ${theme.colors.sl_background} border border-slate-600/50 rounded-xl placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 ${isUpdate ? 'cursor-not-allowed opacity-60' : ''}`}
                     />
                   </div>
 
@@ -503,7 +519,8 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
                         name="email"
                         value={formData.email}
                         onChange={handleChange}
-                        className={`w-full pl-12 p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300`}
+                        disabled={isUpdate}
+                        className={`w-full pl-12 p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 ${isUpdate ? 'cursor-not-allowed opacity-60' : ''}`}
                       />
                     </div>
                   </div>
@@ -520,7 +537,8 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
                           name="phoneCode"
                           value={formData.phoneCode}
                           onChange={handleChange}
-                          className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300`}
+                          disabled={isUpdate}
+                          className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 ${isUpdate ? 'cursor-not-allowed opacity-60' : ''}`}
                           placeholder="+1"
                         />
                       </div>
@@ -531,7 +549,8 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
                           name="phoneNumber"
                           value={formData.phoneNumber}
                           onChange={handleChange}
-                          className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl  placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300`}
+                          disabled={isUpdate}
+                          className={`w-full p-4 ${theme.colors.c_background} border border-slate-600/50 rounded-xl  placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500/50 transition-all duration-300 ${isUpdate ? 'cursor-not-allowed opacity-60' : ''}`}
                         />
                       </div>
                     </div>
@@ -540,7 +559,12 @@ if (loading) return <p className="p-6 text-center text-white">{t('Loading profil
 
                 <button
                   onClick={handleUpdateDetails}
-                  className="mt-8 px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-500 hover:to-blue-500 text-white rounded-xl transition-all duration-300 font-medium shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 hover:scale-105 flex items-center"
+                  disabled={isUpdate}
+                  className={`mt-8 px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-600 text-white rounded-xl transition-all duration-300 font-medium shadow-lg shadow-orange-500/25 flex items-center ${
+                    isUpdate 
+                      ? 'opacity-50 cursor-not-allowed' 
+                      : 'hover:from-blue-500 hover:to-blue-500 hover:shadow-orange-500/40 hover:scale-105'
+                  }`}
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-3m-1 4l-3 3m0 0l-3-3m3 3V4" />

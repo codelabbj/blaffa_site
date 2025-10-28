@@ -625,6 +625,18 @@ function BetIdsPage() {
             });
             const searchData = searchResponse.data;
             if (searchData && searchData.UserId && searchData.UserId !== 0) {
+                // Check if CurrencyId is 27
+                if (searchData.CurrencyId !== 27) {
+                    // Show error modal if CurrencyId is not 27
+                    setModal({
+                        type: 'error',
+                        title: t('Compte non trouvé'),
+                        message: t('Aucun compte n\'a été trouvé avec l\'ID {{betid}} ou votre compte n\'est pas configuré en Franc CFA (XOF - Afrique de l\'Ouest). Assurez-vous que l\'identifiant est correct et que votre compte est bien rattaché à la zone XOF, puis réessayez.', {
+                            betid: newAppId.trim()
+                        })
+                    });
+                    return;
+                }
                 // Show confirmation modal
                 setModal({
                     type: 'confirm',
@@ -642,7 +654,8 @@ function BetIdsPage() {
                 // Show error modal
                 setModal({
                     type: 'error',
-                    message: t('No account was found with the ID {{betid}}. Make sure it is spelled correctly and try again.', {
+                    title: t('Compte non trouvé'),
+                    message: t('Aucun compte n\'a été trouvé avec l\'ID {{betid}}. Assurez-vous que l\'identifiant est correct et réessayez.', {
                         betid: newAppId.trim()
                     })
                 });
@@ -650,6 +663,7 @@ function BetIdsPage() {
         } catch  {
             setModal({
                 type: 'error',
+                title: t('Erreur de validation'),
                 message: t('Échec de la validation de l\'ID de pari. Veuillez réessayer.')
             });
         }
@@ -759,25 +773,25 @@ function BetIdsPage() {
                         className: "animate-spin rounded-full h-16 w-16 border-4 border-blue-500/30 border-t-blue-500"
                     }, void 0, false, {
                         fileName: "[project]/src/app/bet_id/page.tsx",
-                        lineNumber: 289,
+                        lineNumber: 301,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 to-blue-500/20 animate-pulse"
                     }, void 0, false, {
                         fileName: "[project]/src/app/bet_id/page.tsx",
-                        lineNumber: 290,
+                        lineNumber: 302,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/bet_id/page.tsx",
-                lineNumber: 288,
+                lineNumber: 300,
                 columnNumber: 7
             }, this)
         }, void 0, false, {
             fileName: "[project]/src/app/bet_id/page.tsx",
-            lineNumber: 287,
+            lineNumber: 299,
             columnNumber: 5
         }, this);
     }
@@ -786,7 +800,7 @@ function BetIdsPage() {
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$DashboardHeader$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/src/app/bet_id/page.tsx",
-                lineNumber: 298,
+                lineNumber: 310,
                 columnNumber: 5
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("style", {
@@ -815,7 +829,7 @@ function BetIdsPage() {
       `
             }, void 0, false, {
                 fileName: "[project]/src/app/bet_id/page.tsx",
-                lineNumber: 299,
+                lineNumber: 311,
                 columnNumber: 5
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -829,7 +843,7 @@ function BetIdsPage() {
                                 children: error
                             }, void 0, false, {
                                 fileName: "[project]/src/app/bet_id/page.tsx",
-                                lineNumber: 331,
+                                lineNumber: 343,
                                 columnNumber: 11
                             }, this),
                             success && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -837,13 +851,13 @@ function BetIdsPage() {
                                 children: success
                             }, void 0, false, {
                                 fileName: "[project]/src/app/bet_id/page.tsx",
-                                lineNumber: 336,
+                                lineNumber: 348,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/bet_id/page.tsx",
-                        lineNumber: 329,
+                        lineNumber: 341,
                         columnNumber: 7
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -865,24 +879,24 @@ function BetIdsPage() {
                                         d: "M10 19l-7-7m0 0l7-7m-7 7h18"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/bet_id/page.tsx",
-                                        lineNumber: 352,
+                                        lineNumber: 364,
                                         columnNumber: 13
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/bet_id/page.tsx",
-                                    lineNumber: 351,
+                                    lineNumber: 363,
                                     columnNumber: 11
                                 }, this),
                                 t("Back")
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/bet_id/page.tsx",
-                            lineNumber: 347,
+                            lineNumber: 359,
                             columnNumber: 9
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/bet_id/page.tsx",
-                        lineNumber: 341,
+                        lineNumber: 353,
                         columnNumber: 7
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -897,7 +911,7 @@ function BetIdsPage() {
                                             className: "absolute inset-0 shimmer-effect opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/bet_id/page.tsx",
-                                            lineNumber: 365,
+                                            lineNumber: 377,
                                             columnNumber: 13
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -921,17 +935,17 @@ function BetIdsPage() {
                                                                     d: "M12 6v6m0 0v6m0-6h6m-6 0H6"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/bet_id/page.tsx",
-                                                                    lineNumber: 371,
+                                                                    lineNumber: 383,
                                                                     columnNumber: 21
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/bet_id/page.tsx",
-                                                                lineNumber: 370,
+                                                                lineNumber: 382,
                                                                 columnNumber: 19
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/bet_id/page.tsx",
-                                                            lineNumber: 369,
+                                                            lineNumber: 381,
                                                             columnNumber: 17
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -939,13 +953,13 @@ function BetIdsPage() {
                                                             children: t("Add New Bet ID")
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/bet_id/page.tsx",
-                                                            lineNumber: 374,
+                                                            lineNumber: 386,
                                                             columnNumber: 17
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/bet_id/page.tsx",
-                                                    lineNumber: 368,
+                                                    lineNumber: 380,
                                                     columnNumber: 15
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -958,7 +972,7 @@ function BetIdsPage() {
                                                                     children: t("App Name")
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/bet_id/page.tsx",
-                                                                    lineNumber: 379,
+                                                                    lineNumber: 391,
                                                                     columnNumber: 19
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -974,7 +988,7 @@ function BetIdsPage() {
                                                                                     children: t("Select App")
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/app/bet_id/page.tsx",
-                                                                                    lineNumber: 386,
+                                                                                    lineNumber: 398,
                                                                                     columnNumber: 23
                                                                                 }, this),
                                                                                 apps.map((app)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("option", {
@@ -982,13 +996,13 @@ function BetIdsPage() {
                                                                                         children: app.public_name || app.name
                                                                                     }, app.id, false, {
                                                                                         fileName: "[project]/src/app/bet_id/page.tsx",
-                                                                                        lineNumber: 388,
+                                                                                        lineNumber: 400,
                                                                                         columnNumber: 25
                                                                                     }, this))
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/src/app/bet_id/page.tsx",
-                                                                            lineNumber: 381,
+                                                                            lineNumber: 393,
                                                                             columnNumber: 21
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1005,29 +1019,29 @@ function BetIdsPage() {
                                                                                     d: "M19 9l-7 7-7-7"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/app/bet_id/page.tsx",
-                                                                                    lineNumber: 395,
+                                                                                    lineNumber: 407,
                                                                                     columnNumber: 25
                                                                                 }, this)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/app/bet_id/page.tsx",
-                                                                                lineNumber: 394,
+                                                                                lineNumber: 406,
                                                                                 columnNumber: 23
                                                                             }, this)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/app/bet_id/page.tsx",
-                                                                            lineNumber: 393,
+                                                                            lineNumber: 405,
                                                                             columnNumber: 21
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/app/bet_id/page.tsx",
-                                                                    lineNumber: 380,
+                                                                    lineNumber: 392,
                                                                     columnNumber: 19
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/bet_id/page.tsx",
-                                                            lineNumber: 378,
+                                                            lineNumber: 390,
                                                             columnNumber: 17
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1037,7 +1051,7 @@ function BetIdsPage() {
                                                                     children: t("User Bet ID")
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/bet_id/page.tsx",
-                                                                    lineNumber: 402,
+                                                                    lineNumber: 414,
                                                                     columnNumber: 19
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1048,13 +1062,13 @@ function BetIdsPage() {
                                                                     placeholder: t("Enter your bet ID")
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/bet_id/page.tsx",
-                                                                    lineNumber: 403,
+                                                                    lineNumber: 415,
                                                                     columnNumber: 19
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/bet_id/page.tsx",
-                                                            lineNumber: 401,
+                                                            lineNumber: 413,
                                                             columnNumber: 17
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1065,30 +1079,30 @@ function BetIdsPage() {
                                                                 children: t('Add Bet ID')
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/bet_id/page.tsx",
-                                                                lineNumber: 413,
+                                                                lineNumber: 425,
                                                                 columnNumber: 19
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/bet_id/page.tsx",
-                                                            lineNumber: 412,
+                                                            lineNumber: 424,
                                                             columnNumber: 17
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/bet_id/page.tsx",
-                                                    lineNumber: 377,
+                                                    lineNumber: 389,
                                                     columnNumber: 15
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/bet_id/page.tsx",
-                                            lineNumber: 367,
+                                            lineNumber: 379,
                                             columnNumber: 13
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/bet_id/page.tsx",
-                                    lineNumber: 363,
+                                    lineNumber: 375,
                                     columnNumber: 11
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1101,7 +1115,7 @@ function BetIdsPage() {
                                                     children: t("Saved Bet IDs")
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/bet_id/page.tsx",
-                                                    lineNumber: 427,
+                                                    lineNumber: 439,
                                                     columnNumber: 15
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1109,13 +1123,13 @@ function BetIdsPage() {
                                                     children: "Vos identifiants de paris sauvegardés"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/bet_id/page.tsx",
-                                                    lineNumber: 428,
+                                                    lineNumber: 440,
                                                     columnNumber: 15
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/bet_id/page.tsx",
-                                            lineNumber: 426,
+                                            lineNumber: 438,
                                             columnNumber: 13
                                         }, this),
                                         !savedAppIds || savedAppIds.length === 0 ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1136,17 +1150,17 @@ function BetIdsPage() {
                                                             d: "M9 12h.01M15 12h.01M12 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/bet_id/page.tsx",
-                                                            lineNumber: 435,
+                                                            lineNumber: 447,
                                                             columnNumber: 21
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/bet_id/page.tsx",
-                                                        lineNumber: 434,
+                                                        lineNumber: 446,
                                                         columnNumber: 19
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/bet_id/page.tsx",
-                                                    lineNumber: 433,
+                                                    lineNumber: 445,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -1154,7 +1168,7 @@ function BetIdsPage() {
                                                     children: t("No bet IDs saved yet")
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/bet_id/page.tsx",
-                                                    lineNumber: 438,
+                                                    lineNumber: 450,
                                                     columnNumber: 17
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1162,13 +1176,13 @@ function BetIdsPage() {
                                                     children: "Ajoutez votre premier ID de pari pour commencer à gérer vos identifiants."
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/bet_id/page.tsx",
-                                                    lineNumber: 439,
+                                                    lineNumber: 451,
                                                     columnNumber: 17
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/bet_id/page.tsx",
-                                            lineNumber: 432,
+                                            lineNumber: 444,
                                             columnNumber: 15
                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4",
@@ -1184,7 +1198,7 @@ function BetIdsPage() {
                                                             className: "absolute inset-0 shimmer-effect opacity-0 group-hover:opacity-100 transition-opacity duration-500"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/bet_id/page.tsx",
-                                                            lineNumber: 456,
+                                                            lineNumber: 468,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1211,17 +1225,17 @@ function BetIdsPage() {
                                                                                             d: "M9 12h.01M15 12h.01M12 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/src/app/bet_id/page.tsx",
-                                                                                            lineNumber: 463,
+                                                                                            lineNumber: 475,
                                                                                             columnNumber: 33
                                                                                         }, this)
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/src/app/bet_id/page.tsx",
-                                                                                        lineNumber: 462,
+                                                                                        lineNumber: 474,
                                                                                         columnNumber: 31
                                                                                     }, this)
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/app/bet_id/page.tsx",
-                                                                                    lineNumber: 461,
+                                                                                    lineNumber: 473,
                                                                                     columnNumber: 29
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1230,18 +1244,18 @@ function BetIdsPage() {
                                                                                         children: appName
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/src/app/bet_id/page.tsx",
-                                                                                        lineNumber: 467,
+                                                                                        lineNumber: 479,
                                                                                         columnNumber: 31
                                                                                     }, this)
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/app/bet_id/page.tsx",
-                                                                                    lineNumber: 466,
+                                                                                    lineNumber: 478,
                                                                                     columnNumber: 29
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/src/app/bet_id/page.tsx",
-                                                                            lineNumber: 460,
+                                                                            lineNumber: 472,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1261,23 +1275,23 @@ function BetIdsPage() {
                                                                                     d: "M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/app/bet_id/page.tsx",
-                                                                                    lineNumber: 479,
+                                                                                    lineNumber: 491,
                                                                                     columnNumber: 31
                                                                                 }, this)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/app/bet_id/page.tsx",
-                                                                                lineNumber: 478,
+                                                                                lineNumber: 490,
                                                                                 columnNumber: 29
                                                                             }, this)
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/app/bet_id/page.tsx",
-                                                                            lineNumber: 473,
+                                                                            lineNumber: 485,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/app/bet_id/page.tsx",
-                                                                    lineNumber: 459,
+                                                                    lineNumber: 471,
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1288,7 +1302,7 @@ function BetIdsPage() {
                                                                             children: "ID de pari"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/app/bet_id/page.tsx",
-                                                                            lineNumber: 485,
+                                                                            lineNumber: 497,
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1308,71 +1322,71 @@ function BetIdsPage() {
                                                                                         className: "h-4 w-4 text-gray-500"
                                                                                     }, void 0, false, {
                                                                                         fileName: "[project]/src/app/bet_id/page.tsx",
-                                                                                        lineNumber: 495,
+                                                                                        lineNumber: 507,
                                                                                         columnNumber: 27
                                                                                     }, this)
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/app/bet_id/page.tsx",
-                                                                                    lineNumber: 486,
+                                                                                    lineNumber: 498,
                                                                                     columnNumber: 84
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/src/app/bet_id/page.tsx",
-                                                                            lineNumber: 486,
+                                                                            lineNumber: 498,
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/app/bet_id/page.tsx",
-                                                                    lineNumber: 484,
+                                                                    lineNumber: 496,
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/bet_id/page.tsx",
-                                                            lineNumber: 458,
+                                                            lineNumber: 470,
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, item.id, true, {
                                                     fileName: "[project]/src/app/bet_id/page.tsx",
-                                                    lineNumber: 448,
+                                                    lineNumber: 460,
                                                     columnNumber: 21
                                                 }, this);
                                             })
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/bet_id/page.tsx",
-                                            lineNumber: 444,
+                                            lineNumber: 456,
                                             columnNumber: 15
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/bet_id/page.tsx",
-                                    lineNumber: 425,
+                                    lineNumber: 437,
                                     columnNumber: 11
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/bet_id/page.tsx",
-                            lineNumber: 360,
+                            lineNumber: 372,
                             columnNumber: 9
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/bet_id/page.tsx",
-                        lineNumber: 359,
+                        lineNumber: 371,
                         columnNumber: 7
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/bet_id/page.tsx",
-                lineNumber: 327,
+                lineNumber: 339,
                 columnNumber: 5
             }, this),
             modal && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm",
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: `bg-gradient-to-r ${theme.colors.a_background} rounded-2xl shadow-2xl p-8 max-w-md w-full relative`,
+                    className: `${modal.type === 'error' ? 'bg-white' : `bg-gradient-to-r ${theme.colors.a_background}`} rounded-2xl shadow-2xl p-8 max-w-md w-full relative`,
                     children: modal.type === 'confirm' ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -1380,7 +1394,7 @@ function BetIdsPage() {
                                 children: t('Confirmer l\'ID de pari')
                             }, void 0, false, {
                                 fileName: "[project]/src/app/bet_id/page.tsx",
-                                lineNumber: 516,
+                                lineNumber: 528,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1396,7 +1410,7 @@ function BetIdsPage() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/bet_id/page.tsx",
-                                                lineNumber: 518,
+                                                lineNumber: 530,
                                                 columnNumber: 22
                                             }, this),
                                             " ",
@@ -1404,7 +1418,7 @@ function BetIdsPage() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/bet_id/page.tsx",
-                                        lineNumber: 518,
+                                        lineNumber: 530,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1417,7 +1431,7 @@ function BetIdsPage() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/bet_id/page.tsx",
-                                                lineNumber: 519,
+                                                lineNumber: 531,
                                                 columnNumber: 22
                                             }, this),
                                             " ",
@@ -1425,7 +1439,7 @@ function BetIdsPage() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/bet_id/page.tsx",
-                                        lineNumber: 519,
+                                        lineNumber: 531,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1438,7 +1452,7 @@ function BetIdsPage() {
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/bet_id/page.tsx",
-                                                lineNumber: 520,
+                                                lineNumber: 532,
                                                 columnNumber: 22
                                             }, this),
                                             " ",
@@ -1446,13 +1460,13 @@ function BetIdsPage() {
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/bet_id/page.tsx",
-                                        lineNumber: 520,
+                                        lineNumber: 532,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/bet_id/page.tsx",
-                                lineNumber: 517,
+                                lineNumber: 529,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1467,7 +1481,7 @@ function BetIdsPage() {
                                         children: t('Annuler')
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/bet_id/page.tsx",
-                                        lineNumber: 523,
+                                        lineNumber: 535,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1476,66 +1490,66 @@ function BetIdsPage() {
                                         children: t('Confirmer')
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/bet_id/page.tsx",
-                                        lineNumber: 529,
+                                        lineNumber: 541,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/bet_id/page.tsx",
-                                lineNumber: 522,
+                                lineNumber: 534,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                className: "text-xl font-bold mb-4 text-red-600",
-                                children: t('ID de pari invalide')
+                                className: "text-xl font-bold mb-4 text-gray-900",
+                                children: modal.title || t('ID de pari invalide')
                             }, void 0, false, {
                                 fileName: "[project]/src/app/bet_id/page.tsx",
-                                lineNumber: 539,
+                                lineNumber: 551,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "mb-4 text-slate-700 dark:text-slate-200",
+                                className: "mb-4 text-gray-700",
                                 children: modal.message
                             }, void 0, false, {
                                 fileName: "[project]/src/app/bet_id/page.tsx",
-                                lineNumber: 540,
+                                lineNumber: 552,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "flex justify-end mt-6",
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                    className: "px-4 py-2 bg-gray-200 dark:bg-slate-700 rounded hover:bg-gray-300 dark:hover:bg-slate-600",
+                                    className: "px-4 py-2 text-blue-600 hover:text-blue-700 font-medium",
                                     onClick: ()=>setModal(null),
-                                    children: t('Fermer')
+                                    children: t('Quitter')
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/bet_id/page.tsx",
-                                    lineNumber: 542,
+                                    lineNumber: 554,
                                     columnNumber: 17
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/bet_id/page.tsx",
-                                lineNumber: 541,
+                                lineNumber: 553,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true)
                 }, void 0, false, {
                     fileName: "[project]/src/app/bet_id/page.tsx",
-                    lineNumber: 513,
+                    lineNumber: 525,
                     columnNumber: 9
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/bet_id/page.tsx",
-                lineNumber: 512,
+                lineNumber: 524,
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/bet_id/page.tsx",
-        lineNumber: 297,
+        lineNumber: 309,
         columnNumber: 3
     }, this);
 }
