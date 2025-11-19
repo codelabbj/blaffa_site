@@ -95,7 +95,15 @@ export default function Dashboard() {
         {/* Welcome Section */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold mb-2">Bienvenue sur Blaffa</h1>
-          <p className=" ">Télécharger l'application mobile</p>
+          <p className=" ">
+            <a 
+              href="https://api.blaffa.net/download_apk" 
+              download
+              className="text-blue-500 hover:text-blue-600 underline transition-colors"
+            >
+              Télécharger l'application mobile
+            </a>
+          </p>
         </div>
 
         <div className={`relative overflow-hidden rounded-3xl -mx-4 px-4 md:mx-0 md:px-8 py-4 md:py-8 `}>

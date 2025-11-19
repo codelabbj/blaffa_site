@@ -1,7 +1,7 @@
 
 "use client";
 import { useState, useEffect } from 'react'; // Removed MouseEvent import from react
-import { User, Bell, Download} from 'lucide-react';
+import { User, Bell} from 'lucide-react';
 import Image from 'next/image';
 import ThemeToggle from './ThemeToggle';
 //import LanguageToggle from './LanguageToggle';
@@ -113,32 +113,6 @@ const DashboardHeader = () => {
           </div>
           
           <div className="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
-            {/* Desktop Download Button */}
-            <button
-              onClick={() => handleMenuItemClick(() => {
-                window.location.href = 'https://api.blaffa.net/download_apk';
-              })}
-              className="hidden lg:flex px-3 py-2 items-center gap-2 hover:bg-gray-800 transition-colors text-left group rounded-lg max-w-fit"
-            >
-              <div className="w-8 h-8 rounded-lg bg-blue-500/20 flex items-center justify-center group-hover:bg-blue-500/30 transition-colors">
-                <Download size={16} className="text-blue-500" />
-              </div>
-              <span className="text-gray-400 group-hover:text-white transition-colors text-sm whitespace-nowrap">
-                {t("Télécharger l'application")}
-              </span>
-            </button>
-
-            {/* Mobile Download Button - Icon Only */}
-            <button
-              onClick={() => handleMenuItemClick(() => {
-                window.location.href = 'https://api.blaffa.net/download_apk';
-              })}
-              className="lg:hidden p-2 hover:bg-gray-800 transition-colors rounded-lg"
-              title={t("Télécharger l'application")}
-            >
-              <Download size={18} className="text-blue-500" />
-            </button>
-
             <a href='/notifications' className="relative p-2 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors">
               <Bell className="h-5 w-5 sm:h-6 sm:w-6" />
               {/* {notifications.some((n) => !n.is_read) && (

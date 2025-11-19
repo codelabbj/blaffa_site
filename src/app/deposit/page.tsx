@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 //import DashboardHeader from '@/components/DashboardHeader';
 import { useTheme } from '@/components/ThemeProvider';
 import { useWebSocket } from '../../context/WebSocketContext';
-import {  Check, CheckCircle, Smartphone, XCircle } from 'lucide-react';
+import {  Check, CheckCircle, Smartphone, XCircle, Copy } from 'lucide-react';
 import api from '@/lib/axios';
 import DashboardHeader from '@/components/DashboardHeader';
 // import { CopyIcon } from 'lucide-react';
@@ -25,6 +25,7 @@ interface Network {
   image?: string;
   otp_required?: boolean;
   message_init?: string;
+  deposit_api?: string;
 }
 
 interface App {
@@ -123,7 +124,7 @@ export default function Deposits() {
   const [currentStep, setCurrentStep] = useState<'selectId' | 'selectNetwork' | 'enterDetails' | 'manageBetId'>('selectId');
   const [selectedPlatform, setSelectedPlatform] = useState<App | null>(null);
   const [platforms, setPlatforms] = useState<App[]>([]);
-  const [selectedNetwork, setSelectedNetwork] = useState<{ id: string; name: string; public_name?: string; country_code?: string; image?: string, otp_required?: boolean, tape_code?: string } | null>(null);
+  const [selectedNetwork, setSelectedNetwork] = useState<{ id: string; name: string; public_name?: string; country_code?: string; image?: string, otp_required?: boolean, tape_code?: string, deposit_api?: string } | null>(null);
   const [formData, setFormData] = useState({
     amount: '',
     phoneNumber: '',
@@ -137,7 +138,7 @@ export default function Deposits() {
     otp_code: '',
   });
   
-  const [networks, setNetworks] = useState<{ id: string; name: string; public_name?: string; image?: string, otp_required?: boolean, tape_code?: string }[]>([]);
+  const [networks, setNetworks] = useState<{ id: string; name: string; public_name?: string; image?: string, otp_required?: boolean, tape_code?: string, deposit_api?: string }[]>([]);
   const [savedAppIds, setSavedAppIds] = useState<IdLink[]>([]); // Used in manageBetId and other steps
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -148,6 +149,10 @@ export default function Deposits() {
   const { theme } = useTheme();
   const { addMessageHandler } = useWebSocket();
   const [selectedBetId, setSelectedBetId] = useState<string | null>(null);
+  const [showMoovModal, setShowMoovModal] = useState(false);
+  const [moovUssdCode, setMoovUssdCode] = useState('');
+  const [moovMerchantPhone, setMoovMerchantPhone] = useState('');
+  const [copied, setCopied] = useState(false);
 
 
   useEffect(() => {
@@ -245,7 +250,7 @@ export default function Deposits() {
     setCurrentStep('selectNetwork');
   };
 
-  const handleNetworkSelect = (network: { id: string; name: string; public_name?: string; country_code?: string; image?: string, otp_required?: boolean, tape_code?: string }) => {
+  const handleNetworkSelect = (network: { id: string; name: string; public_name?: string; country_code?: string; image?: string, otp_required?: boolean, tape_code?: string, deposit_api?: string }) => {
     setSelectedNetwork(network);
     setCurrentStep('manageBetId');
   };
@@ -422,7 +427,14 @@ export default function Deposits() {
 
       const transaction = response.data;
       setSelectedTransaction({ transaction });
-      setIsModalOpen(true);
+      
+      // Check if Moov redirection should be triggered
+      if (shouldTriggerMoovRedirect(selectedNetwork)) {
+        const amount = parseFloat(formData.amount);
+        await handleMoovRedirect(amount);
+      } else {
+        setIsModalOpen(true);
+      }
       
       setSuccess('Transaction initiée avec succès !');
       // Reset form
@@ -534,6 +546,100 @@ export default function Deposits() {
     setIsModalOpen(false);
     setSelectedTransaction(null);
     setTransactionLink(null); // Reset link when closing modal
+  };
+
+  // Fetch settings to get merchant phone number
+  const fetchSettings = async (): Promise<string | null> => {
+    try {
+      const token = localStorage.getItem('accessToken');
+      if (!token) return null;
+
+      const response = await api.get('/blaffa/setting/', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (response.status === 200) {
+        const settings = response.data;
+        // Check for both possible field names
+        return settings.moov_merchant_phone || settings.moov_marchand_phone || null;
+      }
+      return null;
+    } catch (error) {
+      console.error('Error fetching settings:', error);
+      return null;
+    }
+  };
+
+  // Check if Moov redirection should be triggered
+  const shouldTriggerMoovRedirect = (network: { name?: string; deposit_api?: string } | null): boolean => {
+    if (!network) return false;
+    
+    const isMoov = network.name?.toLowerCase() === 'moov';
+    const hasConnectApi = network.deposit_api?.toLowerCase() === 'connect';
+    
+    return isMoov && hasConnectApi;
+  };
+
+  // Generate USSD code
+  const generateUssdCode = (merchantPhone: string, amount: number): string => {
+    const ussdAmount = Math.floor(amount * 0.99); // 99% of the transaction amount
+    return `*155*2*1*${merchantPhone}*${ussdAmount}#`;
+  };
+
+  // Attempt automatic dialer redirect
+  const attemptDialerRedirect = (ussdCode: string): void => {
+    try {
+      const link = document.createElement('a');
+      link.href = `tel:${ussdCode}`;
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+      setTimeout(() => {
+        document.body.removeChild(link);
+      }, 100);
+    } catch (error) {
+      console.error('Error attempting dialer redirect:', error);
+    }
+  };
+
+  // Handle Moov redirection flow
+  const handleMoovRedirect = async (amount: number): Promise<void> => {
+    const merchantPhone = await fetchSettings();
+    
+    if (!merchantPhone) {
+      console.warn('Moov merchant phone not found in settings');
+      return;
+    }
+
+    const ussdCode = generateUssdCode(merchantPhone, amount);
+    setMoovUssdCode(ussdCode);
+    setMoovMerchantPhone(merchantPhone);
+    
+    // Attempt automatic redirect
+    attemptDialerRedirect(ussdCode);
+    
+    // Always show modal as fallback
+    setShowMoovModal(true);
+  };
+
+  // Close Moov modal and redirect to dashboard
+  const closeMoovModal = (): void => {
+    setShowMoovModal(false);
+    // Redirect to dashboard after 2 seconds
+    setTimeout(() => {
+      window.location.href = '/dashboard';
+    }, 2000);
+  };
+
+  // Copy USSD code to clipboard
+  const copyUssdCode = async (): Promise<void> => {
+    try {
+      await navigator.clipboard.writeText(moovUssdCode);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      console.error('Error copying USSD code:', error);
+    }
   };
 
  const renderStep = () => {
@@ -1096,6 +1202,76 @@ export default function Deposits() {
             </div>
           </div>
         )}
+
+      {/* Moov USSD Modal */}
+      {showMoovModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 modal-backdrop">
+          <div className={`${theme.colors.background} rounded-lg shadow-xl w-full max-w-md modal-content`}>
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold">Code USSD Moov</h3>
+                <button 
+                  onClick={() => setShowMoovModal(false)}
+                  className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              
+              <div className="space-y-4">
+                <p className="text-sm text-gray-600 dark:text-gray-400">
+                  Veuillez copier et coller ce code dans votre application téléphone pour compléter le paiement.
+                </p>
+                
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Numéro du marchand
+                  </label>
+                  <div className="font-mono text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900 rounded px-3 py-2">
+                    {moovMerchantPhone}
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    Code USSD
+                  </label>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      readOnly
+                      value={moovUssdCode}
+                      className="flex-1 p-2 border rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white border-slate-300 dark:border-slate-600 font-mono text-sm"
+                    />
+                    <button
+                      onClick={copyUssdCode}
+                      className={`px-4 py-2 rounded-md transition-colors flex items-center gap-2 ${
+                        copied
+                          ? 'bg-green-600 text-white'
+                          : 'bg-blue-600 text-white hover:bg-blue-700'
+                      }`}
+                    >
+                      <Copy size={16} />
+                      {copied ? 'Copié!' : 'Copier'}
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div className="mt-6 flex justify-end">
+                <button
+                  onClick={closeMoovModal}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                >
+                  J'ai compris
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
