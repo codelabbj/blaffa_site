@@ -4645,12 +4645,6 @@
   }
 
   @media (hover: hover) {
-    .hover\:text-blue-600:hover {
-      color: var(--color-blue-600);
-    }
-  }
-
-  @media (hover: hover) {
     .hover\:text-blue-700:hover {
       color: var(--color-blue-700);
     }
