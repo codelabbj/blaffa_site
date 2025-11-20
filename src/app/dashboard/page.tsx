@@ -18,6 +18,7 @@ import {
   MessageCircle,
   X,
   Send,
+  Download,
   // Bell,
   
 } from 'lucide-react';
@@ -99,8 +100,9 @@ export default function Dashboard() {
             <a 
               href="https://api.blaffa.net/download_apk" 
               download
-              className="text-blue-500 hover:text-blue-600 underline transition-colors"
+              className="inline-flex items-center gap-2 bg-blue-600 text-white font-semibold px-4 py-2 rounded-full shadow hover:bg-blue-700 active:bg-blue-800 transition-colors"
             >
+              <Download size={18} />
               Télécharger l'application mobile
             </a>
           </p>
