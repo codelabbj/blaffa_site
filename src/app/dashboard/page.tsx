@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import Footer from '@/components/footer';
 import { useTheme } from '../../components/ThemeProvider';
 import DashboardHeader from '@/components/DashboardHeader';
+import api from '@/lib/axios';
 
 //import Advertisement_Hero from '@/components/Advertisement_Hero';
 //import { ArrowDownLeft, ArrowUpRight, Ticket, CreditCard } from 'lucide-react';
@@ -32,6 +33,7 @@ export default function Dashboard() {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [isContactMenuOpen, setIsContactMenuOpen] = useState(false);
+  const [telegramUrl, setTelegramUrl] = useState('https://t.me/manosservice'); // Default fallback
   // const [animateHeader, setAnimateHeader] = useState(false);
   const { theme } = useTheme();
 
@@ -43,6 +45,34 @@ export default function Dashboard() {
   
   
   
+  // Fetch settings to get telegram URL
+  useEffect(() => {
+    const fetchTelegramUrl = async () => {
+      try {
+        const token = localStorage.getItem('accessToken');
+        if (!token) return;
+
+        const response = await api.get('/blaffa/setting/', {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        if (response.status === 200) {
+          const settingsData = response.data;
+          const settings = Array.isArray(settingsData) ? settingsData[0] : settingsData;
+          
+          if (settings?.telegram) {
+            setTelegramUrl(settings.telegram);
+          }
+        }
+      } catch (error) {
+        console.error('Error fetching telegram URL from settings:', error);
+        // Keep default fallback URL
+      }
+    };
+
+    fetchTelegramUrl();
+  }, []);
+
   // Simulates loading state
   useEffect(() => {
     // setAnimateHeader(true);
@@ -230,7 +260,7 @@ export default function Dashboard() {
             <div className="absolute bottom-20 right-0 flex flex-col-reverse gap-3 mb-2">
               {/* Telegram Button */}
               <a
-                href="https://t.me/manosservice"
+                href={telegramUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 bg-white hover:bg-blue-50 rounded-full px-4 py-2 shadow-lg transition-all duration-300 animate-[slideIn_0.3s_ease-out] transform hover:scale-105"

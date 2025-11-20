@@ -559,9 +559,13 @@ export default function Deposits() {
       });
 
       if (response.status === 200) {
-        const settings = response.data;
-        // Check for both possible field names
-        return settings.moov_merchant_phone || settings.moov_marchand_phone || null;
+        const settingsData = response.data;
+        const settings = Array.isArray(settingsData) ? settingsData[0] : settingsData;
+        
+        if (!settings) return null;
+
+        // Use the correct merchant phone key provided by backend
+        return settings.moov_marchand_phone || null;
       }
       return null;
     } catch (error) {
