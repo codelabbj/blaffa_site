@@ -9,7 +9,7 @@ import { useTranslation } from 'react-i18next';
 // import styles from '../styles/Withdraw.module.css';
 //import DashboardHeader from '@/components/DashboardHeader';
 import { useTheme } from '../../components/ThemeProvider';
-import { Check, CheckCircle, Smartphone, XCircle } from 'lucide-react';
+import { Check, CheckCircle, Smartphone, XCircle, HelpCircle, AlertTriangle, ExternalLink } from 'lucide-react';
 import api from '@/lib/axios';
 import DashboardHeader from '@/components/DashboardHeader';
 
@@ -783,29 +783,36 @@ export default function Withdraw() {
             )}
             
             {selectedPlatform?.withdrawal_link && (
-              <div className="flex flex-col items-center gap-3 pt-2">
-                <button
-                  type="button"
-                  onClick={() => window.open(selectedPlatform.withdrawal_link, '_blank')}
-                  className={`group relative flex items-center space-x-2 bg-gradient-to-r ${theme.colors.s_background} hover:from-slate-600/50 hover:to-slate-500/50 px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-600/30 transition-all duration-300 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white`}
-                >
-                  {/* <div className="w-5 h-5 rounded-full bg-blue-500 flex items-center justify-center">
-                    <span className="text-white font-bold text-sm">?</span>
-                  </div> */}
-                  {t("Comment obtenir un code de retrait ?")}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    // If platform has a specific link for why withdrawal fails, use it
-                    // Otherwise, you can set a default URL here
-                    const url = selectedPlatform?.why_withdrawal_fail;
-                    window.open(url, '_blank');
-                  }}
-                  className={`group relative flex items-center space-x-2 bg-gradient-to-r ${theme.colors.s_background} hover:from-slate-600/50 hover:to-slate-500/50 px-4 py-2 rounded-xl border border-slate-300 dark:border-slate-600/30 transition-all duration-300 text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white`}
-                >
-                  {selectedPlatform?.why_withdrawal_fail || t("Pourquoi le retrait échoue ?")}
-                </button>
+              <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800/50 rounded-2xl">
+                <h4 className="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-4 text-center flex items-center justify-center gap-2">
+                  <HelpCircle className="w-4 h-4" />
+                  {t("Besoin d'aide avec votre retrait ?")}
+                </h4>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <button
+                    type="button"
+                    onClick={() => window.open(selectedPlatform.withdrawal_link, '_blank')}
+                    className="group relative flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 px-4 py-3 rounded-xl border border-blue-300 dark:border-blue-600 shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transition-all duration-300 text-white font-medium hover:scale-105"
+                  >
+                    <HelpCircle className="w-5 h-5" />
+                    <span>{t("Comment obtenir un code de retrait ?")}</span>
+                    <ExternalLink className="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity" />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const url = selectedPlatform?.why_withdrawal_fail;
+                      if (url) {
+                        window.open(url, '_blank');
+                      }
+                    }}
+                    className="group relative flex items-center justify-center space-x-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 px-4 py-3 rounded-xl border border-orange-300 dark:border-orange-600 shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-all duration-300 text-white font-medium hover:scale-105"
+                  >
+                    <AlertTriangle className="w-5 h-5" />
+                    <span>{t("Pourquoi le retrait échoue ?")}</span>
+                    <ExternalLink className="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity" />
+                  </button>
+                </div>
               </div>
             )}
             <div className="flex justify-between pt-2">
