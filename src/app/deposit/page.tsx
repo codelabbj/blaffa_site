@@ -20,13 +20,14 @@ import DashboardHeader from '@/components/DashboardHeader';
 interface Network {
   id: string;
   name: string;
-  public_name: string;
-  country_code: string;
+  public_name?: string;
+  country_code?: string;
   image?: string;
   otp_required?: boolean;
   message_init?: string;
   deposit_api?: string;
   deposit_message?: string;
+  tape_code?: string;
 }
 
 interface App {
@@ -125,7 +126,7 @@ export default function Deposits() {
   const [currentStep, setCurrentStep] = useState<'selectId' | 'selectNetwork' | 'enterDetails' | 'manageBetId'>('selectId');
   const [selectedPlatform, setSelectedPlatform] = useState<App | null>(null);
   const [platforms, setPlatforms] = useState<App[]>([]);
-  const [selectedNetwork, setSelectedNetwork] = useState<{ id: string; name: string; public_name?: string; country_code?: string; image?: string, otp_required?: boolean, tape_code?: string, deposit_api?: string } | null>(null);
+  const [selectedNetwork, setSelectedNetwork] = useState<Network | null>(null);
   const [formData, setFormData] = useState({
     amount: '',
     phoneNumber: '',
@@ -139,7 +140,7 @@ export default function Deposits() {
     otp_code: '',
   });
   
-  const [networks, setNetworks] = useState<{ id: string; name: string; public_name?: string; image?: string, otp_required?: boolean, tape_code?: string, deposit_api?: string }[]>([]);
+  const [networks, setNetworks] = useState<Network[]>([]);
   const [savedAppIds, setSavedAppIds] = useState<IdLink[]>([]); // Used in manageBetId and other steps
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -251,7 +252,7 @@ export default function Deposits() {
     setCurrentStep('selectNetwork');
   };
 
-  const handleNetworkSelect = (network: { id: string; name: string; public_name?: string; country_code?: string; image?: string, otp_required?: boolean, tape_code?: string, deposit_api?: string }) => {
+  const handleNetworkSelect = (network: Network) => {
     setSelectedNetwork(network);
     setCurrentStep('manageBetId');
   };
