@@ -305,33 +305,54 @@ export default function Deposits() {
     }
   };
 
+  // Get network-specific minimum amount
+  const getNetworkMinAmount = (): number => {
+    if (selectedNetwork?.name?.toLowerCase() === 'moov') {
+      return 505; // Moov minimum is 505 FCFA
+    } else if (selectedNetwork?.name?.toLowerCase() === 'orange') {
+      return 100; // Orange minimum is 100 FCFA
+    } else {
+      // Use platform-level minimum for other networks
+      return selectedPlatform?.minimum_deposit || parseFloat(selectedPlatform?.minimun_deposit || '100');
+    }
+  };
+
   // Validation function for amount
   const validateAmount = (amount: string): string => {
     if (!amount || amount.trim() === '') {
       return 'Le montant est requis';
     }
-    
+
     const numAmount = parseFloat(amount);
     if (isNaN(numAmount)) {
       return 'Veuillez saisir un montant valide';
     }
-    
+
     if (numAmount <= 0) {
       return 'Le montant doit être supérieur à 0';
     }
-    
-    // Use API-provided limits from selected platform, fallback to defaults
-    const minAmount = selectedPlatform?.minimum_deposit || parseFloat(selectedPlatform?.minimun_deposit || '100');
+
+    // Network-specific minimum amounts
+    let minAmount: number;
+    if (selectedNetwork?.name?.toLowerCase() === 'moov') {
+      minAmount = 505; // Moov minimum is 505 FCFA
+    } else if (selectedNetwork?.name?.toLowerCase() === 'orange') {
+      minAmount = 100; // Orange minimum is 100 FCFA
+    } else {
+      // Use platform-level minimum for other networks
+      minAmount = selectedPlatform?.minimum_deposit || parseFloat(selectedPlatform?.minimun_deposit || '100');
+    }
+
     const maxAmount = selectedPlatform?.maximum_deposit || parseFloat(selectedPlatform?.max_deposit || '1000000');
-    
+
     if (numAmount < minAmount) {
       return `Le montant minimum est ${minAmount} FCFA`;
     }
-    
+
     if (numAmount > maxAmount) {
       return `Le montant maximum est ${maxAmount} FCFA`;
     }
-    
+
     return '';
   };
 
@@ -969,9 +990,9 @@ export default function Deposits() {
                 ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
                 : 'border-slate-300 dark:border-slate-600 focus:border-blue-500 focus:ring-blue-500'
             }`}
-            placeholder={`Saisissez le montant à déposer (${selectedPlatform?.minimum_deposit || selectedPlatform?.minimun_deposit || 100} - ${selectedPlatform?.maximum_deposit || selectedPlatform?.max_deposit || 1000000} FCFA)`}
+            placeholder={`Saisissez le montant à déposer (${getNetworkMinAmount()} - ${selectedPlatform?.maximum_deposit || selectedPlatform?.max_deposit || 1000000} FCFA)`}
             required
-            min={selectedPlatform?.minimum_deposit || selectedPlatform?.minimun_deposit || 100}
+            min={getNetworkMinAmount()}
             max={selectedPlatform?.maximum_deposit || selectedPlatform?.max_deposit || 1000000}
             step="0.01"
           />
@@ -982,11 +1003,11 @@ export default function Deposits() {
           {selectedPlatform && (
             <div className="mt-2 text-xs flex flex-wrap gap-2 items-center">
               <span className={
-                formData.amount && Number(formData.amount) < Number(selectedPlatform.minimum_deposit || selectedPlatform.minimun_deposit || 100)
+                formData.amount && Number(formData.amount) < getNetworkMinAmount()
                   ? 'text-red-500 font-semibold'
                   : 'text-gray-500'
               }>
-                {t('Minimum deposit')}: {selectedPlatform.minimum_deposit || selectedPlatform.minimun_deposit || 100} FCFA
+                {t('Minimum deposit')}: {getNetworkMinAmount()} FCFA
               </span>
               <span className="mx-2">|</span>
               <span className={
