@@ -20,14 +20,13 @@ import DashboardHeader from '@/components/DashboardHeader';
 interface Network {
   id: string;
   name: string;
-  public_name?: string;
-  country_code?: string;
+  public_name: string;
+  country_code: string;
   image?: string;
   otp_required?: boolean;
   message_init?: string;
   deposit_api?: string;
   deposit_message?: string;
-  tape_code?: string;
 }
 
 interface App {
@@ -126,7 +125,7 @@ export default function Deposits() {
   const [currentStep, setCurrentStep] = useState<'selectId' | 'selectNetwork' | 'enterDetails' | 'manageBetId'>('selectId');
   const [selectedPlatform, setSelectedPlatform] = useState<App | null>(null);
   const [platforms, setPlatforms] = useState<App[]>([]);
-  const [selectedNetwork, setSelectedNetwork] = useState<Network | null>(null);
+  const [selectedNetwork, setSelectedNetwork] = useState<{ id: string; name: string; public_name?: string; country_code?: string; image?: string, otp_required?: boolean, tape_code?: string, deposit_api?: string, deposit_message?: string } | null>(null);
   const [formData, setFormData] = useState({
     amount: '',
     phoneNumber: '',
@@ -140,7 +139,7 @@ export default function Deposits() {
     otp_code: '',
   });
   
-  const [networks, setNetworks] = useState<Network[]>([]);
+  const [networks, setNetworks] = useState<{ id: string; name: string; public_name?: string; image?: string, otp_required?: boolean, tape_code?: string, deposit_api?: string }[]>([]);
   const [savedAppIds, setSavedAppIds] = useState<IdLink[]>([]); // Used in manageBetId and other steps
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -154,6 +153,10 @@ export default function Deposits() {
   const [showMoovModal, setShowMoovModal] = useState(false);
   const [moovUssdCode, setMoovUssdCode] = useState('');
   const [moovMerchantPhone, setMoovMerchantPhone] = useState('');
+  const [showOrangeModal, setShowOrangeModal] = useState(false);
+  const [orangeUssdCode, setOrangeUssdCode] = useState('');
+  const [orangeMerchantPhone, setOrangeMerchantPhone] = useState('');
+  const [orangeTransactionLink, setOrangeTransactionLink] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
 
@@ -252,7 +255,7 @@ export default function Deposits() {
     setCurrentStep('selectNetwork');
   };
 
-  const handleNetworkSelect = (network: Network) => {
+  const handleNetworkSelect = (network: { id: string; name: string; public_name?: string; country_code?: string; image?: string, otp_required?: boolean, tape_code?: string, deposit_api?: string }) => {
     setSelectedNetwork(network);
     setCurrentStep('manageBetId');
   };
@@ -433,7 +436,14 @@ export default function Deposits() {
       // Check if Moov redirection should be triggered
       if (shouldTriggerMoovRedirect(selectedNetwork)) {
         const amount = parseFloat(formData.amount);
-        await handleMoovRedirect(amount);
+        const countryCode = selectedNetwork.country_code;
+        await handleMoovRedirect(amount, countryCode);
+      }
+      // Check if Orange redirection should be triggered
+      else if (shouldTriggerOrangeRedirect(selectedNetwork)) {
+        const amount = parseFloat(formData.amount);
+        const countryCode = selectedNetwork.country_code;
+        await handleOrangeRedirect(amount, countryCode);
       } else {
         setIsModalOpen(true);
       }
@@ -551,7 +561,7 @@ export default function Deposits() {
   };
 
   // Fetch settings to get merchant phone number
-  const fetchSettings = async (): Promise<string | null> => {
+  const fetchSettings = async (networkName?: string, countryCode?: string): Promise<string | null> => {
     try {
       const token = localStorage.getItem('accessToken');
       if (!token) return null;
@@ -563,10 +573,27 @@ export default function Deposits() {
       if (response.status === 200) {
         const settingsData = response.data;
         const settings = Array.isArray(settingsData) ? settingsData[0] : settingsData;
-        
+
         if (!settings) return null;
 
-        // Use the correct merchant phone key provided by backend
+        // Handle different networks
+        if (networkName?.toLowerCase() === 'moov') {
+          if (countryCode?.toLowerCase() === 'bf') {
+            return settings.bf_moov_marchand_phone || settings.moov_marchand_phone || null;
+          } else if (countryCode?.toLowerCase() === 'ci') {
+            return settings.ci_moov_marchand_phone || settings.moov_marchand_phone || null;
+          }
+          return settings.moov_marchand_phone || null;
+        } else if (networkName?.toLowerCase() === 'orange') {
+          if (countryCode?.toLowerCase() === 'bf') {
+            return settings.bf_orange_marchand_phone || null;
+          } else if (countryCode?.toLowerCase() === 'ci') {
+            return settings.ci_orange_marchand_phone || null;
+          }
+          return settings.orange_marchand_phone || null;
+        }
+
+        // Default fallback
         return settings.moov_marchand_phone || null;
       }
       return null;
@@ -579,17 +606,32 @@ export default function Deposits() {
   // Check if Moov redirection should be triggered
   const shouldTriggerMoovRedirect = (network: { name?: string; deposit_api?: string } | null): boolean => {
     if (!network) return false;
-    
+
     const isMoov = network.name?.toLowerCase() === 'moov';
     const hasConnectApi = network.deposit_api?.toLowerCase() === 'connect';
-    
+
     return isMoov && hasConnectApi;
+  };
+
+  // Check if Orange redirection should be triggered
+  const shouldTriggerOrangeRedirect = (network: { name?: string; deposit_api?: string } | null): boolean => {
+    if (!network) return false;
+
+    const isOrange = network.name?.toLowerCase() === 'orange';
+    const hasConnectApi = network.deposit_api?.toLowerCase() === 'connect';
+
+    return isOrange && hasConnectApi;
   };
 
   // Generate USSD code
   const generateUssdCode = (merchantPhone: string, amount: number): string => {
     const ussdAmount = Math.floor(amount * 0.99); // 99% of the transaction amount
     return `*155*2*1*${merchantPhone}*${ussdAmount}#`;
+  };
+
+  // Generate Orange USSD code
+  const generateOrangeUssdCode = (merchantPhone: string, amount: number): string => {
+    return `*144*2*1*${merchantPhone}*${amount}#`;
   };
 
   // Attempt automatic dialer redirect
@@ -609,9 +651,9 @@ export default function Deposits() {
   };
 
   // Handle Moov redirection flow
-  const handleMoovRedirect = async (amount: number): Promise<void> => {
-    const merchantPhone = await fetchSettings();
-    
+  const handleMoovRedirect = async (amount: number, countryCode?: string): Promise<void> => {
+    const merchantPhone = await fetchSettings('moov', countryCode);
+
     if (!merchantPhone) {
       console.warn('Moov merchant phone not found in settings');
       return;
@@ -620,17 +662,47 @@ export default function Deposits() {
     const ussdCode = generateUssdCode(merchantPhone, amount);
     setMoovUssdCode(ussdCode);
     setMoovMerchantPhone(merchantPhone);
-    
+
     // Attempt automatic redirect
     attemptDialerRedirect(ussdCode);
-    
+
     // Always show modal as fallback
     setShowMoovModal(true);
+  };
+
+  // Handle Orange redirection flow
+  const handleOrangeRedirect = async (amount: number, countryCode?: string): Promise<void> => {
+    const merchantPhone = await fetchSettings('orange', countryCode);
+
+    if (!merchantPhone) {
+      console.warn('Orange merchant phone not found in settings');
+      return;
+    }
+
+    const ussdCode = generateOrangeUssdCode(merchantPhone, amount);
+    setOrangeUssdCode(ussdCode);
+    setOrangeMerchantPhone(merchantPhone);
+
+    // Attempt automatic dialer redirect
+    attemptDialerRedirect(ussdCode);
+
+    // Always show modal as fallback
+    setShowOrangeModal(true);
   };
 
   // Close Moov modal and redirect to dashboard
   const closeMoovModal = (): void => {
     setShowMoovModal(false);
+    // Redirect to dashboard after 2 seconds
+    setTimeout(() => {
+      window.location.href = '/dashboard';
+    }, 2000);
+  };
+
+  // Close Orange modal and redirect to dashboard
+  const closeOrangeModal = (): void => {
+    setShowOrangeModal(false);
+    setOrangeTransactionLink(null);
     // Redirect to dashboard after 2 seconds
     setTimeout(() => {
       window.location.href = '/dashboard';
@@ -645,6 +717,17 @@ export default function Deposits() {
       setTimeout(() => setCopied(false), 2000);
     } catch (error) {
       console.error('Error copying USSD code:', error);
+    }
+  };
+
+  // Copy Orange USSD code to clipboard
+  const copyOrangeUssdCode = async (): Promise<void> => {
+    try {
+      await navigator.clipboard.writeText(orangeUssdCode);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (error) {
+      console.error('Error copying Orange USSD code:', error);
     }
   };
 
@@ -1284,6 +1367,96 @@ export default function Deposits() {
                 <button
                   onClick={closeMoovModal}
                   className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                >
+                  J'ai compris
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Orange USSD Modal */}
+      {showOrangeModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 modal-backdrop">
+          <div className={`${theme.colors.background} rounded-lg shadow-xl w-full max-w-md modal-content`}>
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold">Paiement Orange</h3>
+                <button
+                  onClick={() => setShowOrangeModal(false)}
+                  className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                {orangeTransactionLink ? (
+                  // Show transaction link button
+                  <>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Cliquez sur le bouton ci-dessous pour continuer votre paiement.
+                    </p>
+                    <div className="mt-6 flex justify-center">
+                      <button
+                        onClick={() => window.open(orangeTransactionLink, '_blank', 'noopener,noreferrer')}
+                        className="px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center gap-2"
+                      >
+                        Continuer le paiement
+                      </button>
+                    </div>
+                  </>
+                ) : (
+                  // Show USSD code
+                  <>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Veuillez copier et coller ce code dans votre application téléphone pour compléter le paiement.
+                    </p>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Numéro du marchand
+                      </label>
+                      <div className="font-mono text-orange-700 dark:text-orange-300 bg-orange-50 dark:bg-orange-900 rounded px-3 py-2">
+                        {orangeMerchantPhone}
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        Code USSD
+                      </label>
+                      <div className="flex items-center gap-2">
+                        <input
+                          type="text"
+                          readOnly
+                          value={orangeUssdCode}
+                          className="flex-1 p-2 border rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white border-slate-300 dark:border-slate-600 font-mono text-sm"
+                        />
+                        <button
+                          onClick={copyOrangeUssdCode}
+                          className={`px-4 py-2 rounded-md transition-colors flex items-center gap-2 ${
+                            copied
+                              ? 'bg-green-600 text-white'
+                              : 'bg-orange-600 text-white hover:bg-orange-700'
+                          }`}
+                        >
+                          <Copy size={16} />
+                          {copied ? 'Copié!' : 'Copier'}
+                        </button>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
+
+              <div className="mt-6 flex justify-end">
+                <button
+                  onClick={closeOrangeModal}
+                  className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
                 >
                   J'ai compris
                 </button>
