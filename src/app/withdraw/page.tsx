@@ -327,6 +327,31 @@ export default function Withdraw() {
     return `${indication}${phoneNumber}`;
   };
 
+  // Strip indication from phone number for transaction requests
+  const stripPhoneIndication = (phoneNumber: string): string => {
+    if (!selectedNetwork?.indication || !phoneNumber) return phoneNumber;
+
+    const indication = selectedNetwork.indication;
+
+    // Remove + prefix from indication for comparison
+    const indicationWithoutPlus = indication.replace('+', '');
+
+    // If phone starts with +, remove the indication part
+    if (phoneNumber.startsWith('+')) {
+      if (phoneNumber.startsWith(indication)) {
+        return phoneNumber.substring(indication.length);
+      }
+    }
+
+    // If phone starts with indication without +, remove it
+    if (phoneNumber.startsWith(indicationWithoutPlus)) {
+      return phoneNumber.substring(indicationWithoutPlus.length);
+    }
+
+    // Return as-is if no indication found
+    return phoneNumber;
+  };
+
   // Phone management handlers
   const handlePhoneSelect = (phone: UserPhone) => {
     setSelectedPhone(phone);
@@ -490,9 +515,9 @@ export default function Withdraw() {
       withdrawalCode: validateWithdrawalCode(formData.withdrawalCode),
       phoneNumber: '', // No longer need to validate phone input
     };
-
+    
     setValidationErrors(errors);
-
+    
     // Return true if no errors
     return !Object.values(errors).some(error => error !== '');
   };
@@ -540,7 +565,7 @@ export default function Withdraw() {
       const response = await api.post(`/blaffa/transaction?country_code=${countryCode}`, {
         type_trans: 'withdrawal',
         withdriwal_code: formData.withdrawalCode,
-        phone_number: selectedPhone?.phone || '',
+        phone_number: selectedPhone ? stripPhoneIndication(selectedPhone.phone) : '',
         network_id: selectedNetwork.id,
         app_id: selectedPlatform.id,
         user_app_id: selectedBetId,
@@ -738,7 +763,7 @@ export default function Withdraw() {
             </div>
           </div>
         );
-
+        
       case 'selectPhone':
         return (
           <div className="space-y-6">
@@ -862,7 +887,7 @@ export default function Withdraw() {
         return (
           <div className="space-y-6">
             <div className="flex items-center mb-8">
-              <button
+              <button 
                 onClick={() => setCurrentStep('selectPhone')}
                 className="group mr-4 p-2 rounded-xl border border-slate-600/30 hover:text-blue-400 hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/20"
               >

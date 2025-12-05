@@ -224,6 +224,31 @@ export default function Deposits() {
     return `${indication}${phoneNumber}`;
   };
 
+  // Strip indication from phone number for transaction requests
+  const stripPhoneIndication = (phoneNumber: string): string => {
+    if (!selectedNetwork?.indication || !phoneNumber) return phoneNumber;
+
+    const indication = selectedNetwork.indication;
+
+    // Remove + prefix from indication for comparison
+    const indicationWithoutPlus = indication.replace('+', '');
+
+    // If phone starts with +, remove the indication part
+    if (phoneNumber.startsWith('+')) {
+      if (phoneNumber.startsWith(indication)) {
+        return phoneNumber.substring(indication.length);
+      }
+    }
+
+    // If phone starts with indication without +, remove it
+    if (phoneNumber.startsWith(indicationWithoutPlus)) {
+      return phoneNumber.substring(indicationWithoutPlus.length);
+    }
+
+    // Return as-is if no indication found
+    return phoneNumber;
+  };
+
   // Fetch networks and saved app IDs on component mount
   const fetchPlatforms = async () => {
     const token = localStorage.getItem('accessToken');
@@ -600,9 +625,9 @@ export default function Deposits() {
       phoneNumber: '', // No longer need to validate phone input
       otp_code: validateOtpCode(formData.otp_code),
     };
-
+    
     setValidationErrors(errors);
-
+    
     // Return true if no errors
     return !Object.values(errors).some(error => error !== '');
   };
@@ -631,7 +656,7 @@ export default function Deposits() {
         amount: formData.amount,
         app_id: selectedPlatform.id,
         network_id: selectedNetwork.id,
-        phone_number: selectedPhone?.phone || '',
+        phone_number: selectedPhone ? stripPhoneIndication(selectedPhone.phone) : '',
         user_app_id: selectedBetId,
         source:'web',
       };
@@ -1032,7 +1057,7 @@ export default function Deposits() {
         return (
           <div className="space-y-6">
             <div className="flex items-center mb-8">
-              <button
+              <button 
                 onClick={() => setCurrentStep('selectPhone')}
                 className="group mr-4 p-2 rounded-xl border border-slate-600/30 hover:text-blue-400 hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/20"
               >
@@ -1151,7 +1176,7 @@ export default function Deposits() {
             </div>
           </div>
         );
-
+        
       case 'selectPhone':
         return (
           <div className="space-y-6">
