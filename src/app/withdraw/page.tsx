@@ -20,6 +20,7 @@ interface Network {
   public_name?: string;
   country_code?: string;
   indication?: string;
+  placeholder?: string;
   image?: string;
   with_fee?: boolean;
   fee_percent?: number;
@@ -360,6 +361,12 @@ export default function Withdraw() {
 
   const handleAddPhone = async () => {
     if (!selectedNetwork || !newPhoneNumber.trim()) return;
+
+    // Validate phone number length
+    if (newPhoneNumber.length > 10) {
+      setError(`Numéro de téléphone invalide. Le numéro ne doit pas dépasser 10 chiffres. Exemple: ${selectedNetwork.placeholder || '771234567'}`);
+      return;
+    }
 
     // Format the phone number with country code before sending to API
     const formattedPhone = newPhoneNumber.startsWith('+')
@@ -1502,11 +1509,9 @@ export default function Withdraw() {
                     value={newPhoneNumber}
                     onChange={(e) => setNewPhoneNumber(e.target.value)}
                     className="w-full p-2 border rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white border-slate-300 dark:border-slate-600"
-                    placeholder="ex: 771234567"
+                    placeholder={selectedNetwork?.placeholder || "Entrez votre numéro"}
+                    maxLength={10}
                   />
-                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                    {t("Entrez le numéro sans le préfixe +225")}
-                  </p>
                 </div>
               </div>
 
