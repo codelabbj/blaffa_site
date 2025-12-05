@@ -22,6 +22,7 @@ interface Network {
   name: string;
   public_name: string;
   country_code: string;
+  indication?: string;
   image?: string;
   otp_required?: boolean;
   message_init?: string;
@@ -63,6 +64,14 @@ interface IdLink {
 interface WebSocketMessage {
   type: string;
   data?: string;
+}
+
+interface UserPhone {
+  id: string;
+  phone: string;
+  network: number;
+  network_name?: string;
+  is_default?: boolean;
 }
 
 interface Transaction {
@@ -122,10 +131,10 @@ interface ApiError extends Error {
 
 export default function Deposits() {
   const { t } = useTranslation();
-  const [currentStep, setCurrentStep] = useState<'selectId' | 'selectNetwork' | 'enterDetails' | 'manageBetId'>('selectId');
+  const [currentStep, setCurrentStep] = useState<'selectId' | 'selectNetwork' | 'selectPhone' | 'manageBetId' | 'enterDetails'>('selectId');
   const [selectedPlatform, setSelectedPlatform] = useState<App | null>(null);
   const [platforms, setPlatforms] = useState<App[]>([]);
-  const [selectedNetwork, setSelectedNetwork] = useState<{ id: string; name: string; public_name?: string; country_code?: string; image?: string, otp_required?: boolean, tape_code?: string, deposit_api?: string, deposit_message?: string } | null>(null);
+  const [selectedNetwork, setSelectedNetwork] = useState<{ id: string; name: string; public_name?: string; country_code?: string; indication?: string; image?: string, otp_required?: boolean, tape_code?: string, deposit_api?: string, deposit_message?: string } | null>(null);
   const [formData, setFormData] = useState({
     amount: '',
     phoneNumber: '',
@@ -139,7 +148,7 @@ export default function Deposits() {
     otp_code: '',
   });
   
-  const [networks, setNetworks] = useState<{ id: string; name: string; public_name?: string; image?: string, otp_required?: boolean, tape_code?: string, deposit_api?: string }[]>([]);
+  const [networks, setNetworks] = useState<{ id: string; name: string; public_name?: string; indication?: string; image?: string, otp_required?: boolean, tape_code?: string, deposit_api?: string }[]>([]);
   const [savedAppIds, setSavedAppIds] = useState<IdLink[]>([]); // Used in manageBetId and other steps
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -159,6 +168,15 @@ export default function Deposits() {
   const [orangeTransactionLink, setOrangeTransactionLink] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
 
+  // Phone number management state
+  const [userPhones, setUserPhones] = useState<UserPhone[]>([]);
+  const [selectedPhone, setSelectedPhone] = useState<UserPhone | null>(null);
+  const [phoneLoading, setPhoneLoading] = useState(false);
+  const [showAddPhoneModal, setShowAddPhoneModal] = useState(false);
+  const [showEditPhoneModal, setShowEditPhoneModal] = useState(false);
+  const [phoneToEdit, setPhoneToEdit] = useState<UserPhone | null>(null);
+  const [newPhoneNumber, setNewPhoneNumber] = useState('');
+
 
   useEffect(() => {
     const handleTransactionLink = (data: WebSocketMessage) => {
@@ -169,6 +187,42 @@ export default function Deposits() {
     const removeHandler = addMessageHandler(handleTransactionLink);
     return () => removeHandler();
   }, [addMessageHandler]);
+
+  // Auto-hide error messages after 20 seconds
+  useEffect(() => {
+    if (error) {
+      const timer = setTimeout(() => {
+        setError('');
+      }, 20000); // 20 seconds
+
+      return () => clearTimeout(timer);
+    }
+  }, [error]);
+
+  // Format phone number with indication from selected network
+  const formatPhoneWithCountryCode = (phoneNumber: string): string => {
+    if (!selectedNetwork?.indication || !phoneNumber) return phoneNumber;
+
+    const indication = selectedNetwork.indication;
+
+    // If phone already starts with +, return as-is
+    if (phoneNumber.startsWith('+')) {
+      return phoneNumber;
+    }
+
+    // If phone already starts with the indication, add +
+    if (phoneNumber.startsWith(indication.replace('+', ''))) {
+      return `+${phoneNumber}`;
+    }
+
+    // If phone already starts with indication (without +), add +
+    if (phoneNumber.startsWith(indication)) {
+      return phoneNumber;
+    }
+
+    // Otherwise, prepend the indication
+    return `${indication}${phoneNumber}`;
+  };
 
   // Fetch networks and saved app IDs on component mount
   const fetchPlatforms = async () => {
@@ -193,6 +247,87 @@ export default function Deposits() {
     } catch (error) {
       console.error('Error fetching platforms:', error);
       setPlatforms([]);
+    }
+  };
+
+  // Phone number management functions
+  const fetchUserPhones = async (networkId?: string): Promise<UserPhone[]> => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) return [];
+
+    try {
+      const params = networkId ? { network: networkId } : {};
+      const response = await api.get('/blaffa/user-phone/', {
+        headers: { Authorization: `Bearer ${token}` },
+        params
+      });
+
+      if (response.status === 200) {
+        return Array.isArray(response.data) ? response.data : [];
+      }
+      return [];
+    } catch (error) {
+      console.error('Error fetching user phones:', error);
+      return [];
+    }
+  };
+
+  const addUserPhone = async (phone: string, networkId: string): Promise<UserPhone | null> => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) return null;
+
+    try {
+      const response = await api.post('/blaffa/user-phone/', {
+        phone: phone,
+        network: networkId
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (response.status === 201) {
+        return response.data;
+      }
+      return null;
+    } catch (error) {
+      console.error('Error adding user phone:', error);
+      return null;
+    }
+  };
+
+  const updateUserPhone = async (phoneId: string, phone: string): Promise<UserPhone | null> => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) return null;
+
+    try {
+      const response = await api.patch(`/blaffa/user-phone/${phoneId}/`, {
+        phone: phone
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (response.status === 200) {
+        return response.data;
+      }
+      return null;
+    } catch (error) {
+      console.error('Error updating user phone:', error);
+      return null;
+    }
+  };
+
+  const deleteUserPhone = async (phoneId: string): Promise<boolean> => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) return false;
+
+    try {
+      const response = await api.delete(`/blaffa/user-phone/${phoneId}/`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      return response.status === 204;
+    } catch (error) {
+      console.error('Error deleting user phone:', error);
+      return false;
     }
   };
 
@@ -255,9 +390,16 @@ export default function Deposits() {
     setCurrentStep('selectNetwork');
   };
 
-  const handleNetworkSelect = (network: { id: string; name: string; public_name?: string; country_code?: string; image?: string, otp_required?: boolean, tape_code?: string, deposit_api?: string }) => {
+  const handleNetworkSelect = async (network: { id: string; name: string; public_name?: string; country_code?: string; indication?: string; image?: string, otp_required?: boolean, tape_code?: string, deposit_api?: string }) => {
     setSelectedNetwork(network);
-    setCurrentStep('manageBetId');
+
+    // Fetch user phones for this network
+    setPhoneLoading(true);
+    const phones = await fetchUserPhones(network.id);
+    setUserPhones(phones);
+    setPhoneLoading(false);
+
+    setCurrentStep('selectPhone');
   };
 
   // Save new bet ID
@@ -286,6 +428,63 @@ export default function Deposits() {
       }
     } catch (error) {
       console.error('Error saving bet ID:', error);
+    }
+  };
+
+  // Phone management handlers
+  const handlePhoneSelect = (phone: UserPhone) => {
+    setSelectedPhone(phone);
+    setCurrentStep('manageBetId');
+  };
+
+  const handleAddPhone = async () => {
+    if (!selectedNetwork || !newPhoneNumber.trim()) return;
+
+    // Format the phone number with country code before sending to API
+    const formattedPhone = newPhoneNumber.startsWith('+')
+      ? newPhoneNumber
+      : formatPhoneWithCountryCode(newPhoneNumber);
+
+    const addedPhone = await addUserPhone(formattedPhone, selectedNetwork.id);
+    if (addedPhone) {
+      setUserPhones(prev => [...prev, addedPhone]);
+      setNewPhoneNumber('');
+      setShowAddPhoneModal(false);
+    } else {
+      setError(t('Failed to add phone number'));
+    }
+  };
+
+  const handleEditPhone = async () => {
+    if (!phoneToEdit || !newPhoneNumber.trim()) return;
+
+    // Format the phone number with country code before sending to API
+    const formattedPhone = newPhoneNumber.startsWith('+')
+      ? newPhoneNumber
+      : formatPhoneWithCountryCode(newPhoneNumber);
+
+    const updatedPhone = await updateUserPhone(phoneToEdit.id, formattedPhone);
+    if (updatedPhone) {
+      setUserPhones(prev => prev.map(phone =>
+        phone.id === phoneToEdit.id ? updatedPhone : phone
+      ));
+      setNewPhoneNumber('');
+      setShowEditPhoneModal(false);
+      setPhoneToEdit(null);
+    } else {
+      setError(t('Failed to update phone number'));
+    }
+  };
+
+  const handleDeletePhone = async (phoneId: string) => {
+    const success = await deleteUserPhone(phoneId);
+    if (success) {
+      setUserPhones(prev => prev.filter(phone => phone.id !== phoneId));
+      if (selectedPhone?.id === phoneId) {
+        setSelectedPhone(null);
+      }
+    } else {
+      setError(t('Failed to delete phone number'));
     }
   };
 
@@ -390,14 +589,20 @@ export default function Deposits() {
 
   // Validate all form fields
   const validateForm = (): boolean => {
+    // Validate that a phone number is selected
+    if (!selectedPhone) {
+      setError(t('Veuillez sélectionner un numéro de téléphone'));
+      return false;
+    }
+
     const errors = {
       amount: validateAmount(formData.amount),
-      phoneNumber: validatePhoneNumber(formData.phoneNumber),
+      phoneNumber: '', // No longer need to validate phone input
       otp_code: validateOtpCode(formData.otp_code),
     };
-    
+
     setValidationErrors(errors);
-    
+
     // Return true if no errors
     return !Object.values(errors).some(error => error !== '');
   };
@@ -426,7 +631,7 @@ export default function Deposits() {
         amount: formData.amount,
         app_id: selectedPlatform.id,
         network_id: selectedNetwork.id,
-        phone_number: formData.phoneNumber.replace(/\s+/g, ''),
+        phone_number: selectedPhone?.phone || '',
         user_app_id: selectedBetId,
         source:'web',
       };
@@ -827,8 +1032,8 @@ export default function Deposits() {
         return (
           <div className="space-y-6">
             <div className="flex items-center mb-8">
-              <button 
-                onClick={() => setCurrentStep('selectNetwork')}
+              <button
+                onClick={() => setCurrentStep('selectPhone')}
                 className="group mr-4 p-2 rounded-xl border border-slate-600/30 hover:text-blue-400 hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/20"
               >
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 group-hover:-translate-x-1 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor">
@@ -946,7 +1151,111 @@ export default function Deposits() {
             </div>
           </div>
         );
-        
+
+      case 'selectPhone':
+        return (
+          <div className="space-y-6">
+            <div className="flex items-center mb-8">
+              <button
+                onClick={() => setCurrentStep('selectNetwork')}
+                className="group mr-4 p-2 rounded-xl border border-slate-600/30 hover:text-blue-400 hover:from-slate-600/50 hover:to-slate-500/50 transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-blue-500/20"
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 group-hover:-translate-x-1 transition-transform duration-300" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M9.707 16.707a1 1 0 01-1.414 0l-6-6a1 1 0 010-1.414l6-6a1 1 0 011.414 1.414L5.414 9H17a1 1 0 110 2H5.414l4.293 4.293a1 1 0 010 1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+              <div>
+                <h2 className="text-2xl font-bold mb-1">{t("Sélectionner un numéro de téléphone")}</h2>
+                <p className="text-slate-400 text-sm">{t("Choisissez ou ajoutez un numéro pour les transactions mobile money")}</p>
+              </div>
+            </div>
+
+            {phoneLoading ? (
+              <div className="flex justify-center items-center p-20">
+                <div className="relative">
+                  <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500/30 border-t-blue-500"></div>
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 to-blue-500/20 animate-pulse"></div>
+                </div>
+              </div>
+            ) : (
+              <>
+                {/* List of saved phones */}
+                <div className="space-y-2">
+                  {userPhones.map((phone) => (
+                    <div
+                      key={phone.id}
+                      onClick={() => handlePhoneSelect(phone)}
+                      className={`flex items-center justify-between rounded-lg px-4 py-3 cursor-pointer ${
+                        selectedPhone?.id === phone.id
+                          ? 'bg-blue-600/20 border border-blue-500'
+                          : 'bg-gradient-to-r hover:from-slate-600/50 hover:to-slate-500/50'
+                      } border border-slate-600/30 transition-all duration-300 hover:shadow-lg`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <Smartphone className="w-5 h-5 text-blue-400" />
+                        <span className="font-mono text-sm">{formatPhoneWithCountryCode(phone.phone)}</span>
+                        {phone.network_name && (
+                          <span className="text-xs text-gray-500 bg-gray-700 px-2 py-1 rounded">
+                            {phone.network_name}
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            setPhoneToEdit(phone);
+                            setNewPhoneNumber(phone.phone);
+                            setShowEditPhoneModal(true);
+                          }}
+                          className="p-1 text-xs text-blue-600 hover:text-white bg-blue-100 hover:bg-blue-600 rounded-full transition"
+                          title={t('Modifier')}
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                          </svg>
+                        </button>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeletePhone(phone.id);
+                          }}
+                          className="p-1 text-xs text-red-600 hover:text-white bg-red-100 hover:bg-red-600 rounded-full transition"
+                          title={t('Supprimer')}
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {userPhones.length === 0 && (
+                  <div className="text-center py-8">
+                    <Smartphone className="w-12 h-12 text-gray-500 mx-auto mb-4" />
+                    <p className="text-slate-400 mb-4">{t("Aucun numéro de téléphone enregistré pour ce réseau")}</p>
+                  </div>
+                )}
+
+                {/* Add new phone button */}
+                <div className="flex justify-center">
+                  <button
+                    onClick={() => setShowAddPhoneModal(true)}
+                    className="px-6 py-3 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors flex items-center gap-2"
+                  >
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    {t('Ajouter un numéro de téléphone')}
+                  </button>
+                </div>
+              </>
+            )}
+          </div>
+        );
+
       case 'enterDetails':
         return (
       <div className="space-y-6">
@@ -1050,24 +1359,19 @@ export default function Deposits() {
   
         <div>
           <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-            {t("Numéro de téléphone")} <span className="text-red-500">*</span>
+            {t("Numéro de téléphone")}
           </label>
-          <input
-            type="tel"
-            name="phoneNumber"
-            value={formData.phoneNumber}
-            onChange={handleInputChange}
-            className={`w-full p-2 border rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 ${
-              validationErrors.phoneNumber 
-                ? 'border-red-500 focus:border-red-500 focus:ring-red-500' 
-                : 'border-slate-300 dark:border-slate-600 focus:border-blue-500 focus:ring-blue-500'
-            }`}
-            placeholder="ex: 771234567"
-            required
-          />
-          {validationErrors.phoneNumber && (
-            <p className="mt-1 text-sm text-red-500">{validationErrors.phoneNumber}</p>
-          )}
+          <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+            <Smartphone className="w-5 h-5 text-green-600 dark:text-green-400" />
+            <div className="flex-1">
+              <div className="font-mono text-green-700 dark:text-green-300 font-medium">
+                {selectedPhone ? formatPhoneWithCountryCode(selectedPhone.phone) : 'Aucun numéro sélectionné'}
+              </div>
+              <div className="text-xs text-green-600 dark:text-green-400 mt-1">
+                {selectedPhone?.network_name ? `${selectedPhone.network_name} Network` : 'Numéro de téléphone sélectionné'}
+              </div>
+            </div>
+          </div>
         </div>
 
         {/* Display deposit message from selected network */}
@@ -1087,7 +1391,7 @@ export default function Deposits() {
         <div className="flex justify-between pt-2">
           <button
             type="button"
-            onClick={() => setCurrentStep('manageBetId')}
+            onClick={() => setCurrentStep('selectPhone')}
             className="px-4 py-2 text-sm text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
           >
             ← {t("Back")}
@@ -1112,6 +1416,8 @@ export default function Deposits() {
       case 'selectId':
         return t("");
       case 'selectNetwork':
+        return t("");
+      case 'selectPhone':
         return t("");
       case 'enterDetails':
         return t("");
@@ -1480,6 +1786,124 @@ export default function Deposits() {
                   className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
                 >
                   J'ai compris
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Add Phone Modal */}
+      {showAddPhoneModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 modal-backdrop">
+          <div className={`${theme.colors.background} rounded-lg shadow-xl w-full max-w-md modal-content`}>
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold">{t("Ajouter un numéro de téléphone")}</h3>
+                <button
+                  onClick={() => setShowAddPhoneModal(false)}
+                  className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {t("Numéro de téléphone")}
+                  </label>
+                  <input
+                    type="tel"
+                    value={newPhoneNumber}
+                    onChange={(e) => setNewPhoneNumber(e.target.value)}
+                    className="w-full p-2 border rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white border-slate-300 dark:border-slate-600"
+                    placeholder="ex: 771234567"
+                  />
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                    {t("Entrez le numéro sans le préfixe +225")}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-6 flex justify-end gap-3">
+                <button
+                  onClick={() => setShowAddPhoneModal(false)}
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                >
+                  {t("Annuler")}
+                </button>
+                <button
+                  onClick={handleAddPhone}
+                  disabled={!newPhoneNumber.trim()}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+                >
+                  {t("Ajouter")}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Phone Modal */}
+      {showEditPhoneModal && phoneToEdit && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 modal-backdrop">
+          <div className={`${theme.colors.background} rounded-lg shadow-xl w-full max-w-md modal-content`}>
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold">{t("Modifier le numéro de téléphone")}</h3>
+                <button
+                  onClick={() => {
+                    setShowEditPhoneModal(false);
+                    setPhoneToEdit(null);
+                    setNewPhoneNumber('');
+                  }}
+                  className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {t("Numéro de téléphone")}
+                  </label>
+                  <input
+                    type="tel"
+                    value={newPhoneNumber}
+                    onChange={(e) => setNewPhoneNumber(e.target.value)}
+                    className="w-full p-2 border rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white border-slate-300 dark:border-slate-600"
+                    placeholder="ex: 771234567"
+                  />
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                    {t("Entrez le numéro sans le préfixe +225")}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-6 flex justify-end gap-3">
+                <button
+                  onClick={() => {
+                    setShowEditPhoneModal(false);
+                    setPhoneToEdit(null);
+                    setNewPhoneNumber('');
+                  }}
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                >
+                  {t("Annuler")}
+                </button>
+                <button
+                  onClick={handleEditPhone}
+                  disabled={!newPhoneNumber.trim()}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+                >
+                  {t("Modifier")}
                 </button>
               </div>
             </div>
