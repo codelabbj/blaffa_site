@@ -29,6 +29,7 @@ interface Network {
   message_init?: string;
   deposit_api?: string;
   deposit_message?: string;
+  payment_by_link?: boolean;
 }
 
 interface App {
@@ -135,7 +136,7 @@ export default function Deposits() {
   const [currentStep, setCurrentStep] = useState<'selectId' | 'selectNetwork' | 'selectPhone' | 'manageBetId' | 'enterDetails'>('selectId');
   const [selectedPlatform, setSelectedPlatform] = useState<App | null>(null);
   const [platforms, setPlatforms] = useState<App[]>([]);
-  const [selectedNetwork, setSelectedNetwork] = useState<{ id: string; name: string; public_name?: string; country_code?: string; indication?: string; placeholder?: string; image?: string, otp_required?: boolean, tape_code?: string, deposit_api?: string, deposit_message?: string } | null>(null);
+  const [selectedNetwork, setSelectedNetwork] = useState<{ id: string; name: string; public_name?: string; country_code?: string; indication?: string; placeholder?: string; image?: string, otp_required?: boolean, tape_code?: string, deposit_api?: string, deposit_message?: string, payment_by_link?: boolean } | null>(null);
   const [formData, setFormData] = useState({
     amount: '',
     phoneNumber: '',
@@ -149,7 +150,7 @@ export default function Deposits() {
     otp_code: '',
   });
   
-  const [networks, setNetworks] = useState<{ id: string; name: string; public_name?: string; indication?: string; placeholder?: string; image?: string, otp_required?: boolean, tape_code?: string, deposit_api?: string }[]>([]);
+  const [networks, setNetworks] = useState<{ id: string; name: string; public_name?: string; indication?: string; placeholder?: string; image?: string, otp_required?: boolean, tape_code?: string, deposit_api?: string, payment_by_link?: boolean }[]>([]);
   const [savedAppIds, setSavedAppIds] = useState<IdLink[]>([]); // Used in manageBetId and other steps
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -416,7 +417,7 @@ export default function Deposits() {
     setCurrentStep('selectNetwork');
   };
 
-  const handleNetworkSelect = async (network: { id: string; name: string; public_name?: string; country_code?: string; indication?: string; placeholder?: string; image?: string, otp_required?: boolean, tape_code?: string, deposit_api?: string }) => {
+  const handleNetworkSelect = async (network: { id: string; name: string; public_name?: string; country_code?: string; indication?: string; placeholder?: string; image?: string, otp_required?: boolean, tape_code?: string, deposit_api?: string, payment_by_link?: boolean }) => {
     setSelectedNetwork(network);
 
     // Fetch user phones for this network
@@ -701,7 +702,22 @@ export default function Deposits() {
       else if (shouldTriggerOrangeRedirect(selectedNetwork)) {
         const amount = parseFloat(formData.amount);
         const countryCode = selectedNetwork.country_code;
-        await handleOrangeRedirect(amount, countryCode);
+
+        // Check if payment_by_link is enabled in the network response
+        if (selectedNetwork.payment_by_link === true) {
+          // If payment_by_link is true, check if transaction_link exists
+          if (transaction.transaction_link) {
+            // Show modal with transaction link instead of USSD
+            setOrangeTransactionLink(transaction.transaction_link);
+            setShowOrangeModal(true);
+          } else {
+            // If payment_by_link is true but no link, show USSD modal
+            await handleOrangeRedirect(amount, countryCode);
+          }
+        } else {
+          // If payment_by_link is false or not present, use USSD dialing
+          await handleOrangeRedirect(amount, countryCode);
+        }
       } else {
         setIsModalOpen(true);
       }
