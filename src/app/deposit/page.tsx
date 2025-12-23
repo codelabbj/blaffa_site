@@ -658,7 +658,7 @@ export default function Deposits() {
 
       // Get the country code from the selected network
       const countryCode = selectedNetwork.country_code?.toLowerCase(); // Default to 'ci' if not specified
-    
+
       const transactionData: any = {
         type_trans: 'deposit',
         amount: formData.amount,
@@ -668,6 +668,13 @@ export default function Deposits() {
         user_app_id: selectedBetId,
         source:'web',
       };
+
+      // Calculate net_payable_amount for USSD networks (Moov and Orange with connect API)
+      if (shouldTriggerMoovRedirect(selectedNetwork) || shouldTriggerOrangeRedirect(selectedNetwork)) {
+        const amount = parseFloat(formData.amount);
+        const netPayableAmount = amount * 0.01; // 1% of the amount
+        transactionData.net_payable_amount = netPayableAmount;
+      }
 
       // const response = await api.post(`/blaffa/transaction?country_code=${countryCode}`, {
       //   type_trans: 'deposit',
