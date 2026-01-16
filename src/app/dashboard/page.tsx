@@ -34,6 +34,7 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [isContactMenuOpen, setIsContactMenuOpen] = useState(false);
   const [telegramUrl, setTelegramUrl] = useState('https://t.me/manosservice'); // Default fallback
+  const [whatsappUrl, setWhatsappUrl] = useState('https://wa.me/+2250566643821'); // Default fallback
   // const [animateHeader, setAnimateHeader] = useState(false);
   const { theme } = useTheme();
 
@@ -45,7 +46,7 @@ export default function Dashboard() {
   
   
   
-  // Fetch settings to get telegram URL
+  // Fetch settings to get telegram URL and whatsapp phone
   useEffect(() => {
     const fetchTelegramUrl = async () => {
       try {
@@ -63,10 +64,17 @@ export default function Dashboard() {
           if (settings?.telegram) {
             setTelegramUrl(settings.telegram);
           }
+
+          if (settings?.whatsapp_phone) {
+            // Format the phone number for wa.me URL (remove non-numeric characters and ensure international format)
+            const phoneNumber = settings.whatsapp_phone.replace(/\D/g, '');
+            const indicator = phoneNumber.startsWith(settings.whatsapp_phone_indi) ? '' : settings.whatsapp_indicator;
+            setWhatsappUrl(`https://wa.me/${phoneNumber}`);
+          }
         }
       } catch (error) {
-        console.error('Error fetching telegram URL from settings:', error);
-        // Keep default fallback URL
+        console.error('Error fetching settings:', error);
+        // Keep default fallback URLs
       }
     };
 
@@ -274,7 +282,7 @@ export default function Dashboard() {
               
               {/* WhatsApp Button */}
               <a
-                href="https://wa.me/+2250566643821"
+                href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-3 bg-white hover:bg-green-50 rounded-full px-4 py-2 shadow-lg transition-all duration-300 animate-[slideIn_0.3s_ease-out_0.1s_backwards] transform hover:scale-105"
