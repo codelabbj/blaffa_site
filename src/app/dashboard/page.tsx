@@ -69,7 +69,7 @@ export default function Dashboard() {
             // Format the phone number for wa.me URL (remove non-numeric characters and ensure international format)
             const phoneNumber = settings.whatsapp_phone.replace(/\D/g, '');
             const indicator = phoneNumber.startsWith(settings.whatsapp_phone_indi) ? '' : settings.whatsapp_indicator;
-            setWhatsappUrl(`https://wa.me/${phoneNumber}`);
+            setWhatsappUrl(`https://wa.me/${indicator}${phoneNumber}`);
           }
         }
       } catch (error) {
