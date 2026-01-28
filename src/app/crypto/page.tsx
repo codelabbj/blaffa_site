@@ -84,7 +84,7 @@ export default function CryptoPage() {
               setUserId(profile.id.toString());
             }
           })
-          .catch(() => {});
+          .catch(() => { });
       }
     }
     // Force language to French
@@ -151,23 +151,23 @@ export default function CryptoPage() {
       // Option 1: Both files with same field name (array)
       // formData.append("user_card[]", userImage);
       // formData.append("user_card[]", cardImage);
-      
+
       // Option 2: Individual field names (matching server response)
       formData.append("file", userImage);
       formData.append("image", cardImage);
-      
+
       // Option 3: Try with different field names (uncomment if others don't work)
       // formData.append("user_image", userImage);
       // formData.append("card_image", cardImage);
-      
+
       // Debug: Log FormData contents
       console.log("FormData contents:");
       for (const pair of formData.entries()) {
         console.log(pair[0] + ':', pair[1]);
       }
-      
+
       const token = localStorage.getItem("accessToken");
-      
+
       // Use fetch directly to avoid axios header conflicts
       const response = await fetch(UPLOAD_API, {
         method: 'POST',
@@ -176,20 +176,20 @@ export default function CryptoPage() {
         },
         body: formData,
       });
-      
+
       // Debug: Log response details
       console.log("Response status:", response.status);
       console.log("Response headers:", Object.fromEntries(response.headers.entries()));
-      
+
       if (!response.ok) {
         const errorText = await response.text();
         console.error("Error response body:", errorText);
         throw new Error(`Upload failed: ${response.status} ${response.statusText}`);
       }
-      
+
       const result = await response.json();
       console.log("Upload response:", result);
-      
+
       setShowVerifyModal(false);
       setSuccessMessage(t("Images uploaded. Please wait for admin verification."));
       setShowSuccessModal(true);
@@ -300,13 +300,13 @@ export default function CryptoPage() {
               <FaArrowLeft className="text-lg sm:mr-2" />
               <span className="hidden sm:inline">{t('Back to Cryptos')}</span>
             </button>
-            { (typeTrans === 'buy' || typeTrans === 'sale') && (
+            {(typeTrans === 'buy' || typeTrans === 'sale') && (
               <CryptoTransactionForm
                 isVerified={userVerified === true}
                 crypto={selectedCrypto}
                 typeTrans={typeTrans}
               />
-            ) }
+            )}
           </>
         ) : loading ? (
           <div className="flex items-center justify-center min-h-[200px] sm:min-h-[300px]">
@@ -320,7 +320,7 @@ export default function CryptoPage() {
                 className={`group relative overflow-hidden bg-gradient-to-br ${theme.colors.s_background} border border-slate-600/30 rounded-2xl p-4 sm:p-6 flex flex-col items-center shadow-md hover:scale-[1.03] active:scale-95 transition-all duration-200 cursor-pointer`}
                 onClick={() => handleCryptoSelect(crypto)}
               >
-                <img src={crypto.logo} alt={crypto.name} className="w-10 h-10 sm:w-12 sm:h-12 object-contain mb-3 sm:mb-4 rounded-full border border-slate-300 bg-white" />
+                <img src={crypto.logo} alt={crypto.name} className="w-10 h-10 sm:w-12 sm:h-12 object-contain mb-3 sm:mb-4 rounded-full border border-slate-300 dark:border-slate-600 bg-white dark:bg-gray-800" />
                 <div className="font-bold text-base sm:text-lg mb-1 sm:mb-2 text-center">{crypto.name}</div>
                 <div className="text-slate-400 text-xs sm:text-sm mb-1">{crypto.symbol}</div>
                 <div className="text-blue-500 font-mono text-2xl sm:text-3xl font-extrabold">{crypto.public_amount}xof</div>

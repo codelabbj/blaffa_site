@@ -71,7 +71,7 @@ api.interceptors.response.use(
         if (!refreshToken) {
           // No refresh token available, redirect to login
           localStorage.removeItem('accessToken');
-          window.location.href = '/auth';
+          window.location.href = '/login';
           return Promise.reject(error);
         }
 
@@ -83,7 +83,7 @@ api.interceptors.response.use(
         );
 
         const { access, refresh: newRefresh } = response.data;
-        
+
         // Update tokens in localStorage
         localStorage.setItem('accessToken', access);
         if (newRefresh) {
@@ -104,7 +104,7 @@ api.interceptors.response.use(
         console.error('Failed to refresh token:', refreshError);
         localStorage.removeItem('accessToken');
         localStorage.removeItem('refreshToken');
-        window.location.href = '/auth';
+        window.location.href = '/login';
         processQueue(refreshError);
         return Promise.reject(refreshError);
       } finally {

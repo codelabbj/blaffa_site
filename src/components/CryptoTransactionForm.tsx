@@ -70,7 +70,7 @@ export default function CryptoTransactionForm({ isVerified, crypto, typeTrans }:
         // Optionally handle error
       }
     };
-    
+
     fetchNetworks();
   }, []);
 
@@ -245,12 +245,12 @@ export default function CryptoTransactionForm({ isVerified, crypto, typeTrans }:
 
   return (
     <div
-      className="bg-gradient-to-r rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-xs sm:max-w-md relative mx-auto mt-8"
+      className={`rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-xs sm:max-w-md relative mx-auto mt-8 border-2`}
       style={{
         background: theme.mode === 'dark'
-          ? 'linear-gradient(135deg, rgba(30,41,59,0.85) 60%, rgba(51,65,85,0.85) 100%)'
-          : 'linear-gradient(135deg, rgba(255,255,255,0.85) 60%, rgba(226,232,240,0.85) 100%)',
-        borderColor: theme.mode === 'dark' ? '#334155' : '#e5e7eb',
+          ? 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)'
+          : 'linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)',
+        borderColor: theme.mode === 'dark' ? '#334155' : '#e2e8f0',
       }}
     >
       <h2 className="text-2xl font-extrabold mb-6 text-center" style={{ color: theme.colors.primary }}>
@@ -262,10 +262,10 @@ export default function CryptoTransactionForm({ isVerified, crypto, typeTrans }:
       </h2>
       {/* Network selection */}
       <div className="mb-4">
-        <label className="block mb-1 font-medium">{t('Select Network')}</label>
+        <label className={`block mb-1 font-medium ${theme.colors.text}`}>{t('Select Network')}</label>
         <select
           className={`w-full p-3 rounded-lg border focus:ring-2 focus:ring-blue-400 text-lg transition-colors
-            ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-600 text-slate-100' : 'bg-white border-slate-300 text-slate-900'}`}
+            ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-700 text-slate-100' : 'bg-white border-slate-200 text-slate-900'}`}
           value={selectedNetwork?.id || ''}
           onChange={e => {
             const net = networks.find(n => String(n.id) === e.target.value);
@@ -280,14 +280,14 @@ export default function CryptoTransactionForm({ isVerified, crypto, typeTrans }:
         {selectedNetwork && selectedNetwork.image && (
           <div className="mt-2 flex items-center gap-2">
             <img src={selectedNetwork.image} alt={selectedNetwork.name} className="w-8 h-8 rounded" />
-            <span className="text-sm">{selectedNetwork.public_name || selectedNetwork.name}</span>
+            <span className={`text-sm ${theme.colors.d_text}`}>{selectedNetwork.public_name || selectedNetwork.name}</span>
           </div>
         )}
       </div>
       <div className="flex items-center gap-4 mb-6 justify-center">
-        {crypto.logo && <img src={crypto.logo} alt={crypto.name} className="w-14 h-14 rounded-full border-2 border-blue-400 shadow-md" />}
+        {crypto.logo && <img src={crypto.logo} alt={crypto.name} className="w-14 h-14 rounded-full border-2 border-primary shadow-md bg-white" />}
         <div>
-          <div className="font-bold text-lg flex items-center gap-2">
+          <div className={`font-bold text-lg flex items-center gap-2 ${theme.colors.text}`}>
             {crypto.name}
             <span className="inline-block bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200 px-2 py-0.5 rounded-full text-xs font-semibold border border-blue-300 ml-1">
               {crypto.symbol}
@@ -298,7 +298,7 @@ export default function CryptoTransactionForm({ isVerified, crypto, typeTrans }:
       </div>
       {/* Amount input (dynamic) */}
       <div className="mb-4 relative">
-        <label className="block mb-1 font-medium">
+        <label className={`block mb-1 font-medium ${theme.colors.text}`}>
           {transactionType === 'buy' ? t('Amount (Local Currency)') : t('Amount (Crypto)')}
         </label>
         <div className="relative">
@@ -308,7 +308,7 @@ export default function CryptoTransactionForm({ isVerified, crypto, typeTrans }:
           <input
             type="number"
             className={`w-full p-3 pl-10 rounded-lg border focus:ring-2 focus:ring-blue-400 text-lg transition-colors
-              ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-600 text-slate-100 placeholder-slate-400' : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400'}`}
+              ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-700 text-slate-100 placeholder-slate-500' : 'bg-white border-slate-200 text-slate-900 placeholder-slate-400'}`}
             value={amount}
             onChange={e => setAmount(e.target.value)}
             min="0"
@@ -335,7 +335,7 @@ export default function CryptoTransactionForm({ isVerified, crypto, typeTrans }:
             <input
               type="text"
               className={`w-full p-3 pl-10 rounded-lg border focus:ring-2 focus:ring-blue-400 transition-colors
-                ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-600 text-slate-100 placeholder-slate-400' : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400'}`}
+                ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-700 text-slate-100 placeholder-slate-500' : 'bg-white border-slate-200 text-slate-900 placeholder-slate-400'}`}
               placeholder={t('Wallet link')}
               value={walletLink}
               onChange={e => setWalletLink(e.target.value)}
@@ -490,11 +490,11 @@ export default function CryptoTransactionForm({ isVerified, crypto, typeTrans }:
 
       {/* API result display */}
       {apiResult && (
-        <div className="mt-6 p-4 rounded-lg text-center shadow-lg"
+        <div className={`mt-6 p-4 rounded-lg text-center shadow-lg border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-slate-200'}`}
           style={{
             background: theme.mode === 'dark'
-              ? 'linear-gradient(135deg, rgba(30,41,59,0.95) 60%, rgba(51,65,85,0.95) 100%)'
-              : 'linear-gradient(135deg, rgba(255,255,255,0.95) 60%, rgba(226,232,240,0.95) 100%)',
+              ? 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)'
+              : 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
           }}
         >
           {transactionType === 'sale' && apiResult?.wallet_address && (
@@ -586,7 +586,7 @@ export default function CryptoTransactionForm({ isVerified, crypto, typeTrans }:
 // Modal with blur and shadow
 function Modal({ children, onClose, theme }: { children: React.ReactNode; onClose: () => void; theme: { mode: string } }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center" style={{backdropFilter: 'blur(6px)'}}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ backdropFilter: 'blur(6px)' }}>
       <div
         className="rounded-xl shadow-2xl max-w-md w-full relative border"
         style={{

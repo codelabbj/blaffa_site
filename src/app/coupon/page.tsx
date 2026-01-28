@@ -1,246 +1,269 @@
 "use client"
 import { useState, useEffect } from 'react';
 import Head from 'next/head';
-import { useTranslation } from 'react-i18next';
-import { useTheme } from '../../components/ThemeProvider'; 
+import { useTheme } from '../../components/ThemeProvider';
 import api from '@/lib/axios';
-import DashboardHeader from '@/components/DashboardHeader';
+import { useRouter } from 'next/navigation';
+import { ArrowLeft, Star, ThumbsUp, ThumbsDown, Copy, Check, Plus, Link as LinkIcon, Trophy } from 'lucide-react';
 
-// Define the type for a single coupon object
+// Unified interfaces matching the actual JSON response
 interface BetApp {
   id: string;
   name: string;
   image: string;
-  is_active: boolean;
-  order: number;
-  city: string;
-  street: string;
-  deposit_tuto_content: string;
-  deposit_link: string | null;
-  withdrawal_tuto_content: string;
-  withdrawal_link: string | null;
   public_name: string;
-  minimun_deposit: number;
-  max_deposit: number;
-  minimun_with: number;
-  max_win: number;
 }
 
 interface Coupon {
   id: string;
-  images: string[];
   created_at: string;
   code: string;
   bet_app: BetApp;
+  author_first_name: string;
+  author_last_name: string;
+  author_rating: number;
+  coupon_type: 'combine' | 'single';
+  cote: string;
+  match_count: number;
+  likes: number;
+  dislikes: number;
+  average_rating: number;
+  user_liked: boolean;
+  user_disliked: boolean;
+  can_rate: boolean;
+}
+
+interface UserProfile {
+  first_name: string;
+  last_name: string;
+  email: string;
 }
 
 const CouponPage = () => {
   const [coupons, setCoupons] = useState<Coupon[]>([]);
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [copied, setCopied] = useState(false);
-  const { t } = useTranslation();
+  const [copiedId, setCopiedId] = useState<string | null>(null);
   const { theme } = useTheme();
+  const router = useRouter();
 
   useEffect(() => {
-    const accessToken = localStorage.getItem('accessToken');
-    if (!accessToken) {
-        console.error(t('No access token found.'));
-        window.location.href = '/';
-        return;
-    }
-    fetchCoupons(accessToken);
+    const fetchData = async () => {
+      setLoading(true);
+      try {
+        const token = localStorage.getItem('accessToken');
+        const promises: Promise<any>[] = [api.get(`/blaffa/coupon`)];
+
+        if (token) {
+          promises.push(api.get(`/auth/me`));
+        }
+
+        const results = await Promise.allSettled(promises);
+
+        // Handle Coupons
+        if (results[0].status === 'fulfilled') {
+          const data = results[0].value.data;
+          setCoupons(data.results || data || []);
+        }
+
+        // Handle Profile
+        if (results[1] && results[1].status === 'fulfilled') {
+          const profileData = results[1].value.data;
+          setUserProfile({
+            first_name: profileData.first_name,
+            last_name: profileData.last_name,
+            email: profileData.email
+          });
+        }
+      } catch (err) {
+        console.error('Error fetching data:', err);
+        setError('Failed to load data.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
-  const fetchCoupons = async (accessToken: string) => {
-    try {
-      setLoading(true);
-      setError(null);
-      const response = await api.get(`/blaffa/coupon`, {
-        headers: {
-          'Authorization': `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (response.status !== 200) {
-        const errorData = await response.data.catch(() => ({ message: 'Unknown error' }));
-        throw new Error(`HTTP error! status: ${response.status}, message: ${errorData.message || response.statusText}`);
-      }
-
-      const data = await response.data;
-      console.log('API Response:', data); // Debug log
-      
-      if (data && data.results && Array.isArray(data.results)) {
-         setCoupons(data.results);
-      } else if (Array.isArray(data)) {
-         // Handle case where response is directly an array
-         setCoupons(data);
-      } else {
-         console.error('API response results is not an array:', data);
-         setCoupons([]);
-      }
-
-    } catch (err) {
-      console.error('Error fetching coupons:', err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCopy = (text: string) => {
+  const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    setCopiedId(id);
+    setTimeout(() => setCopiedId(null), 2000);
   };
 
-  if (loading) {
-    return (
-      <>
-        <Head>
-          <title>Coupons - blaffa</title>
-          <meta name="description" content="View all available coupons" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-        </Head>
-        <div className={`min-h-screen bg-gradient-to-br ${theme.colors.a_background} flex items-center justify-center p-4`}>
-          <div className="text-center">
-            <div className="relative mb-6">
-              <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500/30 border-t-blue-500 mx-auto"></div>
-              <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 to-blue-500/20 animate-pulse"></div>
-            </div>
-            <p className="text-slate-300 text-lg font-medium">Loading coupons...</p>
-          </div>
-        </div>
-      </>
-    );
-  }
+  const getInitials = (first?: string, last?: string) => {
+    if (!first && !last) return '??';
+    return `${(first || '').charAt(0)}${(last || '').charAt(0)}`.toUpperCase();
+  };
 
-  if (error) {
-    return (
-      <>
-        <Head>
-          <title>Coupons - blaffa</title>
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
-        </Head>
-        <div className={`min-h-screen bg-gradient-to-br ${theme.colors.a_background} flex items-center justify-center p-4`}>
-          <div className="text-center max-w-md bg-gradient-to-r from-slate-800/80 to-slate-700/80 backdrop-blur-sm rounded-3xl shadow-2xl border border-slate-600/50 p-8">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-500/20 to-red-600/20 text-red-400 shadow-lg shadow-red-500/20 flex items-center justify-center mx-auto mb-6">
-              <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
-            </div>
-            <h2 className="text-2xl font-bold mb-4">Error Loading Coupons</h2>
-            <p className="text-slate-400 mb-6 leading-relaxed">{error}</p>
-            <button
-              onClick={() => {
-                 const accessToken = localStorage.getItem('accessToken');
-                 if (accessToken) {
-                    fetchCoupons(accessToken);
-                 } else {
-                    console.error(t('No access token found for retry.'));
-                    window.location.href = '/';
-                 }
-              }}
-              className="px-8 py-4 bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-500 hover:to-blue-500 text-white rounded-xl transition-all duration-300 font-medium shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-105"
-            >
-              Try Again
-            </button>
-          </div>
-        </div>
-      </>
-    );
-  }
+  const formatDate = () => {
+    return new Date().toLocaleDateString('fr-FR', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+  };
 
   return (
-    <>
+    <div className={`min-h-screen ${theme.colors.a_background} font-sans pb-20`}>
       <Head>
-        <title>Coupons - blaffa</title>
-        <meta name="description" content="View all available coupons from blaffa" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Coupons - Blaffa</title>
       </Head>
 
-      <div className={`min-h-screen bg-gradient-to-br ${theme.colors.a_background} p-4`}>
-        <DashboardHeader/>
-        
-        <div className="max-w-4xl mx-auto">
-          {/* Header Section */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-            <div>
-              <h1 className="text-3xl font-bold mb-2">{t("Available Coupons")}</h1>
-              <p className="text-slate-400">Discover amazing deals and offers</p>
+      {/* Header */}
+      <header className={`bg-transparent sticky top-0 z-50`}>
+        <div className="max-w-md mx-auto px-4 h-20 flex items-center justify-between">
+          <button onClick={() => router.back()} className={`p-2 -ml-2 rounded-full ${theme.colors.hover} transition-colors`}>
+            <ArrowLeft className={theme.colors.text} size={28} />
+          </button>
+          <h1 className={`text-2xl font-bold ${theme.colors.text}`}>Coupon</h1>
+          <div className="w-10"></div>
+        </div>
+      </header>
+
+      <main className="max-w-md mx-auto p-4 space-y-6">
+        {/* User Card */}
+        <div className={`${theme.colors.a_background} p-8 rounded-[2rem] shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col gap-8 border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-gray-50'}`}>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-5">
+              <div className={`w-16 h-16 rounded-2xl ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-[#E8E8E8]'} flex items-center justify-center ${theme.mode === 'dark' ? 'text-slate-300' : 'text-[#999999]'} font-bold text-2xl`}>
+                {getInitials(userProfile?.first_name, userProfile?.last_name)}
+              </div>
+              <div>
+                <h3 className={`font-bold text-xl ${theme.colors.text}`}>
+                  {userProfile ? `${userProfile.first_name} ${userProfile.last_name}` : 'Anonyme'}
+                </h3>
+                <div className="flex gap-0.5 mt-1">
+                  {[1, 2, 3, 4, 5].map(i => (
+                    <Star key={i} size={18} className={i <= 4 ? "fill-yellow-400 text-yellow-400" : "text-gray-200 fill-gray-200"} />
+                  ))}
+                </div>
+              </div>
             </div>
-            
-            <div className="flex items-center gap-4 mt-4 md:mt-0">
-              <button
-                onClick={() => window.history.back()}
-                className="flex items-center text-white bg-gradient-to-r from-slate-700/50 to-slate-600/50 hover:from-slate-600/50 hover:to-slate-500/50 px-6 py-3 rounded-xl border border-slate-600/30 hover:border-slate-500/50 transition-all duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl group"
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-                {t("Back")}
-              </button>
-            </div>
+            <button className="w-12 h-12 rounded-xl bg-[#002d72] flex items-center justify-center text-white shadow-lg active:scale-95 transition-transform">
+              <Plus size={28} strokeWidth={3} />
+            </button>
           </div>
 
-                    {/* Main Content */}
-          <div className={`bg-gradient-to-r ${theme.colors.s_background} backdrop-blur-sm rounded-3xl shadow-2xl border border-slate-600/50 overflow-hidden`}>
-            <div className="p-8">
-              {!coupons || coupons.length === 0 ? (
-                <div className={`rounded-2xl shadow p-6 text-center bg-gradient-to-br ${theme.colors.s_background}`} style={{ borderRadius: '1rem' }}>
-                  <div className=" font-semibold">Aucun coupon disponible.</div>
-                </div>
-              ) : (
-                <div className="flex flex-col gap-6">
-                  {coupons.map((coupon, idx) => {
-                    // Defensive check for coupon object
-                    if (!coupon) {
-                      console.warn('Undefined coupon at index:', idx);
-                      return null;
-                    }
-                    
-                    return (
-                      <div key={coupon.id || idx} className={`rounded-2xl shadow p-6 bg-gradient-to-br ${theme.colors.s_background}`} style={{ borderRadius: '1rem' }}>
-                        <div className="flex flex-col gap-4">
-                          {/* App Row */}
-                          <div className="flex justify-between items-center">
-                            <span className="font-bold text-base ">App</span>
-                            <span className="text-base ">{coupon.bet_app?.public_name || coupon.bet_app?.name || 'Unknown'}</span>
-                          </div>
-                          {/* Code Row */}
-                          <div className="flex justify-between items-center">
-                            <span className="font-bold text-base">Code</span>
-                            <span className="flex items-center gap-2">
-                              <span className="text-base tracking-widest ">{coupon.code || (coupon.id ? coupon.id.slice(0, 8) : 'N/A')}</span>
-                              <button
-                                onClick={() => handleCopy(coupon.code || (coupon.id ? coupon.id.slice(0, 8) : 'N/A'))}
-                                className="p-1 rounded hover:bg-gray-200"
-                                aria-label="Copy code"
-                              >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <rect x="9" y="9" width="13" height="13" rx="2" stroke="currentColor" strokeWidth="2"/>
-                                  <rect x="3" y="3" width="13" height="13" rx="2" stroke="currentColor" strokeWidth="2"/>
-                                </svg>
-                              </button>
-                              {copied && <span className="text-xs text-green-600 ml-1">Copied!</span>}
-                            </span>
-                          </div>
-                          {/* Date Row */}
-                          <div className="flex justify-between items-center">
-                            <span className="font-bold text-base ">Date</span>
-                            <span className="text-base ">{coupon.created_at ? coupon.created_at.slice(0, 10) : 'N/A'}</span>
-                          </div>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              )}
+          {/* Stats Bar */}
+          <div className="flex gap-4">
+            <div className={`flex-1 ${theme.colors.a_background} border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-gray-100'} rounded-2xl p-4 text-center`}>
+              <div className={`text-3xl font-black ${theme.mode === 'dark' ? 'text-blue-400' : 'text-[#002d72]'} leading-none`}>0</div>
+              <div className={`text-[0.8rem] ${theme.colors.d_text} opacity-60 font-medium mt-2`}>Mes coupons</div>
+            </div>
+            <div className={`flex-1 ${theme.colors.a_background} border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-gray-100'} rounded-2xl p-4 text-center`}>
+              <div className="text-3xl font-black text-green-600 leading-none">0 FCFA</div>
+              <div className={`text-[0.8rem] ${theme.colors.d_text} opacity-60 font-medium mt-2`}>Bonus</div>
             </div>
           </div>
         </div>
-      </div>
-    </>
+
+        {/* Platform Scroll */}
+        <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
+          {['1xBet', 'MELBET', 'BETWINNER'].map((name, idx) => (
+            <div key={idx} className={`flex-shrink-0 ${theme.colors.a_background} px-5 py-4 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex items-center gap-3 border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-transparent'}`}>
+              <div className={`w-10 h-10 rounded-lg ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-gray-50'} flex items-center justify-center p-1`}>
+                <div className={`w-8 h-8 rounded-md flex items-center justify-center text-white font-bold text-xs ${name === '1xBet' ? 'bg-blue-600' : name === 'MELBET' ? 'bg-black' : 'bg-green-700'}`}>
+                  {name.charAt(0)}
+                </div>
+              </div>
+              <span className={`font-bold text-lg ${theme.colors.text}`}>{name}</span>
+            </div>
+          ))}
+        </div>
+
+        {/* Day's Header */}
+        <div className="flex justify-between items-center pt-2">
+          <h2 className={`text-2xl font-bold ${theme.colors.text}`}>Prédicitions du jour</h2>
+          <span className={`text-lg font-medium ${theme.colors.d_text} opacity-60`}>{formatDate()}</span>
+        </div>
+
+        {/* Coupon List */}
+        {loading ? (
+          <div className="flex flex-col items-center justify-center py-20 gap-4">
+            <div className="w-12 h-12 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
+            <p className="text-gray-400 animate-pulse">Chargement des coupons...</p>
+          </div>
+        ) : coupons.length === 0 ? (
+          <div className="text-center py-20 space-y-4">
+            <Trophy size={64} className="mx-auto text-gray-200" />
+            <p className="text-gray-500">Aucune prédiction pour aujourd'hui.</p>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {coupons.map((coupon) => (
+              <div key={coupon.id} className={`${theme.colors.a_background} rounded-[2.5rem] p-8 shadow-[0_4px_25px_rgba(0,0,0,0.04)] border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-transparent'} transition-all hover:shadow-lg`}>
+                {/* Author Info */}
+                <div className="flex items-center gap-5 mb-6">
+                  <div className={`w-16 h-16 rounded-[1.25rem] ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-[#E8E8E8]'} ${theme.mode === 'dark' ? 'text-slate-400' : 'text-[#999999]'} flex items-center justify-center font-bold text-2xl`}>
+                    {getInitials(coupon.author_first_name, coupon.author_last_name)}
+                  </div>
+                  <div>
+                    <h3 className={`font-bold text-[1.3rem] ${theme.colors.text}`}>{coupon.author_first_name} {coupon.author_last_name}</h3>
+                    <div className="flex gap-0.5 mt-1">
+                      {[1, 2, 3, 4, 5].map(i => (
+                        <Star key={i} size={18} className={i <= Math.round(coupon.author_rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-200 fill-gray-200"} />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bet Type Pill */}
+                <div className="inline-flex items-center gap-2 bg-[#E9F3FF] dark:bg-blue-900/30 text-[#1976D2] dark:text-blue-300 text-[1rem] px-5 py-2.5 rounded-xl font-bold mb-6">
+                  <LinkIcon size={16} />
+                  {coupon.coupon_type === 'combine' ? `Combiné (${coupon.match_count} matchs)` : 'Simple'}
+                </div>
+
+                {/* Côte & Platform */}
+                <div className="flex justify-between items-end mb-8">
+                  <div>
+                    <div className={`${theme.colors.d_text} opacity-60 text-[1.1rem] font-medium leading-none`}>Côte totale: <span className={`text-[1.8rem] font-black ml-1 ${theme.colors.text}`}>{coupon.cote}</span></div>
+                  </div>
+                  <div className={`flex items-center gap-3 ${theme.mode === 'dark' ? 'bg-slate-800 border-slate-700' : 'bg-[#F8F9FA] border-gray-100'} py-2.5 px-5 rounded-[1.5rem] shadow-sm border`}>
+                    <div className="w-6 h-6 rounded flex items-center justify-center overflow-hidden">
+                      <img src={coupon.bet_app.image} alt="app" className="w-full h-full object-contain" />
+                    </div>
+                    <span className={`font-bold text-sm ${theme.colors.text}`}>{coupon.bet_app.public_name}</span>
+                  </div>
+                </div>
+
+                <hr className={`border-gray-50 ${theme.mode === 'dark' ? 'border-slate-700/50' : ''} mb-6`} />
+
+                {/* Footer Actions */}
+                <div className="flex items-center justify-between">
+                  <div className={`flex items-center gap-6 ${theme.mode === 'dark' ? 'text-slate-400' : 'text-[#999999]'}`}>                    <div className="flex items-center gap-2">
+                    <ThumbsUp size={24} className={coupon.user_liked ? "text-blue-500 fill-blue-500" : ""} />
+                    <span className="font-bold text-lg">{coupon.likes}</span>
+                  </div>
+                    <div className="flex items-center gap-2">
+                      <ThumbsDown size={24} className={coupon.user_disliked ? "text-red-500 fill-red-500" : ""} />
+                      <span className="font-bold text-lg">{coupon.dislikes}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5 ml-1">
+                      <Star size={24} className="fill-yellow-400 text-yellow-400" />
+                      <span className={`font-bold text-lg ${theme.colors.text}`}>{coupon.average_rating || '4.5'}</span>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => handleCopy(coupon.code, coupon.id)}
+                    className={`flex items-center gap-3 px-6 py-4 rounded-[1.25rem] text-[1.1rem] font-black transition-all shadow-sm active:scale-95
+                      ${copiedId === coupon.id
+                        ? 'bg-green-100 text-green-700 border border-green-200'
+                        : 'bg-[#ECF2FF] text-[#002d72] dark:text-blue-300'}`}
+                  >
+                    {copiedId === coupon.id ? <Check size={20} strokeWidth={3} /> : <div className="p-1 rounded bg-white/60 dark:bg-gray-800/60"><Copy size={18} /></div>}
+                    <span>{coupon.code}</span>
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </main>
+    </div>
   );
 };
 

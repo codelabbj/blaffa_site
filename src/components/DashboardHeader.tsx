@@ -1,7 +1,7 @@
 
 "use client";
 import { useState, useEffect } from 'react'; // Removed MouseEvent import from react
-import { User, Bell} from 'lucide-react';
+import { User, Bell, Headphones } from 'lucide-react';
 import Image from 'next/image';
 import ThemeToggle from './ThemeToggle';
 //import LanguageToggle from './LanguageToggle';
@@ -12,7 +12,7 @@ import { useTranslation } from 'react-i18next';
 const DashboardHeader = () => {
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const { t } = useTranslation();
-  
+
 
   useEffect(() => {
     setTimeout(() => {
@@ -58,7 +58,7 @@ const DashboardHeader = () => {
   //               </span>
   //             </div>
   //           </div>
-            
+
   //           <div className="flex items-center space-x-4">
   //               <button
   //                 onClick={() => handleMenuItemClick(() => {
@@ -96,46 +96,44 @@ const DashboardHeader = () => {
   // );
 
   return (
-  <>
-    <header className="backdrop-blur-lg border-b border-black/20 sticky top-0 z-50 overflow-x-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-        <div className="flex items-center justify-between h-16 w-full overflow-x-hidden">
-          <div className="flex items-center space-x-4 flex-shrink-0">
-            <div className="flex items-center space-x-2">
-              {/* <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+    <>
+      <header className="backdrop-blur-lg border-b border-black/20 sticky top-0 z-50 overflow-x-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+          <div className="flex items-center justify-between h-16 w-full overflow-x-hidden">
+            <div className="flex items-center space-x-4 flex-shrink-0">
+              <div className="flex items-center space-x-2">
+                {/* <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
                 
               </div> */}
-              <Image src="/logo.png" alt="Logo" width={40} height={40} className="rounded-full" />
-              <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-600 bg-clip-text text-transparent">
-                Blaffa
-              </span>
-            </div>
-          </div>
-          
-          <div className="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
-            <a href='/notifications' className="relative p-2 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors">
-              <Bell className="h-5 w-5 sm:h-6 sm:w-6" />
-              {/* {notifications.some((n) => !n.is_read) && (
-                <span className="absolute -top-1 -right-1 text-white text-xs px-1.5 rounded-full">
-                  {notifications.filter((n) => !n.is_read).length}
+                <Image src="/logo.png" alt="Logo" width={40} height={40} className="rounded-full" />
+                <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-600 bg-clip-text text-transparent">
+                  Blaffa
                 </span>
-              )} */}
-            </a>
-            
-            <a className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center relative group" href='/profile'>
-              <User size={16} className="text-sm text-white font-bold group-hover:scale-110 transition-transform"/>
-              <div className="absolute inset-0 bg-blue-500 rounded-full animate-ping opacity-75 duration-1000 hidden group-hover:block"></div>
-            </a>
-            
-            <div className="w-8 h-8">
-              <ThemeToggle />
+              </div>
+            </div>
+
+            <div className="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
+              {/* Support/Contact Icon */}
+              <a href='/contact' className="relative p-2 hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
+                <Headphones className="h-5 w-5 sm:h-6 sm:w-6" />
+              </a>
+
+              {/* Notification Bell with Red Dot */}
+              <a href='/notifications' className="relative p-2 hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
+                <Bell className="h-5 w-5 sm:h-6 sm:w-6" />
+                {/* Red notification dot */}
+                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
+              </a>
+
+              <div className="w-8 h-8">
+                <ThemeToggle />
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </header>
-  </>
-);
+      </header>
+    </>
+  );
 
 };
 

@@ -1,10 +1,15 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'export',  // Enable static exports
+  // Only enable static export for production builds
+  ...(process.env.NODE_ENV === 'production' && {
+    output: 'export',
+    images: {
+      unoptimized: true, // Required for static export
+    },
+  }),
   distDir: 'dist',
   images: {
-    unoptimized: true,  // Required for static export
     domains: [
       'api.betpayapp.com',
       'api.blaffa.net',

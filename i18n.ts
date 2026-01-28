@@ -727,14 +727,33 @@ const resources = {
   
 // });
 export const initializeI18n = () => {
-   // Configuration for i18next
-   const config = {
+  // Skip i18n initialization during SSR to prevent hydration issues
+  if (typeof window === 'undefined') {
+    // Return a minimal i18n instance for SSR
+    i18n
+      .use(initReactI18next)
+      .init({
+        resources,
+        lng: 'fr', // Always default to French for SSR
+        fallbackLng: 'fr',
+        supportedLngs: ['fr', 'en'],
+        interpolation: {
+          escapeValue: false,
+        },
+      });
+    return i18n;
+  }
+
+  // Client-side initialization with language detection
+  const savedLanguage = localStorage.getItem('i18nextLng') || 'fr';
+
+  const config = {
     resources,
-    lng: 'fr', // Default language
-    fallbackLng: 'fr', // Fallback language
-    supportedLngs: ['fr', 'en'], // Supported languages with French first
+    lng: savedLanguage,
+    fallbackLng: 'fr',
+    supportedLngs: ['fr', 'en'],
     interpolation: {
-      escapeValue: false, // React already escapes values
+      escapeValue: false,
     },
     detection: {
       order: ['localStorage', 'navigator'],
@@ -747,28 +766,6 @@ export const initializeI18n = () => {
     .use(LanguageDetector)
     .use(initReactI18next)
     .init(config);
-    // .init({
-    //   resources,
-    //   fallbackLng: 'fr',
-    //   supportedLngs: ['en', 'fr'],
-    //   interpolation: {
-    //     escapeValue: false,
-    //   },
-    //   detection: {
-    //     order: ['localStorage', 'navigator'],
-    //     lookupLocalStorage: 'i18nextLng',
-    //     caches: ['localStorage'],
-    //   },
-    // });
-
-  // Set default language if not set
-  if (typeof window !== 'undefined') {
-    const savedLanguage = localStorage.getItem('i18nextLng');
-    if (!savedLanguage) {
-      i18n.changeLanguage('fr');
-      localStorage.setItem('i18nextLng', 'fr');
-    }
-  }
 
   return i18n;
 };

@@ -943,47 +943,28 @@ const resources = {
     }
 };
 const initializeI18n = ()=>{
-    // Configuration for i18next
-    const config = {
-        resources,
-        lng: 'fr',
-        fallbackLng: 'fr',
-        supportedLngs: [
-            'fr',
-            'en'
-        ],
-        interpolation: {
-            escapeValue: false
-        },
-        detection: {
-            order: [
-                'localStorage',
-                'navigator'
+    // Skip i18n initialization during SSR to prevent hydration issues
+    if ("TURBOPACK compile-time truthy", 1) {
+        // Return a minimal i18n instance for SSR
+        __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$i18next$2f$dist$2f$esm$2f$i18next$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].use(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$i18next$2f$dist$2f$es$2f$initReactI18next$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["initReactI18next"]).init({
+            resources,
+            lng: 'fr',
+            fallbackLng: 'fr',
+            supportedLngs: [
+                'fr',
+                'en'
             ],
-            lookupLocalStorage: 'i18nextLng',
-            caches: [
-                'localStorage'
-            ]
-        }
-    };
-    __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$i18next$2f$dist$2f$esm$2f$i18next$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].use(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$i18next$2d$browser$2d$languagedetector$2f$dist$2f$esm$2f$i18nextBrowserLanguageDetector$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"]).use(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$i18next$2f$dist$2f$es$2f$initReactI18next$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["initReactI18next"]).init(config);
-    // .init({
-    //   resources,
-    //   fallbackLng: 'fr',
-    //   supportedLngs: ['en', 'fr'],
-    //   interpolation: {
-    //     escapeValue: false,
-    //   },
-    //   detection: {
-    //     order: ['localStorage', 'navigator'],
-    //     lookupLocalStorage: 'i18nextLng',
-    //     caches: ['localStorage'],
-    //   },
-    // });
-    // Set default language if not set
-    if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
+            interpolation: {
+                escapeValue: false
+            }
+        });
+        return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$i18next$2f$dist$2f$esm$2f$i18next$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"];
+    }
+    //TURBOPACK unreachable
     ;
-    return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$i18next$2f$dist$2f$esm$2f$i18next$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"];
+    // Client-side initialization with language detection
+    const savedLanguage = undefined;
+    const config = undefined;
 };
 const __TURBOPACK__default__export__ = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$i18next$2f$dist$2f$esm$2f$i18next$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"];
 }),
@@ -1076,6 +1057,7 @@ function RootLayout({ children }) {
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("html", {
         lang: i18n.language,
         className: "overflow-x-hidden",
+        suppressHydrationWarning: true,
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("head", {
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("meta", {

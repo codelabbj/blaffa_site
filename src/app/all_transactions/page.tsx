@@ -1,7 +1,8 @@
 'use client'
 
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { ArrowDownLeft, ArrowUpRight, RotateCw, X, Copy, Smartphone, Phone, CreditCard, Hash, Calendar, Activity } from 'lucide-react';
+import { ArrowDownLeft, ArrowUpRight, RotateCw, X, Copy, Smartphone, Phone, CreditCard, Hash, Calendar, Activity, Search, ChevronDown } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useTheme } from '../../components/ThemeProvider'; // Adjust path as needed
 import axios from 'axios'
 import api from '@/lib/axios';
@@ -49,112 +50,133 @@ export default function AllTransactionsPage() {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const observerRef = useRef<IntersectionObserver | null>(null);
- // const lastTransactionRef = useRef<HTMLDivElement | null>(null);
+  // const lastTransactionRef = useRef<HTMLDivElement | null>(null);
 
   const [isRefreshing, setIsRefreshing] = useState(false);
-  const [selectedTransaction, setSelectedTransaction] = useState<Transaction | null>(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isFilterOpen, setIsFilterOpen] = useState(false);
+  const [isStatusFilterOpen, setIsStatusFilterOpen] = useState(false);
+  const [activeCategory, setActiveCategory] = useState<'all' | 'deposit' | 'withdrawal'>('all');
+  const [tempCategory, setTempCategory] = useState<'all' | 'deposit' | 'withdrawal'>('all');
+  const [activeStatus, setActiveStatus] = useState<string>('all');
+  const [tempStatus, setTempStatus] = useState<string>('all');
   const { theme } = useTheme();
+  const router = useRouter();
 
   // Add this near the top of your component, after the state declarations
 
-  const fetchTransactions = useCallback(async (pageNum = 1, isRefresh = false) => {
-  if (!isRefresh) setLoading(true);
-  else setIsRefreshing(true);
-  
-  try {
-    console.log('Fetching transactions...');
-    const token = localStorage.getItem('accessToken');
-    console.log('Token exists:', !!token);
-    
-    if (!token) {
-      console.error('No access token found');
-      throw new Error('Authentication required. Please log in again.');
-    }
+  // Fetch transactions from API
+  const fetchTransactions = useCallback(async (pageNumber: number, category: string = 'all') => {
+    if (pageNumber === 1) setLoading(true);
 
-    const response = await api.get(
-      `/blaffa/historic${pageNum > 1 ? `?page=${pageNum}` : ''}`,
-      {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
+    try {
+      const token = localStorage.getItem('accessToken');
+      if (!token) {
+        setLoading(false);
+        setTransactions([]);
+        setHasMore(false);
+        return;
       }
-    );
 
-    console.log('Response status:', response.status);
-    
-    // With axios, the data is already parsed
-    const data: ApiResponse = response.data;
-    console.log('Received data:', data);
-    console.log('Received data for page:', pageNum, data);
-    
-    const newTransactions = data.results
-      .map(item => item.transaction)
-      .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-    
-    setTransactions(prev => pageNum === 1 ? newTransactions : [...prev, ...newTransactions]);
-    setHasMore(!!data.next);
-    setError(null);
-  } catch (err) {
-    console.error('Error in fetchTransactions:', err);
-    let errorMessage = 'Failed to load transactions';
-    
-    if (axios.isAxiosError(err)) {
-      errorMessage = err.response?.data?.message || err.message;
-    } else if (err instanceof Error) {
-      errorMessage = err.message;
+      let apiUrl = `/blaffa/historic?page=${pageNumber}`;
+      if (category === 'deposit') apiUrl += '&type=deposit';
+      if (category === 'withdrawal') apiUrl += '&type=withdrawal';
+
+      if (activeStatus !== 'all') {
+        const apiStatusMap: Record<string, string> = {
+          'success': 'completed',
+          'en attente': 'pending',
+          'echec': 'failed'
+        };
+        const statusToFetch = apiStatusMap[activeStatus.toLowerCase()] || activeStatus;
+        apiUrl += `&status=${statusToFetch}`;
+      }
+
+      const response = await api.get(apiUrl, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      // With axios, the data is already parsed
+      const data: ApiResponse = response.data;
+      console.log('Received data:', data);
+      console.log('Received data for page:', pageNumber, data);
+
+      const newTransactions = data.results
+        .map(item => item.transaction)
+        .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+
+      setTransactions(prev => pageNumber === 1 ? newTransactions : [...prev, ...newTransactions]);
+      setHasMore(!!data.next);
+      setError(null);
+    } catch (err) {
+      console.error('Error in fetchTransactions:', err);
+      let errorMessage = 'Failed to load transactions';
+
+      if (axios.isAxiosError(err)) {
+        errorMessage = err.response?.data?.message || err.message;
+      } else if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+
+      setError(errorMessage);
+
+      if (errorMessage.toLowerCase().includes('authenticat')) {
+        console.log('Authentication error, redirecting to login...');
+        // window.location.href = '/login'; // Uncomment this if you want to redirect to login
+      }
+    } finally {
+      setLoading(false);
+      setIsRefreshing(false);
     }
-    
-    setError(errorMessage);
-    
-    if (errorMessage.toLowerCase().includes('authenticat')) {
-      console.log('Authentication error, redirecting to login...');
-      // window.location.href = '/login'; // Uncomment this if you want to redirect to login
+  }, []);
+
+  const lastTransactionElement = useCallback((node: HTMLDivElement | null) => {
+    if (loading || !node) return;
+
+    if (observerRef.current) observerRef.current.disconnect();
+
+    observerRef.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        setPage(prevPage => prevPage + 1);
+      }
+    });
+
+    observerRef.current.observe(node);
+  }, [loading, hasMore]);
+
+  useEffect(() => {
+    if (page > 1) {
+      fetchTransactions(page, activeCategory);
     }
-  } finally {
-    setLoading(false);
-    setIsRefreshing(false);
-  }
-}, []);
+  }, [page, activeCategory, fetchTransactions]);
 
-const lastTransactionElement = useCallback((node: HTMLDivElement | null) => {
-  if (loading || !node) return;
-  
-  if (observerRef.current) observerRef.current.disconnect();
-  
-  observerRef.current = new IntersectionObserver(entries => {
-    if (entries[0].isIntersecting && hasMore) {
-      setPage(prevPage => prevPage + 1);
-    }
-  });
-  
-  observerRef.current.observe(node);
-}, [loading, hasMore]);
+  useEffect(() => {
+    setPage(1); // Reset page when category or status changes
+    fetchTransactions(1, activeCategory);
+  }, [activeCategory, activeStatus, fetchTransactions]);
 
-useEffect(() => {
-  if (page > 1) {
-    fetchTransactions(page, false);
-  }
-}, [page]);
-
-useEffect(() => {
-  fetchTransactions(1, false);
-}, []);
-
- useEffect(() => {
-  return () => {
-    if (observerRef.current) {
-      observerRef.current.disconnect();
-    }
+  const handleApplyFilter = () => {
+    setActiveCategory(tempCategory);
+    setIsFilterOpen(false);
   };
-}, []);
-  
- const handleRefresh = () => {
-  setPage(1); // Reset to first page
-  fetchTransactions(1, true);
-};
-  
+
+  const handleApplyStatusFilter = () => {
+    setActiveStatus(tempStatus);
+    setIsStatusFilterOpen(false);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+    };
+  }, []);
+
+  const handleRefresh = () => {
+    setPage(1); // Reset to first page
+    fetchTransactions(1, activeCategory);
+  };
+
 
   const formatDate = (isoDate: string) => {
     const date = new Date(isoDate);
@@ -208,7 +230,7 @@ useEffect(() => {
     }
   }
 
-  if (loading && transactions.length === 0) {
+  if (loading && transactions.length === 0 && !isFilterOpen) {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
@@ -216,13 +238,13 @@ useEffect(() => {
     );
   }
 
-  if (error) {
+  if (error && !isFilterOpen) {
     return (
       <div className="p-4 max-w-7xl mx-auto">
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative" role="alert">
           <strong className="font-bold">Erreur! </strong>
           <span className="block sm:inline">{error}</span>
-          <button 
+          <button
             onClick={handleRefresh}
             className="absolute top-0 bottom-0 right-0 px-4 py-3"
           >
@@ -233,9 +255,12 @@ useEffect(() => {
     );
   }
 
- return (
-    <div className={`min-h-screen bg-gradient-to-br ${theme.colors.a_background} p-4`}>
-      <DashboardHeader/>
+  return (
+    <div className={`min-h-screen bg-gradient-to-br ${theme.colors.a_background} relative pb-20`}>
+      {/* Inline Header matching reference */}
+      <div className="px-6 pt-10 pb-4">
+        <h1 className={`text-2xl font-bold ${theme.colors.text} tracking-tight`}>Historique</h1>
+      </div>
       <style>
         {`
           @keyframes slideInUp {
@@ -292,395 +317,185 @@ useEffect(() => {
         `}
       </style>
 
-      <div className="max-w-7xl mx-auto">
-        {/* Header Section */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
-          <div>
-            <h1 className="text-3xl font-bold  mb-2">Toutes les transactions</h1>
-            <p className="">Suivez toutes vos activités financières</p>
-          </div>
-          
+      <div className="max-w-md mx-auto">
+        {/* Navigation Bar */}
+        <div className="flex items-center justify-between mb-8 px-2">
           <button
-            onClick={() => window.history.back()}
-            className="flex items-center  bg-gradient-to-r from-slate-700/50 to-slate-600/50 hover:from-slate-600/50 hover:to-slate-500/50 px-6 py-3 rounded-xl border border-slate-600/30 hover:border-slate-500/50 transition-all duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl group mt-4 md:mt-0"
+            onClick={() => {
+              setIsFilterOpen(!isFilterOpen);
+              setIsStatusFilterOpen(false);
+            }}
+            className="flex items-center gap-2 group cursor-pointer"
           >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform duration-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            <span className={`text-xl font-medium ${theme.colors.text}`}>Categories</span>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className={`${isFilterOpen ? 'text-blue-600' : 'text-gray-400'}`}>
+              <path d="M3 6H21M7 12H17M10 18H14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
             </svg>
-            Retour
+          </button>
+          <button
+            onClick={() => {
+              setIsStatusFilterOpen(!isStatusFilterOpen);
+              setIsFilterOpen(false);
+            }}
+            className="flex items-center gap-2 group cursor-pointer"
+          >
+            <span className={`text-xl font-medium ${theme.colors.text}`}>Tout</span>
+            <ChevronDown className={`w-5 h-5 ${isStatusFilterOpen ? 'text-blue-600' : 'text-gray-400'} group-hover:text-blue-500 transition-colors`} />
           </button>
         </div>
-        
-        <div className={`bg-gradient-to-r ${theme.colors.s_background} backdrop-blur-sm rounded-3xl shadow-2xl border border-slate-600/50 overflow-hidden`}>
-          {/* Mobile View */}
-          <div className=" space-y-4">
-            {transactions.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-20 px-6">
-                <div className="bg-gradient-to-br from-slate-800 to-slate-700 rounded-2xl p-6 mb-6 shadow-2xl border border-slate-600/50">
-                  <Activity className="w-12 h-12 text-slate-400 mx-auto" />
-                </div>
-                <h3 className="text-xl font-semibold text-white mb-3">Aucune transaction trouvée</h3>
-                <p className="text-slate-400 text-center max-w-md leading-relaxed">
-                  Votre historique de transactions apparaîtra ici une fois que vous commencerez à effectuer des paiements.
-                </p>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {transactions.map((tx, index) => {
-                  const isLastElement = index === transactions.length - 1;
-                  return (
-                    <div 
-                      key={tx.id}
-                      ref={isLastElement ? lastTransactionElement : null}
-                      className={`bg-gradient-to-br ${theme.colors.s_background} rounded-2xl p-4 shadow-lg border border-slate-700/50 backdrop-blur-sm hover:border-slate-600/70 transition-all duration-300 relative overflow-hidden`}
-                      style={{
-                        animation: `slideInUp 0.6s ease-out ${index * 100}ms both`,
-                      }}
-                    >
-                      <div className="flex justify-between items-start">
-                        <div className="flex items-center space-x-3">
-                          <div className={`flex-shrink-0 h-12 w-12 rounded-2xl flex items-center justify-center ${
-                            tx.type_trans === 'deposit' 
-                              ? 'bg-gradient-to-br from-green-500/20 to-emerald-600/20 text-green-400' 
-                              : 'bg-gradient-to-br from-blue-500/20 to-indigo-600/20 text-blue-400'
-                          }`}>
-                            {getTransactionTypeIcon(tx.type_trans)}
-                          </div>
-                          <div>
-                            <div className="font-medium ">
-                              {tx.type_trans === 'deposit' ? 'Dépôt' : tx.type_trans === 'withdrawal' ? 'Retrait' : tx.type_trans === 'buy' ? 'Achat' : tx.type_trans === 'sale' ? 'Vente' : tx.type_trans}
-                            </div>
-                            <div className="text-sm ">
-                              {tx.phone_number}
-                            </div>
-                          </div>
-                        </div>
-                        <div className="text-right">
-                          <div className={`font-bold ${
-                            tx.type_trans === 'deposit' ? 'text-green-400' : 'text-blue-400'
-                          }`}>
-                            {tx.type_trans === 'deposit' ? '+' : '-'}{formatAmount(tx.amount)}
-                          </div>
-                          <div className="text-xs ">
-                            {formatDate(tx.created_at)}
-                          </div>
-                        </div>
-                      </div>
-                      <div className="mt-3 pt-3 border-t border-slate-700/50 flex justify-between items-center">
-                        <StatusBadge status={tx.status} type_trans={tx.type_trans} />
-                        <button
-                          onClick={() => {
-                            setSelectedTransaction(tx);
-                            setIsModalOpen(true);
-                          }}
-                          className="text-xs bg-slate-700/50 hover:bg-slate-600/50 text-white px-3 py-1 rounded-lg transition-colors"
-                        >
-                          Voir détails
-                        </button>
-                      </div>
-                    </div>
-                  );
-                })}
-                {loading && hasMore && (
-                  <div className="flex justify-center py-4">
-                    <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-                  </div>
-                )}
-              </div>
-            )}
-          </div>
+        {isFilterOpen ? (
+          /* Category Filter Menu View */
+          <div className="px-2 animate-in fade-in slide-in-from-bottom-4 duration-300">
+            <h3 className={`text-2xl font-bold ${theme.colors.text} mb-6`}>Filtre rapide</h3>
 
-          {/* Desktop View */}
-          {/* <div className="hidden md:block w-full h-full overflow-y-auto">
-            {transactions.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-20 px-6">
-                <div className="bg-gradient-to-br from-slate-800 to-slate-700 rounded-2xl p-6 mb-6 shadow-2xl border border-slate-600/50">
-                  <Activity className="w-12 h-12 text-slate-400 mx-auto" />
-                </div>
-                <h3 className="text-xl font-semibold mb-3">Aucune transaction trouvée</h3>
-                <p className="text-slate-400 text-center max-w-md leading-relaxed">
-                  Votre historique de transactions apparaîtra ici une fois que vous commencerez à effectuer des paiements.
-                </p>
-              </div>
-            ) : (
-              <div className="w-full overflow-x-auto">
-                <table className="min-w-full table-fixed">
-                  <colgroup>
-                    <col className="w-[25%]" />
-                    <col className="w-[15%]" />
-                    <col className="w-[20%]" />
-                    <col className="w-[15%]" />
-                    <col className="w-[15%]" />
-                    <col className="w-[10%]" />
-                  </colgroup>
-                  <thead className="bg-gradient-to-r from-slate-700/50 to-slate-600/50 backdrop-blur-sm">
-                    <tr>
-                      <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-                        Type
-                      </th>
-                      <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-                        Montant
-                      </th>
-                      <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-                        Référence
-                      </th>
-                      <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-                        Statut
-                      </th>
-                      <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-slate-300 uppercase tracking-wider">
-                        Date
-                      </th>
-                      <th scope="col" className="px-4 py-3 text-right text-xs font-medium text-slate-300 uppercase tracking-wider">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-600/30">
-                    {transactions.map((tx, index) => {
-                      const isLastElement = index === transactions.length - 1;
-                      return (
-                        <tr 
-                          key={tx.id}
-                          ref={isLastElement ? lastTransactionElement : null}
-                          className="group hover:bg-gradient-to-r hover:from-slate-700/30 hover:to-slate-600/30 transition-all duration-500 relative overflow-hidden"
-                          style={{
-                            animation: `slideInUp 0.6s ease-out ${index * 100}ms both`
-                          }}
-                        >
-                          
-                          <td className="px-4 py-3 whitespace-nowrap relative truncate max-w-[200px]">
-                            <div className="flex items-center">
-                              <div className={`flex-shrink-0 h-10 w-10 rounded-2xl flex items-center justify-center transition-all duration-500 group-hover:scale-110 ${
-                                tx.type_trans === 'deposit' 
-                                  ? 'bg-gradient-to-br from-green-500/20 to-emerald-600/20 text-green-400 shadow-lg shadow-green-500/20' 
-                                  : 'bg-gradient-to-br from-blue-500/20 to-indigo-600/20 text-blue-400 shadow-lg shadow-blue-500/20'
-                              }`}>
-                                {getTransactionTypeIcon(tx.type_trans)}
-                              </div>
-                              <div className="ml-3 overflow-hidden">
-                                <div className="text-sm font-medium group-hover:text-blue-200 transition-colors duration-300 truncate">
-                                  {tx.type_trans === 'deposit' ? 'Dépôt' : 'Retrait'}
-                                </div>
-                                <div className="text-sm  group-hover:text-slate-300 transition-colors duration-300 truncate">
-                                  {tx.phone_number}
-                                </div>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="px-4 py-3 whitespace-nowrap relative">
-                            <div className={`text-sm font-bold transition-all duration-300 group-hover:scale-105 ${
-                              tx.type_trans === 'deposit' 
-                                ? 'text-green-400 group-hover:text-green-300' 
-                                : 'text-blue-400 group-hover:text-blue-300'
-                            }`}>
-                              {tx.type_trans === 'deposit' ? '+' : '-'}{formatAmount(tx.amount)}
-                            </div>
-                          </td>
-                          <td className="px-4 py-3 whitespace-nowrap relative">
-                            <div className="text-sm font-mono group-hover:text-blue-200 transition-colors duration-300 truncate max-w-[150px]">
-                              {tx.reference}
-                            </div>
-                          </td>
-                          <td className="px-4 py-3 whitespace-nowrap relative">
-                            <StatusBadge status={tx.status} type_trans={tx.type_trans} />
-                          </td>
-                          <td className="px-4 py-3 whitespace-nowrap text-sm group-hover:text-blue-200 transition-colors duration-300 relative">
-                            {formatDate(tx.created_at)}
-                          </td>
-                          <td className="px-4 py-3 whitespace-nowrap text-right text-sm font-medium relative">
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setSelectedTransaction(tx);
-                                setIsModalOpen(true);
-                              }}
-                              className="bg-gradient-to-r from-blue-600/80 to-blue-600/80 hover:from-blue-500 hover:to-blue-500  px-3 py-1.5 text-sm rounded-lg transition-all duration-300 shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 hover:scale-105"
-                            >
-                              Détails
-                            </button>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                    {loading && hasMore && (
-                      <tr>
-                        <td colSpan={6} className="py-4 text-center">
-                          <div className="flex justify-center">
-                            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-                          </div>
-                        </td>
-                      </tr>
-                    )}
-                  </tbody>
-                </table>
-              </div>
-            )}
-            
-          </div> */}
-          
-        </div>
-       {/* {loading && hasMore && (
-          <div className="flex justify-center py-4">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-          </div>
-        )} */}
-           
-      </div>
-
-      {/* Enhanced Transaction Details Modal */}
-      {isModalOpen && selectedTransaction && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 p-4 modal-backdrop">
-          <div className="bg-gradient-to-br from-slate-800/95 to-slate-700/95 backdrop-blur-xl rounded-3xl w-full max-w-lg shadow-2xl border border-slate-600/50 modal-content max-h-[90vh] overflow-y-auto">
-            {/* Header */}
-            <div className="relative p-6 pb-0">
-              <div className="flex justify-between items-start mb-6">
-                <div>
-                  <h3 className="text-2xl font-bold text-white mb-1">Détails de la transaction</h3>
-                  <p className="text-slate-400 text-sm">Consultez les informations de votre transaction</p>
-                </div>
-                <button 
-                  onClick={() => setIsModalOpen(false)}
-                  className="w-10 h-10 rounded-xl bg-slate-700/50 hover:bg-slate-600/50 text-slate-400 hover:text-white transition-all duration-300 flex items-center justify-center group"
+            <div className="flex flex-wrap gap-4 mb-12">
+              {[
+                { label: 'Tout', value: 'all' },
+                { label: 'Retrait', value: 'withdrawal' },
+                { label: 'Recharge', value: 'deposit' }
+              ].map((cat) => (
+                <button
+                  key={cat.value}
+                  onClick={() => setTempCategory(cat.value as any)}
+                  className={`px-8 py-3 rounded-xl border-2 font-medium text-lg transition-all
+                    ${tempCategory === cat.value
+                      ? 'border-[#3b82f6] text-[#3b82f6] bg-blue-50/50 dark:bg-blue-900/20'
+                      : 'border-gray-200 dark:border-gray-700 text-gray-400'
+                    }`}
                 >
-                  <X size={20} className="group-hover:rotate-90 transition-transform duration-300" />
+                  {cat.label}
                 </button>
-              </div>
-              
-              {/* Transaction Type & Status Card */}
-              <div className="bg-gradient-to-r from-slate-700/50 to-slate-600/50 backdrop-blur-sm rounded-2xl p-4 border border-slate-600/30">
-                <div className="flex items-center gap-4">
-                  <div className={`w-16 h-16 rounded-2xl flex items-center justify-center transition-all duration-300 ${
-                    selectedTransaction.type_trans === 'deposit' 
-                      ? 'bg-gradient-to-br from-green-500/20 to-emerald-600/20 text-green-400 shadow-lg shadow-green-500/20' 
-                      : 'bg-gradient-to-br from-blue-500/20 to-indigo-600/20 text-blue-400 shadow-lg shadow-blue-500/20'
-                  }`}>
-                    {getTransactionTypeIcon(selectedTransaction.type_trans)}
-                  </div>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-3 mb-2">
-                      <h4 className="font-semibold text-xl text-white">
-                        {selectedTransaction.type_trans === 'deposit' ? 'Dépôt' : selectedTransaction.type_trans === 'withdrawal' ? 'Retrait' : selectedTransaction.type_trans === 'buy' ? 'Achat' : selectedTransaction.type_trans === 'sale' ? 'Vente' : selectedTransaction.type_trans}
-                      </h4>
-                      <StatusBadge status={selectedTransaction.status} type_trans={selectedTransaction.type_trans} />
-                    </div>
-                    <div className="flex items-center text-slate-400 text-sm">
-                      <Calendar className="w-4 h-4 mr-2" />
-                      {formatDate(selectedTransaction.created_at)}
-                    </div>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
-            
-            {/* Amount Section */}
-            <div className="px-6 py-4">
-              <div className="bg-gradient-to-br from-slate-900/50 to-slate-800/50 rounded-2xl p-6 border border-slate-600/30">
-                <div className="text-center">
-                  <div className="text-slate-400 text-sm mb-2 font-medium">Montant de la transaction</div>
-                  <div className={`text-4xl font-bold mb-2 ${
-                    selectedTransaction.type_trans === 'deposit' 
-                      ? 'text-green-400' 
-                      : 'text-blue-400'
-                  }`}>
-                    {selectedTransaction.type_trans === 'deposit' ? '+' : '-'}
-                    {formatAmount(selectedTransaction.amount)}
-                  </div>
-                  <div className="text-slate-500 text-xs">
-                    {selectedTransaction.type_trans === 'deposit' ? 'Reçu' : 'Envoyé'}
-                  </div>
-                </div>
-              </div>
-            </div>
-            
-            {/* Details Grid */}
-            <div className="px-6 pb-6">
-              <div className="space-y-4">
-                {/* Transaction ID */}
-                <div className="bg-slate-700/30 rounded-xl p-4 border border-slate-600/20">
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center text-slate-400 text-sm font-medium">
-                      <Hash className="w-4 h-4 mr-2" />
-                      ID Transaction
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-white text-sm font-mono">{selectedTransaction.id}</span>
-                      <button 
-                        onClick={() => copyToClipboard(selectedTransaction.id)}
-                        className="w-8 h-8 rounded-lg bg-slate-600/50 hover:bg-slate-500/50 text-slate-400 hover:text-white transition-all duration-300 flex items-center justify-center group"
-                      >
-                        <Copy size={14} className="group-hover:scale-110 transition-transform duration-300" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Reference */}
-                <div className="bg-slate-700/30 rounded-xl p-4 border border-slate-600/20">
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center text-slate-400 text-sm font-medium">
-                      <CreditCard className="w-4 h-4 mr-2" />
-                      Référence
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-white text-sm font-mono">{selectedTransaction.reference}</span>
-                      <button 
-                        onClick={() => copyToClipboard(selectedTransaction.reference)}
-                        className="w-8 h-8 rounded-lg bg-slate-600/50 hover:bg-slate-500/50 text-slate-400 hover:text-white transition-all duration-300 flex items-center justify-center group"
-                      >
-                        <Copy size={14} className="group-hover:scale-110 transition-transform duration-300" />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                
-                {/* Phone Number */}
-                <div className="bg-slate-700/30 rounded-xl p-4 border border-slate-600/20">
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center text-slate-400 text-sm font-medium">
-                      <Phone className="w-4 h-4 mr-2" />
-                      Téléphone
-                    </div>
-                    <span className="text-white text-sm font-mono">{selectedTransaction.phone_number}</span>
-                  </div>
-                </div>
-                
-                {/* Network */}
-                {selectedTransaction.network && (
-                  <div className="bg-slate-700/30 rounded-xl p-4 border border-slate-600/20">
-                    <div className="flex justify-between items-center">
-                      <div className="flex items-center text-slate-400 text-sm font-medium">
-                        <Smartphone className="w-4 h-4 mr-2" />
-                        Réseau
-                      </div>
-                      <span className="text-white text-sm">{selectedTransaction.network.public_name || selectedTransaction.network.name}</span>
-                    </div>
-                  </div>
-                )}
 
-                {/* Error Message */}
-                {selectedTransaction.error_message && (
-                  <div className="bg-gradient-to-r from-red-900/30 to-red-800/30 rounded-xl p-4 border border-red-600/30">
-                <p className="text-red-400 font-medium text-sm mb-2">{("Message d'erreur")}</p>
-                    <p className="text-red-300 text-sm">
-                      {selectedTransaction.error_message}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </div>
-            
-            {/* Footer */}
-            <div className="px-6 pb-6">
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-600 hover:from-blue-500 hover:to-blue-500 text-white rounded-xl transition-all duration-300 font-medium shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40"
-              >
-                Fermer
-              </button>
-            </div>
+            <button
+              onClick={handleApplyFilter}
+              className="w-full py-4 bg-[#1a4a90] hover:bg-[#153a70] text-white rounded-2xl text-xl font-bold transition-colors shadow-lg shadow-blue-900/20"
+            >
+              Appliquer
+            </button>
           </div>
-        </div>
-      )}
+        ) : isStatusFilterOpen ? (
+          /* Status Filter Menu View */
+          <div className="px-2 animate-in fade-in slide-in-from-bottom-4 duration-300">
+            <h3 className={`text-2xl font-bold ${theme.colors.text} mb-6`}>All Status</h3>
+
+            <div className="space-y-4 mb-12">
+              {[
+                { label: 'Tout', value: 'all' },
+                { label: 'success', value: 'success' },
+                { label: 'En attente', value: 'En attente' },
+                { label: 'Echec', value: 'Echec' }
+              ].map((stat) => (
+                <button
+                  key={stat.value}
+                  onClick={() => setTempStatus(stat.value)}
+                  className={`w-full p-5 rounded-2xl border-2 transition-all flex items-center justify-between
+                            ${tempStatus === stat.value
+                      ? 'border-[#1a4a90] bg-[#f8faff] dark:bg-blue-900/10'
+                      : 'border-gray-200 dark:border-gray-700'
+                    }`}
+                >
+                  <span className={`text-xl font-medium ${tempStatus === stat.value ? 'text-[#1a4a90] dark:text-blue-400' : theme.colors.text}`}>
+                    {stat.label}
+                  </span>
+                  <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center p-1
+                            ${tempStatus === stat.value ? 'border-[#1a4a90]' : 'border-gray-300'}
+                        `}>
+                    {tempStatus === stat.value && (
+                      <div className="w-full h-full rounded-full bg-[#1a4a90]"></div>
+                    )}
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={handleApplyStatusFilter}
+              className="w-full py-4 bg-[#1a4a90] hover:bg-[#153a70] text-white rounded-2xl text-xl font-bold transition-colors shadow-lg shadow-blue-900/20"
+            >
+              Appliquer
+            </button>
+          </div>
+        ) : (
+          /* Transactions List View */
+          <div className="grid gap-0">
+            {loading && page === 1 ? (
+              <div className="flex flex-col items-center justify-center py-20 gap-4">
+                <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+                <p className="text-gray-500 animate-pulse">Chargement...</p>
+              </div>
+            ) : transactions.length === 0 ? (
+              <div className="flex flex-col items-center justify-center py-32 px-6 text-center">
+                <div className="mb-8 text-gray-200 dark:text-gray-800">
+                  <svg width="180" height="220" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 3C4 1.89543 4.89543 1 6 1H14L20 7V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V3Z" stroke="currentColor" strokeWidth="0.5" />
+                    <path d="M14 1V5C14 6.10457 14.8954 7 16 7H20" stroke="currentColor" strokeWidth="0.5" />
+                    <path d="M4 22C4.5 21 5.5 20.5 6 21C6.5 21.5 7.5 21.5 8 21C8.5 20.5 9.5 20.5 10 21C10.5 21.5 11.5 21.5 12 21C12.5 20.5 13.5 20.5 14 21C14.5 21.5 15.5 21.5 16 21C16.5 20.5 17.5 20.5 18 21C18.5 21.5 19.5 21 20 22" stroke="currentColor" strokeWidth="0.5" />
+                  </svg>
+                </div>
+              </div>
+            ) : (
+              transactions.map((tx, index) => {
+                const isLastElement = index === transactions.length - 1;
+                return (
+                  <div
+                    key={tx.id}
+                    ref={isLastElement ? lastTransactionElement : null}
+                    className={`group relative w-full overflow-hidden ${theme.colors.c_background} dark:bg-transparent transition-all duration-300 cursor-pointer`}
+                    style={{
+                      animation: `slideInUp 0.6s ease-out ${index * 100}ms both`,
+                    }}
+                    onClick={() => {
+                      router.push(`/transaction/${tx.id}`);
+                    }}
+                  >
+                    <div className="relative p-5 w-full">
+                      <div className="flex items-center justify-between w-full">
+                        <div className="flex items-center gap-4">
+                          <div className="w-12 h-12 rounded-full bg-gray-50 dark:bg-gray-800 flex items-center justify-center flex-shrink-0">
+                            <div className="flex gap-0.5">
+                              <div className="w-1.5 h-1.5 rounded-full bg-[#3b82f6]"></div>
+                              <div className="w-1.5 h-1.5 rounded-full bg-[#3b82f6]"></div>
+                              <div className="w-1.5 h-1.5 rounded-full bg-[#3b82f6]"></div>
+                            </div>
+                          </div>
+
+                          <div className="flex flex-col">
+                            <h3 className={`font-semibold text-lg ${theme.colors.text} leading-tight`}>
+                              {tx.type_trans === 'deposit' ? 'Dépôt' : tx.type_trans === 'withdrawal' ? 'Retrait' : tx.type_trans}
+                            </h3>
+                            <p className="text-sm text-gray-500 font-normal">
+                              {formatDate(tx.created_at)}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="text-right">
+                          <div className={`font-bold text-lg ${theme.colors.text}`}>
+                            XOF {tx.amount}
+                          </div>
+                          <p className={`text-sm font-medium ${tx.status === 'completed' ? 'text-green-500' :
+                            tx.status === 'pending' ? 'text-orange-400' : 'text-red-500'
+                            }`}>
+                            {tx.status}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="absolute bottom-0 left-20 right-0 h-[1px] bg-gray-100 dark:bg-gray-800/50"></div>
+                  </div>
+                )
+              })
+            )}
+            {loading && hasMore && (
+              <div className="flex justify-center py-4">
+                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

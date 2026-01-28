@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/navigation';
 import { useTheme } from '../../components/ThemeProvider';
 import api from '@/lib/axios';
-import DashboardHeader from '@/components/DashboardHeader';
+// import DashboardHeader from '@/components/DashboardHeader';
 //import { markNotificationAsRead } from '../../utils/notifications';
 
 
@@ -79,8 +79,9 @@ export default function NotificationsPage() {
   const fetchNotifications = async (pageNum = 1) => {
     const accessToken = localStorage.getItem('accessToken');
     if (!accessToken) {
-      console.error('No access token found');
-      setError('Please log in to view notifications');
+      setLoading(false);
+      setNotifications([]);
+      setHasMore(false);
       return;
     }
 
@@ -179,7 +180,7 @@ export default function NotificationsPage() {
   const markSelectedAsRead = () => {
     try {
       setNotifications((prev) =>
-        prev.map((n) => 
+        prev.map((n) =>
           selectedNotifications.has(n.id) ? { ...n, is_read: true } : n
         )
       );
@@ -242,7 +243,7 @@ export default function NotificationsPage() {
     if (diffMins < 60) return `${diffMins}m ago`;
     if (diffHours < 24) return `${diffHours}h ago`;
     if (diffDays < 7) return `${diffDays}d ago`;
-    
+
     return date.toLocaleDateString();
   };
 
@@ -311,7 +312,7 @@ export default function NotificationsPage() {
 
       wsRef.current.onclose = () => {
         setWsStatus('disconnected');
-        
+
         const reconnectDelay = Math.min(30000, 1000 * Math.pow(2, wsReconnectAttempts.current));
         reconnectTimeoutRef.current = setTimeout(() => {
           wsReconnectAttempts.current++;
@@ -324,22 +325,22 @@ export default function NotificationsPage() {
     }
   };
 
-  
-// Add this function before the return statement
-const lastNotificationElement = (node: HTMLDivElement | null) => {
-  if (loading) return;
-  
-  if (observerRef.current) observerRef.current.disconnect();
-  
-  observerRef.current = new IntersectionObserver(entries => {
-    if (entries[0].isIntersecting && hasMore) {
-      setPage(prev => prev + 1);
-      fetchNotifications(page + 1);
-    }
-  });
-  
-  if (node) observerRef.current.observe(node);
-};
+
+  // Add this function before the return statement
+  const lastNotificationElement = (node: HTMLDivElement | null) => {
+    if (loading) return;
+
+    if (observerRef.current) observerRef.current.disconnect();
+
+    observerRef.current = new IntersectionObserver(entries => {
+      if (entries[0].isIntersecting && hasMore) {
+        setPage(prev => prev + 1);
+        fetchNotifications(page + 1);
+      }
+    });
+
+    if (node) observerRef.current.observe(node);
+  };
 
 
 
@@ -360,10 +361,10 @@ const lastNotificationElement = (node: HTMLDivElement | null) => {
         clearTimeout(reconnectTimeoutRef.current);
       }
       // Add this line for observer cleanup
-    if (observerRef.current) {
-      observerRef.current.disconnect();
-    }
-  
+      if (observerRef.current) {
+        observerRef.current.disconnect();
+      }
+
     };
   }, []);
 
@@ -372,7 +373,7 @@ const lastNotificationElement = (node: HTMLDivElement | null) => {
   return (
     <div className={`min-h-screen bg-gradient-to-br ${theme.colors.a_background}`}>
       {/* Header */}
-      <DashboardHeader/>
+      {/* <DashboardHeader /> */}
       <div className={`bg-gradient-to-br ${theme.colors.a_background} shadow-sm border-b border-gray-200 dark:border-gray-700`}>
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
@@ -384,13 +385,7 @@ const lastNotificationElement = (node: HTMLDivElement | null) => {
                 <ArrowLeft className="h-5 w-5" />
               </button>
               <div className="flex items-center space-x-2">
-                <Bell className="h-6 w-6" />
-                <h1 className="text-2xl font-bold">Notifications</h1>
-                {/* {unreadCount > 0 && (
-                  <span className="bg-orange-500 text-white text-sm px-2 py-1 rounded-full">
-                    {unreadCount}
-                  </span>
-                )} */}
+                <h1 className="text-2xl font-bold">Notification</h1>
               </div>
             </div>
 
@@ -485,28 +480,26 @@ const lastNotificationElement = (node: HTMLDivElement | null) => {
             <RefreshCw className="h-6 w-6 animate-spin text-gray-400" />
           </div>
         ) : notifications.length === 0 ? (
-          <div className="text-center py-12">
-            <Bell className="h-12 w-12  mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 dark:text-gray-100 mb-2">
-              No notifications yet
-            </h3>
-            <p className="text-gray-500 dark:text-gray-400">
-              {("When you receive notifications, they'll appear here.")}
-            </p>
+          <div className="flex flex-col items-center justify-center py-32 px-6 text-center">
+            <div className="mb-8 text-gray-200 dark:text-gray-800">
+              <svg width="180" height="220" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M4 3C4 1.89543 4.89543 1 6 1H14L20 7V20C20 21.1046 19.1046 22 18 22H6C4.89543 22 4 21.1046 4 20V3Z" stroke="currentColor" strokeWidth="0.5" />
+                <path d="M14 1V5C14 6.10457 14.8954 7 16 7H20" stroke="currentColor" strokeWidth="0.5" />
+                <path d="M4 22C4.5 21 5.5 20.5 6 21C6.5 21.5 7.5 21.5 8 21C8.5 20.5 9.5 20.5 10 21C10.5 21.5 11.5 21.5 12 21C12.5 20.5 13.5 20.5 14 21C14.5 21.5 15.5 21.5 16 21C16.5 20.5 17.5 20.5 18 21C18.5 21.5 19.5 21 20 22" stroke="currentColor" strokeWidth="0.5" />
+              </svg>
+            </div>
           </div>
         ) : (
           <div className="space-y-2">
             {notifications.map((notification, index) => (
-            <div
+              <div
                 key={notification.id}
                 ref={index === notifications.length - 1 ? lastNotificationElement : null}
-                className={`relative bg-gradient-to-br ${theme.colors.background} rounded-lg border ${
-                  notification.is_read 
-                    ? 'border-gray-200 dark:border-gray-700' 
-                    : 'border-orange-200 dark:border-orange-800 bg-orange-50 dark:bg-orange-900/10'
-                } p-4 hover:shadow-md transition-shadow cursor-pointer ${
-                  selectedNotifications.has(notification.id) ? 'ring-2 ring-blue-500' : ''
-                }`}
+                className={`relative bg-gradient-to-br ${theme.colors.background} rounded-lg border ${notification.is_read
+                  ? 'border-gray-200 dark:border-gray-700'
+                  : 'border-orange-200 dark:border-orange-800 bg-orange-50 dark:bg-orange-900/10'
+                  } p-4 hover:shadow-md transition-shadow cursor-pointer ${selectedNotifications.has(notification.id) ? 'ring-2 ring-blue-500' : ''
+                  }`}
                 onClick={() => {
                   if (isSelectionMode) {
                     toggleNotificationSelection(notification.id);
@@ -529,11 +522,10 @@ const lastNotificationElement = (node: HTMLDivElement | null) => {
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between">
-                      <h3 className={`text-sm font-medium ${
-                        notification.is_read 
-                          ? `${theme.colors.text}`
-                          : `${theme.colors.text} font-semibold`
-                      }`}>
+                      <h3 className={`text-sm font-medium ${notification.is_read
+                        ? `${theme.colors.text}`
+                        : `${theme.colors.text} font-semibold`
+                        }`}>
                         {notification.title}
                       </h3>
                       <div className="flex items-center space-x-2">
@@ -545,11 +537,10 @@ const lastNotificationElement = (node: HTMLDivElement | null) => {
                         )}
                       </div>
                     </div>
-                    <p className={`mt-1 text-sm ${
-                      notification.is_read 
-                        ? `${theme.colors.text}`
-                        : `${theme.colors.text}`
-                    }`}>
+                    <p className={`mt-1 text-sm ${notification.is_read
+                      ? `${theme.colors.text}`
+                      : `${theme.colors.text}`
+                      }`}>
                       {notification.content}
                     </p>
                   </div>

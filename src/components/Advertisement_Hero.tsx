@@ -39,15 +39,26 @@ const SlidingHero = ({ baseUrl = 'https://api.blaffa.net' }) => {
       try {
         setLoading(true);
         setError(null); // Clear previous errors
-        const response = await api.get(`/blaffa/advertisement`);
+        // Use fetch instead of axios to avoid sending auth token
+        const response = await fetch(`${baseUrl}/blaffa/advertisement`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        });
         
-        // With Axios, the response data is directly available in response.data
-        const data = response.data;
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const data = await response.json();
         
         // Ensure data.results is an array and contains objects matching Slide interface
         if (Array.isArray(data.results)) {
           const enabledAds: Slide[] = data.results.filter((ad: Ad) => ad.enable); // Use 'any' temporarily if structure is uncertain, or refine filter type
           setSlides(enabledAds);
+          // Save to localStorage for offline/fallback use
+          localStorage.setItem('advertisementCache', JSON.stringify(enabledAds));
         } else {
             console.error('API response results is not an array:', data);
             setSlides([]); // Set to empty array if results is not as expected
@@ -55,30 +66,20 @@ const SlidingHero = ({ baseUrl = 'https://api.blaffa.net' }) => {
 
       } catch (err: unknown) { // Catch error as unknown
         console.error('Error fetching advertisements:', err);
-        let errorMessage = 'An unexpected error occurred.';
-        if (err instanceof Error) {
-            errorMessage = err.message;
-        } else if (typeof err === 'string') {
-            errorMessage = err;
-        }
-        setError(`Failed to load advertisements: ${errorMessage}`);
-        // Fallback demo data - ensure it matches the Slide interface
-        setSlides([
-          {
-            id: 'demo-1',
-            image: '/HeroImage.jpg',
-            content: '',
-            created_at: new Date().toISOString(),
-            enable: true
-          },
-          {
-            id: 'demo-2',
-            image: '/HeroImage2.jpg',
-            content: '',
-            created_at: new Date().toISOString(),
-            enable: true
+        // Try to load from localStorage cache
+        const cachedAds = localStorage.getItem('advertisementCache');
+        if (cachedAds) {
+          try {
+            const parsedAds = JSON.parse(cachedAds) as Slide[];
+            setSlides(parsedAds);
+            console.log('Loaded advertisements from cache');
+          } catch (parseErr) {
+            console.error('Failed to parse cached advertisements:', parseErr);
+            setSlides([]); // Empty array if no valid cache
           }
-        ]);
+        } else {
+          setSlides([]); // Empty array if no cache available
+        }
       } finally {
         setLoading(false);
       }
@@ -125,15 +126,8 @@ const SlidingHero = ({ baseUrl = 'https://api.blaffa.net' }) => {
     );
   }
 
-  if (error && slides.length === 0) {
-    return (
-      <div className="relative w-full h-64 md:h-96 lg:h-[500px] bg-gradient-to-r from-red-900 to-red-800 flex items-center justify-center text-white">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold mb-2">Unable to load content</h2>
-          <p className="text-red-200">{error}</p> {/* Display the specific error message */}
-        </div>
-      </div>
-    );
+  if (slides.length === 0) {
+    return null; // Show nothing if no slides available
   }
 
   return (
