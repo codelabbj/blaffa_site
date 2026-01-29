@@ -204,7 +204,7 @@ const CouponPage = ()=>{
         });
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: `min-h-screen ${theme.mode === 'dark' ? theme.colors.a_background : 'bg-[#F8F9FB]'} font-sans pb-20`,
+        className: `min-h-screen ${theme.colors.a_background} font-sans pb-20`,
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$components$2f$noop$2d$head$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("title", {
@@ -220,13 +220,13 @@ const CouponPage = ()=>{
                 columnNumber: 7
             }, ("TURBOPACK compile-time value", void 0)),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("header", {
-                className: `bg-transparent dark:bg-gray-900 sticky top-0 z-50`,
+                className: `bg-transparent sticky top-0 z-50`,
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                     className: "max-w-md mx-auto px-4 h-20 flex items-center justify-between",
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                             onClick: ()=>router.back(),
-                            className: "p-2 -ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors",
+                            className: `p-2 -ml-2 rounded-full ${theme.colors.hover} transition-colors`,
                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$arrow$2d$left$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ArrowLeft$3e$__["ArrowLeft"], {
                                 className: theme.colors.text,
                                 size: 28
@@ -270,7 +270,7 @@ const CouponPage = ()=>{
                 className: "max-w-md mx-auto p-4 space-y-6",
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: `bg-white dark:bg-gray-800 p-8 rounded-[2rem] shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col gap-8`,
+                        className: `${theme.colors.a_background} p-8 rounded-[2rem] shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col gap-8 border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-gray-50'}`,
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "flex items-center justify-between",
@@ -279,7 +279,7 @@ const CouponPage = ()=>{
                                         className: "flex items-center gap-5",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "w-16 h-16 rounded-2xl bg-[#E8E8E8] dark:bg-gray-700 flex items-center justify-center text-[#999999] font-bold text-2xl",
+                                                className: `w-16 h-16 rounded-2xl ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-[#E8E8E8]'} flex items-center justify-center ${theme.mode === 'dark' ? 'text-slate-300' : 'text-[#999999]'} font-bold text-2xl`,
                                                 children: getInitials(userProfile?.first_name, userProfile?.last_name)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/coupon/page.tsx",
@@ -354,10 +354,10 @@ const CouponPage = ()=>{
                                 className: "flex gap-4",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "flex-1 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-4 text-center",
+                                        className: `flex-1 ${theme.colors.a_background} border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-gray-100'} rounded-2xl p-4 text-center`,
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "text-3xl font-black text-[#002d72] dark:text-blue-400 leading-none",
+                                                className: `text-3xl font-black ${theme.mode === 'dark' ? 'text-blue-400' : 'text-[#002d72]'} leading-none`,
                                                 children: "0"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/coupon/page.tsx",
@@ -365,7 +365,7 @@ const CouponPage = ()=>{
                                                 columnNumber: 15
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "text-[0.8rem] text-gray-400 font-medium mt-2",
+                                                className: `text-[0.8rem] ${theme.colors.d_text} opacity-60 font-medium mt-2`,
                                                 children: "Mes coupons"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/coupon/page.tsx",
@@ -379,7 +379,7 @@ const CouponPage = ()=>{
                                         columnNumber: 13
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "flex-1 bg-white dark:bg-gray-900 border border-gray-100 dark:border-gray-800 rounded-2xl p-4 text-center",
+                                        className: `flex-1 ${theme.colors.a_background} border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-gray-100'} rounded-2xl p-4 text-center`,
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 className: "text-3xl font-black text-green-600 leading-none",
@@ -390,7 +390,7 @@ const CouponPage = ()=>{
                                                 columnNumber: 15
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "text-[0.8rem] text-gray-400 font-medium mt-2",
+                                                className: `text-[0.8rem] ${theme.colors.d_text} opacity-60 font-medium mt-2`,
                                                 children: "Bonus"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/coupon/page.tsx",
@@ -422,10 +422,10 @@ const CouponPage = ()=>{
                             'MELBET',
                             'BETWINNER'
                         ].map((name, idx)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: `flex-shrink-0 bg-white dark:bg-gray-800 px-5 py-4 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex items-center gap-3 border border-transparent`,
+                                className: `flex-shrink-0 ${theme.colors.a_background} px-5 py-4 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex items-center gap-3 border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-transparent'}`,
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "w-10 h-10 rounded-lg bg-gray-50 dark:bg-gray-700 flex items-center justify-center p-1",
+                                        className: `w-10 h-10 rounded-lg ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-gray-50'} flex items-center justify-center p-1`,
                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: `w-8 h-8 rounded-md flex items-center justify-center text-white font-bold text-xs ${name === '1xBet' ? 'bg-blue-600' : name === 'MELBET' ? 'bg-black' : 'bg-green-700'}`,
                                             children: name.charAt(0)
@@ -470,7 +470,7 @@ const CouponPage = ()=>{
                                 columnNumber: 11
                             }, ("TURBOPACK compile-time value", void 0)),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                className: "text-gray-400 text-lg font-medium",
+                                className: `text-lg font-medium ${theme.colors.d_text} opacity-60`,
                                 children: formatDate()
                             }, void 0, false, {
                                 fileName: "[project]/src/app/coupon/page.tsx",
@@ -533,13 +533,13 @@ const CouponPage = ()=>{
                     }, ("TURBOPACK compile-time value", void 0)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "space-y-6",
                         children: coupons.map((coupon)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: `bg-white dark:bg-gray-800 rounded-[2.5rem] p-8 shadow-[0_4px_25px_rgba(0,0,0,0.04)] transition-all hover:shadow-lg`,
+                                className: `${theme.colors.a_background} rounded-[2.5rem] p-8 shadow-[0_4px_25px_rgba(0,0,0,0.04)] border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-transparent'} transition-all hover:shadow-lg`,
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "flex items-center gap-5 mb-6",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "w-16 h-16 rounded-[1.25rem] bg-[#E8E8E8] dark:bg-gray-700 text-[#999999] flex items-center justify-center font-bold text-2xl",
+                                                className: `w-16 h-16 rounded-[1.25rem] ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-[#E8E8E8]'} ${theme.mode === 'dark' ? 'text-slate-400' : 'text-[#999999]'} flex items-center justify-center font-bold text-2xl`,
                                                 children: getInitials(coupon.author_first_name, coupon.author_last_name)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/coupon/page.tsx",
@@ -615,7 +615,7 @@ const CouponPage = ()=>{
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                    className: "text-gray-400 text-[1.1rem] font-medium leading-none",
+                                                    className: `${theme.colors.d_text} opacity-60 text-[1.1rem] font-medium leading-none`,
                                                     children: [
                                                         "Côte totale: ",
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -624,7 +624,7 @@ const CouponPage = ()=>{
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/coupon/page.tsx",
                                                             lineNumber: 222,
-                                                            columnNumber: 104
+                                                            columnNumber: 126
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     ]
                                                 }, void 0, true, {
@@ -638,7 +638,7 @@ const CouponPage = ()=>{
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0)),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "flex items-center gap-3 bg-[#F8F9FA] dark:bg-gray-700 py-2.5 px-5 rounded-[1.5rem] shadow-sm border border-gray-100 dark:border-gray-600",
+                                                className: `flex items-center gap-3 ${theme.mode === 'dark' ? 'bg-slate-800 border-slate-700' : 'bg-[#F8F9FA] border-gray-100'} py-2.5 px-5 rounded-[1.5rem] shadow-sm border`,
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: "w-6 h-6 rounded flex items-center justify-center overflow-hidden",
@@ -677,7 +677,7 @@ const CouponPage = ()=>{
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("hr", {
-                                        className: "border-gray-50 dark:border-gray-700/50 mb-6"
+                                        className: `border-gray-50 ${theme.mode === 'dark' ? 'border-slate-700/50' : ''} mb-6`
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/coupon/page.tsx",
                                         lineNumber: 232,
@@ -687,8 +687,9 @@ const CouponPage = ()=>{
                                         className: "flex items-center justify-between",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "flex items-center gap-6 text-[#999999]",
+                                                className: `flex items-center gap-6 ${theme.mode === 'dark' ? 'text-slate-400' : 'text-[#999999]'}`,
                                                 children: [
+                                                    "                    ",
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: "flex items-center gap-2",
                                                         children: [
@@ -697,22 +698,22 @@ const CouponPage = ()=>{
                                                                 className: coupon.user_liked ? "text-blue-500 fill-blue-500" : ""
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/coupon/page.tsx",
-                                                                lineNumber: 238,
-                                                                columnNumber: 23
+                                                                lineNumber: 237,
+                                                                columnNumber: 21
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                 className: "font-bold text-lg",
                                                                 children: coupon.likes
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/coupon/page.tsx",
-                                                                lineNumber: 239,
-                                                                columnNumber: 23
+                                                                lineNumber: 238,
+                                                                columnNumber: 21
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/coupon/page.tsx",
-                                                        lineNumber: 237,
-                                                        columnNumber: 21
+                                                        lineNumber: 236,
+                                                        columnNumber: 145
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: "flex items-center gap-2",
@@ -722,7 +723,7 @@ const CouponPage = ()=>{
                                                                 className: coupon.user_disliked ? "text-red-500 fill-red-500" : ""
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/coupon/page.tsx",
-                                                                lineNumber: 242,
+                                                                lineNumber: 241,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -730,13 +731,13 @@ const CouponPage = ()=>{
                                                                 children: coupon.dislikes
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/coupon/page.tsx",
-                                                                lineNumber: 243,
+                                                                lineNumber: 242,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/coupon/page.tsx",
-                                                        lineNumber: 241,
+                                                        lineNumber: 240,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -747,7 +748,7 @@ const CouponPage = ()=>{
                                                                 className: "fill-yellow-400 text-yellow-400"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/coupon/page.tsx",
-                                                                lineNumber: 246,
+                                                                lineNumber: 245,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0)),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -755,13 +756,13 @@ const CouponPage = ()=>{
                                                                 children: coupon.average_rating || '4.5'
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/coupon/page.tsx",
-                                                                lineNumber: 247,
+                                                                lineNumber: 246,
                                                                 columnNumber: 23
                                                             }, ("TURBOPACK compile-time value", void 0))
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/coupon/page.tsx",
-                                                        lineNumber: 245,
+                                                        lineNumber: 244,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
@@ -780,7 +781,7 @@ const CouponPage = ()=>{
                                                         strokeWidth: 3
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/coupon/page.tsx",
-                                                        lineNumber: 258,
+                                                        lineNumber: 257,
                                                         columnNumber: 47
                                                     }, ("TURBOPACK compile-time value", void 0)) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: "p-1 rounded bg-white/60 dark:bg-gray-800/60",
@@ -788,25 +789,25 @@ const CouponPage = ()=>{
                                                             size: 18
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/coupon/page.tsx",
-                                                            lineNumber: 258,
+                                                            lineNumber: 257,
                                                             columnNumber: 146
                                                         }, ("TURBOPACK compile-time value", void 0))
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/coupon/page.tsx",
-                                                        lineNumber: 258,
+                                                        lineNumber: 257,
                                                         columnNumber: 85
                                                     }, ("TURBOPACK compile-time value", void 0)),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         children: coupon.code
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/coupon/page.tsx",
-                                                        lineNumber: 259,
+                                                        lineNumber: 258,
                                                         columnNumber: 21
                                                     }, ("TURBOPACK compile-time value", void 0))
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/coupon/page.tsx",
-                                                lineNumber: 251,
+                                                lineNumber: 250,
                                                 columnNumber: 19
                                             }, ("TURBOPACK compile-time value", void 0))
                                         ]

@@ -15,7 +15,7 @@ __turbopack_context__.n(__turbopack_context__.i("[project]/src/app/layout.tsx [a
 }),
 "[project]/src/app/withdraw/page.tsx [app-rsc] (ecmascript)", ((__turbopack_context__, module, exports) => {
 
-const e = new Error("Could not parse module '[project]/src/app/withdraw/page.tsx'\n\nExpression expected");
+const e = new Error("Could not parse module '[project]/src/app/withdraw/page.tsx'\n\nUnterminated regexp literal");
 e.code = 'MODULE_UNPARSABLE';
 throw e;
 }),

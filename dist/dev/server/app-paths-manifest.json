@@ -1,16 +1,6 @@
 {
   "/_not-found/page": "app/_not-found/page.js",
-  "/all_transactions/page": "app/all_transactions/page.js",
-  "/bet_id/page": "app/bet_id/page.js",
-  "/coupon/page": "app/coupon/page.js",
-  "/crypto/buy/page": "app/crypto/buy/page.js",
-  "/crypto/sell/page": "app/crypto/sell/page.js",
   "/dashboard/page": "app/dashboard/page.js",
   "/deposit/page": "app/deposit/page.js",
-  "/login/page": "app/login/page.js",
-  "/notifications/page": "app/notifications/page.js",
-  "/page": "app/page.js",
-  "/profile/edit/page": "app/profile/edit/page.js",
-  "/profile/page": "app/profile/page.js",
-  "/transaction/[id]/page": "app/transaction/[id]/page.js"
+  "/withdraw/page": "app/withdraw/page.js"
 }

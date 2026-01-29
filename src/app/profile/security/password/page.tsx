@@ -80,7 +80,7 @@ export default function ChangePassword() {
             <div className="animate-in slide-in-from-bottom-10 fade-in duration-500 min-h-screen">
                 <div className="bg-[#003399] pt-14 pb-12 px-6 rounded-b-[3.5rem] relative mb-12 shadow-2xl shadow-blue-900/40">
                     <button
-                        onClick={() => router.push('/profile')}
+                        onClick={() => router.back()}
                         className="absolute top-14 left-6 text-white hover:opacity-70 transition-opacity"
                     >
                         <ChevronLeft size={36} />

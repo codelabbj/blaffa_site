@@ -360,10 +360,10 @@ function CryptoTransactionForm({ isVerified, crypto, typeTrans }) {
     //   );
     // }
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "bg-gradient-to-r rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-xs sm:max-w-md relative mx-auto mt-8",
+        className: `rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-xs sm:max-w-md relative mx-auto mt-8 border-2`,
         style: {
-            background: theme.mode === 'dark' ? 'linear-gradient(135deg, rgba(30,41,59,0.85) 60%, rgba(51,65,85,0.85) 100%)' : 'linear-gradient(135deg, rgba(255,255,255,0.85) 60%, rgba(226,232,240,0.85) 100%)',
-            borderColor: theme.mode === 'dark' ? '#334155' : '#e5e7eb'
+            background: theme.mode === 'dark' ? 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)' : 'linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)',
+            borderColor: theme.mode === 'dark' ? '#334155' : '#e2e8f0'
         },
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -381,7 +381,7 @@ function CryptoTransactionForm({ isVerified, crypto, typeTrans }) {
                 className: "mb-4",
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                        className: "block mb-1 font-medium",
+                        className: `block mb-1 font-medium ${theme.colors.text}`,
                         children: t('Select Network')
                     }, void 0, false, {
                         fileName: "[project]/src/components/CryptoTransactionForm.tsx",
@@ -390,7 +390,7 @@ function CryptoTransactionForm({ isVerified, crypto, typeTrans }) {
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("select", {
                         className: `w-full p-3 rounded-lg border focus:ring-2 focus:ring-blue-400 text-lg transition-colors
-            ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-600 text-slate-100' : 'bg-white border-slate-300 text-slate-900'}`,
+            ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-700 text-slate-100' : 'bg-white border-slate-200 text-slate-900'}`,
                         value: selectedNetwork?.id || '',
                         onChange: (e)=>{
                             const net = networks.find((n)=>String(n.id) === e.target.value);
@@ -432,7 +432,7 @@ function CryptoTransactionForm({ isVerified, crypto, typeTrans }) {
                                 columnNumber: 13
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                className: "text-sm",
+                                className: `text-sm ${theme.colors.d_text}`,
                                 children: selectedNetwork.public_name || selectedNetwork.name
                             }, void 0, false, {
                                 fileName: "[project]/src/components/CryptoTransactionForm.tsx",
@@ -457,7 +457,7 @@ function CryptoTransactionForm({ isVerified, crypto, typeTrans }) {
                     crypto.logo && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
                         src: crypto.logo,
                         alt: crypto.name,
-                        className: "w-14 h-14 rounded-full border-2 border-blue-400 shadow-md"
+                        className: "w-14 h-14 rounded-full border-2 border-primary shadow-md bg-white"
                     }, void 0, false, {
                         fileName: "[project]/src/components/CryptoTransactionForm.tsx",
                         lineNumber: 288,
@@ -466,7 +466,7 @@ function CryptoTransactionForm({ isVerified, crypto, typeTrans }) {
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "font-bold text-lg flex items-center gap-2",
+                                className: `font-bold text-lg flex items-center gap-2 ${theme.colors.text}`,
                                 children: [
                                     crypto.name,
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -512,7 +512,7 @@ function CryptoTransactionForm({ isVerified, crypto, typeTrans }) {
                 className: "mb-4 relative",
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                        className: "block mb-1 font-medium",
+                        className: `block mb-1 font-medium ${theme.colors.text}`,
                         children: transactionType === 'buy' ? t('Amount (Local Currency)') : t('Amount (Crypto)')
                     }, void 0, false, {
                         fileName: "[project]/src/components/CryptoTransactionForm.tsx",
@@ -537,7 +537,7 @@ function CryptoTransactionForm({ isVerified, crypto, typeTrans }) {
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                 type: "number",
                                 className: `w-full p-3 pl-10 rounded-lg border focus:ring-2 focus:ring-blue-400 text-lg transition-colors
-              ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-600 text-slate-100 placeholder-slate-400' : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400'}`,
+              ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-700 text-slate-100 placeholder-slate-500' : 'bg-white border-slate-200 text-slate-900 placeholder-slate-400'}`,
                                 value: amount,
                                 onChange: (e)=>setAmount(e.target.value),
                                 min: "0",
@@ -620,7 +620,7 @@ function CryptoTransactionForm({ isVerified, crypto, typeTrans }) {
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
                                 type: "text",
                                 className: `w-full p-3 pl-10 rounded-lg border focus:ring-2 focus:ring-blue-400 transition-colors
-                ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-600 text-slate-100 placeholder-slate-400' : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400'}`,
+                ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-700 text-slate-100 placeholder-slate-500' : 'bg-white border-slate-200 text-slate-900 placeholder-slate-400'}`,
                                 placeholder: t('Wallet link'),
                                 value: walletLink,
                                 onChange: (e)=>setWalletLink(e.target.value)
@@ -1059,9 +1059,9 @@ function CryptoTransactionForm({ isVerified, crypto, typeTrans }) {
                 columnNumber: 9
             }, this),
             apiResult && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "mt-6 p-4 rounded-lg text-center shadow-lg",
+                className: `mt-6 p-4 rounded-lg text-center shadow-lg border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-slate-200'}`,
                 style: {
-                    background: theme.mode === 'dark' ? 'linear-gradient(135deg, rgba(30,41,59,0.95) 60%, rgba(51,65,85,0.95) 100%)' : 'linear-gradient(135deg, rgba(255,255,255,0.95) 60%, rgba(226,232,240,0.95) 100%)'
+                    background: theme.mode === 'dark' ? 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)' : 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)'
                 },
                 children: [
                     transactionType === 'sale' && apiResult?.wallet_address && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
@@ -1410,7 +1410,7 @@ function CryptoSelectionGrid({ mode, title }) {
             children: [
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                     onClick: ()=>setSelectedCrypto(null),
-                    className: "group flex items-center gap-2 mb-6 text-gray-500 hover:text-gray-900 transition-colors",
+                    className: `group flex items-center gap-2 mb-6 ${theme.mode === 'dark' ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'} transition-colors`,
                     children: [
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fa$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FaArrowLeft"], {}, void 0, false, {
                             fileName: "[project]/src/components/CryptoSelectionGrid.tsx",
@@ -1418,6 +1418,7 @@ function CryptoSelectionGrid({ mode, title }) {
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                            className: "font-medium",
                             children: "Retour"
                         }, void 0, false, {
                             fileName: "[project]/src/components/CryptoSelectionGrid.tsx",
@@ -1453,19 +1454,20 @@ function CryptoSelectionGrid({ mode, title }) {
         className: "w-full",
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
-                className: "text-2xl font-bold mb-2",
+                className: `text-2xl font-bold mb-2 ${theme.colors.text}`,
                 children: [
                     title === 'Achat' && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "flex items-center gap-4",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                 onClick: ()=>window.history.back(),
+                                className: theme.colors.hover,
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fa$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FaArrowLeft"], {
                                     className: "text-xl"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/CryptoSelectionGrid.tsx",
                                     lineNumber: 95,
-                                    columnNumber: 71
+                                    columnNumber: 102
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/CryptoSelectionGrid.tsx",
@@ -1490,12 +1492,13 @@ function CryptoSelectionGrid({ mode, title }) {
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                 onClick: ()=>window.history.back(),
+                                className: theme.colors.hover,
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$icons$2f$fa$2f$index$2e$mjs__$5b$app$2d$client$5d$__$28$ecmascript$29$__["FaArrowLeft"], {
                                     className: "text-xl"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/CryptoSelectionGrid.tsx",
                                     lineNumber: 101,
-                                    columnNumber: 71
+                                    columnNumber: 102
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/CryptoSelectionGrid.tsx",
@@ -1522,7 +1525,7 @@ function CryptoSelectionGrid({ mode, title }) {
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                className: "text-gray-900 font-medium mb-6",
+                className: `font-medium mb-6 ${theme.colors.d_text}`,
                 children: "1. Sélectionnez votre crypto monnaie"
             }, void 0, false, {
                 fileName: "[project]/src/components/CryptoSelectionGrid.tsx",
@@ -1553,14 +1556,14 @@ function CryptoSelectionGrid({ mode, title }) {
                 className: "grid grid-cols-2 gap-4",
                 children: cryptos.map((crypto)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         onClick: ()=>handleCryptoSelect(crypto),
-                        className: "border border-gray-200 rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer hover:border-black transition-all bg-white shadow-sm",
+                        className: `border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-gray-200'} rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer hover:border-blue-500 transition-all ${theme.colors.a_background} shadow-sm`,
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "w-12 h-12 relative mb-3",
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
                                     src: crypto.logo,
                                     alt: crypto.name,
-                                    className: "w-full h-full object-contain rounded-full bg-black text-white p-1"
+                                    className: `w-full h-full object-contain rounded-full ${theme.mode === 'dark' ? 'bg-slate-800' : 'bg-black'} text-white p-1`
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/CryptoSelectionGrid.tsx",
                                     lineNumber: 124,
@@ -1572,7 +1575,7 @@ function CryptoSelectionGrid({ mode, title }) {
                                 columnNumber: 29
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                className: "font-medium text-gray-900 mb-1",
+                                className: `font-medium mb-1 ${theme.colors.text}`,
                                 children: crypto.name
                             }, void 0, false, {
                                 fileName: "[project]/src/components/CryptoSelectionGrid.tsx",
@@ -1580,7 +1583,7 @@ function CryptoSelectionGrid({ mode, title }) {
                                 columnNumber: 29
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                className: "text-gray-900 font-bold",
+                                className: `font-bold ${theme.colors.primary}`,
                                 children: [
                                     parseInt(crypto.public_amount.toString()).toFixed(1),
                                     " CFA"
@@ -1628,27 +1631,37 @@ __turbopack_context__.s([
     ()=>SellCryptoPage
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ThemeProvider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/ThemeProvider.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$CryptoSelectionGrid$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/CryptoSelectionGrid.tsx [app-client] (ecmascript)");
+;
+var _s = __turbopack_context__.k.signature();
 'use client';
 ;
 ;
 function SellCryptoPage() {
+    _s();
+    const { theme } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ThemeProvider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"])();
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "min-h-screen bg-white p-4 pt-6",
+        className: `min-h-screen ${theme.colors.a_background} p-4 pt-6`,
         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$CryptoSelectionGrid$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
             mode: "sale",
             title: "Vente"
         }, void 0, false, {
             fileName: "[project]/src/app/crypto/sell/page.tsx",
-            lineNumber: 8,
+            lineNumber: 10,
             columnNumber: 13
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/app/crypto/sell/page.tsx",
-        lineNumber: 7,
+        lineNumber: 9,
         columnNumber: 9
     }, this);
 }
+_s(SellCryptoPage, "JkSxfi8+JQlqgIgDOc3wQN+nVIw=", false, function() {
+    return [
+        __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ThemeProvider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"]
+    ];
+});
 _c = SellCryptoPage;
 var _c;
 __turbopack_context__.k.register(_c, "SellCryptoPage");

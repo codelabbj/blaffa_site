@@ -1,5 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 //import Head from 'next/head';
 //import axios from 'axios';
 import { useTranslation } from 'react-i18next';
@@ -9,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 //import DashboardHeader from '@/components/DashboardHeader';
 import { useTheme } from '@/components/ThemeProvider';
 import { useWebSocket } from '../../context/WebSocketContext';
-import { Check, CheckCircle, Smartphone, XCircle, Copy, Plus, ArrowLeft } from 'lucide-react';
+import { Check, CheckCircle, Phone, XCircle, Copy, Plus, ArrowLeft } from 'lucide-react';
 import api from '@/lib/axios';
 import DashboardHeader from '@/components/DashboardHeader';
 // import { CopyIcon } from 'lucide-react';
@@ -132,6 +133,7 @@ interface ApiError extends Error {
 }
 
 export default function Deposits() {
+  const router = useRouter();
   const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState<'selectId' | 'selectNetwork' | 'selectPhone' | 'manageBetId' | 'enterDetails' | 'addPhone'>('selectId');
   const [selectedPlatform, setSelectedPlatform] = useState<App | null>(null);
@@ -1153,7 +1155,7 @@ export default function Deposits() {
                     </div>
                   ) : (
                     <div className={`w-14 h-14 ${theme.mode === 'dark' ? 'bg-slate-800' : 'bg-gray-100'} rounded-lg flex items-center justify-center flex-shrink-0`}>
-                      <Smartphone className={`w-6 h-6 ${theme.colors.d_text} opacity-40`} />
+                      <Phone className={`w-6 h-6 ${theme.colors.d_text} opacity-40`} />
                     </div>
                   )}
                   <span className={`text-lg font-medium ${theme.colors.text}`}>
@@ -1218,7 +1220,7 @@ export default function Deposits() {
                     >
                       <div className="flex items-center gap-4">
                         <div className={`w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0`}>
-                          <Smartphone className="w-6 h-6 text-white" />
+                          <Phone className="w-6 h-6 text-white" />
                         </div>
                         <span className={`text-lg font-medium ${theme.colors.text}`}>
                           {formatPhoneWithCountryCode(phone.phone)}
@@ -1340,15 +1342,8 @@ export default function Deposits() {
                 <ArrowLeft size={28} className="text-gray-900 dark:text-gray-100" />
               </button>
               <h3 className={`text-xl font-bold ${theme.colors.text}`}>
-                Dépôt - Informations
-              </h3>
-            </div>
-
-            {/* Title */}
-            <div className="mb-8">
-              <h4 className={`text-lg font-bold ${theme.colors.text} mb-2`}>
                 5. Confirmer le paiement
-              </h4>
+              </h3>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
@@ -1384,17 +1379,19 @@ export default function Deposits() {
                   Numéro de téléphone
                 </label>
                 <div className="flex gap-3">
-                  {/* Flag/Country Code Box */}
-                  <div className={`flex items-center gap-2 px-4 py-3 ${theme.colors.a_background} border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-slate-300'} rounded-xl`}>
-                    <span className="text-2xl">🇨🇮</span>
+                  {/* Flag/Indication Box */}
+                  <div className={`flex items-center justify-center gap-2 px-4 py-3 w-1/3 ${theme.colors.a_background} border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-slate-300'} rounded-xl`}>
+                    <span className="text-2xl">
+                      {getCountryFlag(selectedNetwork?.indication)}
+                    </span>
                     <span className={`text-lg font-medium ${theme.colors.text}`}>
                       {selectedNetwork?.indication || '+225'}
                     </span>
                   </div>
                   {/* Phone Number Box */}
-                  <div className={`flex-1 flex items-center px-4 py-3 ${theme.colors.a_background} border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-slate-300'} rounded-xl`}>
+                  <div className={`flex-1 relative flex items-center h-14 px-4 rounded-xl border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-slate-300'} ${theme.colors.a_background}`}>
                     <span className={`text-lg ${theme.colors.text}`}>
-                      {selectedPhone ? selectedPhone.phone.replace(/^\+?225/, '') : ''}
+                      {selectedPhone ? (selectedNetwork?.indication ? selectedPhone.phone.replace(new RegExp(`^\\+?${selectedNetwork.indication.replace('+', '')}`), '') : selectedPhone.phone) : ''}
                     </span>
                   </div>
                 </div>
@@ -1438,6 +1435,29 @@ export default function Deposits() {
     }
   };
 
+  // Helper to get country flag based on indication
+  const getCountryFlag = (indication?: string) => {
+    if (!indication) return '🇧🇫'; // Default
+    const cleanIndication = indication.replace('+', '');
+    switch (cleanIndication) {
+      case '226': return '🇧🇫'; // Burkina Faso
+      case '225': return '🇨🇮'; // Cote d'Ivoire
+      case '223': return '🇲🇱'; // Mali
+      case '221': return '🇸🇳'; // Senegal
+      case '228': return '🇹🇬'; // Togo
+      case '229': return '🇧🇯'; // Benin
+      case '237': return '🇨🇲'; // Cameroon
+      case '224': return '🇬🇳'; // Guinea
+      case '241': return '🇬🇦'; // Gabon
+      case '242': return '🇨🇬'; // Congo
+      case '243': return '🇨🇩'; // DRC
+      case '227': return '🇳🇪'; // Niger
+      case '233': return '🇬🇭'; // Ghana
+      case '234': return '🇳🇬'; // Nigeria
+      default: return '🌍';
+    }
+  };
+
   // Get current step title
   const getCurrentStepTitle = () => {
     switch (currentStep) {
@@ -1450,7 +1470,7 @@ export default function Deposits() {
       case 'selectPhone':
         return "Dépôt - Numéro de télé...";
       case 'enterDetails':
-        return "Dépôt - Montant";
+        return "Dépôt - Informations";
       default:
         return "Dépôt";
     }
@@ -1520,7 +1540,7 @@ export default function Deposits() {
           <button
             onClick={() => {
               if (currentStep === 'selectId') {
-                window.location.href = '/dashboard';
+                router.back();
               } else if (currentStep === 'manageBetId') {
                 setCurrentStep('selectId');
               } else if (currentStep === 'selectNetwork') {

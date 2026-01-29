@@ -3,13 +3,14 @@
 
 'use client';
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
 //import Head from 'next/head';
 //import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 // import styles from '../styles/Withdraw.module.css';
 //import DashboardHeader from '@/components/DashboardHeader';
 import { useTheme } from '../../components/ThemeProvider';
-import { Check, CheckCircle, Smartphone, XCircle, HelpCircle, AlertTriangle, ExternalLink, Plus, ArrowLeft } from 'lucide-react';
+import { Check, CheckCircle, Phone, XCircle, HelpCircle, AlertTriangle, ExternalLink, Plus, ArrowLeft } from 'lucide-react';
 import api from '@/lib/axios';
 import DashboardHeader from '@/components/DashboardHeader';
 
@@ -93,6 +94,7 @@ interface UserPhone {
 // }
 
 export default function Withdraw() {
+  const router = useRouter();
   const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState<'selectId' | 'selectNetwork' | 'selectPhone' | 'manageBetId' | 'enterDetails' | 'addPhone'>('selectId');
   const [selectedPlatform, setSelectedPlatform] = useState<App | null>(null);
@@ -702,7 +704,7 @@ export default function Withdraw() {
                     </div>
                   ) : (
                     <div className={`w-14 h-14 ${theme.mode === 'dark' ? 'bg-slate-800' : 'bg-gray-100'} rounded-lg flex items-center justify-center flex-shrink-0`}>
-                      <Smartphone className={`w-6 h-6 ${theme.colors.d_text} opacity-40`} />
+                      <Phone className={`w-6 h-6 ${theme.colors.d_text} opacity-40`} />
                     </div>
                   )}
                   <span className="text-lg font-medium text-gray-900 dark:text-white">
@@ -767,7 +769,7 @@ export default function Withdraw() {
                     >
                       <div className="flex items-center gap-4">
                         <div className={`w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center flex-shrink-0`}>
-                          <Smartphone className="w-6 h-6 text-white" />
+                          <Phone className="w-6 h-6 text-white" />
                         </div>
                         <span className={`text-lg font-medium ${theme.colors.text}`}>
                           {formatPhoneWithCountryCode(phone.phone)}
@@ -966,37 +968,67 @@ export default function Withdraw() {
                 <ArrowLeft size={28} className="text-gray-900 dark:text-gray-100" />
               </button>
               <h3 className={`text-xl font-bold ${theme.colors.text}`}>
-                Retrait - Informations
+                5. Confirmer le retrait
               </h3>
             </div>
 
-            {/* Title */}
-            <div className="mb-8">
-              <h4 className={`text-lg font-bold ${theme.colors.text} mb-2`}>
-                5. Confirmer le retrait
-              </h4>
+            {/* Badges for City/Street */}
+            {selectedPlatform && (selectedPlatform.city || selectedPlatform.street) && (
+              <div className="flex flex-wrap gap-2 mb-4">
+                {selectedPlatform.street && (
+                  <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                    Rue: {selectedPlatform.street}
+                  </span>
+                )}
+                {selectedPlatform.city && (
+                  <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-medium">
+                    Ville: {selectedPlatform.city}
+                  </span>
+                )}
+              </div>
+            )}
+
+            {/* Warning Limits */}
+            <div className="mb-6 p-4 bg-orange-50 border border-orange-200 rounded-xl flex items-start gap-3">
+              <AlertTriangle className="w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5" />
+              <p className="text-sm text-orange-700">
+                Assurez-vous que le montant est dans les limites autorisées {selectedPlatform?.minimum_withdrawal || 1000} F - {selectedPlatform?.maximum_withdrawal || 300000} F.
+              </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-6">
+              {/* Withdrawal Code Field */}
+              <div>
+                <input
+                  type="text"
+                  name="withdrawalCode"
+                  value={formData.withdrawalCode}
+                  onChange={handleInputChange}
+                  className={`w-full h-14 px-4 rounded-xl border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-gray-300'} ${theme.colors.a_background} text-lg ${theme.colors.text} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all`}
+                  placeholder="Code de retrait"
+                  required
+                />
+                {validationErrors.withdrawalCode && (
+                  <p className="mt-2 text-sm text-red-500">{validationErrors.withdrawalCode}</p>
+                )}
+              </div>
+
               {/* Amount Field */}
               <div>
-                <label className="block text-base text-gray-500 dark:text-gray-400 mb-2">
-                  Montant (F CFA)
-                </label>
                 <input
                   type="number"
                   name="amount"
                   value={formData.amount}
                   onChange={handleInputChange}
                   className={`w-full h-14 px-4 rounded-xl border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-gray-300'} ${theme.colors.a_background} text-lg ${theme.colors.text} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all`}
-                  placeholder="Entrez le montant"
+                  placeholder="Montant (F CFA)"
                   required
                   min={selectedPlatform?.minimum_withdrawal || 100}
                   max={selectedPlatform?.maximum_withdrawal || 1000000}
                   step="1"
                 />
-                {/* Range indicator */}
-                <div className="mt-2 text-sm text-gray-400">
+                {/* Range indicator RED */}
+                <div className="mt-2 text-sm text-red-500 font-medium">
                   {selectedPlatform?.minimum_withdrawal || 100} F - {selectedPlatform?.maximum_withdrawal || 300000} F
                 </div>
                 {validationErrors.amount && (
@@ -1004,56 +1036,79 @@ export default function Withdraw() {
                 )}
               </div>
 
-              {/* Phone Number Display */}
-              <div>
-                <label className="block text-base text-gray-500 dark:text-gray-400 mb-2">
-                  Numéro de téléphone
-                </label>
-                <div className="flex gap-3">
-                  {/* Flag/Country Code Box */}
-                  <div className="flex items-center gap-2 px-4 py-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-xl">
-                    <span className="text-2xl">🇨🇮</span>
-                    <span className="text-lg font-medium text-gray-900 dark:text-gray-100">
-                      {selectedNetwork?.indication || '+225'}
-                    </span>
-                  </div>
-                  {/* Phone Number Box */}
-                  <div className={`flex-1 flex items-center px-4 py-3 ${theme.colors.a_background} border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-slate-200'} rounded-xl`}>
-                    <span className={`text-lg ${theme.colors.text}`}>
-                      {selectedPhone ? selectedPhone.phone.replace(/^\+?225/, '') : ''}
-                    </span>
-                  </div>
+
+
+              {/* Split Phone Display */}
+              <div className="flex gap-4">
+                <div className={`w-1/3 flex items-center justify-center gap-2 h-14 rounded-xl border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-gray-300'} ${theme.colors.a_background}`}>
+                  <span className="text-2xl">
+                    {getCountryFlag(selectedNetwork?.indication)}
+                  </span>
+                  <span className={`text-lg font-bold ${theme.colors.text}`}>
+                    {selectedNetwork?.indication || '+226'}
+                  </span>
+                </div>
+                <div className={`flex-1 relative flex items-center h-14 px-4 rounded-xl border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-gray-300'} ${theme.colors.a_background}`}>
+                  <span className={`text-lg ${theme.colors.text}`}>
+                    {selectedPhone ? stripPhoneIndication(selectedPhone.phone) : ''}
+                  </span>
+                  <label className="absolute -top-2.5 left-3 px-1 bg-white dark:bg-slate-900 text-xs text-gray-500">Numéro de téléphone</label>
                 </div>
               </div>
 
-              {/* Info Alert */}
-              <div className={`p-4 ${theme.mode === 'dark' ? 'bg-blue-900/20 border-blue-700' : 'bg-blue-50 border-blue-200'} border rounded-xl`}>
-                <div className="flex items-start gap-3">
-                  <div className="flex-shrink-0 mt-0.5">
-                    <svg className={`w-5 h-5 ${theme.mode === 'dark' ? 'text-blue-400' : 'text-blue-600'}`} fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+              {/* Youtube Buttons */}
+              <div className="space-y-3">
+                <button
+                  type="button"
+                  onClick={() => window.open(selectedPlatform?.withdrawal_tuto_content || '#', '_blank')}
+                  className="w-full p-4 rounded-xl border border-gray-200 bg-white dark:bg-slate-800 dark:border-slate-700 flex items-center justify-between shadow-sm"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center text-white">
+                      {/* Youtube Play Icon */}
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M8 5v14l11-7z" /></svg>
+                    </div>
+                    <div className="text-left w-full">
+                      <div className="text-xs text-gray-500 text-left">Tutoriel vidéo</div>
+                      <div className={`font-bold text-sm ${theme.colors.text} text-red-600 text-left`}>Comment obtenir un code de retrait avec 1XBET ?</div>
+                    </div>
+                  </div>
+                  <div className="text-red-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <p className="text-sm text-blue-700 dark:text-blue-300 uppercase font-medium">
-                    Le numéro que vous écrivez doit être le même que vous allez utiliser pour recevoir le retrait.
-                  </p>
-                </div>
-              </div>
+                </button>
 
-              {/* Warning Text */}
-              <div className="text-center">
-                <p className="text-sm text-orange-500 dark:text-orange-400 italic">
-                  Vérifiez votre compte de pari avant de confirmer le retrait.
-                </p>
+                <button
+                  type="button"
+                  onClick={() => window.open(selectedPlatform?.why_withdrawal_fail || '#', '_blank')}
+                  className="w-full p-4 rounded-xl border border-gray-200 bg-white dark:bg-slate-800 dark:border-slate-700 flex items-center justify-between shadow-sm"
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center text-white">
+                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M8 5v14l11-7z" /></svg>
+                    </div>
+                    <div className="text-left w-full">
+                      <div className="text-xs text-gray-500 text-left">Tutoriel vidéo</div>
+                      <div className={`font-bold text-sm ${theme.colors.text} text-red-600 text-left`}>Pourquoi mon retrait a échoué ?</div>
+                    </div>
+                  </div>
+                  <div className="text-red-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                    </svg>
+                  </div>
+                </button>
               </div>
 
               {/* Submit Button */}
-              <div className="pt-6">
+              <div className="pt-6 pb-20">
                 <button
                   type="submit"
                   disabled={loading || !formData.amount || !selectedPhone}
-                  className={`w-full h-14 text-white font-bold text-lg rounded-2xl shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed`}
-                  style={{ backgroundColor: theme.mode === 'dark' ? theme.colors.primary : '#1a4384' }}
+                  className="w-full h-14 text-white font-bold text-lg rounded-2xl shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                  style={{ backgroundColor: theme.mode === 'dark' ? theme.colors.primary : '#9ca3af' }}
                 >
                   {loading ? 'Traitement...' : 'Retrait'}
                 </button>
@@ -1061,146 +1116,55 @@ export default function Withdraw() {
             </form>
           </div>
         );
-        <div>
-          <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">
-            {t("Numéro de téléphone")}
-          </label>
-          <div className="flex items-center gap-3 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-            <Smartphone className="w-5 h-5 text-green-600 dark:text-green-400" />
-            <div className="flex-1">
-              <div className="font-mono text-green-700 dark:text-green-300 font-medium">
-                {selectedPhone ? formatPhoneWithCountryCode(selectedPhone.phone) : 'Aucun numéro sélectionné'}
-              </div>
-              <div className="text-xs text-green-600 dark:text-green-400 mt-1">
-                {selectedPhone?.network_name ? `${selectedPhone.network_name} Network` : 'Numéro de téléphone sélectionné'}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Fee Calculation Display */ }
-        {
-          formData.amount && selectedNetwork && (
-            <div className={`bg-gradient-to-r ${theme.colors.s_background} border border-slate-300 dark:border-slate-600/30 rounded-xl p-4 space-y-3`}>
-              <h4 className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-3">{t("Transaction Summary")}</h4>
-
-              <div className="space-y-2">
-                <div className="flex justify-between items-center">
-                  <span className="text-slate-600 dark:text-slate-400 text-sm">{t("Amount to withdraw")}:</span>
-                  <span className="text-slate-900 dark:text-white font-medium">{originalAmount.toFixed(2)} FCFA</span>
-                </div>
-
-                {selectedNetwork.with_fee && selectedNetwork.fee_percent && (
-                  <>
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-600 dark:text-slate-400 text-sm">
-                        {t("Fee")} ({selectedNetwork.fee_percent}%):
-                      </span>
-                      <span className="text-red-600 dark:text-red-400 font-medium">-{feeAmount.toFixed(2)} FCFA</span>
-                    </div>
-
-                    <div className="border-t border-slate-300 dark:border-slate-600/30 pt-2">
-                      <div className="flex justify-between items-center">
-                        <span className="text-slate-700 dark:text-slate-300 font-medium">{t("You will receive")}:</span>
-                        <span className="text-green-600 dark:text-green-400 font-bold text-lg">{netAmount.toFixed(2)} FCFA</span>
-                      </div>
-                    </div>
-                  </>
-                )}
-
-                {!selectedNetwork.with_fee && (
-                  <div className="border-t border-slate-300 dark:border-slate-600/30 pt-2">
-                    <div className="flex justify-between items-center">
-                      <span className="text-slate-700 dark:text-slate-300 font-medium">{t("You will receive")}:</span>
-                      <span className="text-green-600 dark:text-green-400 font-bold text-lg">{originalAmount.toFixed(2)} FCFA</span>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          )
-        }
-
-        {
-          selectedPlatform?.withdrawal_link && (
-            <div className="mt-6 p-4 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 border border-blue-200 dark:border-blue-800/50 rounded-2xl">
-              <h4 className="text-sm font-semibold text-blue-800 dark:text-blue-200 mb-4 text-center flex items-center justify-center gap-2">
-                <HelpCircle className="w-4 h-4" />
-                {t("Besoin d'aide avec votre retrait ?")}
-              </h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <button
-                  type="button"
-                  onClick={() => window.open(selectedPlatform.withdrawal_link, '_blank')}
-                  className="group relative flex items-center justify-center space-x-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 px-4 py-3 rounded-xl border border-blue-300 dark:border-blue-600 shadow-lg shadow-blue-500/25 hover:shadow-blue-500/40 transition-all duration-300 text-white font-medium hover:scale-105"
-                >
-                  <HelpCircle className="w-5 h-5" />
-                  <span>{t("Comment obtenir un code de retrait ?")}</span>
-                  <ExternalLink className="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    const url = selectedPlatform?.why_withdrawal_fail;
-                    if (url) {
-                      window.open(url, '_blank');
-                    }
-                  }}
-                  className="group relative flex items-center justify-center space-x-2 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 px-4 py-3 rounded-xl border border-orange-300 dark:border-orange-600 shadow-lg shadow-orange-500/25 hover:shadow-orange-500/40 transition-all duration-300 text-white font-medium hover:scale-105"
-                >
-                  <AlertTriangle className="w-5 h-5" />
-                  <span>{t("Pourquoi le retrait échoue ?")}</span>
-                  <ExternalLink className="w-4 h-4 opacity-70 group-hover:opacity-100 transition-opacity" />
-                </button>
-              </div>
-            </div>
-          )
-        }
-        <div className="flex justify-between pt-2">
-          <button
-            type="button"
-            onClick={() => setCurrentStep('selectPhone')}
-            className="px-4 py-2 text-sm text-slate-600 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200"
-          >
-            ← {t("Back")}
-          </button>
-          <button
-            type="submit"
-            disabled={loading}
-            className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
-          >
-            {loading ? t('Processing...') : t('Submit')}
-          </button>
-        </div>
-            </form >
-          </div >
-        );
-}
+    }
   };
 
-// Get current step title
-const getCurrentStepTitle = () => {
-  switch (currentStep) {
-    case 'selectId':
-      return "Retrait";
-    case 'manageBetId':
-      return "Retrait - ID Utilisateur";
-    case 'selectNetwork':
-      return "Retrait - Réseau";
-    case 'selectPhone':
-      return "Retrait - Numéro de télé...";
-    case 'enterDetails':
-      return "Retrait - Montant";
-    default:
-      return "Retrait";
-  }
-};
+  // Helper to get country flag based on indication
+  const getCountryFlag = (indication?: string) => {
+    if (!indication) return '🇧🇫'; // Default
+    const cleanIndication = indication.replace('+', '');
+    switch (cleanIndication) {
+      case '226': return '🇧🇫'; // Burkina Faso
+      case '225': return '🇨🇮'; // Cote d'Ivoire
+      case '223': return '🇲🇱'; // Mali
+      case '221': return '🇸🇳'; // Senegal
+      case '228': return '🇹🇬'; // Togo
+      case '229': return '🇧🇯'; // Benin
+      case '237': return '🇨🇲'; // Cameroon
+      case '224': return '🇬🇳'; // Guinea
+      case '241': return '🇬🇦'; // Gabon
+      case '242': return '🇨🇬'; // Congo
+      case '243': return '🇨🇩'; // DRC
+      case '227': return '🇳🇪'; // Niger
+      case '233': return '🇬🇭'; // Ghana
+      case '234': return '🇳🇬'; // Nigeria
+      default: return '🌍';
+    }
+  };
 
-return (
-  <div className={`min-h-screen bg-gradient-to-br ${theme.colors.a_background} p-4`}>
+  // Get current step title
+  const getCurrentStepTitle = () => {
+    switch (currentStep) {
+      case 'selectId':
+        return "Retrait";
+      case 'manageBetId':
+        return "Retrait - ID Utilisateur";
+      case 'selectNetwork':
+        return "Retrait - Réseau";
+      case 'selectPhone':
+        return "Retrait - Numéro de télé...";
+      case 'enterDetails':
+        return "Retrait - Informations";
+      default:
+        return "Retrait";
+    }
+  };
 
-    <style>
-      {`
+  return (
+    <div className={`min-h-screen bg-gradient-to-br ${theme.colors.a_background} p-4`}>
+
+      <style>
+        {`
           @keyframes slideInUp {
             from {
               opacity: 0;
@@ -1268,36 +1232,36 @@ return (
             animation: flash 2s infinite;
           }
         `}
-    </style>
+      </style>
 
-    <div className="max-w-4xl mx-auto">
-      {/* Header Section */}
-      <div className="flex items-center gap-6 mb-12">
-        <button
-          onClick={() => {
-            if (currentStep === 'selectId') {
-              window.location.href = '/dashboard';
-            } else if (currentStep === 'manageBetId') {
-              setCurrentStep('selectId');
-            } else if (currentStep === 'selectNetwork') {
-              setCurrentStep('manageBetId');
-            } else if (currentStep === 'selectPhone') {
-              setCurrentStep('selectNetwork');
-            } else if (currentStep === 'enterDetails') {
-              setCurrentStep('selectPhone');
-            }
-          }}
-          className="p-2 -ml-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
-        >
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-          </svg>
-        </button>
-        <h1 className="text-3xl font-bold tracking-tight">{getCurrentStepTitle()}</h1>
-      </div>
+      <div className="max-w-4xl mx-auto">
+        {/* Header Section */}
+        <div className="flex items-center gap-6 mb-12">
+          <button
+            onClick={() => {
+              if (currentStep === 'selectId') {
+                router.back();
+              } else if (currentStep === 'manageBetId') {
+                setCurrentStep('selectId');
+              } else if (currentStep === 'selectNetwork') {
+                setCurrentStep('manageBetId');
+              } else if (currentStep === 'selectPhone') {
+                setCurrentStep('selectNetwork');
+              } else if (currentStep === 'enterDetails') {
+                setCurrentStep('selectPhone');
+              }
+            }}
+            className="p-2 -ml-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
+          </button>
+          <h1 className="text-3xl font-bold tracking-tight">{getCurrentStepTitle()}</h1>
+        </div>
 
-      {/* Information Icon with Dropdown */}
-      {/* <div className="mb-6">
+        {/* Information Icon with Dropdown */}
+        {/* <div className="mb-6">
           <div className="flex items-center justify-start">
             <button
               onClick={() => setShowInfoDropdown(!showInfoDropdown)}
@@ -1398,69 +1362,69 @@ return (
           )}
         </div> */}
 
-      {/* Main Content */}
-      <div className="pb-24">
-        <div>
-          {/* Alert Messages */}
-          {error && (
-            <div className="mb-6 p-4 bg-gradient-to-r from-red-900/50 to-red-800/50 border border-red-600/50 text-red-300 rounded-2xl backdrop-blur-sm">
-              <div className="flex items-center">
-                <XCircle className="w-5 h-5 mr-3" />
-                {error}
+        {/* Main Content */}
+        <div className="pb-24">
+          <div>
+            {/* Alert Messages */}
+            {error && (
+              <div className="mb-6 p-4 bg-gradient-to-r from-red-900/50 to-red-800/50 border border-red-600/50 text-red-300 rounded-2xl backdrop-blur-sm">
+                <div className="flex items-center">
+                  <XCircle className="w-5 h-5 mr-3" />
+                  {error}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {success && (
-            <div className="mb-6 p-4 bg-gradient-to-r from-green-900/50 to-green-800/50 border border-green-600/50 text-green-300 rounded-2xl backdrop-blur-sm">
-              <div className="flex items-center">
-                <CheckCircle className="w-5 h-5 mr-3" />
-                {success}
+            {success && (
+              <div className="mb-6 p-4 bg-gradient-to-r from-green-900/50 to-green-800/50 border border-green-600/50 text-green-300 rounded-2xl backdrop-blur-sm">
+                <div className="flex items-center">
+                  <CheckCircle className="w-5 h-5 mr-3" />
+                  {success}
+                </div>
               </div>
-            </div>
-          )}
+            )}
 
-          {loading && !success && !error ? (
-            <div className="flex justify-center items-center p-20">
-              <div className="relative">
-                <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500/30 border-t-blue-500"></div>
-                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 to-blue-500/20 animate-pulse"></div>
+            {loading && !success && !error ? (
+              <div className="flex justify-center items-center p-20">
+                <div className="relative">
+                  <div className="animate-spin rounded-full h-16 w-16 border-4 border-blue-500/30 border-t-blue-500"></div>
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 to-blue-500/20 animate-pulse"></div>
+                </div>
               </div>
-            </div>
-          ) : (
-            renderStep()
-          )}
-        </div>
-      </div>
-    </div>
-
-    {/* Transaction Details Modal */}
-    {isModalOpen && selectedTransaction && (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-        <div className={`${theme.colors.background} rounded-lg shadow-xl w-full max-w-md`}>
-          <div className="p-6">
-            <h3 className="text-lg font-semibold mb-4">{t("Transaction Details")}</h3>
-            <div className="space-y-2">
-              <p><span className="font-medium">{t("Status")}:</span> {selectedTransaction.transaction.status}</p>
-              <p><span className="font-medium">{t("Reference")}:</span> {selectedTransaction.transaction.reference}</p>
-              <p><span className="font-medium">{t("Date")}:</span> {new Date(selectedTransaction.transaction.created_at).toLocaleString()}</p>
-            </div>
-            <div className="mt-6 flex justify-end">
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-              >
-                {t("Close")}
-              </button>
-            </div>
+            ) : (
+              renderStep()
+            )}
           </div>
         </div>
       </div>
-    )}
+
+      {/* Transaction Details Modal */}
+      {isModalOpen && selectedTransaction && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+          <div className={`${theme.colors.background} rounded-lg shadow-xl w-full max-w-md`}>
+            <div className="p-6">
+              <h3 className="text-lg font-semibold mb-4">{t("Transaction Details")}</h3>
+              <div className="space-y-2">
+                <p><span className="font-medium">{t("Status")}:</span> {selectedTransaction.transaction.status}</p>
+                <p><span className="font-medium">{t("Reference")}:</span> {selectedTransaction.transaction.reference}</p>
+                <p><span className="font-medium">{t("Date")}:</span> {new Date(selectedTransaction.transaction.created_at).toLocaleString()}</p>
+              </div>
+              <div className="mt-6 flex justify-end">
+                <button
+                  onClick={() => setIsModalOpen(false)}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                >
+                  {t("Close")}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
 
-    {/* Add CSS animations */}
-    <style jsx>{`
+      {/* Add CSS animations */}
+      <style jsx>{`
         @keyframes fadeIn {
           from { opacity: 0; }
           to { opacity: 1; }
@@ -1487,69 +1451,69 @@ return (
       `}</style>
 
 
-    {/* Edit Phone Modal */}
-    {showEditPhoneModal && phoneToEdit && (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 modal-backdrop">
-        <div className={`${theme.colors.background} rounded-lg shadow-xl w-full max-w-md modal-content`}>
-          <div className="p-6">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-semibold">{t("Modifier le numéro de téléphone")}</h3>
-              <button
-                onClick={() => {
-                  setShowEditPhoneModal(false);
-                  setPhoneToEdit(null);
-                  setNewPhoneNumber('');
-                }}
-                className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                  {t("Numéro de téléphone")}
-                </label>
-                <input
-                  type="tel"
-                  value={newPhoneNumber}
-                  onChange={(e) => setNewPhoneNumber(e.target.value)}
-                  className="w-full p-2 border rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white border-slate-300 dark:border-slate-600"
-                  placeholder="ex: 771234567"
-                />
-                <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-                  {t("Entrez le numéro sans le préfixe +225")}
-                </p>
+      {/* Edit Phone Modal */}
+      {showEditPhoneModal && phoneToEdit && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 modal-backdrop">
+          <div className={`${theme.colors.background} rounded-lg shadow-xl w-full max-w-md modal-content`}>
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-lg font-semibold">{t("Modifier le numéro de téléphone")}</h3>
+                <button
+                  onClick={() => {
+                    setShowEditPhoneModal(false);
+                    setPhoneToEdit(null);
+                    setNewPhoneNumber('');
+                  }}
+                  className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
+                >
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
               </div>
-            </div>
 
-            <div className="mt-6 flex justify-end gap-3">
-              <button
-                onClick={() => {
-                  setShowEditPhoneModal(false);
-                  setPhoneToEdit(null);
-                  setNewPhoneNumber('');
-                }}
-                className="px-4 py-2 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
-              >
-                {t("Annuler")}
-              </button>
-              <button
-                onClick={handleEditPhone}
-                disabled={!newPhoneNumber.trim()}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
-              >
-                {t("Modifier")}
-              </button>
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                    {t("Numéro de téléphone")}
+                  </label>
+                  <input
+                    type="tel"
+                    value={newPhoneNumber}
+                    onChange={(e) => setNewPhoneNumber(e.target.value)}
+                    className="w-full p-2 border rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white border-slate-300 dark:border-slate-600"
+                    placeholder="ex: 771234567"
+                  />
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
+                    {t("Entrez le numéro sans le préfixe +225")}
+                  </p>
+                </div>
+              </div>
+
+              <div className="mt-6 flex justify-end gap-3">
+                <button
+                  onClick={() => {
+                    setShowEditPhoneModal(false);
+                    setPhoneToEdit(null);
+                    setNewPhoneNumber('');
+                  }}
+                  className="px-4 py-2 text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-200"
+                >
+                  {t("Annuler")}
+                </button>
+                <button
+                  onClick={handleEditPhone}
+                  disabled={!newPhoneNumber.trim()}
+                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+                >
+                  {t("Modifier")}
+                </button>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    )}
+      )}
 
-  </div>
-);
+    </div>
+  );
 }

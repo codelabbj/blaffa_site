@@ -262,7 +262,7 @@ function EditProfile() {
                         className: "bg-[#003399] pt-14 pb-12 px-6 rounded-b-[3.5rem] relative mb-12 shadow-2xl shadow-blue-900/40",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                onClick: ()=>router.push('/profile'),
+                                onClick: ()=>router.back(),
                                 className: "absolute top-14 left-6 text-white hover:opacity-70 transition-opacity",
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$chevron$2d$left$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ChevronLeft$3e$__["ChevronLeft"], {
                                     size: 36
@@ -288,10 +288,10 @@ function EditProfile() {
                                 className: "flex flex-col items-center mt-12",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "w-36 h-36 rounded-full bg-white flex items-center justify-center mb-6 shadow-xl border-4 border-white/20",
+                                        className: `w-36 h-36 rounded-full ${theme.colors.a_background} flex items-center justify-center mb-6 shadow-xl border-4 border-white/20`,
                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
                                             xmlns: "http://www.w3.org/2000/svg",
-                                            className: "w-20 h-20 text-gray-300",
+                                            className: `w-20 h-20 ${theme.colors.text} opacity-20`,
                                             fill: "none",
                                             viewBox: "0 0 24 24",
                                             stroke: "currentColor",
@@ -366,7 +366,7 @@ function EditProfile() {
                                         className: "relative group",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                                className: "absolute -top-3.5 left-6 px-1.5 text-gray-400 dark:text-gray-500 text-sm font-bold bg-white dark:bg-slate-900 group-focus-within:text-blue-600 transition-colors",
+                                                className: `absolute -top-3.5 left-6 px-1.5 ${theme.colors.d_text} opacity-60 text-sm font-bold ${theme.colors.a_background} group-focus-within:text-blue-600 transition-colors`,
                                                 children: "Prénom"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/profile/edit/page.tsx",
@@ -374,12 +374,12 @@ function EditProfile() {
                                                 columnNumber: 29
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "flex items-center bg-white dark:bg-slate-800/50 border border-gray-100 dark:border-gray-700/50 rounded-3xl p-5 shadow-sm focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all",
+                                                className: `flex items-center ${theme.colors.a_background} border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-gray-100'} rounded-3xl p-5 shadow-sm focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all`,
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center mr-5",
+                                                        className: `w-14 h-14 rounded-2xl ${theme.mode === 'dark' ? 'bg-blue-900/20' : 'bg-blue-50'} flex items-center justify-center mr-5`,
                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$user$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__User$3e$__["User"], {
-                                                            className: "text-blue-600",
+                                                            className: "text-blue-600 dark:text-blue-400",
                                                             size: 28
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/profile/edit/page.tsx",
@@ -397,7 +397,7 @@ function EditProfile() {
                                                         placeholder: "Rasheed",
                                                         value: formData.firstName,
                                                         onChange: handleChange,
-                                                        className: "flex-1 text-xl font-bold bg-transparent outline-none text-gray-900 dark:text-white"
+                                                        className: `flex-1 text-xl font-bold bg-transparent outline-none ${theme.colors.text}`
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/profile/edit/page.tsx",
                                                         lineNumber: 131,
@@ -419,7 +419,7 @@ function EditProfile() {
                                         className: "relative group",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                                className: "absolute -top-3.5 left-6 px-1.5 text-gray-400 dark:text-gray-500 text-sm font-bold bg-white dark:bg-slate-900 group-focus-within:text-blue-600 transition-colors",
+                                                className: `absolute -top-3.5 left-6 px-1.5 ${theme.colors.d_text} opacity-60 text-sm font-bold ${theme.colors.a_background} group-focus-within:text-blue-600 transition-colors`,
                                                 children: "Nom"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/profile/edit/page.tsx",
@@ -427,12 +427,12 @@ function EditProfile() {
                                                 columnNumber: 29
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "flex items-center bg-white dark:bg-slate-800/50 border border-gray-100 dark:border-gray-700/50 rounded-3xl p-5 shadow-sm focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all",
+                                                className: `flex items-center ${theme.colors.a_background} border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-gray-100'} rounded-3xl p-5 shadow-sm focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all`,
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center mr-5",
+                                                        className: `w-14 h-14 rounded-2xl ${theme.mode === 'dark' ? 'bg-blue-900/20' : 'bg-blue-50'} flex items-center justify-center mr-5`,
                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$credit$2d$card$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__CreditCard$3e$__["CreditCard"], {
-                                                            className: "text-blue-600",
+                                                            className: "text-blue-600 dark:text-blue-400",
                                                             size: 28
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/profile/edit/page.tsx",
@@ -450,7 +450,7 @@ function EditProfile() {
                                                         placeholder: "idris",
                                                         value: formData.lastName,
                                                         onChange: handleChange,
-                                                        className: "flex-1 text-xl font-bold bg-transparent outline-none text-gray-900 dark:text-white"
+                                                        className: `flex-1 text-xl font-bold bg-transparent outline-none ${theme.colors.text}`
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/profile/edit/page.tsx",
                                                         lineNumber: 149,
@@ -472,7 +472,7 @@ function EditProfile() {
                                         className: "relative group",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                                className: "absolute -top-3.5 left-6 px-1.5 text-gray-400 dark:text-gray-500 text-sm font-bold bg-white dark:bg-slate-900 group-focus-within:text-blue-600 transition-colors",
+                                                className: `absolute -top-3.5 left-6 px-1.5 ${theme.colors.d_text} opacity-60 text-sm font-bold ${theme.colors.a_background} group-focus-within:text-blue-600 transition-colors`,
                                                 children: "Email"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/profile/edit/page.tsx",
@@ -480,12 +480,12 @@ function EditProfile() {
                                                 columnNumber: 29
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "flex items-center bg-white dark:bg-slate-800/50 border border-gray-100 dark:border-gray-700/50 rounded-3xl p-5 shadow-sm focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all",
+                                                className: `flex items-center ${theme.colors.a_background} border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-gray-100'} rounded-3xl p-5 shadow-sm focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all`,
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center mr-5",
+                                                        className: `w-14 h-14 rounded-2xl ${theme.mode === 'dark' ? 'bg-blue-900/20' : 'bg-blue-50'} flex items-center justify-center mr-5`,
                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$mail$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Mail$3e$__["Mail"], {
-                                                            className: "text-blue-600",
+                                                            className: "text-blue-600 dark:text-blue-400",
                                                             size: 28
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/profile/edit/page.tsx",
@@ -503,7 +503,7 @@ function EditProfile() {
                                                         placeholder: "viralrarsh@gmail.com",
                                                         value: formData.email,
                                                         onChange: handleChange,
-                                                        className: "flex-1 text-xl font-bold bg-transparent outline-none text-gray-900 dark:text-white"
+                                                        className: `flex-1 text-xl font-bold bg-transparent outline-none ${theme.colors.text}`
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/profile/edit/page.tsx",
                                                         lineNumber: 167,
@@ -525,7 +525,7 @@ function EditProfile() {
                                         className: "relative group",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
-                                                className: "absolute -top-3.5 left-6 px-1.5 text-gray-400 dark:text-gray-500 text-sm font-bold bg-white dark:bg-slate-900 group-focus-within:text-blue-600 transition-colors",
+                                                className: `absolute -top-3.5 left-6 px-1.5 ${theme.colors.d_text} opacity-60 text-sm font-bold ${theme.colors.a_background} group-focus-within:text-blue-600 transition-colors`,
                                                 children: "Téléphone"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/profile/edit/page.tsx",
@@ -533,12 +533,12 @@ function EditProfile() {
                                                 columnNumber: 29
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "flex items-center bg-white dark:bg-slate-800/50 border border-gray-100 dark:border-gray-700/50 rounded-3xl p-5 shadow-sm focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all",
+                                                className: `flex items-center ${theme.colors.a_background} border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-gray-100'} rounded-3xl p-5 shadow-sm focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all`,
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                        className: "w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center mr-5",
+                                                        className: `w-14 h-14 rounded-2xl ${theme.mode === 'dark' ? 'bg-blue-900/20' : 'bg-blue-50'} flex items-center justify-center mr-5`,
                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$phone$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Phone$3e$__["Phone"], {
-                                                            className: "text-blue-600",
+                                                            className: "text-blue-600 dark:text-blue-400",
                                                             size: 28
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/profile/edit/page.tsx",
@@ -556,7 +556,7 @@ function EditProfile() {
                                                         placeholder: "08110798402",
                                                         value: formData.phoneNumber,
                                                         onChange: handleChange,
-                                                        className: "flex-1 text-xl font-bold bg-transparent outline-none text-gray-900 dark:text-white"
+                                                        className: `flex-1 text-xl font-bold bg-transparent outline-none ${theme.colors.text}`
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/profile/edit/page.tsx",
                                                         lineNumber: 185,
@@ -582,13 +582,17 @@ function EditProfile() {
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                 type: "submit",
-                                className: "w-full bg-[#003399] text-white py-6 rounded-[2rem] flex items-center justify-center gap-4 text-2xl font-bold shadow-2xl shadow-blue-500/30 mt-12 active:scale-[0.98] transition-all hover:bg-[#002b80]",
+                                className: `w-full text-white py-6 rounded-[2rem] flex items-center justify-center gap-4 text-2xl font-bold shadow-2xl transition-all hover:opacity-90 active:scale-[0.98] mt-12`,
+                                style: {
+                                    backgroundColor: theme.mode === 'dark' ? theme.colors.primary : '#003399',
+                                    boxShadow: `0 20px 40px ${theme.mode === 'dark' ? 'rgba(0,0,0,0.4)' : 'rgba(0,51,153,0.3)'}`
+                                },
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$save$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Save$3e$__["Save"], {
                                         size: 28
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/profile/edit/page.tsx",
-                                        lineNumber: 201,
+                                        lineNumber: 202,
                                         columnNumber: 25
                                     }, this),
                                     "Enregistrer les modifications"

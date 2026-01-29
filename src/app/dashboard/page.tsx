@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import TransactionHistory from '@/components/TransactionHistory';
 import { useTranslation } from 'react-i18next';
-import Footer from '@/components/footer';
+// import Footer from '@/components/footer';
 import { useTheme } from '../../components/ThemeProvider';
 import api from '@/lib/axios';
 
@@ -171,7 +171,7 @@ export default function Dashboard() {
             </a>
 
             {/* Retrait */}
-            <a href="/withdrawal" className="flex flex-col items-center gap-2 group">
+            <a href="/withdraw" className="flex flex-col items-center gap-2 group">
               <div className="w-20 h-20 rounded-full bg-[#FFF0F0] dark:bg-red-900/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                 <svg className="w-10 h-10 text-[#FF4D4D] dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
@@ -262,8 +262,6 @@ export default function Dashboard() {
           </div>
 
         </div>
-
-        <Footer />
 
       </main>
     </div>

@@ -67,13 +67,17 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
   }, [pathname, searchParams]);
 
   // Check if current path is an auth page (login or register)
-  const isAuthPage = pathname === '/login' || pathname === '/register';
+  // const isAuthPage = pathname === '/login' || pathname === '/register';
 
-  //return <>{children}</>;
+  // Define pages that should have bottom navigation
+  const showBottomNav = ['/', '/dashboard', '/notifications', '/all_transactions', '/profile'].includes(pathname || '');
+
   return (
     <div className="min-h-screen flex flex-col">
-      <main className="flex-grow pb-24">{children}</main>
-      {!isAuthPage && <BottomNavbar />}
+      <main className={`flex-grow ${showBottomNav ? 'pb-20' : ''}`}>
+        {children}
+      </main>
+      {showBottomNav && <BottomNavbar />}
     </div>
   );
 }
@@ -83,10 +87,7 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-
-
   return (
-
     <html lang={i18n.language} className="overflow-x-hidden" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -97,9 +98,7 @@ export default function RootLayout({
             <ThemeProvider>
               <Suspense fallback={<div>Loading...</div>}>
                 <LayoutContent>
-                  <div className="min-h-screen">
-                    <main>{children}</main>
-                  </div>
+                  {children}
                 </LayoutContent>
               </Suspense>
             </ThemeProvider>
@@ -107,6 +106,5 @@ export default function RootLayout({
         </I18nextProvider>
       </body>
     </html>
-
   );
 }
