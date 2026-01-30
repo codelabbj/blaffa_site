@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useParams, useRouter } from 'next/navigation';
-import { ArrowLeft, Copy, RefreshCw, CheckCircle2, XCircle, Clock, Smartphone, Phone, CreditCard, Hash, MessageCircle } from 'lucide-react';
+import { ArrowLeft, Copy, RefreshCw, CheckCircle2, AlertCircle, Clock, Smartphone, Phone, CreditCard, Hash, MessageCircle } from 'lucide-react';
 import { useTheme } from '../../../components/ThemeProvider';
 import api from '@/lib/axios';
 
@@ -15,6 +15,7 @@ type Transaction = {
     created_at: string;
     phone_number: string;
     transaction_reference: string | null;
+    user_app_id?: string | null;
     error_message: string | null;
     net_payable_amount: number | null;
     payment_method?: string;
@@ -46,24 +47,66 @@ export default function TransactionDetailPage() {
 
     const fetchTransactionDetails = useCallback(async () => {
         setLoading(true);
+        setError(null);
         try {
             const token = localStorage.getItem('accessToken');
             if (!token) throw new Error('Authentication required');
 
-            // Note: Using the historic endpoint and finding the transaction by ID 
-            // since a specific detail endpoint wasn't explicitly provided.
-            const response = await api.get('/blaffa/historic', {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            // 1. Try direct transaction endpoints first
+            const potentialEndpoints = [
+                `/blaffa/transaction/${params.id}/`,
+                `/blaffa/transaction/${params.id}`,
+                `/blaffa/historic/${params.id}/`,
+                `/blaffa/historic/${params.id}`
+            ];
 
-            const transactions = response.data.results;
-            const found = transactions.find((item: any) => item.transaction.id === params.id);
+            for (const endpoint of potentialEndpoints) {
+                try {
+                    const directResponse = await api.get(endpoint, {
+                        headers: { Authorization: `Bearer ${token}` }
+                    });
 
-            if (found) {
-                setTransaction(found.transaction);
-            } else {
-                setError('Transaction introuvable');
+                    if (directResponse.data && (directResponse.data.id || directResponse.data.transaction?.id || directResponse.data.reference)) {
+                        const data = directResponse.data.transaction || directResponse.data;
+                        if (String(data.id) === String(params.id) ||
+                            String(directResponse.data.id) === String(params.id) ||
+                            data.reference === params.id) {
+                            setTransaction(data);
+                            setLoading(false);
+                            return;
+                        }
+                    }
+                } catch (e) { /* ignore and try next */ }
             }
+
+            // 2. Fallback: Search in the recent history (loop through first 5 pages if needed)
+            let page = 1;
+            let found = null;
+            let hasMore = true;
+
+            while (!found && hasMore && page <= 5) {
+                const response = await api.get(`/blaffa/historic${page > 1 ? `?page=${page}` : ''}`, {
+                    headers: { Authorization: `Bearer ${token}` }
+                });
+
+                const results = response.data.results || [];
+                found = results.find((item: any) =>
+                    (item.transaction && String(item.transaction.id) === String(params.id)) ||
+                    (String(item.id) === String(params.id)) ||
+                    (item.transaction && item.transaction.reference === params.id)
+                );
+
+                if (found) {
+                    setTransaction(found.transaction || found);
+                    setLoading(false);
+                    return;
+                }
+
+                hasMore = !!response.data.next;
+                page++;
+            }
+
+            setError('Transaction introuvable');
         } catch (err: any) {
             console.error('Error fetching details:', err);
             setError(err.message || 'Failed to load transaction details');
@@ -85,29 +128,68 @@ export default function TransactionDetailPage() {
     };
 
     const getStatusIcon = (status: string) => {
-        switch (status.toLowerCase()) {
+        const s = status.toLowerCase();
+        switch (s) {
             case 'completed':
             case 'accept':
             case 'approve':
-                return <CheckCircle2 size={70} className="text-green-500" />;
+            case 'success':
+                return (
+                    <div className="w-24 h-24 rounded-full flex items-center justify-center mb-4 text-green-500">
+                        <CheckCircle2 size={95} className="stroke-[1.5]" />
+                    </div>
+                );
             case 'failed':
             case 'error':
-                return <XCircle size={70} className="text-red-500" />;
+            case 'fail':
+            case 'echec':
+                return (
+                    <div className="w-24 h-24 rounded-full flex items-center justify-center mb-4 text-[#ff5a51]">
+                        <AlertCircle size={95} className="stroke-[1.5]" />
+                    </div>
+                );
             case 'pending':
+            case 'payment_init_success':
+            case 'en attente':
             default:
-                return <RefreshCw size={70} className="text-gray-400 animate-spin-slow" />;
+                return (
+                    <div className="w-24 h-24 rounded-full flex items-center justify-center mb-4">
+                        <RefreshCw size={95} className="text-gray-400 stroke-[1.2] animate-spin-slow" />
+                    </div>
+                );
         }
     };
 
     const getStatusText = (status: string) => {
-        const map: Record<string, string> = {
-            pending: 'En attente',
-            completed: 'Terminé',
-            failed: 'Échoué',
-            accept: 'Accepté',
-            approve: 'Approuvé'
-        };
-        return map[status.toLowerCase()] || status;
+        const s = status.toLowerCase();
+        if (['pending', 'payment_init_success', 'en attente'].includes(s)) return 'En attente';
+        if (['completed', 'accept', 'approve', 'success'].includes(s)) return 'Succès';
+        if (['failed', 'error', 'fail', 'echec'].includes(s)) return 'Échec';
+        return status;
+    };
+
+    const getStatusSubtext = (status: string) => {
+        const s = status.toLowerCase();
+        if (['pending', 'payment_init_success', 'en attente'].includes(s)) return 'Transaction en cours';
+        if (['completed', 'accept', 'approve', 'success'].includes(s)) return 'Transaction réussie';
+        if (['failed', 'error', 'fail', 'echec'].includes(s)) return 'Transaction échouée';
+        return '';
+    };
+
+    const getStatusColor = (status: string) => {
+        switch (status.toLowerCase()) {
+            case 'completed':
+            case 'accept':
+            case 'approve':
+            case 'success':
+                return 'text-green-500';
+            case 'failed':
+            case 'error':
+            case 'fail':
+                return 'text-red-500';
+            default:
+                return 'text-gray-500';
+        }
     };
 
     if (loading) {
@@ -120,108 +202,225 @@ export default function TransactionDetailPage() {
 
     if (error || !transaction) {
         return (
-            <div className={`min-h-screen ${theme.colors.a_background} p-6 flex flex-col items-center justify-center`}>
-                <div className="bg-red-50 dark:bg-red-900/10 p-6 rounded-2xl border border-red-100 dark:border-red-900/20 text-center max-w-sm">
-                    <XCircle size={48} className="text-red-500 mx-auto mb-4" />
-                    <h2 className={`text-xl font-bold ${theme.colors.text} mb-2`}>Oups!</h2>
-                    <p className="text-gray-500 dark:text-gray-400 mb-6">{error || 'Something went wrong'}</p>
+            <div className={`min-h-screen ${theme.colors.a_background} flex flex-col`}>
+                <div className="flex items-center px-4 py-6">
+                    <button onClick={() => router.back()} className="p-2">
+                        <ArrowLeft className={theme.colors.text} size={24} />
+                    </button>
+                    <h1 className={`flex-1 text-center text-xl font-bold ${theme.colors.text} mr-10`}>
+                        Détails de la transaction
+                    </h1>
+                </div>
+
+                <div className="mx-auto w-full px-6 flex flex-col items-center justify-center pt-20">
+                    <div className="w-24 h-24 rounded-full flex items-center justify-center mb-6 text-orange-400">
+                        <AlertCircle size={95} className="stroke-[1.2]" />
+                    </div>
+
+                    <h2 className={`text-xl font-bold ${theme.colors.text} mb-4 text-center`}>
+                        {error || 'Transaction introuvable'}
+                    </h2>
+
+                    <p className="text-gray-500 text-center mb-10 px-4">
+                        Nous n'avons pas pu charger les informations. L'ID de la transaction est <strong>{params.id}</strong>.
+                    </p>
+
+                    <button
+                        onClick={() => fetchTransactionDetails()}
+                        className="w-full py-4 bg-blue-600 text-white rounded-2xl font-bold text-lg shadow-lg mb-4"
+                    >
+                        Réessayer
+                    </button>
+
                     <button
                         onClick={() => router.back()}
-                        className="w-full py-3 bg-blue-600 text-white rounded-xl font-medium"
+                        className="w-full py-4 border-2 border-gray-200 dark:border-gray-800 text-gray-500 rounded-2xl font-bold text-lg"
                     >
-                        Retourner
+                        Retour
                     </button>
                 </div>
             </div>
         );
     }
 
-    return (
-        <div className={`min-h-screen ${theme.colors.a_background} relative`}>
-            {/* Back Button */}
-            <button
-                onClick={() => router.back()}
-                className="absolute top-6 left-6 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-            >
-                <ArrowLeft className={theme.colors.text} size={28} />
-            </button>
+    const formatDate = (dateString: string) => {
+        try {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            }) + ' : ' + date.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            });
+        } catch (e) {
+            return dateString;
+        }
+    };
 
-            <div className="max-w-md mx-auto pt-20 pb-10 px-6 flex flex-col items-center">
+    return (
+        <div className={`min-h-screen ${theme.colors.a_background} flex flex-col`}>
+            {/* Header */}
+            <div className="flex items-center px-4 py-6">
+                <button
+                    onClick={() => router.back()}
+                    className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                >
+                    <ArrowLeft className={theme.colors.text} size={24} />
+                </button>
+                <h1 className={`flex-1 text-center text-xl font-bold ${theme.colors.text} mr-10`}>
+                    Détails de la transaction
+                </h1>
+            </div>
+
+            <div className="mx-auto w-full px-4 pb-10 flex flex-col items-center">
                 {/* Large Status Icon */}
-                <div className="mb-8">
+                <div className="mt-8">
                     {getStatusIcon(transaction.status)}
                 </div>
 
                 {/* Status and Amount */}
-                <p className={`text-lg font-medium text-gray-500 dark:text-gray-400 mb-1`}>
+                <h2 className={`text-2xl font-bold ${getStatusColor(transaction.status)} mb-1`}>
                     {getStatusText(transaction.status)}
-                </p>
-                <h2 className={`text-3xl font-bold ${theme.colors.text} mb-3`}>
-                    XOF {transaction.amount}
                 </h2>
-
-                {/* Description Label */}
-                <p className={`text-center text-lg ${theme.colors.text} font-medium px-4 mb-10`}>
-                    Votre {transaction.type_trans === 'withdrawal' ? 'retrait' : 'dépôt'} sur {transaction.app?.public_name || 'Blaffa'} est {transaction.status}
+                <p className="text-gray-400 text-sm mb-6">
+                    {getStatusSubtext(transaction.status)}
                 </p>
+                <div className={`text-3xl font-black ${theme.colors.text} mb-8`}>
+                    XOF {transaction.amount}
+                </div>
 
-                {/* Details List */}
-                <div className="w-full space-y-6 mb-12">
-                    <div className="flex justify-between items-center">
-                        <span className="text-lg text-gray-500 dark:text-gray-400">Méthode de paiement</span>
-                        <span className={`text-lg font-medium ${theme.colors.text}`}>
-                            {transaction.network?.public_name || transaction.payment_method || 'N/A'}
-                        </span>
-                    </div>
-
-                    <div className="flex justify-between items-center">
-                        <span className="text-lg text-gray-500 dark:text-gray-400">Référence</span>
-                        <div className="flex items-center gap-2">
-                            <span className={`text-lg font-medium ${theme.colors.text} font-mono`}>
-                                {transaction.reference}
-                            </span>
-                            <button
-                                onClick={() => copyToClipboard(transaction.reference)}
-                                className="p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 hover:text-blue-500 transition-colors"
-                            >
-                                <Copy size={20} />
-                            </button>
+                {/* Message Box */}
+                <div className="w-full bg-[#EBF5FF] rounded-2xl p-4 mb-6 border border-[#D1E9FF]">
+                    <div className="flex items-center gap-2 mb-1">
+                        <div className="bg-blue-500 rounded-full p-0.5 text-white">
+                            <Clock size={14} className="transform rotate-0" />
                         </div>
+                        <span className="font-bold text-[#1E3A8A]">Message</span>
                     </div>
+                    <p className="text-[#1E3A8A] text-sm">
+                        {transaction.error_message || (['pending', 'payment_init_success', 'en attente'].includes(transaction.status?.toLowerCase()) ? 'Transaction en cours' : 'Aucune demande de paiement n’a été trouvée pour ce client.')}
+                    </p>
+                </div>
 
-                    <div className="flex justify-between items-center">
-                        <span className="text-lg text-gray-500 dark:text-gray-400">Numéro de téléphone</span>
-                        <span className={`text-lg font-medium ${theme.colors.text} font-mono`}>
-                            {transaction.phone_number}
-                        </span>
-                    </div>
+                {/* Transaction Information Card */}
+                <div className={`w-full ${theme.colors.a_background} rounded-3xl p-6 border ${theme.mode === 'dark' ? 'border-gray-800' : 'border-gray-100'} shadow-sm mb-8`}>
+                    <h3 className={`text-lg font-bold ${theme.colors.text} mb-6`}>
+                        Informations de la transaction
+                    </h3>
 
-                    <div className="flex justify-between items-center">
-                        <span className="text-lg text-gray-500 dark:text-gray-400">Émetteur de la facture</span>
-                        <span className={`text-lg font-medium ${theme.colors.text}`}>
-                            {transaction.user ? `${transaction.user.first_name} ${transaction.user.last_name}` : transaction.issuer || 'Utilisateur Blaffa'}
-                        </span>
+                    <div className="space-y-6">
+                        {/* Application */}
+                        <div className="flex items-start gap-4">
+                            <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center shrink-0">
+                                <CreditCard className="text-white" size={20} />
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-gray-400 text-xs">Application</span>
+                                <span className={`font-semibold ${theme.colors.text}`}>{transaction.app?.public_name || '1xBet'}</span>
+                            </div>
+                        </div>
+
+                        {/* Réseau */}
+                        <div className="flex items-start gap-4">
+                            <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center shrink-0">
+                                <Smartphone className="text-white" size={20} />
+                            </div>
+                            <div className="flex flex-col text-sm">
+                                <span className="text-gray-400 text-xs">Réseau</span>
+                                <span className={`font-semibold ${theme.colors.text}`}>
+                                    {transaction.network?.public_name || transaction.payment_method || 'ORANGE BURKINA'}
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Numéro */}
+                        <div className="flex items-start gap-4">
+                            <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center shrink-0">
+                                <Phone className="text-gray-500" size={20} />
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-gray-400 text-xs">Numéro</span>
+                                <span className={`font-semibold ${theme.colors.text}`}>{transaction.phone_number}</span>
+                            </div>
+                        </div>
+
+                        {/* Montant */}
+                        <div className="flex items-start gap-4">
+                            <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center shrink-0 text-gray-400">
+                                <span className="font-bold text-xl">$</span>
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-gray-400 text-xs">Montant</span>
+                                <span className={`font-semibold ${theme.colors.text}`}>XOF {transaction.amount}</span>
+                            </div>
+                        </div>
+
+                        {/* Référence */}
+                        <div className="flex items-start gap-4">
+                            <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center shrink-0">
+                                <Hash className="text-gray-500" size={20} />
+                            </div>
+                            <div className="flex flex-col flex-1 min-w-0">
+                                <span className="text-gray-400 text-xs">Référence</span>
+                                <div className="flex items-center justify-between">
+                                    <span className={`font-semibold ${theme.colors.text} truncate`}>{transaction.reference}</span>
+                                    <button
+                                        onClick={() => copyToClipboard(transaction.reference)}
+                                        className="text-blue-400 hover:text-blue-500"
+                                    >
+                                        <Copy size={16} />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Date */}
+                        <div className="flex items-start gap-4">
+                            <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center shrink-0">
+                                <Clock className="text-gray-500" size={20} />
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-gray-400 text-xs">Date</span>
+                                <span className={`font-semibold ${theme.colors.text}`}>
+                                    {formatDate(transaction.created_at)}
+                                </span>
+                            </div>
+                        </div>
+
+                        {/* Application ID (1xBet ID) */}
+                        <div className="flex items-start gap-4">
+                            <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center shrink-0">
+                                <Smartphone className="text-gray-500" size={20} />
+                            </div>
+                            <div className="flex flex-col">
+                                <span className="text-gray-400 text-xs">{transaction.app?.public_name || '1xBet'} ID</span>
+                                <span className={`font-semibold ${theme.colors.text}`}>{(transaction as any).user_app_id || transaction.transaction_reference || 'N/A'}</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                {/* Support Button - Coral style matching reference */}
+                {/* Support Button */}
                 <button
                     onClick={() => window.open('https://wa.me/22553445327', '_blank')}
-                    className="w-full py-4 bg-[#ffc1bb] hover:bg-[#ffb1aa] text-[#ff6b62] rounded-xl text-xl font-medium transition-colors shadow-sm"
+                    className="w-full py-4 bg-[#ffdedb] hover:bg-[#ffcfcc] text-[#ff6b62] rounded-2xl text-xl font-bold transition-colors shadow-sm mt-4"
                 >
                     Contacter le support
                 </button>
             </div>
 
             <style jsx>{`
-        .animate-spin-slow {
-          animation: spin 3s linear infinite;
-        }
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
+                .animate-spin-slow {
+                    animation: spin 3s linear infinite;
+                }
+                @keyframes spin {
+                    from { transform: rotate(0deg); }
+                    to { transform: rotate(360deg); }
+                }
+            `}</style>
         </div>
     );
 }

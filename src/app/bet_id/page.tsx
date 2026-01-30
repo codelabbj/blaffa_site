@@ -254,7 +254,7 @@ function BetIdsContent() {
         <h1 className={`text-2xl font-bold ${theme.colors.text}`}>{headerTitle}</h1>
       </header>
 
-      <main className="max-w-md mx-auto px-6 pt-6">
+      <main className="w-full px-6 pt-6">
         {/* Step Guide */}
         <div className="mb-10">
           <h2 className={`text-xl font-bold ${theme.colors.text}`}>2. Choisissez ou créez votre ID pour {platformName}</h2>

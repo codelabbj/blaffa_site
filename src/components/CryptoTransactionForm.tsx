@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useTheme } from './ThemeProvider';
-import { FaPhoneAlt, FaMoneyBillWave, FaWallet, FaCheckCircle, FaCopy } from 'react-icons/fa';
+import { FaPhoneAlt, FaMoneyBillWave, FaWallet, FaCheckCircle, FaCopy, FaArrowLeft } from 'react-icons/fa';
 import api from '@/lib/axios';
 import { useTranslation } from 'react-i18next';
 import { useWebSocket } from '@/context/WebSocketContext';
 
-const API_URL = 'https://api.blaffa.net/blaffa/transaction'; // Replace with your real base URL
+const TRANSACTION_ENDPOINT = '/blaffa/transaction/';
 
 interface Crypto {
   id: string | number;
@@ -22,70 +22,100 @@ interface Network {
   public_name: string;
   country_code: string;
   image?: string;
-  otp_required?: boolean;
-  message_init?: string;
+  indication?: string;
 }
 
 interface CryptoTransactionFormProps {
   isVerified: boolean;
   crypto: Crypto;
   typeTrans: 'buy' | 'sale';
+  selectedNetwork?: Network | null;
 }
 
-export default function CryptoTransactionForm({ isVerified, crypto, typeTrans }: CryptoTransactionFormProps) {
+export default function CryptoTransactionForm({ isVerified, crypto, typeTrans, selectedNetwork }: CryptoTransactionFormProps) {
   const { t } = useTranslation();
   const { theme } = useTheme();
   const { addMessageHandler } = useWebSocket();
-  const [amount, setAmount] = useState(''); // For buy: local currency, for sell: crypto amount
-  const [calculatedValue, setCalculatedValue] = useState(''); // For buy: crypto, for sell: local currency
+  const [amount, setAmount] = useState(''); // Amount in XOF (local currency)
+  const [quantity, setQuantity] = useState(''); // Quantity of token
   const [phone, setPhone] = useState('');
-  const [confirmPhone, setConfirmPhone] = useState('');
   const [walletLink, setWalletLink] = useState('');
   const [confirmWalletLink, setConfirmWalletLink] = useState('');
-  // Remove transactionType/modal state, use typeTrans prop
   const transactionType = typeTrans;
   const [modal, setModal] = useState<'wallet' | 'confirm' | null>(null);
   const [loading, setLoading] = useState(false);
   const [apiResult, setApiResult] = useState<Record<string, string> | null>(null);
   const [error, setError] = useState('');
-  const [networks, setNetworks] = useState<Network[]>([]);
-  const [selectedNetwork, setSelectedNetwork] = useState<Network | null>(null);
   const [transactionLink, setTransactionLink] = useState<string | null>(null);
   const [hash, setHash] = useState('');
-  const [showHashModal, setShowHashModal] = useState(false);
+  const [view, setView] = useState<'form' | 'sale_confirm'>('form');
 
-  // Fetch networks on mount
-  useEffect(() => {
-    const fetchNetworks = async () => {
-      const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
-      if (!token) return;
-      try {
-        const response = await api.get('/blaffa/network/', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
-        if (Array.isArray(response.data)) {
-          setNetworks(response.data);
-        }
-      } catch {
-        // Optionally handle error
+  // Helper to parse API errors
+  const parseError = (err: any) => {
+    const data = err.response?.data;
+    if (!data) return t('Une erreur est survenue. Veuillez réessayer.');
+
+    // Handle specific error codes
+    const code = data.code;
+    if (code) {
+      switch (code) {
+        case 'token_not_valid':
+          return t('Votre session est expirée ou invalide. Veuillez vous reconnecter.');
+        case 'user_not_found':
+          return t('Utilisateur non trouvé.');
+        // Add more codes as they become known
       }
-    };
+    }
 
-    fetchNetworks();
-  }, []);
+    // Direct detail message
+    if (typeof data.detail === 'string') return data.detail;
+    if (typeof data.message === 'string') return data.message;
 
-  // Calculate value when amount, crypto, or transactionType changes
-  useEffect(() => {
-    if (!amount || isNaN(Number(amount)) || !transactionType) {
-      setCalculatedValue('');
+    // Handle validation errors (e.g., { "phone_number": ["This field is required."] })
+    if (typeof data === 'object') {
+      const firstError = Object.values(data)[0];
+      if (Array.isArray(firstError) && firstError.length > 0) return firstError[0];
+      if (typeof firstError === 'string') return firstError;
+    }
+
+    return t('Une erreur est survenue. Veuillez réessayer.');
+  };
+
+  // Helper to get country flag based on indication
+  const getCountryFlag = (indication?: string) => {
+    if (!indication) return '🇧🇫'; // Default
+    const cleanIndication = indication.replace('+', '');
+    switch (cleanIndication) {
+      case '226': return '🇧🇫'; case '225': return '🇨🇮'; case '223': return '🇲🇱';
+      case '221': return '🇸🇳'; case '228': return '🇹🇬'; case '229': return '🇧🇯';
+      case '237': return '🇨🇲'; case '224': return '🇬🇳'; case '241': return '🇬🇦';
+      case '242': return '🇨🇬'; case '243': return '🇨🇩'; case '227': return '🇳🇪';
+      case '233': return '🇬🇭'; case '234': return '🇳🇬'; default: return '🌍';
+    }
+  };
+
+  // Calculate equivalent when quantity changes (Crypto -> Fiat)
+  const handleQuantityChange = (q: string) => {
+    setQuantity(q);
+    if (!q || isNaN(Number(q))) {
+      setAmount('');
       return;
     }
-    if (transactionType === 'buy') {
-      setCalculatedValue((Number(amount) / Number(crypto.public_amount)).toFixed(2));
-    } else if (transactionType === 'sale') {
-      setCalculatedValue((Number(amount) * Number(crypto.public_amount)).toFixed(2));
+    // Amount (XOF) = Quantity * Public Amount
+    const xof = Number(q) * Number(crypto.public_amount);
+    setAmount(xof.toFixed(0));
+  };
+
+  const handleAmountChange = (a: string) => {
+    setAmount(a);
+    if (!a || isNaN(Number(a))) {
+      setQuantity('');
+      return;
     }
-  }, [amount, crypto, transactionType]);
+    // Quantity = Amount / Public Amount
+    const q = Number(a) / Number(crypto.public_amount);
+    setQuantity(q.toFixed(6));
+  };
 
   // Listen for transaction_link from websocket
   useEffect(() => {
@@ -99,21 +129,6 @@ export default function CryptoTransactionForm({ isVerified, crypto, typeTrans }:
     return () => removeHandler();
   }, [addMessageHandler]);
 
-  // Handle confirmation for buy (after wallet link)
-  const handleWalletConfirm = () => {
-    if (!walletLink || walletLink !== confirmWalletLink) {
-      setError(t('Wallet links do not match.'));
-      return;
-    }
-    const sanitizedPhone = phone.replace(/\s+/g, '');
-    const sanitizedConfirmPhone = confirmPhone.replace(/\s+/g, '');
-    if (!sanitizedPhone || sanitizedPhone !== sanitizedConfirmPhone) {
-      setError(t('Please fill all fields and confirm your phone number.'));
-      return;
-    }
-    setError('');
-    setModal('confirm');
-  };
 
   // Handle API call
   const handleConfirm = async () => {
@@ -123,38 +138,46 @@ export default function CryptoTransactionForm({ isVerified, crypto, typeTrans }:
       setError(t('Please select a network.'));
       return;
     }
+
+    if (transactionType === 'buy') {
+      if (!walletLink || !confirmWalletLink || walletLink !== confirmWalletLink) {
+        setError(t('Les adresses de portefeuille ne correspondent pas.'));
+        return;
+      }
+      // Validate phone
+      if (!phone) {
+        setError(t('Veuillez entrer votre numéro de téléphone.'));
+        return;
+      }
+    }
+
     if (transactionType === 'sale') {
-      setShowHashModal(true);
+      setView('sale_confirm');
       return;
     }
+
     setLoading(true);
     try {
-      const payload: Record<string, string> = {
+      const payload = {
         type_trans: 'buy',
-        total_crypto: calculatedValue,
+        total_crypto: quantity,
         crypto_id: String(crypto.id),
         phone_number: phone.replace(/\s+/g, ''),
         network_id: selectedNetwork.id,
         amount: amount,
         wallet_link: walletLink,
       };
-      const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      };
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(payload),
-      });
-      const data = await res.json();
+
+      const response = await api.post(TRANSACTION_ENDPOINT, payload);
+      const data = response.data;
+
       setApiResult(data as Record<string, string>);
       if (data && data.transaction_link) {
         window.open(data.transaction_link, '_blank', 'noopener,noreferrer');
       }
-    } catch {
-      setError(t('Transaction failed. Please try again.'));
+    } catch (err: any) {
+      console.error("Transaction Error:", err);
+      setError(parseError(err));
     } finally {
       setLoading(false);
       setModal(null);
@@ -177,39 +200,32 @@ export default function CryptoTransactionForm({ isVerified, crypto, typeTrans }:
       return;
     }
     try {
-      const payload: Record<string, string> = {
+      const payload = {
         type_trans: 'sale',
-        total_crypto: amount,
+        total_crypto: quantity, // was amount in sale
         crypto_id: String(crypto.id),
         phone_number: phone.replace(/\s+/g, ''),
         network_id: selectedNetwork.id,
-        amount: calculatedValue,
+        amount: amount, // was calculatedValue
         hash,
       };
-      const token = typeof window !== 'undefined' ? localStorage.getItem('accessToken') : null;
-      const headers: Record<string, string> = {
-        'Content-Type': 'application/json',
-        ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      };
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(payload),
-      });
-      const data = await res.json();
+
+      const response = await api.post(TRANSACTION_ENDPOINT, payload);
+      const data = response.data;
+
       setApiResult(data as Record<string, string>);
       if (data && data.transaction_link) {
         window.open(data.transaction_link, '_blank', 'noopener,noreferrer');
       }
-      // Show success message for 2 seconds before closing modal
       setTimeout(() => {
-        setShowHashModal(false);
+        setView('form');
         setApiResult(null);
         setHash('');
         setModal(null);
       }, 2000);
-    } catch {
-      setError(t('Transaction failed. Please try again.'));
+    } catch (err: any) {
+      console.error("Hash Submit Error:", err);
+      setError(parseError(err));
     } finally {
       setLoading(false);
     }
@@ -223,387 +239,211 @@ export default function CryptoTransactionForm({ isVerified, crypto, typeTrans }:
     );
   }
 
-  // Show transaction type modal first
-  // Remove transactionType/modal state, use typeTrans prop
-  // if (modal === 'type') {
-  //   return (
-  //     <Modal onClose={() => setModal(null)} theme={theme}>
-  //       <div className="p-4">
-  //         <h3 className="text-lg font-bold mb-4 text-center">{t('Are you buying or selling?')}</h3>
-  //         <div className="flex gap-4">
-  //           <button className="flex-1 bg-gradient-to-r from-green-500 to-green-700 text-white py-2 rounded-lg font-bold text-lg shadow-md hover:from-green-600 hover:to-green-800 transition flex items-center justify-center gap-2" onClick={() => handleTypeSelect('buy')}>
-  //             <FaWallet /> {t('Buy')}
-  //           </button>
-  //           <button className="flex-1 bg-gradient-to-r from-red-500 to-red-700 text-white py-2 rounded-lg font-bold text-lg shadow-md hover:from-red-600 hover:to-red-800 transition flex items-center justify-center gap-2" onClick={() => handleTypeSelect('sell')}>
-  //             <FaWallet /> {t('Sell')}
-  //           </button>
-  //         </div>
-  //       </div>
-  //     </Modal>
-  //   );
-  // }
+  if (view === 'sale_confirm') {
+    return (
+      <div className="w-full min-h-[400px] flex flex-col">
+        {/* Header */}
+        <div className="flex items-center gap-4 mb-8">
+          <button onClick={() => setView('form')} className={`${theme.colors.hover} text-xl`}>
+            <FaArrowLeft />
+          </button>
+          <h1 className={`text-xl font-bold ${theme.colors.text}`}>Confirmation de l&apos;envoi</h1>
+        </div>
 
-  return (
-    <div
-      className={`rounded-2xl shadow-2xl p-6 sm:p-8 w-full max-w-xs sm:max-w-md relative mx-auto mt-8 border-2`}
-      style={{
-        background: theme.mode === 'dark'
-          ? 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)'
-          : 'linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%)',
-        borderColor: theme.mode === 'dark' ? '#334155' : '#e2e8f0',
-      }}
-    >
-      <h2 className="text-2xl font-extrabold mb-6 text-center" style={{ color: theme.colors.primary }}>
-        {transactionType === 'buy'
-          ? `${t('Buy')} ${crypto.name}`
-          : transactionType === 'sale'
-            ? `${t('Sell')} ${crypto.name}`
-            : `${t('Buy or Sell')} ${crypto.name}`}
-      </h2>
-      {/* Network selection */}
-      <div className="mb-4">
-        <label className={`block mb-1 font-medium ${theme.colors.text}`}>{t('Select Network')}</label>
-        <select
-          className={`w-full p-3 rounded-lg border focus:ring-2 focus:ring-blue-400 text-lg transition-colors
-            ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-700 text-slate-100' : 'bg-white border-slate-200 text-slate-900'}`}
-          value={selectedNetwork?.id || ''}
-          onChange={e => {
-            const net = networks.find(n => String(n.id) === e.target.value);
-            setSelectedNetwork(net || null);
-          }}
-        >
-          <option value="">{t('Select a network')}</option>
-          {networks.map(net => (
-            <option key={net.id} value={String(net.id)}>{net.public_name || net.name}</option>
-          ))}
-        </select>
-        {selectedNetwork && selectedNetwork.image && (
-          <div className="mt-2 flex items-center gap-2">
-            <img src={selectedNetwork.image} alt={selectedNetwork.name} className="w-8 h-8 rounded" />
-            <span className={`text-sm ${theme.colors.d_text}`}>{selectedNetwork.public_name || selectedNetwork.name}</span>
-          </div>
-        )}
-      </div>
-      <div className="flex items-center gap-4 mb-6 justify-center">
-        {crypto.logo && <img src={crypto.logo} alt={crypto.name} className="w-14 h-14 rounded-full border-2 border-primary shadow-md bg-white" />}
-        <div>
-          <div className={`font-bold text-lg flex items-center gap-2 ${theme.colors.text}`}>
-            {crypto.name}
-            <span className="inline-block bg-blue-100 text-blue-700 dark:bg-blue-900 dark:text-blue-200 px-2 py-0.5 rounded-full text-xs font-semibold border border-blue-300 ml-1">
-              {crypto.symbol}
+        <p className={`text-sm mb-8 ${theme.colors.d_text}`}>
+          Veuillez envoyer vos cryptos à l&apos;adresse ci-dessous dans votre portefeuille.
+        </p>
+
+        <div className="mb-6">
+          <p className={`text-sm font-bold mb-2 ${theme.mode === 'dark' ? 'text-blue-400' : 'text-blue-900'}`}>Adresse de destination :</p>
+          <div className={`flex items-center gap-3 p-4 rounded-xl border ${theme.mode === 'dark' ? 'bg-slate-800/50 border-slate-700' : 'bg-gray-50 border-gray-200'}`}>
+            <span className={`flex-1 font-mono text-sm break-all ${theme.colors.text}`}>
+              {crypto.sale_adress || 'Adresse non disponible'}
             </span>
+            <button
+              onClick={() => handleCopy(crypto.sale_adress || '')}
+              className={`p-2 rounded-lg ${theme.mode === 'dark' ? 'bg-slate-700 text-blue-400' : 'bg-blue-100 text-blue-800'}`}
+            >
+              <FaCopy />
+            </button>
           </div>
-          <div className="text-blue-500 text-sm font-mono">{t('Public Amount')}: {crypto.public_amount} XOF</div>
+        </div>
+
+        {/* Hash Input with Floating Label */}
+        <div className="relative mt-8 mb-auto">
+          <div className="absolute -top-3 left-4 px-2 bg-white dark:bg-slate-900 z-10">
+            <span className="text-xs text-green-600 font-medium">Entrez le hash/id de la transaction</span>
+          </div>
+          <div className={`p-4 rounded-xl border-2 border-green-500 ${theme.colors.a_background}`}>
+            <input
+              type="text"
+              value={hash}
+              onChange={(e) => setHash(e.target.value)}
+              placeholder="0x..."
+              className={`w-full bg-transparent outline-none text-lg ${theme.colors.text} placeholder:text-gray-400`}
+            />
+          </div>
+        </div>
+
+        {/* Action Button */}
+        <div className="mt-10">
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-xl text-sm font-medium">
+              {error}
+            </div>
+          )}
+          <button
+            onClick={handleHashSubmit}
+            className="w-full py-4 rounded-xl font-bold text-lg text-white shadow-lg bg-[#003087] hover:bg-[#002566] transition-all disabled:opacity-50"
+            disabled={loading || !hash}
+          >
+            {loading ? t('Traitement...') : 'Valider'}
+          </button>
         </div>
       </div>
-      {/* Amount input (dynamic) */}
-      <div className="mb-4 relative">
-        <label className={`block mb-1 font-medium ${theme.colors.text}`}>
-          {transactionType === 'buy' ? t('Amount (Local Currency)') : t('Amount (Crypto)')}
-        </label>
-        <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
-            <FaMoneyBillWave />
-          </span>
+    );
+  }
+
+  return (
+    <div className="w-full">
+      {/* Wallet Address Inputs (Buy only) */}
+      {transactionType === 'buy' && (
+        <div className="space-y-4 mb-6">
+          <div className={`p-4 rounded-xl border ${theme.colors.a_background} ${theme.mode === 'dark' ? 'border-blue-900' : 'border-blue-800'}`}>
+            <label className={`block mb-2 text-sm ${theme.colors.text}`}>Adresse du portefeuille</label>
+            <input
+              type="text"
+              value={walletLink}
+              onChange={(e) => setWalletLink(e.target.value)}
+              placeholder="Entrez l'adresse du portefeuille"
+              className={`w-full bg-transparent outline-none text-lg ${theme.colors.text} placeholder:text-gray-400`}
+            />
+          </div>
+
+          <div className={`p-4 rounded-xl border ${theme.colors.a_background} ${theme.mode === 'dark' ? 'border-gray-700' : 'border-gray-300'}`}>
+            <input
+              type="text"
+              value={confirmWalletLink}
+              onChange={(e) => setConfirmWalletLink(e.target.value)}
+              placeholder="Confirmer l'adresse du portefeuille"
+              className={`w-full bg-transparent outline-none text-lg ${theme.colors.text} placeholder:text-gray-400`}
+            />
+          </div>
+
+          {/* Warning */}
+          <div className="p-3 bg-orange-50 border border-orange-200 rounded-xl flex items-start gap-3">
+            <div className="w-5 h-5 rounded-full border border-orange-400 text-orange-400 flex items-center justify-center text-xs flex-shrink-0 mt-0.5">i</div>
+            <p className="text-sm text-orange-800 leading-snug">
+              Vérifiez bien votre adresse. Les transactions crypto sont irréversibles.
+            </p>
+          </div>
+        </div>
+      )}
+
+      {/* Quantity & Amount Inputs */}
+      <div className="space-y-4 mb-6">
+        <div className={`p-4 rounded-xl border ${theme.colors.a_background} ${theme.mode === 'dark' ? 'border-gray-700' : 'border-gray-300'}`}>
+          <label className={`block mb-1 text-sm text-gray-500`}>Quantité de {crypto.name} à {transactionType === 'buy' ? 'acheter' : 'vendre'}</label>
           <input
             type="number"
-            className={`w-full p-3 pl-10 rounded-lg border focus:ring-2 focus:ring-blue-400 text-lg transition-colors
-              ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-700 text-slate-100 placeholder-slate-500' : 'bg-white border-slate-200 text-slate-900 placeholder-slate-400'}`}
+            value={quantity}
+            onChange={(e) => handleQuantityChange(e.target.value)}
+            placeholder="0"
+            className={`w-full bg-transparent outline-none text-xl font-medium ${theme.colors.text}`}
+          />
+        </div>
+
+        <div className={`p-4 rounded-xl border ${theme.colors.a_background} ${theme.mode === 'dark' ? 'border-gray-700' : 'border-gray-300'}`}>
+          <label className={`block mb-1 text-sm text-gray-500`}>Montant équivalent (F CFA)</label>
+          <input
+            type="number"
             value={amount}
-            onChange={e => setAmount(e.target.value)}
-            min="0"
-            placeholder={transactionType === 'buy' ? t('Enter amount') : t('Enter crypto amount')}
+            onChange={(e) => handleAmountChange(e.target.value)}
+            placeholder="0"
+            className={`w-full bg-transparent outline-none text-xl font-medium ${theme.colors.text}`}
+          />
+        </div>
+        <p className="text-xs text-gray-400 pl-1">1000 F - 60000 F</p>
+      </div>
+
+      {/* Info Box (*133#) */}
+      {transactionType === 'buy' && (
+        <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-xl flex items-start gap-3">
+          <div className="w-5 h-5 rounded-full border border-blue-500 text-blue-500 flex items-center justify-center text-xs flex-shrink-0 mt-0.5">i</div>
+          <p className="text-sm text-blue-800 leading-snug">
+            Après avoir lancer, veuillez composer *133# puis 1 pour confirmer le montant qui apparaît.
+          </p>
+        </div>
+      )}
+
+      {/* Phone Number with Flag */}
+      <div className="flex gap-4 mb-8">
+        <div className={`w-1/3 flex items-center justify-center gap-2 h-14 rounded-xl border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-gray-300'} ${theme.colors.a_background}`}>
+          {/* Flag + Code */}
+          <span className="text-2xl">
+            {selectedNetwork?.image && false ? <img src={selectedNetwork?.image} className="w-6 h-4" alt="" /> : getCountryFlag(selectedNetwork?.indication || '+225')}
+          </span>
+          <span className={`text-lg font-bold ${theme.colors.text}`}>
+            {selectedNetwork?.indication ? selectedNetwork.indication : "+225"}
+          </span>
+        </div>
+        <div className={`flex-1 h-14 px-4 rounded-xl border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-gray-300'} ${theme.colors.a_background} flex items-center`}>
+          <input
+            type="tel"
+            value={phone}
+            onChange={(e) => {
+              const value = e.target.value.replace(/\D/g, '');
+              setPhone(value);
+            }}
+            placeholder="Numéro de téléphone"
+            className={`w-full bg-transparent outline-none text-lg ${theme.colors.text} placeholder:text-gray-400`}
           />
         </div>
       </div>
-      {/* Calculated value display (dynamic) */}
-      {calculatedValue && (
-        <div className={`mb-4 ${transactionType === 'buy' ? 'text-green-600 dark:text-green-400' : 'text-blue-600 dark:text-blue-400'} text-center text-lg font-semibold`}>
-          {transactionType === 'buy'
-            ? <>{t('You will get')}: <span className="font-bold">{calculatedValue} {crypto.symbol}</span></>
-            : <>{t('You will receive')}: <span className="font-bold">{calculatedValue} XOF</span></>}
+
+      {/* Footer Info */}
+      {transactionType === 'buy' && (
+        <p className="text-center text-orange-400 text-sm italic mb-6">
+          Les dépôts commencent a partir de 105 FCFA
+        </p>
+      )}
+
+      {/* Error message */}
+      {error && (
+        <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-xl text-sm font-medium">
+          {error}
         </div>
       )}
-      {/* Phone number input */}
-      {transactionType === 'buy' ? (
-        <>
-          {/* Wallet link input */}
-          <div className="mb-4 relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
-              <FaWallet />
-            </span>
-            <input
-              type="text"
-              className={`w-full p-3 pl-10 rounded-lg border focus:ring-2 focus:ring-blue-400 transition-colors
-                ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-700 text-slate-100 placeholder-slate-500' : 'bg-white border-slate-200 text-slate-900 placeholder-slate-400'}`}
-              placeholder={t('Wallet link')}
-              value={walletLink}
-              onChange={e => setWalletLink(e.target.value)}
-            />
-          </div>
-          {/* Confirm wallet link input */}
-          <div className="mb-4 relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
-              <FaWallet />
-            </span>
-            <input
-              type="text"
-              className={`w-full p-3 pl-10 rounded-lg border focus:ring-2 focus:ring-blue-400 transition-colors
-                ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-600 text-slate-100 placeholder-slate-400' : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400'}`}
-              placeholder={t('Confirm wallet link')}
-              value={confirmWalletLink}
-              onChange={e => setConfirmWalletLink(e.target.value)}
-            />
-          </div>
-        </>
-      ) : (
-        <>
-          {/* Phone number input (for sale) */}
-          <div className="mb-4 relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
-              <FaPhoneAlt />
-            </span>
-            <input
-              type="tel"
-              className={`w-full p-3 pl-10 rounded-lg border focus:ring-2 focus:ring-blue-400 transition-colors
-                ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-600 text-slate-100 placeholder-slate-400' : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400'}`}
-              placeholder={t('Phone number')}
-              value={phone}
-              onChange={e => setPhone(e.target.value)}
-            />
-          </div>
-          {/* Confirm phone number input (for sale) */}
-          <div className="mb-4 relative">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
-              <FaPhoneAlt />
-            </span>
-            <input
-              type="tel"
-              className={`w-full p-3 pl-10 rounded-lg border focus:ring-2 focus:ring-blue-400 transition-colors
-                ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-600 text-slate-100 placeholder-slate-400' : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400'}`}
-              placeholder={t('Confirm phone number')}
-              value={confirmPhone}
-              onChange={e => setConfirmPhone(e.target.value)}
-            />
-          </div>
-        </>
-      )}
-      {/* Error message */}
-      {error && <div className="mb-4 text-red-500 text-center font-medium">{t(error)}</div>}
-      {/* Action button */}
+
       <button
-        className="w-full py-3 rounded-lg font-bold text-lg flex items-center justify-center gap-2 transition bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 text-white shadow-lg active:scale-95"
-        onClick={() => {
-          if (!amount) {
-            setError(t('Please fill all fields.'));
-            return;
-          }
-          if (!selectedNetwork) {
-            setError(t('Please select a network.'));
-            return;
-          }
-          if (transactionType === 'buy') {
-            if (!walletLink || !confirmWalletLink || walletLink !== confirmWalletLink) {
-              setError(t('Please fill all fields and confirm your wallet link.'));
-              return;
-            }
-            setError('');
-            setModal('wallet');
-          } else {
-            const sanitizedPhone = phone.replace(/\s+/g, '');
-            const sanitizedConfirmPhone = confirmPhone.replace(/\s+/g, '');
-            if (!sanitizedPhone || sanitizedPhone !== sanitizedConfirmPhone) {
-              setError(t('Please fill all fields and confirm your phone number.'));
-              return;
-            }
-            setError('');
-            setModal('confirm');
-          }
-        }}
+        onClick={handleConfirm}
+        className={`w-full py-4 rounded-xl font-bold text-lg text-white shadow-lg transition-all
+                ${loading ? 'opacity-70 cursor-not-allowed' : 'hover:scale-[0.99]'}
+            `}
+        style={{ backgroundColor: theme.mode === 'dark' ? theme.colors.primary : '#002D74' }}
         disabled={loading}
       >
-        <FaCheckCircle /> {t('Continue')}
+        {loading ? t('Traitement...') : 'Confirmer'}
       </button>
 
-      {/* Wallet link modal for buy */}
-      {modal === 'wallet' && transactionType === 'buy' && (
-        <Modal onClose={() => setModal(null)} theme={theme}>
-          <div className="p-4">
-            <h3 className="text-lg font-bold mb-2 text-center">{t('Enter your phone number')}</h3>
-            <div className="relative mb-2">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
-                <FaPhoneAlt />
-              </span>
-              <input
-                type="tel"
-                className={`w-full p-3 pl-10 rounded-lg border focus:ring-2 focus:ring-blue-400 transition-colors
-                  ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-600 text-slate-100 placeholder-slate-400' : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400'}`}
-                placeholder={t('Phone number')}
-                value={phone}
-                onChange={e => setPhone(e.target.value)}
-              />
-            </div>
-            <div className="relative mb-2">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-blue-400">
-                <FaPhoneAlt />
-              </span>
-              <input
-                type="tel"
-                className={`w-full p-3 pl-10 rounded-lg border focus:ring-2 focus:ring-blue-400 transition-colors
-                  ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-600 text-slate-100 placeholder-slate-400' : 'bg-white border-slate-300 text-slate-900 placeholder-slate-400'}`}
-                placeholder={t('Confirm phone number')}
-                value={confirmPhone}
-                onChange={e => setConfirmPhone(e.target.value)}
-              />
-            </div>
-            {error && <div className="mb-2 text-red-500 text-center">{t(error)}</div>}
-            <button className="w-full bg-gradient-to-r from-blue-500 to-blue-700 text-white py-2 rounded-lg font-bold text-lg shadow-md hover:from-blue-600 hover:to-blue-800 transition mt-2 flex items-center justify-center gap-2" onClick={handleWalletConfirm}>
-              <FaCheckCircle /> {t('Continue')}
-            </button>
-          </div>
-        </Modal>
-      )}
 
-      {/* Confirmation modal */}
-      {modal === 'confirm' && (
-        <Modal onClose={() => setModal(null)} theme={theme}>
-          <div className="p-4">
-            <h3 className="text-lg font-bold mb-2 text-center">{t('Confirm your transaction')}</h3>
-            <div className="mb-2">Type: <span className="font-semibold">{transactionType?.toUpperCase()}</span></div>
-            <div className="mb-2">Crypto: <span className="font-semibold">{crypto.name}</span></div>
-            <div className="mb-2">Amount: <span className="font-semibold">{
-              transactionType === 'sale'
-                ? `${calculatedValue} XOF`
-                : `${calculatedValue} ${crypto.symbol}`
-            }</span></div>
-            <div className="mb-2">Phone: <span className="font-semibold">{phone}</span></div>
-            <div className="mb-2">Network: <span className="font-semibold">{selectedNetwork?.public_name || selectedNetwork?.name}</span></div>
-            {transactionType === 'buy' && (
-              <div className="mb-2">Wallet Link: <span className="font-semibold break-all">{walletLink}</span></div>
-            )}
-            <button className="w-full bg-gradient-to-r from-green-500 to-green-700 text-white py-2 rounded-lg font-bold text-lg shadow-md hover:from-green-600 hover:to-green-800 transition mt-4 flex items-center justify-center gap-2" onClick={handleConfirm} disabled={loading}>
-              {loading ? t('Processing...') : <FaCheckCircle />} {t('Confirm')}
-            </button>
-          </div>
-        </Modal>
-      )}
+      {/* API RESULT / Transaction Link Modal */}
+      {/* ... keeping behavior of opening link in new tab mostly ... */}
 
-      {/* API result display */}
-      {apiResult && (
-        <div className={`mt-6 p-4 rounded-lg text-center shadow-lg border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-slate-200'}`}
-          style={{
-            background: theme.mode === 'dark'
-              ? 'linear-gradient(135deg, #1e293b 0%, #0f172a 100%)'
-              : 'linear-gradient(135deg, #ffffff 0%, #f8fafc 100%)',
-          }}
-        >
-          {transactionType === 'sale' && apiResult?.wallet_address && (
-            <>
-              <div className="mb-2 font-bold">{t('Sell Wallet Address')}:</div>
-              <div className="mb-2 break-all text-blue-600 dark:text-blue-300 font-mono text-lg">{apiResult.wallet_address}</div>
-              <button className="bg-gradient-to-r from-blue-500 to-blue-700 text-white px-3 py-1 rounded-lg font-semibold mt-2" onClick={() => handleCopy(apiResult.wallet_address)}>{t('Copy')}</button>
-              <div className="mt-2 text-sm text-gray-600 dark:text-gray-300">{t('Send your crypto to this address to complete the sale.')}</div>
-            </>
-          )}
-          {transactionType === 'buy' && (
-            <div className="text-green-600 dark:text-green-400 font-bold flex flex-col items-center gap-2">
-              <FaCheckCircle className="text-2xl" />
-              {t('Your buy request has been submitted!')}
-            </div>
-          )}
-        </div>
-      )}
-
-      {/* Transaction Link Modal */}
-      {transactionLink && (
-        <Modal onClose={() => setTransactionLink(null)} theme={theme}>
-          <div className="p-6 flex flex-col items-center">
-            <h3 className="text-lg font-bold mb-4 text-center">{t('Continue Payment')}</h3>
-            <button
-              onClick={() => window.open(transactionLink, '_blank', 'noopener,noreferrer')}
-              className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors font-bold text-lg shadow-md"
-            >
-              {t('Click to continue payment')}
-            </button>
-            {/* <button
-              onClick={() => setTransactionLink(null)}
-              className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-            >
-              {t('Close')}
-            </button> */}
-          </div>
-        </Modal>
-      )}
-
-      {/* New modal for sell after confirm */}
-      {showHashModal && transactionType === 'sale' && (
-        <Modal onClose={() => setShowHashModal(false)} theme={theme}>
-          <div className="p-4">
-            <h3 className="text-lg font-bold mb-2 text-center">{t('Adresse de vente')}</h3>
-            <div className="mb-2 relative flex items-center">
-              <input
-                type="text"
-                className="w-full p-3 rounded-lg border focus:ring-2 focus:ring-blue-400 transition-colors font-mono"
-                value={crypto.sale_adress || ''}
-                readOnly
-              />
-              <button
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-blue-500 hover:text-blue-700"
-                onClick={() => handleCopy(crypto.sale_adress || '')}
-                title={t('Copier')}
-              >
-                <FaCopy />
-              </button>
-            </div>
-            <div className="text-sm text-gray-500 mb-4">Copiez l&apos;adresse de vente pour vendre votre crypto.</div>
-            <div className="mb-4 relative">
-              <input
-                type="text"
-                className="w-full p-3 rounded-lg border focus:ring-2 focus:ring-blue-400 transition-colors"
-                placeholder={t('Entrez le hash de la transaction')}
-                value={hash}
-                onChange={e => setHash(e.target.value)}
-              />
-            </div>
-            {error && <div className="mb-2 text-red-500 text-center font-medium">{t(error)}</div>}
-            {apiResult && (
-              <div className="mb-2 text-green-600 text-center font-medium">{t('Votre vente a été soumise avec succès!')}</div>
-            )}
-            <button
-              className="w-full bg-gradient-to-r from-green-500 to-green-700 text-white py-2 rounded-lg font-bold text-lg shadow-md hover:from-green-600 hover:to-green-800 transition mt-2 flex items-center justify-center gap-2"
-              onClick={handleHashSubmit}
-              disabled={loading || !hash}
-            >
-              {loading ? t('Traitement...') : <FaCheckCircle />} {t('OK')}
-            </button>
-          </div>
-        </Modal>
-      )}
+      {/* API RESULT / Transaction Link Modal */}
+      {/* ... keeping behavior of opening link in new tab mostly ... */}
     </div>
   );
 }
 
-// Modal with blur and shadow
+// Simple Modal Component
 function Modal({ children, onClose, theme }: { children: React.ReactNode; onClose: () => void; theme: { mode: string } }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center" style={{ backdropFilter: 'blur(6px)' }}>
-      <div
-        className="rounded-xl shadow-2xl max-w-md w-full relative border"
-        style={{
-          background: theme.mode === 'dark'
-            ? 'linear-gradient(135deg, rgba(30,41,59,0.97) 60%, rgba(51,65,85,0.97) 100%)'
-            : 'linear-gradient(135deg, rgba(255,255,255,0.97) 60%, rgba(226,232,240,0.97) 100%)',
-          borderColor: theme.mode === 'dark' ? '#334155' : '#e5e7eb',
-        }}
-      >
-        <button
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700 dark:hover:text-gray-300 text-2xl font-bold"
-          onClick={onClose}
-        >
-          ×
-        </button>
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ backdropFilter: 'blur(5px)', backgroundColor: 'rgba(0,0,0,0.5)' }}>
+      <div className={`bg-white dark:bg-slate-800 rounded-2xl shadow-2xl w-full max-w-md relative overflow-hidden`}>
+        <button onClick={onClose} className="absolute top-2 right-3 text-2xl text-gray-500">&times;</button>
         {children}
       </div>
     </div>
   );
-} 
+}

@@ -168,8 +168,6 @@ function Withdraw() {
     const [loading, setLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [error, setError] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
     const [success, setSuccess] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
-    const [isModalOpen, setIsModalOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
-    const [selectedTransaction, setSelectedTransaction] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     const { theme } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ThemeProvider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"])();
     const [selectedBetId, setSelectedBetId] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
     // const [showInfoDropdown, setShowInfoDropdown] = useState(false);
@@ -441,6 +439,15 @@ function Withdraw() {
         setPhoneLoading(false);
         setCurrentStep('selectPhone');
     };
+    // Get current min and max withdrawal limits
+    const getWithdrawalLimits = ()=>{
+        const minVal = selectedPlatform?.minimun_with || selectedPlatform?.minimum_withdrawal || '100';
+        const maxVal = selectedPlatform?.max_win || selectedPlatform?.maximum_withdrawal || '1000000';
+        return {
+            min: parseFloat(String(minVal)),
+            max: parseFloat(String(maxVal))
+        };
+    };
     const handleInputChange = (e)=>{
         const { name, value } = e.target;
         setFormData((prev)=>({
@@ -467,9 +474,8 @@ function Withdraw() {
         if (numAmount <= 0) {
             return 'Le montant doit être supérieur à 0';
         }
-        // Use API-provided limits from selected platform, fallback to defaults
-        const minAmount = selectedPlatform?.minimum_withdrawal || 100;
-        const maxAmount = selectedPlatform?.maximum_withdrawal || 1000000;
+        // Use API-provided limits from selected platform
+        const { min: minAmount, max: maxAmount } = getWithdrawalLimits();
         if (numAmount < minAmount) {
             return `Le montant minimum est ${minAmount} FCFA`;
         }
@@ -563,16 +569,12 @@ function Withdraw() {
                 }
             });
             const transaction = response.data;
-            setSelectedTransaction({
-                transaction
-            });
-            setIsModalOpen(true);
             setSuccess('Retrait initié avec succès !');
+            // Redirect to dashboard after a short delay
+            setTimeout(()=>{
+                if ("TURBOPACK compile-time truthy", 1) window.location.href = '/dashboard';
+            }, 3000);
             // Reset form
-            setCurrentStep('selectId');
-            setSelectedPlatform(null);
-            setSelectedNetwork(null);
-            setSelectedBetId(null);
             setFormData({
                 withdrawalCode: '',
                 phoneNumber: '',
@@ -649,18 +651,18 @@ function Withdraw() {
                                 children: "1. Sélectionnez votre plateforme"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                lineNumber: 643,
+                                lineNumber: 652,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/withdraw/page.tsx",
-                            lineNumber: 642,
+                            lineNumber: 651,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "w-full flex justify-center",
                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "grid grid-cols-2 md:grid-cols-2 gap-4 w-full max-w-lg",
+                                className: "grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full",
                                 children: platforms.map((platform)=>{
                                     const isActive = selectedPlatform?.id === platform.id;
                                     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -676,12 +678,12 @@ function Withdraw() {
                                                     className: "h-16 w-16 object-contain"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                                    lineNumber: 659,
+                                                    lineNumber: 668,
                                                     columnNumber: 27
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                                lineNumber: 658,
+                                                lineNumber: 667,
                                                 columnNumber: 25
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -689,24 +691,24 @@ function Withdraw() {
                                                 children: platform.public_name || platform.name
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                                lineNumber: 666,
+                                                lineNumber: 675,
                                                 columnNumber: 23
                                             }, this)
                                         ]
                                     }, platform.id, true, {
                                         fileName: "[project]/src/app/withdraw/page.tsx",
-                                        lineNumber: 651,
+                                        lineNumber: 660,
                                         columnNumber: 21
                                     }, this);
                                 })
                             }, void 0, false, {
                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                lineNumber: 647,
+                                lineNumber: 656,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/withdraw/page.tsx",
-                            lineNumber: 646,
+                            lineNumber: 655,
                             columnNumber: 13
                         }, this),
                         platforms.length === 0 && !loading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -716,18 +718,18 @@ function Withdraw() {
                                 children: t("Aucune plateforme disponible")
                             }, void 0, false, {
                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                lineNumber: 677,
+                                lineNumber: 686,
                                 columnNumber: 17
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/withdraw/page.tsx",
-                            lineNumber: 676,
+                            lineNumber: 685,
                             columnNumber: 15
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/withdraw/page.tsx",
-                    lineNumber: 641,
+                    lineNumber: 650,
                     columnNumber: 11
                 }, this);
             case 'selectNetwork':
@@ -741,12 +743,12 @@ function Withdraw() {
                                 children: "3. Sélectionnez votre réseau"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                lineNumber: 688,
+                                lineNumber: 697,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/withdraw/page.tsx",
-                            lineNumber: 687,
+                            lineNumber: 696,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -763,12 +765,12 @@ function Withdraw() {
                                                 className: "w-12 h-12 object-contain"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                                lineNumber: 703,
+                                                lineNumber: 712,
                                                 columnNumber: 23
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                            lineNumber: 702,
+                                            lineNumber: 711,
                                             columnNumber: 21
                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: `w-14 h-14 ${theme.mode === 'dark' ? 'bg-slate-800' : 'bg-gray-100'} rounded-lg flex items-center justify-center flex-shrink-0`,
@@ -776,12 +778,12 @@ function Withdraw() {
                                                 className: `w-6 h-6 ${theme.colors.d_text} opacity-40`
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                                lineNumber: 707,
+                                                lineNumber: 716,
                                                 columnNumber: 23
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                            lineNumber: 706,
+                                            lineNumber: 715,
                                             columnNumber: 21
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -789,18 +791,18 @@ function Withdraw() {
                                             children: network.public_name || network.name
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                            lineNumber: 710,
+                                            lineNumber: 719,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, network.id, true, {
                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                    lineNumber: 693,
+                                    lineNumber: 702,
                                     columnNumber: 17
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/src/app/withdraw/page.tsx",
-                            lineNumber: 691,
+                            lineNumber: 700,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -816,12 +818,12 @@ function Withdraw() {
                                 children: "Suivant"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                lineNumber: 718,
+                                lineNumber: 727,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/withdraw/page.tsx",
-                            lineNumber: 717,
+                            lineNumber: 726,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -843,30 +845,30 @@ function Withdraw() {
                                             d: "M10 19l-7-7m0 0l7-7m-7 7h18"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                            lineNumber: 740,
+                                            lineNumber: 749,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/withdraw/page.tsx",
-                                        lineNumber: 739,
+                                        lineNumber: 748,
                                         columnNumber: 17
                                     }, this),
                                     t("Retour")
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                lineNumber: 735,
+                                lineNumber: 744,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/withdraw/page.tsx",
-                            lineNumber: 734,
+                            lineNumber: 743,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/withdraw/page.tsx",
-                    lineNumber: 686,
+                    lineNumber: 695,
                     columnNumber: 11
                 }, this);
             case 'selectPhone':
@@ -883,12 +885,12 @@ function Withdraw() {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                lineNumber: 752,
+                                lineNumber: 761,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/withdraw/page.tsx",
-                            lineNumber: 751,
+                            lineNumber: 760,
                             columnNumber: 13
                         }, this),
                         phoneLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -897,12 +899,12 @@ function Withdraw() {
                                 className: "animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                lineNumber: 759,
+                                lineNumber: 768,
                                 columnNumber: 17
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/withdraw/page.tsx",
-                            lineNumber: 758,
+                            lineNumber: 767,
                             columnNumber: 15
                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
                             children: [
@@ -921,12 +923,12 @@ function Withdraw() {
                                                                 className: "w-6 h-6 text-white"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                                                lineNumber: 772,
+                                                                lineNumber: 781,
                                                                 columnNumber: 27
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                                            lineNumber: 771,
+                                                            lineNumber: 780,
                                                             columnNumber: 25
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -934,13 +936,13 @@ function Withdraw() {
                                                             children: formatPhoneWithCountryCode(phone.phone)
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                                            lineNumber: 774,
+                                                            lineNumber: 783,
                                                             columnNumber: 25
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                                    lineNumber: 770,
+                                                    lineNumber: 779,
                                                     columnNumber: 23
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -962,28 +964,28 @@ function Withdraw() {
                                                             d: "M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                                            lineNumber: 786,
+                                                            lineNumber: 795,
                                                             columnNumber: 27
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/withdraw/page.tsx",
-                                                        lineNumber: 785,
+                                                        lineNumber: 794,
                                                         columnNumber: 25
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                                    lineNumber: 778,
+                                                    lineNumber: 787,
                                                     columnNumber: 23
                                                 }, this)
                                             ]
                                         }, phone.id, true, {
                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                            lineNumber: 765,
+                                            lineNumber: 774,
                                             columnNumber: 21
                                         }, this))
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                    lineNumber: 763,
+                                    lineNumber: 772,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -997,19 +999,19 @@ function Withdraw() {
                                                 strokeWidth: 2.5
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                                lineNumber: 798,
+                                                lineNumber: 807,
                                                 columnNumber: 21
                                             }, this),
                                             "Ajouter un numéro"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/withdraw/page.tsx",
-                                        lineNumber: 794,
+                                        lineNumber: 803,
                                         columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                    lineNumber: 793,
+                                    lineNumber: 802,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1031,24 +1033,24 @@ function Withdraw() {
                                                     d: "M10 19l-7-7m0 0l7-7m-7 7h18"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                                    lineNumber: 809,
+                                                    lineNumber: 818,
                                                     columnNumber: 23
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                                lineNumber: 808,
+                                                lineNumber: 817,
                                                 columnNumber: 21
                                             }, this),
                                             t("Retour")
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/withdraw/page.tsx",
-                                        lineNumber: 804,
+                                        lineNumber: 813,
                                         columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                    lineNumber: 803,
+                                    lineNumber: 812,
                                     columnNumber: 17
                                 }, this)
                             ]
@@ -1056,7 +1058,7 @@ function Withdraw() {
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/withdraw/page.tsx",
-                    lineNumber: 750,
+                    lineNumber: 759,
                     columnNumber: 11
                 }, this);
             case 'manageBetId':
@@ -1088,12 +1090,12 @@ function Withdraw() {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                lineNumber: 836,
+                                lineNumber: 845,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/withdraw/page.tsx",
-                            lineNumber: 835,
+                            lineNumber: 844,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1116,12 +1118,12 @@ function Withdraw() {
                                                         className: "w-10 h-10 object-contain"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/withdraw/page.tsx",
-                                                        lineNumber: 852,
+                                                        lineNumber: 861,
                                                         columnNumber: 25
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                                    lineNumber: 851,
+                                                    lineNumber: 860,
                                                     columnNumber: 23
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1129,13 +1131,13 @@ function Withdraw() {
                                                     children: id.link
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                                    lineNumber: 855,
+                                                    lineNumber: 864,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                            lineNumber: 849,
+                                            lineNumber: 858,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1157,28 +1159,28 @@ function Withdraw() {
                                                     d: "M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                                    lineNumber: 862,
+                                                    lineNumber: 871,
                                                     columnNumber: 23
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                                lineNumber: 861,
+                                                lineNumber: 870,
                                                 columnNumber: 21
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                            lineNumber: 857,
+                                            lineNumber: 866,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, id.id, true, {
                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                    lineNumber: 841,
+                                    lineNumber: 850,
                                     columnNumber: 17
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/src/app/withdraw/page.tsx",
-                            lineNumber: 839,
+                            lineNumber: 848,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1196,19 +1198,19 @@ function Withdraw() {
                                         strokeWidth: 2.5
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/withdraw/page.tsx",
-                                        lineNumber: 878,
+                                        lineNumber: 887,
                                         columnNumber: 17
                                     }, this),
                                     "Créer un nouvel ID"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                lineNumber: 870,
+                                lineNumber: 879,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/withdraw/page.tsx",
-                            lineNumber: 869,
+                            lineNumber: 878,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1230,30 +1232,30 @@ function Withdraw() {
                                             d: "M10 19l-7-7m0 0l7-7m-7 7h18"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                            lineNumber: 889,
+                                            lineNumber: 898,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/withdraw/page.tsx",
-                                        lineNumber: 888,
+                                        lineNumber: 897,
                                         columnNumber: 17
                                     }, this),
                                     t("Retour aux plateformes")
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                lineNumber: 884,
+                                lineNumber: 893,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/withdraw/page.tsx",
-                            lineNumber: 883,
+                            lineNumber: 892,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/withdraw/page.tsx",
-                    lineNumber: 834,
+                    lineNumber: 843,
                     columnNumber: 11
                 }, this);
             case 'addPhone':
@@ -1271,12 +1273,12 @@ function Withdraw() {
                                         className: theme.colors.text
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/withdraw/page.tsx",
-                                        lineNumber: 905,
+                                        lineNumber: 914,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                    lineNumber: 901,
+                                    lineNumber: 910,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -1284,13 +1286,13 @@ function Withdraw() {
                                     children: "Retrait - Numéro de télé..."
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                    lineNumber: 907,
+                                    lineNumber: 916,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/withdraw/page.tsx",
-                            lineNumber: 900,
+                            lineNumber: 909,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1303,12 +1305,12 @@ function Withdraw() {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                lineNumber: 914,
+                                lineNumber: 923,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/withdraw/page.tsx",
-                            lineNumber: 913,
+                            lineNumber: 922,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1321,7 +1323,7 @@ function Withdraw() {
                                             children: "Nouveau numéro"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                            lineNumber: 921,
+                                            lineNumber: 930,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1332,7 +1334,7 @@ function Withdraw() {
                                             className: `w-full h-14 px-4 rounded-xl border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-gray-300'} ${theme.colors.a_background} text-lg ${theme.colors.text} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder:text-gray-400`
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                            lineNumber: 924,
+                                            lineNumber: 933,
                                             columnNumber: 17
                                         }, this),
                                         error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1340,13 +1342,13 @@ function Withdraw() {
                                             children: error
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                            lineNumber: 931,
+                                            lineNumber: 940,
                                             columnNumber: 27
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                    lineNumber: 920,
+                                    lineNumber: 929,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1358,7 +1360,7 @@ function Withdraw() {
                                             children: "Annuler"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                            lineNumber: 935,
+                                            lineNumber: 944,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1376,25 +1378,25 @@ function Withdraw() {
                                             children: loading ? '...' : 'Enregistrer'
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                            lineNumber: 941,
+                                            lineNumber: 950,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                    lineNumber: 934,
+                                    lineNumber: 943,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/withdraw/page.tsx",
-                            lineNumber: 919,
+                            lineNumber: 928,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/withdraw/page.tsx",
-                    lineNumber: 898,
+                    lineNumber: 907,
                     columnNumber: 11
                 }, this);
             case 'enterDetails':
@@ -1412,12 +1414,12 @@ function Withdraw() {
                                         className: "text-gray-900 dark:text-gray-100"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/withdraw/page.tsx",
-                                        lineNumber: 968,
+                                        lineNumber: 977,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                    lineNumber: 964,
+                                    lineNumber: 973,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -1425,13 +1427,13 @@ function Withdraw() {
                                     children: "5. Confirmer le retrait"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                    lineNumber: 970,
+                                    lineNumber: 979,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/withdraw/page.tsx",
-                            lineNumber: 963,
+                            lineNumber: 972,
                             columnNumber: 13
                         }, this),
                         selectedPlatform && (selectedPlatform.city || selectedPlatform.street) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1445,7 +1447,7 @@ function Withdraw() {
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                    lineNumber: 979,
+                                    lineNumber: 988,
                                     columnNumber: 19
                                 }, this),
                                 selectedPlatform.city && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1456,13 +1458,13 @@ function Withdraw() {
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                    lineNumber: 984,
+                                    lineNumber: 993,
                                     columnNumber: 19
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/withdraw/page.tsx",
-                            lineNumber: 977,
+                            lineNumber: 986,
                             columnNumber: 15
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1472,31 +1474,34 @@ function Withdraw() {
                                     className: "w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                    lineNumber: 993,
+                                    lineNumber: 1002,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                                     className: "text-sm text-orange-700",
                                     children: [
                                         "Assurez-vous que le montant est dans les limites autorisées ",
-                                        selectedPlatform?.minimum_withdrawal || 1000,
+                                        getWithdrawalLimits().min,
                                         " F - ",
-                                        selectedPlatform?.maximum_withdrawal || 300000,
+                                        getWithdrawalLimits().max,
                                         " F."
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                    lineNumber: 994,
+                                    lineNumber: 1003,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/withdraw/page.tsx",
-                            lineNumber: 992,
+                            lineNumber: 1001,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
-                            onSubmit: handleSubmit,
+                            onSubmit: (e)=>{
+                                e.preventDefault();
+                                if (validateForm()) setCurrentStep('summary');
+                            },
                             className: "space-y-6",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1511,7 +1516,7 @@ function Withdraw() {
                                             required: true
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                            lineNumber: 1002,
+                                            lineNumber: 1011,
                                             columnNumber: 17
                                         }, this),
                                         validationErrors.withdrawalCode && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1519,13 +1524,13 @@ function Withdraw() {
                                             children: validationErrors.withdrawalCode
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                            lineNumber: 1012,
+                                            lineNumber: 1021,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                    lineNumber: 1001,
+                                    lineNumber: 1010,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1535,28 +1540,29 @@ function Withdraw() {
                                             name: "amount",
                                             value: formData.amount,
                                             onChange: handleInputChange,
-                                            className: `w-full h-14 px-4 rounded-xl border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-gray-300'} ${theme.colors.a_background} text-lg ${theme.colors.text} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all`,
+                                            className: `w-full h-14 px-4 rounded-xl border ${!formData.amount ? theme.mode === 'dark' ? 'border-slate-700' : 'border-gray-300' : parseFloat(formData.amount) < getWithdrawalLimits().min || parseFloat(formData.amount) > getWithdrawalLimits().max ? 'border-red-500' : 'border-green-500'} ${theme.colors.a_background} text-lg ${theme.colors.text} focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all`,
                                             placeholder: "Montant (F CFA)",
                                             required: true,
-                                            min: selectedPlatform?.minimum_withdrawal || 100,
-                                            max: selectedPlatform?.maximum_withdrawal || 1000000,
+                                            min: getWithdrawalLimits().min,
+                                            max: getWithdrawalLimits().max,
                                             step: "1"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                            lineNumber: 1018,
+                                            lineNumber: 1027,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                            className: "mt-2 text-sm text-red-500 font-medium",
+                                            className: `mt-2 text-sm font-medium ${!formData.amount ? 'text-red-500' // Previous behavior was red by default? Let's check. 
+                                             : parseFloat(formData.amount) < getWithdrawalLimits().min || parseFloat(formData.amount) > getWithdrawalLimits().max ? 'text-red-500' : 'text-green-500'}`,
                                             children: [
-                                                selectedPlatform?.minimum_withdrawal || 100,
+                                                getWithdrawalLimits().min,
                                                 " F - ",
-                                                selectedPlatform?.maximum_withdrawal || 300000,
+                                                getWithdrawalLimits().max,
                                                 " F"
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                            lineNumber: 1031,
+                                            lineNumber: 1045,
                                             columnNumber: 17
                                         }, this),
                                         validationErrors.amount && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1564,13 +1570,13 @@ function Withdraw() {
                                             children: validationErrors.amount
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                            lineNumber: 1035,
+                                            lineNumber: 1054,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                    lineNumber: 1017,
+                                    lineNumber: 1026,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1584,7 +1590,7 @@ function Withdraw() {
                                                     children: getCountryFlag(selectedNetwork?.indication)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                                    lineNumber: 1044,
+                                                    lineNumber: 1063,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1592,13 +1598,13 @@ function Withdraw() {
                                                     children: selectedNetwork?.indication || '+226'
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                                    lineNumber: 1047,
+                                                    lineNumber: 1066,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                            lineNumber: 1043,
+                                            lineNumber: 1062,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1609,7 +1615,7 @@ function Withdraw() {
                                                     children: selectedPhone ? stripPhoneIndication(selectedPhone.phone) : ''
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                                    lineNumber: 1052,
+                                                    lineNumber: 1071,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
@@ -1617,27 +1623,27 @@ function Withdraw() {
                                                     children: "Numéro de téléphone"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                                    lineNumber: 1055,
+                                                    lineNumber: 1074,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                            lineNumber: 1051,
+                                            lineNumber: 1070,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                    lineNumber: 1042,
+                                    lineNumber: 1061,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: "space-y-3",
                                     children: [
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        selectedPlatform?.withdrawal_link && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                             type: "button",
-                                            onClick: ()=>window.open(selectedPlatform?.withdrawal_tuto_content || '#', '_blank'),
+                                            onClick: ()=>window.open(selectedPlatform.withdrawal_link, '_blank'),
                                             className: "w-full p-4 rounded-xl border border-gray-200 bg-white dark:bg-slate-800 dark:border-slate-700 flex items-center justify-between shadow-sm",
                                             children: [
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1653,18 +1659,18 @@ function Withdraw() {
                                                                     d: "M8 5v14l11-7z"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                                                    lineNumber: 1069,
-                                                                    columnNumber: 88
+                                                                    lineNumber: 1089,
+                                                                    columnNumber: 90
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                                                lineNumber: 1069,
-                                                                columnNumber: 23
+                                                                lineNumber: 1089,
+                                                                columnNumber: 25
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                                            lineNumber: 1067,
-                                                            columnNumber: 21
+                                                            lineNumber: 1087,
+                                                            columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                             className: "text-left w-full",
@@ -1674,28 +1680,32 @@ function Withdraw() {
                                                                     children: "Tutoriel vidéo"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                                                    lineNumber: 1072,
-                                                                    columnNumber: 23
+                                                                    lineNumber: 1092,
+                                                                    columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                    className: `font-bold text-sm ${theme.colors.text} text-red-600 text-left`,
-                                                                    children: "Comment obtenir un code de retrait avec 1XBET ?"
-                                                                }, void 0, false, {
+                                                                    className: `font-bold text-sm ${theme.colors.text} text-red-600 text-left uppercase text-xs truncate max-w-[200px]`,
+                                                                    children: [
+                                                                        "Comment obtenir un code de retrait avec ",
+                                                                        selectedPlatform?.public_name || selectedPlatform?.name,
+                                                                        " ?"
+                                                                    ]
+                                                                }, void 0, true, {
                                                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                                                    lineNumber: 1073,
-                                                                    columnNumber: 23
+                                                                    lineNumber: 1093,
+                                                                    columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                                            lineNumber: 1071,
-                                                            columnNumber: 21
+                                                            lineNumber: 1091,
+                                                            columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                                    lineNumber: 1066,
-                                                    columnNumber: 19
+                                                    lineNumber: 1086,
+                                                    columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     className: "text-red-500",
@@ -1710,28 +1720,28 @@ function Withdraw() {
                                                             clipRule: "evenodd"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                                            lineNumber: 1078,
-                                                            columnNumber: 23
+                                                            lineNumber: 1098,
+                                                            columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/withdraw/page.tsx",
-                                                        lineNumber: 1077,
-                                                        columnNumber: 21
+                                                        lineNumber: 1097,
+                                                        columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                                    lineNumber: 1076,
-                                                    columnNumber: 19
+                                                    lineNumber: 1096,
+                                                    columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                            lineNumber: 1061,
-                                            columnNumber: 17
+                                            lineNumber: 1081,
+                                            columnNumber: 19
                                         }, this),
-                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        selectedPlatform?.why_withdrawal_fail && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                             type: "button",
-                                            onClick: ()=>window.open(selectedPlatform?.why_withdrawal_fail || '#', '_blank'),
+                                            onClick: ()=>window.open(selectedPlatform.why_withdrawal_fail, '_blank'),
                                             className: "w-full p-4 rounded-xl border border-gray-200 bg-white dark:bg-slate-800 dark:border-slate-700 flex items-center justify-between shadow-sm",
                                             children: [
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1747,18 +1757,18 @@ function Withdraw() {
                                                                     d: "M8 5v14l11-7z"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                                                    lineNumber: 1090,
-                                                                    columnNumber: 88
+                                                                    lineNumber: 1112,
+                                                                    columnNumber: 90
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                                                lineNumber: 1090,
-                                                                columnNumber: 23
+                                                                lineNumber: 1112,
+                                                                columnNumber: 25
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                                            lineNumber: 1089,
-                                                            columnNumber: 21
+                                                            lineNumber: 1111,
+                                                            columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                             className: "text-left w-full",
@@ -1768,28 +1778,28 @@ function Withdraw() {
                                                                     children: "Tutoriel vidéo"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                                                    lineNumber: 1093,
-                                                                    columnNumber: 23
+                                                                    lineNumber: 1115,
+                                                                    columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                                    className: `font-bold text-sm ${theme.colors.text} text-red-600 text-left`,
+                                                                    className: `font-bold text-sm ${theme.colors.text} text-red-600 text-left uppercase text-xs`,
                                                                     children: "Pourquoi mon retrait a échoué ?"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                                                    lineNumber: 1094,
-                                                                    columnNumber: 23
+                                                                    lineNumber: 1116,
+                                                                    columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                                            lineNumber: 1092,
-                                                            columnNumber: 21
+                                                            lineNumber: 1114,
+                                                            columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                                    lineNumber: 1088,
-                                                    columnNumber: 19
+                                                    lineNumber: 1110,
+                                                    columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     className: "text-red-500",
@@ -1804,29 +1814,29 @@ function Withdraw() {
                                                             clipRule: "evenodd"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                                            lineNumber: 1099,
-                                                            columnNumber: 23
+                                                            lineNumber: 1121,
+                                                            columnNumber: 25
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/withdraw/page.tsx",
-                                                        lineNumber: 1098,
-                                                        columnNumber: 21
+                                                        lineNumber: 1120,
+                                                        columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                                    lineNumber: 1097,
-                                                    columnNumber: 19
+                                                    lineNumber: 1119,
+                                                    columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                            lineNumber: 1083,
-                                            columnNumber: 17
+                                            lineNumber: 1105,
+                                            columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                    lineNumber: 1060,
+                                    lineNumber: 1079,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1841,24 +1851,439 @@ function Withdraw() {
                                         children: loading ? 'Traitement...' : 'Retrait'
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/withdraw/page.tsx",
-                                        lineNumber: 1107,
+                                        lineNumber: 1130,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                    lineNumber: 1106,
+                                    lineNumber: 1129,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/withdraw/page.tsx",
-                            lineNumber: 999,
+                            lineNumber: 1008,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/withdraw/page.tsx",
-                    lineNumber: 961,
+                    lineNumber: 970,
+                    columnNumber: 11
+                }, this);
+            case 'summary':
+                return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: `relative overflow-hidden bg-gradient-to-r from-[#002d72] to-[#1a4384] rounded-3xl p-8 text-white shadow-xl`,
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "relative z-10 flex items-center gap-6",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "bg-white/20 backdrop-blur-md p-4 rounded-2xl",
+                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                                                xmlns: "http://www.w3.org/2000/svg",
+                                                className: "h-10 w-10",
+                                                fill: "none",
+                                                viewBox: "0 0 24 24",
+                                                stroke: "currentColor",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                                    strokeLinecap: "round",
+                                                    strokeLinejoin: "round",
+                                                    strokeWidth: 2,
+                                                    d: "M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/withdraw/page.tsx",
+                                                    lineNumber: 1150,
+                                                    columnNumber: 21
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/withdraw/page.tsx",
+                                                lineNumber: 1149,
+                                                columnNumber: 19
+                                            }, this)
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/withdraw/page.tsx",
+                                            lineNumber: 1148,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                                    className: "text-2xl font-bold mb-1 font-outfit uppercase",
+                                                    children: "Confirmer le retrait"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/withdraw/page.tsx",
+                                                    lineNumber: 1154,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    className: "text-blue-100 opacity-80 uppercase tracking-wide text-sm font-medium",
+                                                    children: "Vérifiez vos informations"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/withdraw/page.tsx",
+                                                    lineNumber: 1155,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/app/withdraw/page.tsx",
+                                            lineNumber: 1153,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/app/withdraw/page.tsx",
+                                    lineNumber: 1147,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "absolute top-0 right-0 -mr-12 -mt-12 bg-white/10 w-48 h-48 rounded-full blur-3xl"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/app/withdraw/page.tsx",
+                                    lineNumber: 1158,
+                                    columnNumber: 15
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/src/app/withdraw/page.tsx",
+                            lineNumber: 1146,
+                            columnNumber: 13
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "space-y-4",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: `flex items-center gap-5 p-5 ${theme.mode === 'dark' ? 'bg-slate-800' : 'bg-white'} border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-slate-100'} rounded-3xl shadow-sm hover:shadow-md transition-all`,
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: `w-14 h-14 rounded-2xl flex items-center justify-center p-2 ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-slate-50'}`,
+                                            children: selectedPlatform?.image ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                                                src: selectedPlatform.image,
+                                                alt: "",
+                                                className: "w-10 h-10 object-contain rounded-lg"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/withdraw/page.tsx",
+                                                lineNumber: 1167,
+                                                columnNumber: 21
+                                            }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "w-8 h-8 bg-blue-100 rounded-lg"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/withdraw/page.tsx",
+                                                lineNumber: 1169,
+                                                columnNumber: 21
+                                            }, this)
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/withdraw/page.tsx",
+                                            lineNumber: 1165,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "flex-1",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    className: `text-sm ${theme.colors.d_text} opacity-50 font-medium uppercase tracking-wider mb-0.5`,
+                                                    children: "Application"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/withdraw/page.tsx",
+                                                    lineNumber: 1173,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    className: `text-xl font-bold ${theme.colors.text} tracking-tight`,
+                                                    children: selectedPlatform?.public_name || selectedPlatform?.name
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/withdraw/page.tsx",
+                                                    lineNumber: 1174,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/app/withdraw/page.tsx",
+                                            lineNumber: 1172,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/app/withdraw/page.tsx",
+                                    lineNumber: 1164,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: `flex items-center gap-5 p-5 ${theme.mode === 'dark' ? 'bg-slate-800' : 'bg-white'} border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-slate-100'} rounded-3xl shadow-sm hover:shadow-md transition-all`,
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: `w-14 h-14 rounded-2xl flex items-center justify-center ${theme.mode === 'dark' ? 'bg-green-900/20' : 'bg-green-50'}`,
+                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                                                xmlns: "http://www.w3.org/2000/svg",
+                                                className: `h-7 w-7 ${theme.mode === 'dark' ? 'text-green-400' : 'text-green-600'}`,
+                                                fill: "none",
+                                                viewBox: "0 0 24 24",
+                                                stroke: "currentColor",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                                    strokeLinecap: "round",
+                                                    strokeLinejoin: "round",
+                                                    strokeWidth: 2,
+                                                    d: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/withdraw/page.tsx",
+                                                    lineNumber: 1182,
+                                                    columnNumber: 21
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/withdraw/page.tsx",
+                                                lineNumber: 1181,
+                                                columnNumber: 19
+                                            }, this)
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/withdraw/page.tsx",
+                                            lineNumber: 1180,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "flex-1",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    className: `text-sm ${theme.colors.d_text} opacity-50 font-medium uppercase tracking-wider mb-0.5`,
+                                                    children: "ID Utilisateur"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/withdraw/page.tsx",
+                                                    lineNumber: 1186,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    className: `text-xl font-bold ${theme.colors.text} tracking-wider`,
+                                                    children: selectedBetId
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/withdraw/page.tsx",
+                                                    lineNumber: 1187,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/app/withdraw/page.tsx",
+                                            lineNumber: 1185,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/app/withdraw/page.tsx",
+                                    lineNumber: 1179,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: `flex items-center gap-5 p-5 ${theme.mode === 'dark' ? 'bg-slate-800' : 'bg-white'} border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-slate-100'} rounded-3xl shadow-sm hover:shadow-md transition-all`,
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: `w-14 h-14 rounded-2xl flex items-center justify-center p-2 ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-slate-50'}`,
+                                            children: selectedNetwork?.image ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                                                src: selectedNetwork.image,
+                                                alt: "",
+                                                className: "w-10 h-10 object-contain"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/withdraw/page.tsx",
+                                                lineNumber: 1195,
+                                                columnNumber: 21
+                                            }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "w-8 h-8 bg-orange-100 rounded-lg"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/withdraw/page.tsx",
+                                                lineNumber: 1197,
+                                                columnNumber: 21
+                                            }, this)
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/withdraw/page.tsx",
+                                            lineNumber: 1193,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "flex-1",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    className: `text-sm ${theme.colors.d_text} opacity-50 font-medium uppercase tracking-wider mb-0.5`,
+                                                    children: "Réseau"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/withdraw/page.tsx",
+                                                    lineNumber: 1201,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    className: `text-xl font-bold ${theme.colors.text} tracking-tight`,
+                                                    children: (selectedNetwork?.public_name || selectedNetwork?.name)?.toUpperCase()
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/withdraw/page.tsx",
+                                                    lineNumber: 1202,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/app/withdraw/page.tsx",
+                                            lineNumber: 1200,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/app/withdraw/page.tsx",
+                                    lineNumber: 1192,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: `flex items-center gap-5 p-5 ${theme.mode === 'dark' ? 'bg-slate-800' : 'bg-white'} border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-slate-100'} rounded-3xl shadow-sm hover:shadow-md transition-all`,
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: `w-14 h-14 rounded-2xl flex items-center justify-center ${theme.mode === 'dark' ? 'bg-purple-900/20' : 'bg-purple-50'}`,
+                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$phone$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Phone$3e$__["Phone"], {
+                                                className: `h-7 w-7 ${theme.mode === 'dark' ? 'text-purple-400' : 'text-purple-600'}`
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/withdraw/page.tsx",
+                                                lineNumber: 1209,
+                                                columnNumber: 19
+                                            }, this)
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/withdraw/page.tsx",
+                                            lineNumber: 1208,
+                                            columnNumber: 17
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "flex-1",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    className: `text-sm ${theme.colors.d_text} opacity-50 font-medium uppercase tracking-wider mb-0.5`,
+                                                    children: "Numéro de téléphone"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/withdraw/page.tsx",
+                                                    lineNumber: 1212,
+                                                    columnNumber: 19
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                    className: `text-xl font-bold ${theme.colors.text} tracking-wider`,
+                                                    children: selectedPhone?.phone || ''
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/withdraw/page.tsx",
+                                                    lineNumber: 1213,
+                                                    columnNumber: 19
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/app/withdraw/page.tsx",
+                                            lineNumber: 1211,
+                                            columnNumber: 17
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/app/withdraw/page.tsx",
+                                    lineNumber: 1207,
+                                    columnNumber: 15
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/src/app/withdraw/page.tsx",
+                            lineNumber: 1162,
+                            columnNumber: 13
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: `p-5 rounded-3xl flex items-start gap-4 ${theme.mode === 'dark' ? 'bg-amber-900/10 border border-amber-900/50' : 'bg-amber-50 border border-amber-100'}`,
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: `mt-0.5 p-2 rounded-xl ${theme.mode === 'dark' ? 'bg-amber-900/30' : 'bg-white shadow-sm'}`,
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                                        xmlns: "http://www.w3.org/2000/svg",
+                                        className: "h-6 w-6 text-amber-500",
+                                        fill: "none",
+                                        viewBox: "0 0 24 24",
+                                        stroke: "currentColor",
+                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                            strokeLinecap: "round",
+                                            strokeLinejoin: "round",
+                                            strokeWidth: 2,
+                                            d: "M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/withdraw/page.tsx",
+                                            lineNumber: 1223,
+                                            columnNumber: 19
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/withdraw/page.tsx",
+                                        lineNumber: 1222,
+                                        columnNumber: 17
+                                    }, this)
+                                }, void 0, false, {
+                                    fileName: "[project]/src/app/withdraw/page.tsx",
+                                    lineNumber: 1221,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                    className: `text-sm font-medium ${theme.mode === 'dark' ? 'text-amber-200/70' : 'text-amber-700/80'} leading-relaxed`,
+                                    children: "Veuillez confirmer que vous avez bien accès à ce numéro de téléphone pour recevoir le paiement."
+                                }, void 0, false, {
+                                    fileName: "[project]/src/app/withdraw/page.tsx",
+                                    lineNumber: 1226,
+                                    columnNumber: 15
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/src/app/withdraw/page.tsx",
+                            lineNumber: 1220,
+                            columnNumber: 13
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "pt-4 flex flex-col gap-4",
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    onClick: handleSubmit,
+                                    disabled: loading,
+                                    className: "w-full h-18 bg-[#002d72] hover:bg-[#001d4a] text-white font-bold text-xl rounded-full shadow-xl shadow-blue-900/20 transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-3 py-6",
+                                    children: loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "animate-spin rounded-full h-6 w-6 border-b-2 border-white"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/withdraw/page.tsx",
+                                                lineNumber: 1240,
+                                                columnNumber: 21
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                children: "Traitement..."
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/withdraw/page.tsx",
+                                                lineNumber: 1241,
+                                                columnNumber: 21
+                                            }, this)
+                                        ]
+                                    }, void 0, true) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                        children: "Confirmer le retrait"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/withdraw/page.tsx",
+                                        lineNumber: 1244,
+                                        columnNumber: 19
+                                    }, this)
+                                }, void 0, false, {
+                                    fileName: "[project]/src/app/withdraw/page.tsx",
+                                    lineNumber: 1233,
+                                    columnNumber: 15
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    onClick: ()=>setCurrentStep('enterDetails'),
+                                    disabled: loading,
+                                    className: `w-full py-4 text-center font-bold text-lg ${theme.colors.d_text} opacity-50 hover:opacity-100 transition-opacity disabled:opacity-30`,
+                                    children: "Retour pour modification"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/app/withdraw/page.tsx",
+                                    lineNumber: 1248,
+                                    columnNumber: 15
+                                }, this)
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/src/app/withdraw/page.tsx",
+                            lineNumber: 1232,
+                            columnNumber: 13
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/src/app/withdraw/page.tsx",
+                    lineNumber: 1144,
                     columnNumber: 11
                 }, this);
         }
@@ -1913,6 +2338,8 @@ function Withdraw() {
                 return "Retrait - Numéro de télé...";
             case 'enterDetails':
                 return "Retrait - Informations";
+            case 'summary':
+                return "Confirmer le retrait";
             default:
                 return "Retrait";
         }
@@ -1991,11 +2418,11 @@ function Withdraw() {
         `
             }, void 0, false, {
                 fileName: "[project]/src/app/withdraw/page.tsx",
-                lineNumber: 1166,
+                lineNumber: 1307,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "jsx-53d6791cd021ef43" + " " + "max-w-4xl mx-auto",
+                className: "jsx-53d6791cd021ef43" + " " + "w-full px-6",
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "jsx-53d6791cd021ef43" + " " + "flex items-center gap-6 mb-12",
@@ -2012,6 +2439,8 @@ function Withdraw() {
                                         setCurrentStep('selectNetwork');
                                     } else if (currentStep === 'enterDetails') {
                                         setCurrentStep('selectPhone');
+                                    } else if (currentStep === 'summary') {
+                                        setCurrentStep('enterDetails');
                                     }
                                 },
                                 className: "jsx-53d6791cd021ef43" + " " + "p-2 -ml-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors",
@@ -2029,17 +2458,17 @@ function Withdraw() {
                                         className: "jsx-53d6791cd021ef43"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/withdraw/page.tsx",
-                                        lineNumber: 1257,
+                                        lineNumber: 1400,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                    lineNumber: 1256,
+                                    lineNumber: 1399,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                lineNumber: 1240,
+                                lineNumber: 1381,
                                 columnNumber: 11
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
@@ -2047,13 +2476,13 @@ function Withdraw() {
                                 children: getCurrentStepTitle()
                             }, void 0, false, {
                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                lineNumber: 1260,
+                                lineNumber: 1403,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/withdraw/page.tsx",
-                        lineNumber: 1239,
+                        lineNumber: 1380,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2070,19 +2499,19 @@ function Withdraw() {
                                                 className: "w-5 h-5 mr-3"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                                lineNumber: 1372,
+                                                lineNumber: 1515,
                                                 columnNumber: 19
                                             }, this),
                                             error
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/withdraw/page.tsx",
-                                        lineNumber: 1371,
+                                        lineNumber: 1514,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                    lineNumber: 1370,
+                                    lineNumber: 1513,
                                     columnNumber: 15
                                 }, this),
                                 success && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2094,19 +2523,19 @@ function Withdraw() {
                                                 className: "w-5 h-5 mr-3"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                                lineNumber: 1381,
+                                                lineNumber: 1524,
                                                 columnNumber: 19
                                             }, this),
                                             success
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/withdraw/page.tsx",
-                                        lineNumber: 1380,
+                                        lineNumber: 1523,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                    lineNumber: 1379,
+                                    lineNumber: 1522,
                                     columnNumber: 15
                                 }, this),
                                 loading && !success && !error ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2118,165 +2547,43 @@ function Withdraw() {
                                                 className: "jsx-53d6791cd021ef43" + " " + "animate-spin rounded-full h-16 w-16 border-4 border-blue-500/30 border-t-blue-500"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                                lineNumber: 1390,
+                                                lineNumber: 1533,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 className: "jsx-53d6791cd021ef43" + " " + "absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 to-blue-500/20 animate-pulse"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                                lineNumber: 1391,
+                                                lineNumber: 1534,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/withdraw/page.tsx",
-                                        lineNumber: 1389,
+                                        lineNumber: 1532,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                    lineNumber: 1388,
+                                    lineNumber: 1531,
                                     columnNumber: 15
                                 }, this) : renderStep()
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/withdraw/page.tsx",
-                            lineNumber: 1367,
+                            lineNumber: 1510,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/withdraw/page.tsx",
-                        lineNumber: 1366,
+                        lineNumber: 1509,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/withdraw/page.tsx",
-                lineNumber: 1237,
+                lineNumber: 1378,
                 columnNumber: 7
-            }, this),
-            isModalOpen && selectedTransaction && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "jsx-53d6791cd021ef43" + " " + "fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50",
-                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "jsx-53d6791cd021ef43" + " " + `${theme.colors.background} rounded-lg shadow-xl w-full max-w-md`,
-                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "jsx-53d6791cd021ef43" + " " + "p-6",
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                className: "jsx-53d6791cd021ef43" + " " + "text-lg font-semibold mb-4",
-                                children: t("Transaction Details")
-                            }, void 0, false, {
-                                fileName: "[project]/src/app/withdraw/page.tsx",
-                                lineNumber: 1406,
-                                columnNumber: 15
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "jsx-53d6791cd021ef43" + " " + "space-y-2",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                        className: "jsx-53d6791cd021ef43",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                className: "jsx-53d6791cd021ef43" + " " + "font-medium",
-                                                children: [
-                                                    t("Status"),
-                                                    ":"
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/src/app/withdraw/page.tsx",
-                                                lineNumber: 1408,
-                                                columnNumber: 20
-                                            }, this),
-                                            " ",
-                                            selectedTransaction.transaction.status
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/src/app/withdraw/page.tsx",
-                                        lineNumber: 1408,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                        className: "jsx-53d6791cd021ef43",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                className: "jsx-53d6791cd021ef43" + " " + "font-medium",
-                                                children: [
-                                                    t("Reference"),
-                                                    ":"
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/src/app/withdraw/page.tsx",
-                                                lineNumber: 1409,
-                                                columnNumber: 20
-                                            }, this),
-                                            " ",
-                                            selectedTransaction.transaction.reference
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/src/app/withdraw/page.tsx",
-                                        lineNumber: 1409,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                                        className: "jsx-53d6791cd021ef43",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                className: "jsx-53d6791cd021ef43" + " " + "font-medium",
-                                                children: [
-                                                    t("Date"),
-                                                    ":"
-                                                ]
-                                            }, void 0, true, {
-                                                fileName: "[project]/src/app/withdraw/page.tsx",
-                                                lineNumber: 1410,
-                                                columnNumber: 20
-                                            }, this),
-                                            " ",
-                                            new Date(selectedTransaction.transaction.created_at).toLocaleString()
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/src/app/withdraw/page.tsx",
-                                        lineNumber: 1410,
-                                        columnNumber: 17
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/src/app/withdraw/page.tsx",
-                                lineNumber: 1407,
-                                columnNumber: 15
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "jsx-53d6791cd021ef43" + " " + "mt-6 flex justify-end",
-                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                    onClick: ()=>setIsModalOpen(false),
-                                    className: "jsx-53d6791cd021ef43" + " " + "px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700",
-                                    children: t("Close")
-                                }, void 0, false, {
-                                    fileName: "[project]/src/app/withdraw/page.tsx",
-                                    lineNumber: 1413,
-                                    columnNumber: 17
-                                }, this)
-                            }, void 0, false, {
-                                fileName: "[project]/src/app/withdraw/page.tsx",
-                                lineNumber: 1412,
-                                columnNumber: 15
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/src/app/withdraw/page.tsx",
-                        lineNumber: 1405,
-                        columnNumber: 13
-                    }, this)
-                }, void 0, false, {
-                    fileName: "[project]/src/app/withdraw/page.tsx",
-                    lineNumber: 1404,
-                    columnNumber: 11
-                }, this)
-            }, void 0, false, {
-                fileName: "[project]/src/app/withdraw/page.tsx",
-                lineNumber: 1403,
-                columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$styled$2d$jsx$2f$style$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
                 id: "53d6791cd021ef43",
@@ -2297,7 +2604,7 @@ function Withdraw() {
                                         children: t("Modifier le numéro de téléphone")
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/withdraw/page.tsx",
-                                        lineNumber: 1460,
+                                        lineNumber: 1580,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2320,23 +2627,23 @@ function Withdraw() {
                                                 className: "jsx-53d6791cd021ef43"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                                lineNumber: 1470,
+                                                lineNumber: 1590,
                                                 columnNumber: 21
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                            lineNumber: 1469,
+                                            lineNumber: 1589,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/withdraw/page.tsx",
-                                        lineNumber: 1461,
+                                        lineNumber: 1581,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                lineNumber: 1459,
+                                lineNumber: 1579,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2349,7 +2656,7 @@ function Withdraw() {
                                             children: t("Numéro de téléphone")
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                            lineNumber: 1477,
+                                            lineNumber: 1597,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2360,7 +2667,7 @@ function Withdraw() {
                                             className: "jsx-53d6791cd021ef43" + " " + "w-full p-2 border rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white border-slate-300 dark:border-slate-600"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                            lineNumber: 1480,
+                                            lineNumber: 1600,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2368,18 +2675,18 @@ function Withdraw() {
                                             children: t("Entrez le numéro sans le préfixe +225")
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/withdraw/page.tsx",
-                                            lineNumber: 1487,
+                                            lineNumber: 1607,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/withdraw/page.tsx",
-                                    lineNumber: 1476,
+                                    lineNumber: 1596,
                                     columnNumber: 17
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                lineNumber: 1475,
+                                lineNumber: 1595,
                                 columnNumber: 15
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2395,7 +2702,7 @@ function Withdraw() {
                                         children: t("Annuler")
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/withdraw/page.tsx",
-                                        lineNumber: 1494,
+                                        lineNumber: 1614,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2405,39 +2712,39 @@ function Withdraw() {
                                         children: t("Modifier")
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/withdraw/page.tsx",
-                                        lineNumber: 1504,
+                                        lineNumber: 1624,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/withdraw/page.tsx",
-                                lineNumber: 1493,
+                                lineNumber: 1613,
                                 columnNumber: 15
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/withdraw/page.tsx",
-                        lineNumber: 1458,
+                        lineNumber: 1578,
                         columnNumber: 13
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/app/withdraw/page.tsx",
-                    lineNumber: 1457,
+                    lineNumber: 1577,
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/withdraw/page.tsx",
-                lineNumber: 1456,
+                lineNumber: 1576,
                 columnNumber: 9
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/withdraw/page.tsx",
-        lineNumber: 1164,
+        lineNumber: 1305,
         columnNumber: 5
     }, this);
 }
-_s(Withdraw, "lwgRk2Rbv4lIxKlDXUe2O2w2ahQ=", false, function() {
+_s(Withdraw, "fCEZut1tE5sF39104Ee1Yf9mpR4=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRouter"],
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$i18next$2f$dist$2f$es$2f$useTranslation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTranslation"],

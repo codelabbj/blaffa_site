@@ -30,6 +30,7 @@ interface Network {
   message_init?: string;
   deposit_api?: string;
   deposit_message?: string;
+  tape_code?: string;
   payment_by_link?: boolean;
 }
 
@@ -53,6 +54,7 @@ interface App {
   max_deposit?: string;
   minimum_deposit?: number;
   maximum_deposit?: number;
+  deposit_message?: string;
 }
 
 
@@ -135,7 +137,7 @@ interface ApiError extends Error {
 export default function Deposits() {
   const router = useRouter();
   const { t } = useTranslation();
-  const [currentStep, setCurrentStep] = useState<'selectId' | 'selectNetwork' | 'selectPhone' | 'manageBetId' | 'enterDetails' | 'addPhone'>('selectId');
+  const [currentStep, setCurrentStep] = useState<'selectId' | 'selectNetwork' | 'selectPhone' | 'manageBetId' | 'enterDetails' | 'addPhone' | 'summary'>('selectId');
   const [selectedPlatform, setSelectedPlatform] = useState<App | null>(null);
   const [platforms, setPlatforms] = useState<App[]>([]);
   const [selectedNetwork, setSelectedNetwork] = useState<{ id: string; name: string; public_name?: string; country_code?: string; indication?: string; placeholder?: string; image?: string, otp_required?: boolean, tape_code?: string, deposit_api?: string, deposit_message?: string, payment_by_link?: boolean } | null>(null);
@@ -535,16 +537,18 @@ export default function Deposits() {
     }
   };
 
-  // Get network-specific minimum amount
+  // Get current min and max deposit limits
+  const getDepositLimits = () => {
+    const minVal = selectedPlatform?.minimun_deposit || selectedPlatform?.minimum_deposit || '100';
+    const maxVal = selectedPlatform?.max_deposit || selectedPlatform?.maximum_deposit || '1000000';
+    return {
+      min: parseFloat(String(minVal)),
+      max: parseFloat(String(maxVal))
+    };
+  };
+
   const getNetworkMinAmount = (): number => {
-    if (selectedNetwork?.name?.toLowerCase() === 'moov') {
-      return 505; // Moov minimum is 505 FCFA
-    } else if (selectedNetwork?.name?.toLowerCase() === 'orange') {
-      return 100; // Orange minimum is 100 FCFA
-    } else {
-      // Use platform-level minimum for other networks
-      return selectedPlatform?.minimum_deposit || parseFloat(selectedPlatform?.minimun_deposit || '100');
-    }
+    return getDepositLimits().min;
   };
 
   // Validation function for amount
@@ -697,41 +701,34 @@ export default function Deposits() {
       const transaction = response.data;
       setSelectedTransaction({ transaction });
 
+      setSuccess('Transaction initiée avec succès !');
+
       // Check if Moov redirection should be triggered
       if (shouldTriggerMoovRedirect(selectedNetwork)) {
         const amount = parseFloat(formData.amount);
         const countryCode = selectedNetwork.country_code;
         await handleMoovRedirect(amount, countryCode);
+        // After redirection (or modal popup), go to dashboard
+        setTimeout(() => { if (typeof window !== 'undefined') window.location.href = '/dashboard'; }, 3000);
       }
       // Check if Orange redirection should be triggered
       else if (shouldTriggerOrangeRedirect(selectedNetwork)) {
         const amount = parseFloat(formData.amount);
         const countryCode = selectedNetwork.country_code;
 
-        // Check if payment_by_link is enabled in the network response
-        if (selectedNetwork.payment_by_link === true) {
-          // If payment_by_link is true, check if transaction_link exists
-          if (transaction.transaction_link) {
-            // Show modal with transaction link instead of USSD
-            setOrangeTransactionLink(transaction.transaction_link);
-            setShowOrangeModal(true);
-          } else {
-            // If payment_by_link is true but no link, show USSD modal
-            await handleOrangeRedirect(amount, countryCode);
-          }
+        if (selectedNetwork.payment_by_link === true && transaction.transaction_link) {
+          window.open(transaction.transaction_link, '_blank');
+          setTimeout(() => { if (typeof window !== 'undefined') window.location.href = '/dashboard'; }, 3000);
         } else {
-          // If payment_by_link is false or not present, use USSD dialing
           await handleOrangeRedirect(amount, countryCode);
+          setTimeout(() => { if (typeof window !== 'undefined') window.location.href = '/dashboard'; }, 3000);
         }
       } else {
-        setIsModalOpen(true);
+        // For other networks, just redirect to dashboard after a short delay
+        setTimeout(() => { if (typeof window !== 'undefined') window.location.href = '/dashboard'; }, 3000);
       }
 
-      setSuccess('Transaction initiée avec succès !');
       // Reset form
-      setCurrentStep('selectId');
-      setSelectedPlatform(null);
-      setSelectedNetwork(null);
       setFormData({ amount: '', phoneNumber: '', betid: '', otp_code: '' });
       setValidationErrors({ amount: '', phoneNumber: '', otp_code: '' });
     } catch (error) {
@@ -944,9 +941,6 @@ export default function Deposits() {
 
     // Attempt automatic redirect
     attemptDialerRedirect(ussdCode);
-
-    // Always show modal as fallback
-    setShowMoovModal(true);
   };
 
   // Handle Orange redirection flow
@@ -964,9 +958,6 @@ export default function Deposits() {
 
     // Attempt automatic dialer redirect
     attemptDialerRedirect(ussdCode);
-
-    // Always show modal as fallback
-    setShowOrangeModal(true);
   };
 
   // Close Moov modal and redirect to dashboard
@@ -1020,7 +1011,7 @@ export default function Deposits() {
             </div>
 
             <div className="w-full flex justify-center">
-              <div className="grid grid-cols-2 md:grid-cols-2 gap-4 w-full max-w-lg">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
                 {platforms.map((platform) => {
                   const isActive = selectedPlatform?.id === platform.id;
                   return (
@@ -1346,7 +1337,7 @@ export default function Deposits() {
               </h3>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={(e) => { e.preventDefault(); if (validateForm()) setCurrentStep('summary'); }} className="space-y-6">
               {/* Amount Field */}
               <div>
                 <label className={`block text-base ${theme.colors.d_text} opacity-70 mb-2`}>
@@ -1357,16 +1348,26 @@ export default function Deposits() {
                   name="amount"
                   value={formData.amount}
                   onChange={handleInputChange}
-                  className="w-full h-14 px-4 rounded-xl border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-lg text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
+                  className={`w-full h-14 px-4 rounded-xl border ${!formData.amount
+                    ? theme.mode === 'dark' ? 'border-gray-600' : 'border-gray-300'
+                    : (parseFloat(formData.amount) < getDepositLimits().min || parseFloat(formData.amount) > getDepositLimits().max)
+                      ? 'border-red-500'
+                      : 'border-green-500'
+                    } bg-white dark:bg-gray-800 text-lg text-gray-900 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all`}
                   placeholder="Entrez le montant"
                   required
-                  min={getNetworkMinAmount()}
-                  max={selectedPlatform?.maximum_deposit || selectedPlatform?.max_deposit || 1000000}
+                  min={getDepositLimits().min}
+                  max={getDepositLimits().max}
                   step="1"
                 />
                 {/* Range indicator */}
-                <div className={`mt-2 text-sm ${theme.colors.d_text} opacity-50`}>
-                  {getNetworkMinAmount()} F - {selectedPlatform?.maximum_deposit || selectedPlatform?.max_deposit || 300000} F
+                <div className={`mt-2 text-sm font-medium ${!formData.amount
+                  ? theme.colors.d_text + ' opacity-50'
+                  : (parseFloat(formData.amount) < getDepositLimits().min || parseFloat(formData.amount) > getDepositLimits().max)
+                    ? 'text-red-500'
+                    : 'text-green-500'
+                  }`}>
+                  {getDepositLimits().min} F - {getDepositLimits().max} F
                 </div>
                 {validationErrors.amount && (
                   <p className="mt-2 text-sm text-red-500">{validationErrors.amount}</p>
@@ -1398,24 +1399,50 @@ export default function Deposits() {
               </div>
 
               {/* Info Alert */}
-              <div className={`p-4 ${theme.mode === 'dark' ? 'bg-blue-900/20 border-blue-700' : 'bg-blue-50 border-blue-200'} border rounded-xl`}>
-                <div className="flex items-start gap-3">
-                  <div className="flex-shrink-0 mt-0.5">
-                    <svg className={`w-5 h-5 ${theme.mode === 'dark' ? 'text-blue-400' : 'text-blue-600'}`} fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                    </svg>
+              {selectedNetwork?.deposit_message && (
+                <div className={`p-4 ${theme.mode === 'dark' ? 'bg-blue-900/20 border-blue-700' : 'bg-blue-50 border-blue-200'} border rounded-xl`}>
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0 mt-0.5">
+                      <svg className={`w-5 h-5 ${theme.mode === 'dark' ? 'text-blue-400' : 'text-blue-600'}`} fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <p className={`text-sm ${theme.mode === 'dark' ? 'text-blue-300' : 'text-blue-700'} uppercase font-medium`}>
+                      {selectedNetwork.deposit_message}
+                    </p>
                   </div>
-                  <p className={`text-sm ${theme.mode === 'dark' ? 'text-blue-300' : 'text-blue-700'} uppercase font-medium`}>
-                    Le numéro que vous écrivez doit être le même que vous allez utiliser pour faire le paiement.
-                  </p>
                 </div>
-              </div>
+              )}
+
+              {/* Tape Code Alert */}
+              {selectedNetwork?.tape_code && (
+                <div className={`p-4 ${theme.mode === 'dark' ? 'bg-green-900/20 border-green-700' : 'bg-green-50 border-green-200'} border rounded-xl`}>
+                  <div className="flex items-start gap-3">
+                    <div className="flex-shrink-0 mt-0.5">
+                      <svg className={`w-5 h-5 ${theme.mode === 'dark' ? 'text-green-400' : 'text-green-600'}`} fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <p className={`text-sm ${theme.mode === 'dark' ? 'text-green-300' : 'text-green-700'} font-medium`}>
+                      Code à taper: <span className="font-bold underline">{selectedNetwork.tape_code}</span>
+                    </p>
+                  </div>
+                </div>
+              )}
 
               {/* Warning Text */}
               <div className="text-center">
-                <p className="text-sm text-orange-500 dark:text-orange-400 italic">
-                  Dès que vous payez, vérifier votre compte de pari, ne lancez pas une 2e fois.
-                </p>
+                {/* No dynamic field specified for this one yet, keeping it or hiding if empty? 
+                     The user said "same for this..." suggesting it might be dynamic too.
+                     If it's not in the API, I'll keep it static or remove if redundant.
+                     Wait, re-reading: "same for this `Dès que vous payez...` and in place of this `tape_code` so those key is got from the network api response"
+                     If there's no key for "Dès que vous payez...", I'll see if I can find it in the platform response.
+                 */}
+                {selectedPlatform?.deposit_message && (
+                  <p className="text-sm text-orange-500 dark:text-orange-400 italic">
+                    {selectedPlatform.deposit_message}
+                  </p>
+                )}
               </div>
 
               {/* Submit Button */}
@@ -1430,6 +1457,122 @@ export default function Deposits() {
                 </button>
               </div>
             </form>
+          </div>
+        );
+      case 'summary':
+        return (
+          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {/* Hero Card */}
+            <div className={`relative overflow-hidden bg-gradient-to-r from-[#002d72] to-[#1a4384] rounded-3xl p-8 text-white shadow-xl`}>
+              <div className="relative z-10 flex items-center gap-6">
+                <div className="bg-white/20 backdrop-blur-md p-4 rounded-2xl">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold mb-1 font-outfit uppercase">Confirmer le dépôt</h3>
+                  <p className="text-blue-100 opacity-80 uppercase tracking-wide text-sm font-medium">Vérifiez vos informations</p>
+                </div>
+              </div>
+              <div className="absolute top-0 right-0 -mr-12 -mt-12 bg-white/10 w-48 h-48 rounded-full blur-3xl"></div>
+            </div>
+
+            {/* Detail Cards Container */}
+            <div className="space-y-4">
+              {/* Application Card */}
+              <div className={`flex items-center gap-5 p-5 ${theme.mode === 'dark' ? 'bg-slate-800' : 'bg-white'} border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-slate-100'} rounded-3xl shadow-sm hover:shadow-md transition-all`}>
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center p-2 ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-slate-50'}`}>
+                  {selectedPlatform?.image ? (
+                    <img src={selectedPlatform.image} alt="" className="w-10 h-10 object-contain rounded-lg" />
+                  ) : (
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg"></div>
+                  )}
+                </div>
+                <div className="flex-1">
+                  <p className={`text-sm ${theme.colors.d_text} opacity-50 font-medium uppercase tracking-wider mb-0.5`}>Application</p>
+                  <p className={`text-xl font-bold ${theme.colors.text} tracking-tight`}>{selectedPlatform?.public_name || selectedPlatform?.name}</p>
+                </div>
+              </div>
+
+              {/* User ID Card */}
+              <div className={`flex items-center gap-5 p-5 ${theme.mode === 'dark' ? 'bg-slate-800' : 'bg-white'} border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-slate-100'} rounded-3xl shadow-sm hover:shadow-md transition-all`}>
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${theme.mode === 'dark' ? 'bg-green-900/20' : 'bg-green-50'}`}>
+                  <svg xmlns="http://www.w3.org/2000/svg" className={`h-7 w-7 ${theme.mode === 'dark' ? 'text-green-400' : 'text-green-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <p className={`text-sm ${theme.colors.d_text} opacity-50 font-medium uppercase tracking-wider mb-0.5`}>ID Utilisateur</p>
+                  <p className={`text-xl font-bold ${theme.colors.text} tracking-wider`}>{selectedBetId}</p>
+                </div>
+              </div>
+
+              {/* Network Card */}
+              <div className={`flex items-center gap-5 p-5 ${theme.mode === 'dark' ? 'bg-slate-800' : 'bg-white'} border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-slate-100'} rounded-3xl shadow-sm hover:shadow-md transition-all`}>
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center p-2 ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-slate-50'}`}>
+                  {selectedNetwork?.image ? (
+                    <img src={selectedNetwork.image} alt="" className="w-10 h-10 object-contain" />
+                  ) : (
+                    <div className="w-8 h-8 bg-orange-100 rounded-lg"></div>
+                  )}
+                </div>
+                <div className="flex-1">
+                  <p className={`text-sm ${theme.colors.d_text} opacity-50 font-medium uppercase tracking-wider mb-0.5`}>Réseau</p>
+                  <p className={`text-xl font-bold ${theme.colors.text} tracking-tight`}>{(selectedNetwork?.public_name || selectedNetwork?.name)?.toUpperCase()}</p>
+                </div>
+              </div>
+
+              {/* Phone Card */}
+              <div className={`flex items-center gap-5 p-5 ${theme.mode === 'dark' ? 'bg-slate-800' : 'bg-white'} border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-slate-100'} rounded-3xl shadow-sm hover:shadow-md transition-all`}>
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${theme.mode === 'dark' ? 'bg-purple-900/20' : 'bg-purple-50'}`}>
+                  <Phone className={`h-7 w-7 ${theme.mode === 'dark' ? 'text-purple-400' : 'text-purple-600'}`} />
+                </div>
+                <div className="flex-1">
+                  <p className={`text-sm ${theme.colors.d_text} opacity-50 font-medium uppercase tracking-wider mb-0.5`}>Numéro de téléphone</p>
+                  <p className={`text-xl font-bold ${theme.colors.text} tracking-wider`}>{formatPhoneWithCountryCode(selectedPhone?.phone || '')}</p>
+                </div>
+              </div>
+            </div>
+
+
+            {/* Warning Alert */}
+            <div className={`p-5 rounded-3xl flex items-start gap-4 ${theme.mode === 'dark' ? 'bg-amber-900/10 border border-amber-900/50' : 'bg-amber-50 border border-amber-100'}`}>
+              <div className={`mt-0.5 p-2 rounded-xl ${theme.mode === 'dark' ? 'bg-amber-900/30' : 'bg-white shadow-sm'}`}>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <p className={`text-sm font-medium ${theme.mode === 'dark' ? 'text-amber-200/70' : 'text-amber-700/80'} leading-relaxed`}>
+                Assurez-vous que toutes les informations sont correctes avant de confirmer.
+              </p>
+            </div>
+
+            {/* Final Action Button */}
+            <div className="pt-4 flex flex-col gap-4">
+              <button
+                onClick={handleSubmit}
+                disabled={loading}
+                className="w-full h-18 bg-[#002d72] hover:bg-[#001d4a] text-white font-bold text-xl rounded-full shadow-xl shadow-blue-900/20 transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-3 py-6"
+              >
+                {loading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                    <span>Traitement...</span>
+                  </>
+                ) : (
+                  <span>Confirmer</span>
+                )}
+              </button>
+
+              <button
+                onClick={() => setCurrentStep('enterDetails')}
+                disabled={loading}
+                className={`w-full py-4 text-center font-bold text-lg ${theme.colors.d_text} opacity-50 hover:opacity-100 transition-opacity disabled:opacity-30`}
+              >
+                Retour pour modification
+              </button>
+            </div>
           </div>
         );
     }
@@ -1471,6 +1614,8 @@ export default function Deposits() {
         return "Dépôt - Numéro de télé...";
       case 'enterDetails':
         return "Dépôt - Informations";
+      case 'summary':
+        return "Confirmer le dépôt";
       default:
         return "Dépôt";
     }
@@ -1534,7 +1679,7 @@ export default function Deposits() {
         `}
       </style>
 
-      <div className="max-w-4xl mx-auto">
+      <div className="w-full px-6">
         {/* Header Section */}
         <div className="flex items-center gap-6 mb-12">
           <button
@@ -1549,6 +1694,8 @@ export default function Deposits() {
                 setCurrentStep('selectNetwork');
               } else if (currentStep === 'enterDetails') {
                 setCurrentStep('selectPhone');
+              } else if (currentStep === 'summary') {
+                setCurrentStep('enterDetails');
               }
             }}
             className="p-2 -ml-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
@@ -1597,244 +1744,6 @@ export default function Deposits() {
       </div>
 
 
-      {/* Transaction Details Modal */}
-      {isModalOpen && selectedTransaction && (
-        <div className={`fixed inset-0 bg-white bg-opacity-50 flex items-center justify-center p-4 z-50`}>
-          <div className={`${theme.colors.background} rounded-lg shadow-xl w-full max-w-md`}>
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold">{t("Transaction Details")}</h3>
-                <button
-                  onClick={closeTransactionDetails}
-                  className=""
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-
-              <div className="space-y-4">
-                <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
-                  <span className="text-gray-600 dark:text-gray-400">{t("Amount")}</span>
-                  <span className="font-medium">{selectedTransaction.transaction.amount} FCFA</span>
-                </div>
-
-                <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
-                  <span className="text-gray-600 dark:text-gray-400">{t("Status")}</span>
-                  <span className={`font-medium ${selectedTransaction.transaction.status === 'completed'
-                    ? 'text-green-600 dark:text-green-400'
-                    : selectedTransaction.transaction.status === 'pending'
-                      ? 'text-yellow-600 dark:text-yellow-400'
-                      : 'text-red-600 dark:text-red-400'
-                    }`}>
-                    {selectedTransaction.transaction.status.charAt(0).toUpperCase() +
-                      selectedTransaction.transaction.status.slice(1)}
-                  </span>
-                </div>
-
-                <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
-                  <span className="">{t("Reference")}</span>
-                  <span className="font-medium">{selectedTransaction.transaction.reference}</span>
-                </div>
-
-                <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
-                  <span className="">{t("Date")}</span>
-                  <span className="font-medium">
-                    {new Date(selectedTransaction.transaction.created_at).toLocaleString('fr-FR')}
-                  </span>
-                </div>
-
-                {selectedTransaction.transaction.phone_number && (
-                  <div className="flex justify-between items-center py-2 border-b dark:border-gray-700">
-                    <span className="">{t("Phone Number")}</span>
-                    <span className="font-medium">{selectedTransaction.transaction.phone_number}</span>
-                  </div>
-                )}
-              </div>
-
-              {/* Add this block for the transaction link button */}
-              {transactionLink && (
-                <div className="mt-6 flex justify-center">
-                  <button
-                    onClick={() => window.open(transactionLink, '_blank', 'noopener,noreferrer')}
-                    className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
-                  >
-                    {t("Click to continue payment")}
-                  </button>
-                </div>
-              )}
-
-              <div className="mt-6 flex justify-end">
-                <button
-                  onClick={closeTransactionDetails}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-                >
-                  {t("Close")}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Moov USSD Modal */}
-      {showMoovModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 modal-backdrop">
-          <div className={`${theme.colors.background} rounded-lg shadow-xl w-full max-w-md modal-content`}>
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold">Code USSD Moov</h3>
-                <button
-                  onClick={() => setShowMoovModal(false)}
-                  className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-
-              <div className="space-y-4">
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Veuillez copier et coller ce code dans votre application téléphone pour compléter le paiement.
-                </p>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Numéro du marchand
-                  </label>
-                  <div className="font-mono text-blue-700 dark:text-blue-300 bg-blue-50 dark:bg-blue-900 rounded px-3 py-2">
-                    {moovMerchantPhone}
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                    Code USSD
-                  </label>
-                  <div className="flex items-center gap-2">
-                    <input
-                      type="text"
-                      readOnly
-                      value={moovUssdCode}
-                      className="flex-1 p-2 border rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white border-slate-300 dark:border-slate-600 font-mono text-sm"
-                    />
-                    <button
-                      onClick={copyUssdCode}
-                      className={`px-4 py-2 rounded-md transition-colors flex items-center gap-2 ${copied
-                        ? 'bg-green-600 text-white'
-                        : 'bg-blue-600 text-white hover:bg-blue-700'
-                        }`}
-                    >
-                      <Copy size={16} />
-                      {copied ? 'Copié!' : 'Copier'}
-                    </button>
-                  </div>
-                </div>
-              </div>
-
-              <div className="mt-6 flex justify-end">
-                <button
-                  onClick={closeMoovModal}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-                >
-                  J'ai compris
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* Orange USSD Modal */}
-      {showOrangeModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 modal-backdrop">
-          <div className={`${theme.colors.background} rounded-lg shadow-xl w-full max-w-md modal-content`}>
-            <div className="p-6">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-lg font-semibold">Paiement Orange</h3>
-                <button
-                  onClick={() => setShowOrangeModal(false)}
-                  className="text-gray-500 hover:text-gray-700 dark:hover:text-gray-300"
-                >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-
-              <div className="space-y-4">
-                {orangeTransactionLink ? (
-                  // Show transaction link button
-                  <>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      Cliquez sur le bouton ci-dessous pour continuer votre paiement.
-                    </p>
-                    <div className="mt-6 flex justify-center">
-                      <button
-                        onClick={() => window.open(orangeTransactionLink, '_blank', 'noopener,noreferrer')}
-                        className="px-6 py-3 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors flex items-center gap-2"
-                      >
-                        Continuer le paiement
-                      </button>
-                    </div>
-                  </>
-                ) : (
-                  // Show USSD code
-                  <>
-                    <p className="text-sm text-gray-600 dark:text-gray-400">
-                      Veuillez copier et coller ce code dans votre application téléphone pour compléter le paiement.
-                    </p>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Numéro du marchand
-                      </label>
-                      <div className="font-mono text-orange-700 dark:text-orange-300 bg-orange-50 dark:bg-orange-900 rounded px-3 py-2">
-                        {orangeMerchantPhone}
-                      </div>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        Code USSD
-                      </label>
-                      <div className="flex items-center gap-2">
-                        <input
-                          type="text"
-                          readOnly
-                          value={orangeUssdCode}
-                          className="flex-1 p-2 border rounded-md bg-white dark:bg-slate-700 text-slate-900 dark:text-white border-slate-300 dark:border-slate-600 font-mono text-sm"
-                        />
-                        <button
-                          onClick={copyOrangeUssdCode}
-                          className={`px-4 py-2 rounded-md transition-colors flex items-center gap-2 ${copied
-                            ? 'bg-green-600 text-white'
-                            : 'bg-orange-600 text-white hover:bg-orange-700'
-                            }`}
-                        >
-                          <Copy size={16} />
-                          {copied ? 'Copié!' : 'Copier'}
-                        </button>
-                      </div>
-                    </div>
-                  </>
-                )}
-              </div>
-
-              <div className="mt-6 flex justify-end">
-                <button
-                  onClick={closeOrangeModal}
-                  className="px-4 py-2 bg-orange-600 text-white rounded-md hover:bg-orange-700 transition-colors"
-                >
-                  J'ai compris
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
 
       {/* Edit Phone Modal */}

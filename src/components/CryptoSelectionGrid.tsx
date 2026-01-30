@@ -4,8 +4,9 @@ import React, { useEffect, useState } from "react";
 import api from "@/lib/axios";
 import { useTheme } from "@/components/ThemeProvider";
 // import { useTranslation } from "react-i18next";
+// ... other imports
 import { FaArrowLeft } from 'react-icons/fa';
-import CryptoTransactionForm from '@/components/CryptoTransactionForm'; // Reuse existing form if needed or adapt
+import CryptoTransactionForm from '@/components/CryptoTransactionForm';
 import { ImSpinner2 } from 'react-icons/im';
 
 interface Crypto {
@@ -20,7 +21,15 @@ interface Crypto {
     symbol: string;
 }
 
-const CRYPTO_API = "/blaffa/crypto"; // using relative path with api instance
+interface Network {
+    id: string;
+    name: string;
+    public_name: string;
+    image?: string;
+}
+
+const CRYPTO_API = "/blaffa/crypto";
+const NETWORK_API = "/blaffa/network/";
 
 interface CryptoSelectionGridProps {
     mode: 'buy' | 'sale';
@@ -28,17 +37,16 @@ interface CryptoSelectionGridProps {
 }
 
 export default function CryptoSelectionGrid({ mode, title }: CryptoSelectionGridProps) {
-    //   const { t } = useTranslation();
     const { theme } = useTheme();
     const [cryptos, setCryptos] = useState<Crypto[]>([]);
+    const [networks, setNetworks] = useState<Network[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [selectedCrypto, setSelectedCrypto] = useState<Crypto | null>(null);
+    const [selectedNetwork, setSelectedNetwork] = useState<Network | null>(null);
+    const [step, setStep] = useState<'crypto' | 'network' | 'details'>('crypto');
 
-    // User verification/upload logic is handled inside CryptoTransactionForm mostly,
-    // or we can lift it here if we want to block selection. 
-    // For now, mirroring existing page logic where selection triggers the form.
-
+    // Fetch Cryptos
     useEffect(() => {
         const fetchCryptos = async () => {
             setLoading(true);
@@ -56,6 +64,21 @@ export default function CryptoSelectionGrid({ mode, title }: CryptoSelectionGrid
         fetchCryptos();
     }, [mode]);
 
+    // Fetch Networks
+    useEffect(() => {
+        const fetchNetworks = async () => {
+            try {
+                const response = await api.get(NETWORK_API);
+                if (Array.isArray(response.data)) {
+                    setNetworks(response.data);
+                }
+            } catch (err) {
+                console.error("Failed to fetch networks", err);
+            }
+        };
+        fetchNetworks();
+    }, []);
+
     const handleCryptoSelect = (crypto: Crypto) => {
         const token = localStorage.getItem('accessToken');
         if (!token) {
@@ -63,26 +86,87 @@ export default function CryptoSelectionGrid({ mode, title }: CryptoSelectionGrid
             return;
         }
         setSelectedCrypto(crypto);
+        setStep('network');
     };
 
-    if (selectedCrypto) {
+    const handleNetworkSelect = (network: Network) => {
+        setSelectedNetwork(network);
+        setStep('details');
+    };
+
+    const handleBack = () => {
+        if (step === 'details') {
+            setStep('network');
+            setSelectedNetwork(null);
+        } else if (step === 'network') {
+            setStep('crypto');
+            setSelectedCrypto(null);
+        } else {
+            window.history.back();
+        }
+    };
+
+    if (step === 'details' && selectedCrypto && selectedNetwork) {
         return (
             <div className="w-full">
                 <button
-                    onClick={() => setSelectedCrypto(null)}
+                    onClick={handleBack}
                     className={`group flex items-center gap-2 mb-6 ${theme.mode === 'dark' ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'} transition-colors`}
                 >
                     <FaArrowLeft />
                     <span className="font-medium">Retour</span>
                 </button>
+                <div className="mb-6">
+                    <h2 className={`text-xl font-bold ${theme.colors.text}`}>4. Entrez les informations de la crypto</h2>
+                </div>
                 <CryptoTransactionForm
-                    isVerified={true} // We might need to propagate this proper, but for UI refactor focus I'll assume true or let form handle it. 
-                    // Actually the previous page strictly checked verification. 
-                    // For this refactor, I will pass true to show the form, but in a real app check user status. 
-                    // The prompt was about styling the selection page.
+                    isVerified={true}
                     crypto={selectedCrypto}
+                    // network={selectedNetwork} // Pass network prop (Typescript will complain until I update Form)
+                    // For now, allow Form to update, I'll update Form next.
+                    // But I need to pass it. I'll pass it as `selectedNetwork` and I'll update the interface in Form.
                     typeTrans={mode}
+                    selectedNetwork={selectedNetwork} // Passing it here
                 />
+            </div>
+        );
+    }
+
+    if (step === 'network' && selectedCrypto) {
+        return (
+            <div className="w-full">
+                <button
+                    onClick={handleBack}
+                    className={`group flex items-center gap-2 mb-6 ${theme.mode === 'dark' ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'} transition-colors`}
+                >
+                    <FaArrowLeft />
+                    <span className="font-medium">Retour</span>
+                </button>
+                <h1 className={`text-2xl font-bold mb-6 ${theme.colors.text}`}>Réseau</h1>
+                <p className={`font-medium mb-6 ${theme.colors.d_text}`}>3. Sélectionnez votre réseau</p>
+
+                <div className="space-y-3">
+                    {networks.map((network) => (
+                        <div
+                            key={network.id}
+                            onClick={() => handleNetworkSelect(network)}
+                            className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all 
+                                ${theme.mode === 'dark' ? 'border-slate-700 hover:bg-slate-800' : 'border-gray-200 hover:bg-gray-50'} 
+                                ${theme.colors.a_background}`}
+                        >
+                            <div className="w-10 h-10 relative flex-shrink-0">
+                                {network.image ? (
+                                    <img src={network.image} alt={network.name} className="w-full h-full object-contain rounded-md" />
+                                ) : (
+                                    <div className="w-full h-full bg-gray-200 rounded-md flex items-center justify-center text-xs font-bold text-gray-500">
+                                        {network.name.substring(0, 2)}
+                                    </div>
+                                )}
+                            </div>
+                            <span className={`text-lg font-medium ${theme.colors.text}`}>{network.public_name || network.name}</span>
+                        </div>
+                    ))}
+                </div>
             </div>
         );
     }
@@ -113,7 +197,7 @@ export default function CryptoSelectionGrid({ mode, title }: CryptoSelectionGrid
             ) : error ? (
                 <div className="text-red-500">{error}</div>
             ) : (
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {cryptos.map((crypto) => (
                         <div
                             key={crypto.id}

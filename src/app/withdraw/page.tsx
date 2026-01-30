@@ -25,6 +25,8 @@ interface Network {
   image?: string;
   with_fee?: boolean;
   fee_percent?: number;
+  deposit_message?: string;
+  tape_code?: string;
 }
 
 interface App {
@@ -46,7 +48,9 @@ interface App {
   why_withdrawal_fail?: string;
   minimum_withdrawal?: number;
   maximum_withdrawal?: number;
-  // why_withdrawal_fail_link?: string;
+  minimun_with?: string;
+  max_win?: string;
+  deposit_message?: string;
 }
 
 // Updated IdLink interface to match the structure from deposit/page.tsx
@@ -96,7 +100,7 @@ interface UserPhone {
 export default function Withdraw() {
   const router = useRouter();
   const { t } = useTranslation();
-  const [currentStep, setCurrentStep] = useState<'selectId' | 'selectNetwork' | 'selectPhone' | 'manageBetId' | 'enterDetails' | 'addPhone'>('selectId');
+  const [currentStep, setCurrentStep] = useState<'selectId' | 'selectNetwork' | 'selectPhone' | 'manageBetId' | 'enterDetails' | 'addPhone' | 'summary'>('selectId');
   const [selectedPlatform, setSelectedPlatform] = useState<App | null>(null);
   const [platforms, setPlatforms] = useState<App[]>([]);
   const [selectedNetwork, setSelectedNetwork] = useState<Network | null>(null);
@@ -118,8 +122,6 @@ export default function Withdraw() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedTransaction, setSelectedTransaction] = useState<TransactionDetail | null>(null);
   const { theme } = useTheme();
   const [selectedBetId, setSelectedBetId] = useState<string | null>(null);
   // const [showInfoDropdown, setShowInfoDropdown] = useState(false);
@@ -416,6 +418,16 @@ export default function Withdraw() {
     setCurrentStep('selectPhone');
   };
 
+  // Get current min and max withdrawal limits
+  const getWithdrawalLimits = () => {
+    const minVal = selectedPlatform?.minimun_with || selectedPlatform?.minimum_withdrawal || '100';
+    const maxVal = selectedPlatform?.max_win || selectedPlatform?.maximum_withdrawal || '1000000';
+    return {
+      min: parseFloat(String(minVal)),
+      max: parseFloat(String(maxVal))
+    };
+  };
+
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -447,9 +459,8 @@ export default function Withdraw() {
       return 'Le montant doit être supérieur à 0';
     }
 
-    // Use API-provided limits from selected platform, fallback to defaults
-    const minAmount = selectedPlatform?.minimum_withdrawal || 100;
-    const maxAmount = selectedPlatform?.maximum_withdrawal || 1000000;
+    // Use API-provided limits from selected platform
+    const { min: minAmount, max: maxAmount } = getWithdrawalLimits();
 
     if (numAmount < minAmount) {
       return `Le montant minimum est ${minAmount} FCFA`;
@@ -566,15 +577,13 @@ export default function Withdraw() {
       });
 
       const transaction = response.data;
-      setSelectedTransaction({ transaction });
-      setIsModalOpen(true);
-
       setSuccess('Retrait initié avec succès !');
+      // Redirect to dashboard after a short delay
+      setTimeout(() => {
+        if (typeof window !== 'undefined') window.location.href = '/dashboard';
+      }, 3000);
+
       // Reset form
-      setCurrentStep('selectId');
-      setSelectedPlatform(null);
-      setSelectedNetwork(null);
-      setSelectedBetId(null);
       setFormData({ withdrawalCode: '', phoneNumber: '', betid: '', amount: '' });
       setValidationErrors({ amount: '', withdrawalCode: '', phoneNumber: '' });
     } catch (err: unknown) {
@@ -644,7 +653,7 @@ export default function Withdraw() {
             </div>
 
             <div className="w-full flex justify-center">
-              <div className="grid grid-cols-2 md:grid-cols-2 gap-4 w-full max-w-lg">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full">
                 {platforms.map((platform) => {
                   const isActive = selectedPlatform?.id === platform.id;
                   return (
@@ -992,11 +1001,11 @@ export default function Withdraw() {
             <div className="mb-6 p-4 bg-orange-50 border border-orange-200 rounded-xl flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5" />
               <p className="text-sm text-orange-700">
-                Assurez-vous que le montant est dans les limites autorisées {selectedPlatform?.minimum_withdrawal || 1000} F - {selectedPlatform?.maximum_withdrawal || 300000} F.
+                Assurez-vous que le montant est dans les limites autorisées {getWithdrawalLimits().min} F - {getWithdrawalLimits().max} F.
               </p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form onSubmit={(e) => { e.preventDefault(); if (validateForm()) setCurrentStep('summary'); }} className="space-y-6">
               {/* Withdrawal Code Field */}
               <div>
                 <input
@@ -1020,16 +1029,26 @@ export default function Withdraw() {
                   name="amount"
                   value={formData.amount}
                   onChange={handleInputChange}
-                  className={`w-full h-14 px-4 rounded-xl border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-gray-300'} ${theme.colors.a_background} text-lg ${theme.colors.text} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all`}
+                  className={`w-full h-14 px-4 rounded-xl border ${!formData.amount
+                    ? theme.mode === 'dark' ? 'border-slate-700' : 'border-gray-300'
+                    : (parseFloat(formData.amount) < getWithdrawalLimits().min || parseFloat(formData.amount) > getWithdrawalLimits().max)
+                      ? 'border-red-500'
+                      : 'border-green-500'
+                    } ${theme.colors.a_background} text-lg ${theme.colors.text} focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all`}
                   placeholder="Montant (F CFA)"
                   required
-                  min={selectedPlatform?.minimum_withdrawal || 100}
-                  max={selectedPlatform?.maximum_withdrawal || 1000000}
+                  min={getWithdrawalLimits().min}
+                  max={getWithdrawalLimits().max}
                   step="1"
                 />
-                {/* Range indicator RED */}
-                <div className="mt-2 text-sm text-red-500 font-medium">
-                  {selectedPlatform?.minimum_withdrawal || 100} F - {selectedPlatform?.maximum_withdrawal || 300000} F
+                {/* Range indicator with dynamic colors */}
+                <div className={`mt-2 text-sm font-medium ${!formData.amount
+                  ? 'text-red-500' // Previous behavior was red by default? Let's check. 
+                  : (parseFloat(formData.amount) < getWithdrawalLimits().min || parseFloat(formData.amount) > getWithdrawalLimits().max)
+                    ? 'text-red-500'
+                    : 'text-green-500'
+                  }`}>
+                  {getWithdrawalLimits().min} F - {getWithdrawalLimits().max} F
                 </div>
                 {validationErrors.amount && (
                   <p className="mt-2 text-sm text-red-500">{validationErrors.amount}</p>
@@ -1058,48 +1077,52 @@ export default function Withdraw() {
 
               {/* Youtube Buttons */}
               <div className="space-y-3">
-                <button
-                  type="button"
-                  onClick={() => window.open(selectedPlatform?.withdrawal_tuto_content || '#', '_blank')}
-                  className="w-full p-4 rounded-xl border border-gray-200 bg-white dark:bg-slate-800 dark:border-slate-700 flex items-center justify-between shadow-sm"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center text-white">
-                      {/* Youtube Play Icon */}
-                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M8 5v14l11-7z" /></svg>
+                {selectedPlatform?.withdrawal_link && (
+                  <button
+                    type="button"
+                    onClick={() => window.open(selectedPlatform.withdrawal_link, '_blank')}
+                    className="w-full p-4 rounded-xl border border-gray-200 bg-white dark:bg-slate-800 dark:border-slate-700 flex items-center justify-between shadow-sm"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center text-white">
+                        {/* Youtube Play Icon */}
+                        <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M8 5v14l11-7z" /></svg>
+                      </div>
+                      <div className="text-left w-full">
+                        <div className="text-xs text-gray-500 text-left">Tutoriel vidéo</div>
+                        <div className={`font-bold text-sm ${theme.colors.text} text-red-600 text-left uppercase text-xs truncate max-w-[200px]`}>Comment obtenir un code de retrait avec {selectedPlatform?.public_name || selectedPlatform?.name} ?</div>
+                      </div>
                     </div>
-                    <div className="text-left w-full">
-                      <div className="text-xs text-gray-500 text-left">Tutoriel vidéo</div>
-                      <div className={`font-bold text-sm ${theme.colors.text} text-red-600 text-left`}>Comment obtenir un code de retrait avec 1XBET ?</div>
+                    <div className="text-red-500">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                      </svg>
                     </div>
-                  </div>
-                  <div className="text-red-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                </button>
+                  </button>
+                )}
 
-                <button
-                  type="button"
-                  onClick={() => window.open(selectedPlatform?.why_withdrawal_fail || '#', '_blank')}
-                  className="w-full p-4 rounded-xl border border-gray-200 bg-white dark:bg-slate-800 dark:border-slate-700 flex items-center justify-between shadow-sm"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center text-white">
-                      <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M8 5v14l11-7z" /></svg>
+                {selectedPlatform?.why_withdrawal_fail && (
+                  <button
+                    type="button"
+                    onClick={() => window.open(selectedPlatform.why_withdrawal_fail, '_blank')}
+                    className="w-full p-4 rounded-xl border border-gray-200 bg-white dark:bg-slate-800 dark:border-slate-700 flex items-center justify-between shadow-sm"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center text-white">
+                        <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M8 5v14l11-7z" /></svg>
+                      </div>
+                      <div className="text-left w-full">
+                        <div className="text-xs text-gray-500 text-left">Tutoriel vidéo</div>
+                        <div className={`font-bold text-sm ${theme.colors.text} text-red-600 text-left uppercase text-xs`}>Pourquoi mon retrait a échoué ?</div>
+                      </div>
                     </div>
-                    <div className="text-left w-full">
-                      <div className="text-xs text-gray-500 text-left">Tutoriel vidéo</div>
-                      <div className={`font-bold text-sm ${theme.colors.text} text-red-600 text-left`}>Pourquoi mon retrait a échoué ?</div>
+                    <div className="text-red-500">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
+                      </svg>
                     </div>
-                  </div>
-                  <div className="text-red-500">
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                      <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                </button>
+                  </button>
+                )}
               </div>
 
               {/* Submit Button */}
@@ -1114,6 +1137,122 @@ export default function Withdraw() {
                 </button>
               </div>
             </form>
+          </div>
+        );
+      case 'summary':
+        return (
+          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {/* Hero Card */}
+            <div className={`relative overflow-hidden bg-gradient-to-r from-[#002d72] to-[#1a4384] rounded-3xl p-8 text-white shadow-xl`}>
+              <div className="relative z-10 flex items-center gap-6">
+                <div className="bg-white/20 backdrop-blur-md p-4 rounded-2xl">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="text-2xl font-bold mb-1 font-outfit uppercase">Confirmer le retrait</h3>
+                  <p className="text-blue-100 opacity-80 uppercase tracking-wide text-sm font-medium">Vérifiez vos informations</p>
+                </div>
+              </div>
+              <div className="absolute top-0 right-0 -mr-12 -mt-12 bg-white/10 w-48 h-48 rounded-full blur-3xl"></div>
+            </div>
+
+            {/* Detail Cards Container */}
+            <div className="space-y-4">
+              {/* Application Card */}
+              <div className={`flex items-center gap-5 p-5 ${theme.mode === 'dark' ? 'bg-slate-800' : 'bg-white'} border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-slate-100'} rounded-3xl shadow-sm hover:shadow-md transition-all`}>
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center p-2 ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-slate-50'}`}>
+                  {selectedPlatform?.image ? (
+                    <img src={selectedPlatform.image} alt="" className="w-10 h-10 object-contain rounded-lg" />
+                  ) : (
+                    <div className="w-8 h-8 bg-blue-100 rounded-lg"></div>
+                  )}
+                </div>
+                <div className="flex-1">
+                  <p className={`text-sm ${theme.colors.d_text} opacity-50 font-medium uppercase tracking-wider mb-0.5`}>Application</p>
+                  <p className={`text-xl font-bold ${theme.colors.text} tracking-tight`}>{selectedPlatform?.public_name || selectedPlatform?.name}</p>
+                </div>
+              </div>
+
+              {/* User ID Card */}
+              <div className={`flex items-center gap-5 p-5 ${theme.mode === 'dark' ? 'bg-slate-800' : 'bg-white'} border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-slate-100'} rounded-3xl shadow-sm hover:shadow-md transition-all`}>
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${theme.mode === 'dark' ? 'bg-green-900/20' : 'bg-green-50'}`}>
+                  <svg xmlns="http://www.w3.org/2000/svg" className={`h-7 w-7 ${theme.mode === 'dark' ? 'text-green-400' : 'text-green-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                  </svg>
+                </div>
+                <div className="flex-1">
+                  <p className={`text-sm ${theme.colors.d_text} opacity-50 font-medium uppercase tracking-wider mb-0.5`}>ID Utilisateur</p>
+                  <p className={`text-xl font-bold ${theme.colors.text} tracking-wider`}>{selectedBetId}</p>
+                </div>
+              </div>
+
+              {/* Network Card */}
+              <div className={`flex items-center gap-5 p-5 ${theme.mode === 'dark' ? 'bg-slate-800' : 'bg-white'} border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-slate-100'} rounded-3xl shadow-sm hover:shadow-md transition-all`}>
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center p-2 ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-slate-50'}`}>
+                  {selectedNetwork?.image ? (
+                    <img src={selectedNetwork.image} alt="" className="w-10 h-10 object-contain" />
+                  ) : (
+                    <div className="w-8 h-8 bg-orange-100 rounded-lg"></div>
+                  )}
+                </div>
+                <div className="flex-1">
+                  <p className={`text-sm ${theme.colors.d_text} opacity-50 font-medium uppercase tracking-wider mb-0.5`}>Réseau</p>
+                  <p className={`text-xl font-bold ${theme.colors.text} tracking-tight`}>{(selectedNetwork?.public_name || selectedNetwork?.name)?.toUpperCase()}</p>
+                </div>
+              </div>
+
+              {/* Phone Card */}
+              <div className={`flex items-center gap-5 p-5 ${theme.mode === 'dark' ? 'bg-slate-800' : 'bg-white'} border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-slate-100'} rounded-3xl shadow-sm hover:shadow-md transition-all`}>
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${theme.mode === 'dark' ? 'bg-purple-900/20' : 'bg-purple-50'}`}>
+                  <Phone className={`h-7 w-7 ${theme.mode === 'dark' ? 'text-purple-400' : 'text-purple-600'}`} />
+                </div>
+                <div className="flex-1">
+                  <p className={`text-sm ${theme.colors.d_text} opacity-50 font-medium uppercase tracking-wider mb-0.5`}>Numéro de téléphone</p>
+                  <p className={`text-xl font-bold ${theme.colors.text} tracking-wider`}>{selectedPhone?.phone || ''}</p>
+                </div>
+              </div>
+            </div>
+
+
+            {/* Warning Alert */}
+            <div className={`p-5 rounded-3xl flex items-start gap-4 ${theme.mode === 'dark' ? 'bg-amber-900/10 border border-amber-900/50' : 'bg-amber-50 border border-amber-100'}`}>
+              <div className={`mt-0.5 p-2 rounded-xl ${theme.mode === 'dark' ? 'bg-amber-900/30' : 'bg-white shadow-sm'}`}>
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                </svg>
+              </div>
+              <p className={`text-sm font-medium ${theme.mode === 'dark' ? 'text-amber-200/70' : 'text-amber-700/80'} leading-relaxed`}>
+                Veuillez confirmer que vous avez bien accès à ce numéro de téléphone pour recevoir le paiement.
+              </p>
+            </div>
+
+            {/* Final Action Button */}
+            <div className="pt-4 flex flex-col gap-4">
+              <button
+                onClick={handleSubmit}
+                disabled={loading}
+                className="w-full h-18 bg-[#002d72] hover:bg-[#001d4a] text-white font-bold text-xl rounded-full shadow-xl shadow-blue-900/20 transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-3 py-6"
+              >
+                {loading ? (
+                  <>
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                    <span>Traitement...</span>
+                  </>
+                ) : (
+                  <span>Confirmer le retrait</span>
+                )}
+              </button>
+
+              <button
+                onClick={() => setCurrentStep('enterDetails')}
+                disabled={loading}
+                className={`w-full py-4 text-center font-bold text-lg ${theme.colors.d_text} opacity-50 hover:opacity-100 transition-opacity disabled:opacity-30`}
+              >
+                Retour pour modification
+              </button>
+            </div>
           </div>
         );
     }
@@ -1155,6 +1294,8 @@ export default function Withdraw() {
         return "Retrait - Numéro de télé...";
       case 'enterDetails':
         return "Retrait - Informations";
+      case 'summary':
+        return "Confirmer le retrait";
       default:
         return "Retrait";
     }
@@ -1234,7 +1375,7 @@ export default function Withdraw() {
         `}
       </style>
 
-      <div className="max-w-4xl mx-auto">
+      <div className="w-full px-6">
         {/* Header Section */}
         <div className="flex items-center gap-6 mb-12">
           <button
@@ -1249,6 +1390,8 @@ export default function Withdraw() {
                 setCurrentStep('selectNetwork');
               } else if (currentStep === 'enterDetails') {
                 setCurrentStep('selectPhone');
+              } else if (currentStep === 'summary') {
+                setCurrentStep('enterDetails');
               }
             }}
             className="p-2 -ml-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
@@ -1398,29 +1541,6 @@ export default function Withdraw() {
         </div>
       </div>
 
-      {/* Transaction Details Modal */}
-      {isModalOpen && selectedTransaction && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className={`${theme.colors.background} rounded-lg shadow-xl w-full max-w-md`}>
-            <div className="p-6">
-              <h3 className="text-lg font-semibold mb-4">{t("Transaction Details")}</h3>
-              <div className="space-y-2">
-                <p><span className="font-medium">{t("Status")}:</span> {selectedTransaction.transaction.status}</p>
-                <p><span className="font-medium">{t("Reference")}:</span> {selectedTransaction.transaction.reference}</p>
-                <p><span className="font-medium">{t("Date")}:</span> {new Date(selectedTransaction.transaction.created_at).toLocaleString()}</p>
-              </div>
-              <div className="mt-6 flex justify-end">
-                <button
-                  onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-                >
-                  {t("Close")}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
 
       {/* Add CSS animations */}

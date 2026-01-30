@@ -371,7 +371,7 @@ export default function NotificationsPage() {
   const unreadCount = notifications.filter(n => !n.is_read).length;
 
   return (
-    <div className={`min-h-screen bg-gradient-to-br ${theme.colors.a_background}`}>
+    <div className={`bg-gradient-to-br ${theme.colors.a_background}`}>
       {/* Header */}
       {/* <DashboardHeader /> */}
       <div className={`bg-gradient-to-br ${theme.colors.a_background} shadow-sm border-b border-gray-200 dark:border-gray-700`}>

@@ -37,55 +37,87 @@ interface UserProfile {
   first_name: string;
   last_name: string;
   email: string;
+  can_publish_coupons: boolean;
+  is_staff: boolean;
 }
 
 const CouponPage = () => {
+  const [platforms, setPlatforms] = useState<BetApp[]>([]);
+  const [selectedPlatformId, setSelectedPlatformId] = useState<string | null>(null);
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
+  const [platformsLoading, setPlatformsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const { theme } = useTheme();
   const router = useRouter();
 
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const token = localStorage.getItem('accessToken');
-        const promises: Promise<any>[] = [api.get(`/blaffa/coupon`)];
-
-        if (token) {
-          promises.push(api.get(`/auth/me`));
-        }
-
-        const results = await Promise.allSettled(promises);
-
-        // Handle Coupons
-        if (results[0].status === 'fulfilled') {
-          const data = results[0].value.data;
-          setCoupons(data.results || data || []);
-        }
-
-        // Handle Profile
-        if (results[1] && results[1].status === 'fulfilled') {
-          const profileData = results[1].value.data;
-          setUserProfile({
-            first_name: profileData.first_name,
-            last_name: profileData.last_name,
-            email: profileData.email
-          });
-        }
-      } catch (err) {
-        console.error('Error fetching data:', err);
-        setError('Failed to load data.');
-      } finally {
-        setLoading(false);
+  const fetchPlatforms = async () => {
+    try {
+      const response = await api.get('/blaffa/app_name?operation_type=coupon');
+      if (response.status === 200) {
+        setPlatforms(response.data || []);
       }
-    };
+    } catch (err) {
+      console.error('Error fetching platforms:', err);
+    } finally {
+      setPlatformsLoading(false);
+    }
+  };
 
-    fetchData();
+  const fetchCoupons = async (platformId: string | null = null) => {
+    setLoading(true);
+    try {
+      const url = platformId ? `/blaffa/coupon?bet_app=${platformId}` : `/blaffa/coupon`;
+      const response = await api.get(url);
+      if (response.status === 200) {
+        const data = response.data;
+        setCoupons(data.results || data || []);
+      }
+    } catch (err) {
+      console.error('Error fetching coupons:', err);
+      setError('Failed to load coupons.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchUserProfile = async () => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) return;
+    try {
+      const response = await api.get(`/auth/me`);
+      if (response.status === 200) {
+        const profileData = response.data;
+        setUserProfile({
+          first_name: profileData.first_name,
+          last_name: profileData.last_name,
+          email: profileData.email,
+          can_publish_coupons: profileData.can_publish_coupons,
+          is_staff: profileData.is_staff
+        });
+      }
+    } catch (err) {
+      console.error('Error fetching profile:', err);
+    }
+  };
+
+  useEffect(() => {
+    fetchPlatforms();
+    fetchCoupons();
+    fetchUserProfile();
   }, []);
+
+  useEffect(() => {
+    if (selectedPlatformId !== null) {
+      fetchCoupons(selectedPlatformId);
+    } else {
+      // Re-fetch all if selection cleared, but we need to avoid the initial mount double call if possible
+      // However, for simplicity here, we re-fetch if it changes to null after first load
+      fetchCoupons();
+    }
+  }, [selectedPlatformId]);
 
   const handleCopy = (text: string, id: string) => {
     navigator.clipboard.writeText(text);
@@ -107,14 +139,14 @@ const CouponPage = () => {
   };
 
   return (
-    <div className={`min-h-screen ${theme.colors.a_background} font-sans pb-20`}>
+    <div className={`${theme.colors.a_background} font-sans`}>
       <Head>
         <title>Coupons - Blaffa</title>
       </Head>
 
       {/* Header */}
       <header className={`bg-transparent sticky top-0 z-50`}>
-        <div className="max-w-md mx-auto px-4 h-20 flex items-center justify-between">
+        <div className="w-full px-6 h-20 flex items-center justify-between">
           <button onClick={() => router.back()} className={`p-2 -ml-2 rounded-full ${theme.colors.hover} transition-colors`}>
             <ArrowLeft className={theme.colors.text} size={28} />
           </button>
@@ -123,7 +155,7 @@ const CouponPage = () => {
         </div>
       </header>
 
-      <main className="max-w-md mx-auto p-4 space-y-6">
+      <main className="w-full p-6 space-y-6">
         {/* User Card */}
         <div className={`${theme.colors.a_background} p-8 rounded-[2rem] shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col gap-8 border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-gray-50'}`}>
           <div className="flex items-center justify-between">
@@ -142,9 +174,14 @@ const CouponPage = () => {
                 </div>
               </div>
             </div>
-            <button className="w-12 h-12 rounded-xl bg-[#002d72] flex items-center justify-center text-white shadow-lg active:scale-95 transition-transform">
-              <Plus size={28} strokeWidth={3} />
-            </button>
+            {(userProfile?.can_publish_coupons || userProfile?.is_staff) && (
+              <button
+                onClick={() => router.push('/coupon/create')}
+                className="w-12 h-12 rounded-xl bg-[#002d72] flex items-center justify-center text-white shadow-lg active:scale-95 transition-transform"
+              >
+                <Plus size={28} strokeWidth={3} />
+              </button>
+            )}
           </div>
 
           {/* Stats Bar */}
@@ -162,16 +199,49 @@ const CouponPage = () => {
 
         {/* Platform Scroll */}
         <div className="flex gap-4 overflow-x-auto pb-4 scrollbar-hide">
-          {['1xBet', 'MELBET', 'BETWINNER'].map((name, idx) => (
-            <div key={idx} className={`flex-shrink-0 ${theme.colors.a_background} px-5 py-4 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex items-center gap-3 border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-transparent'}`}>
-              <div className={`w-10 h-10 rounded-lg ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-gray-50'} flex items-center justify-center p-1`}>
-                <div className={`w-8 h-8 rounded-md flex items-center justify-center text-white font-bold text-xs ${name === '1xBet' ? 'bg-blue-600' : name === 'MELBET' ? 'bg-black' : 'bg-green-700'}`}>
-                  {name.charAt(0)}
-                </div>
-              </div>
-              <span className={`font-bold text-lg ${theme.colors.text}`}>{name}</span>
+          {/* "Tous" Category */}
+          <button
+            onClick={() => setSelectedPlatformId(null)}
+            className={`flex-shrink-0 ${theme.colors.a_background} px-6 py-4 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex items-center gap-3 border transition-all
+              ${selectedPlatformId === null
+                ? 'border-blue-600 ring-2 ring-blue-600/20'
+                : theme.mode === 'dark' ? 'border-slate-800' : 'border-transparent opacity-60 hover:opacity-100'}`}
+          >
+            <div className={`w-10 h-10 rounded-lg ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-gray-50'} flex items-center justify-center`}>
+              <Trophy className={selectedPlatformId === null ? "text-blue-600" : "text-gray-400"} size={20} />
             </div>
-          ))}
+            <span className={`font-bold text-lg ${selectedPlatformId === null ? 'text-blue-600' : theme.colors.text}`}>Tous</span>
+          </button>
+
+          {platformsLoading ? (
+            [1, 2, 3].map(i => (
+              <div key={i} className={`flex-shrink-0 w-32 h-16 ${theme.mode === 'dark' ? 'bg-slate-800' : 'bg-gray-100'} rounded-2xl animate-pulse`}></div>
+            ))
+          ) : (
+            platforms.map((platform) => (
+              <button
+                key={platform.id}
+                onClick={() => setSelectedPlatformId(platform.id)}
+                className={`flex-shrink-0 ${theme.colors.a_background} px-5 py-4 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex items-center gap-3 border transition-all
+                  ${selectedPlatformId === platform.id
+                    ? 'border-blue-600 ring-2 ring-blue-600/20'
+                    : theme.mode === 'dark' ? 'border-slate-800' : 'border-transparent opacity-60 hover:opacity-100'}`}
+              >
+                <div className={`w-10 h-10 rounded-lg ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-gray-50'} flex items-center justify-center p-1`}>
+                  {platform.image ? (
+                    <img src={platform.image} alt="" className="w-8 h-8 object-contain" />
+                  ) : (
+                    <div className="w-8 h-8 bg-blue-600 rounded-md flex items-center justify-center text-white font-bold text-xs">
+                      {platform.name.charAt(0)}
+                    </div>
+                  )}
+                </div>
+                <span className={`font-bold text-lg ${selectedPlatformId === platform.id ? 'text-blue-600' : theme.colors.text}`}>
+                  {platform.public_name || platform.name}
+                </span>
+              </button>
+            ))
+          )}
         </div>
 
         {/* Day's Header */}

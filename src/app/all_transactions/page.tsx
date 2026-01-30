@@ -317,7 +317,7 @@ export default function AllTransactionsPage() {
         `}
       </style>
 
-      <div className="max-w-md mx-auto">
+      <div className="w-full px-6">
         {/* Navigation Bar */}
         <div className="flex items-center justify-between mb-8 px-2">
           <button

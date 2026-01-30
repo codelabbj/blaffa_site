@@ -123,7 +123,12 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$re
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$copy$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Copy$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/copy.js [app-client] (ecmascript) <export default as Copy>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$refresh$2d$cw$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__RefreshCw$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/refresh-cw.js [app-client] (ecmascript) <export default as RefreshCw>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$check$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__CheckCircle2$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/circle-check.js [app-client] (ecmascript) <export default as CheckCircle2>");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$x$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__XCircle$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/circle-x.js [app-client] (ecmascript) <export default as XCircle>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/circle-alert.js [app-client] (ecmascript) <export default as AlertCircle>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$clock$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Clock$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/clock.js [app-client] (ecmascript) <export default as Clock>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$smartphone$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Smartphone$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/smartphone.js [app-client] (ecmascript) <export default as Smartphone>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$phone$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Phone$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/phone.js [app-client] (ecmascript) <export default as Phone>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$credit$2d$card$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__CreditCard$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/credit-card.js [app-client] (ecmascript) <export default as CreditCard>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$hash$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Hash$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/hash.js [app-client] (ecmascript) <export default as Hash>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ThemeProvider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/ThemeProvider.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$axios$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/axios.ts [app-client] (ecmascript)");
 ;
@@ -147,25 +152,57 @@ function TransactionDetailPage() {
     const fetchTransactionDetails = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useCallback"])({
         "TransactionDetailPage.useCallback[fetchTransactionDetails]": async ()=>{
             setLoading(true);
+            setError(null);
             try {
                 const token = localStorage.getItem('accessToken');
                 if (!token) throw new Error('Authentication required');
-                // Note: Using the historic endpoint and finding the transaction by ID 
-                // since a specific detail endpoint wasn't explicitly provided.
-                const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$axios$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].get('/blaffa/historic', {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                });
-                const transactions = response.data.results;
-                const found = transactions.find({
-                    "TransactionDetailPage.useCallback[fetchTransactionDetails].found": (item)=>item.transaction.id === params.id
-                }["TransactionDetailPage.useCallback[fetchTransactionDetails].found"]);
-                if (found) {
-                    setTransaction(found.transaction);
-                } else {
-                    setError('Transaction introuvable');
+                // 1. Try direct transaction endpoints first
+                const potentialEndpoints = [
+                    `/blaffa/transaction/${params.id}/`,
+                    `/blaffa/transaction/${params.id}`,
+                    `/blaffa/historic/${params.id}/`,
+                    `/blaffa/historic/${params.id}`
+                ];
+                for (const endpoint of potentialEndpoints){
+                    try {
+                        const directResponse = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$axios$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].get(endpoint, {
+                            headers: {
+                                Authorization: `Bearer ${token}`
+                            }
+                        });
+                        if (directResponse.data && (directResponse.data.id || directResponse.data.transaction?.id || directResponse.data.reference)) {
+                            const data = directResponse.data.transaction || directResponse.data;
+                            if (String(data.id) === String(params.id) || String(directResponse.data.id) === String(params.id) || data.reference === params.id) {
+                                setTransaction(data);
+                                setLoading(false);
+                                return;
+                            }
+                        }
+                    } catch (e) {}
                 }
+                // 2. Fallback: Search in the recent history (loop through first 5 pages if needed)
+                let page = 1;
+                let found = null;
+                let hasMore = true;
+                while(!found && hasMore && page <= 5){
+                    const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$axios$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].get(`/blaffa/historic${page > 1 ? `?page=${page}` : ''}`, {
+                        headers: {
+                            Authorization: `Bearer ${token}`
+                        }
+                    });
+                    const results = response.data.results || [];
+                    found = results.find({
+                        "TransactionDetailPage.useCallback[fetchTransactionDetails]": (item)=>item.transaction && String(item.transaction.id) === String(params.id) || String(item.id) === String(params.id) || item.transaction && item.transaction.reference === params.id
+                    }["TransactionDetailPage.useCallback[fetchTransactionDetails]"]);
+                    if (found) {
+                        setTransaction(found.transaction || found);
+                        setLoading(false);
+                        return;
+                    }
+                    hasMore = !!response.data.next;
+                    page++;
+                }
+                setError('Transaction introuvable');
             } catch (err) {
                 console.error('Error fetching details:', err);
                 setError(err.message || 'Failed to load transaction details');
@@ -192,49 +229,123 @@ function TransactionDetailPage() {
         setTimeout(()=>setCopied(false), 2000);
     };
     const getStatusIcon = (status)=>{
-        switch(status.toLowerCase()){
+        const s = status.toLowerCase();
+        switch(s){
             case 'completed':
             case 'accept':
             case 'approve':
-                return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$check$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__CheckCircle2$3e$__["CheckCircle2"], {
-                    size: 70,
-                    className: "text-green-500"
+            case 'success':
+                return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "w-24 h-24 rounded-full flex items-center justify-center mb-4 text-green-500",
+                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$check$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__CheckCircle2$3e$__["CheckCircle2"], {
+                        size: 95,
+                        className: "stroke-[1.5]"
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                        lineNumber: 139,
+                        columnNumber: 25
+                    }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                    lineNumber: 92,
-                    columnNumber: 24
+                    lineNumber: 138,
+                    columnNumber: 21
                 }, this);
             case 'failed':
             case 'error':
-                return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$x$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__XCircle$3e$__["XCircle"], {
-                    size: 70,
-                    className: "text-red-500"
+            case 'fail':
+            case 'echec':
+                return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "w-24 h-24 rounded-full flex items-center justify-center mb-4 text-[#ff5a51]",
+                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                        size: 95,
+                        className: "stroke-[1.5]"
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                        lineNumber: 148,
+                        columnNumber: 25
+                    }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                    lineNumber: 95,
-                    columnNumber: 24
+                    lineNumber: 147,
+                    columnNumber: 21
                 }, this);
             case 'pending':
+            case 'payment_init_success':
+            case 'en attente':
             default:
-                return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$refresh$2d$cw$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__RefreshCw$3e$__["RefreshCw"], {
-                    size: 70,
-                    className: "text-gray-400 animate-spin-slow"
+                return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "w-24 h-24 rounded-full flex items-center justify-center mb-4",
+                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$refresh$2d$cw$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__RefreshCw$3e$__["RefreshCw"], {
+                        size: 95,
+                        className: "text-gray-400 stroke-[1.2] animate-spin-slow"
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                        lineNumber: 157,
+                        columnNumber: 25
+                    }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                    lineNumber: 98,
-                    columnNumber: 24
+                    lineNumber: 156,
+                    columnNumber: 21
                 }, this);
         }
     };
     const getStatusText = (status)=>{
-        const map = {
-            pending: 'En attente',
-            completed: 'Terminé',
-            failed: 'Échoué',
-            accept: 'Accepté',
-            approve: 'Approuvé'
-        };
-        return map[status.toLowerCase()] || status;
+        const s = status.toLowerCase();
+        if ([
+            'pending',
+            'payment_init_success',
+            'en attente'
+        ].includes(s)) return 'En attente';
+        if ([
+            'completed',
+            'accept',
+            'approve',
+            'success'
+        ].includes(s)) return 'Succès';
+        if ([
+            'failed',
+            'error',
+            'fail',
+            'echec'
+        ].includes(s)) return 'Échec';
+        return status;
+    };
+    const getStatusSubtext = (status)=>{
+        const s = status.toLowerCase();
+        if ([
+            'pending',
+            'payment_init_success',
+            'en attente'
+        ].includes(s)) return 'Transaction en cours';
+        if ([
+            'completed',
+            'accept',
+            'approve',
+            'success'
+        ].includes(s)) return 'Transaction réussie';
+        if ([
+            'failed',
+            'error',
+            'fail',
+            'echec'
+        ].includes(s)) return 'Transaction échouée';
+        return '';
+    };
+    const getStatusColor = (status)=>{
+        switch(status.toLowerCase()){
+            case 'completed':
+            case 'accept':
+            case 'approve':
+            case 'success':
+                return 'text-green-500';
+            case 'failed':
+            case 'error':
+            case 'fail':
+                return 'text-red-500';
+            default:
+                return 'text-gray-500';
+        }
     };
     if (loading) {
         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -243,286 +354,692 @@ function TransactionDetailPage() {
                 className: "animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"
             }, void 0, false, {
                 fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                lineNumber: 116,
+                lineNumber: 198,
                 columnNumber: 17
             }, this)
         }, void 0, false, {
             fileName: "[project]/src/app/transaction/[id]/page.tsx",
-            lineNumber: 115,
+            lineNumber: 197,
             columnNumber: 13
         }, this);
     }
     if (error || !transaction) {
         return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-            className: `min-h-screen ${theme.colors.a_background} p-6 flex flex-col items-center justify-center`,
-            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "bg-red-50 dark:bg-red-900/10 p-6 rounded-2xl border border-red-100 dark:border-red-900/20 text-center max-w-sm",
+            className: `min-h-screen ${theme.colors.a_background} flex flex-col`,
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "flex items-center px-4 py-6",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                            onClick: ()=>router.back(),
+                            className: "p-2",
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$arrow$2d$left$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ArrowLeft$3e$__["ArrowLeft"], {
+                                className: theme.colors.text,
+                                size: 24
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                lineNumber: 208,
+                                columnNumber: 25
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                            lineNumber: 207,
+                            columnNumber: 21
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                            className: `flex-1 text-center text-xl font-bold ${theme.colors.text} mr-10`,
+                            children: "Détails de la transaction"
+                        }, void 0, false, {
+                            fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                            lineNumber: 210,
+                            columnNumber: 21
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                    lineNumber: 206,
+                    columnNumber: 17
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "mx-auto w-full px-6 flex flex-col items-center justify-center pt-20",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "w-24 h-24 rounded-full flex items-center justify-center mb-6 text-orange-400",
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
+                                size: 95,
+                                className: "stroke-[1.2]"
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                lineNumber: 217,
+                                columnNumber: 25
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                            lineNumber: 216,
+                            columnNumber: 21
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
+                            className: `text-xl font-bold ${theme.colors.text} mb-4 text-center`,
+                            children: error || 'Transaction introuvable'
+                        }, void 0, false, {
+                            fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                            lineNumber: 220,
+                            columnNumber: 21
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                            className: "text-gray-500 text-center mb-10 px-4",
+                            children: [
+                                "Nous n'avons pas pu charger les informations. L'ID de la transaction est ",
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
+                                    children: params.id
+                                }, void 0, false, {
+                                    fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                    lineNumber: 225,
+                                    columnNumber: 98
+                                }, this),
+                                "."
+                            ]
+                        }, void 0, true, {
+                            fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                            lineNumber: 224,
+                            columnNumber: 21
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                            onClick: ()=>fetchTransactionDetails(),
+                            className: "w-full py-4 bg-blue-600 text-white rounded-2xl font-bold text-lg shadow-lg mb-4",
+                            children: "Réessayer"
+                        }, void 0, false, {
+                            fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                            lineNumber: 228,
+                            columnNumber: 21
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                            onClick: ()=>router.back(),
+                            className: "w-full py-4 border-2 border-gray-200 dark:border-gray-800 text-gray-500 rounded-2xl font-bold text-lg",
+                            children: "Retour"
+                        }, void 0, false, {
+                            fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                            lineNumber: 235,
+                            columnNumber: 21
+                        }, this)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                    lineNumber: 215,
+                    columnNumber: 17
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/src/app/transaction/[id]/page.tsx",
+            lineNumber: 205,
+            columnNumber: 13
+        }, this);
+    }
+    const formatDate = (dateString)=>{
+        try {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-GB', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric'
+            }) + ' : ' + date.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            });
+        } catch (e) {
+            return dateString;
+        }
+    };
+    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+        className: "jsx-a285e8668f1fe836" + " " + `min-h-screen ${theme.colors.a_background} flex flex-col`,
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "jsx-a285e8668f1fe836" + " " + "flex items-center px-4 py-6",
                 children: [
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$x$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__XCircle$3e$__["XCircle"], {
-                        size: 48,
-                        className: "text-red-500 mx-auto mb-4"
-                    }, void 0, false, {
-                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                        lineNumber: 125,
-                        columnNumber: 21
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-                        className: `text-xl font-bold ${theme.colors.text} mb-2`,
-                        children: "Oups!"
-                    }, void 0, false, {
-                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                        lineNumber: 126,
-                        columnNumber: 21
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                        className: "text-gray-500 dark:text-gray-400 mb-6",
-                        children: error || 'Something went wrong'
-                    }, void 0, false, {
-                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                        lineNumber: 127,
-                        columnNumber: 21
-                    }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                         onClick: ()=>router.back(),
-                        className: "w-full py-3 bg-blue-600 text-white rounded-xl font-medium",
-                        children: "Retourner"
+                        className: "jsx-a285e8668f1fe836" + " " + "p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$arrow$2d$left$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ArrowLeft$3e$__["ArrowLeft"], {
+                            className: theme.colors.text,
+                            size: 24
+                        }, void 0, false, {
+                            fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                            lineNumber: 271,
+                            columnNumber: 21
+                        }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                        lineNumber: 128,
-                        columnNumber: 21
+                        lineNumber: 267,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                        className: "jsx-a285e8668f1fe836" + " " + `flex-1 text-center text-xl font-bold ${theme.colors.text} mr-10`,
+                        children: "Détails de la transaction"
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                        lineNumber: 273,
+                        columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                lineNumber: 124,
-                columnNumber: 17
-            }, this)
-        }, void 0, false, {
-            fileName: "[project]/src/app/transaction/[id]/page.tsx",
-            lineNumber: 123,
-            columnNumber: 13
-        }, this);
-    }
-    return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-        className: "jsx-4d911afcc83ebd58" + " " + `min-h-screen ${theme.colors.a_background} relative`,
-        children: [
-            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                onClick: ()=>router.back(),
-                className: "jsx-4d911afcc83ebd58" + " " + "absolute top-6 left-6 p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors",
-                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$arrow$2d$left$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ArrowLeft$3e$__["ArrowLeft"], {
-                    className: theme.colors.text,
-                    size: 28
-                }, void 0, false, {
-                    fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                    lineNumber: 146,
-                    columnNumber: 17
-                }, this)
-            }, void 0, false, {
-                fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                lineNumber: 142,
+                lineNumber: 266,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "jsx-4d911afcc83ebd58" + " " + "max-w-md mx-auto pt-20 pb-10 px-6 flex flex-col items-center",
+                className: "jsx-a285e8668f1fe836" + " " + "mx-auto w-full px-4 pb-10 flex flex-col items-center",
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "jsx-4d911afcc83ebd58" + " " + "mb-8",
+                        className: "jsx-a285e8668f1fe836" + " " + "mt-8",
                         children: getStatusIcon(transaction.status)
                     }, void 0, false, {
                         fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                        lineNumber: 151,
-                        columnNumber: 17
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                        className: "jsx-4d911afcc83ebd58" + " " + `text-lg font-medium text-gray-500 dark:text-gray-400 mb-1`,
-                        children: getStatusText(transaction.status)
-                    }, void 0, false, {
-                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                        lineNumber: 156,
+                        lineNumber: 280,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-                        className: "jsx-4d911afcc83ebd58" + " " + `text-3xl font-bold ${theme.colors.text} mb-3`,
+                        className: "jsx-a285e8668f1fe836" + " " + `text-2xl font-bold ${getStatusColor(transaction.status)} mb-1`,
+                        children: getStatusText(transaction.status)
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                        lineNumber: 285,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                        className: "jsx-a285e8668f1fe836" + " " + "text-gray-400 text-sm mb-6",
+                        children: getStatusSubtext(transaction.status)
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                        lineNumber: 288,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "jsx-a285e8668f1fe836" + " " + `text-3xl font-black ${theme.colors.text} mb-8`,
                         children: [
                             "XOF ",
                             transaction.amount
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                        lineNumber: 159,
-                        columnNumber: 17
-                    }, this),
-                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                        className: "jsx-4d911afcc83ebd58" + " " + `text-center text-lg ${theme.colors.text} font-medium px-4 mb-10`,
-                        children: [
-                            "Votre ",
-                            transaction.type_trans === 'withdrawal' ? 'retrait' : 'dépôt',
-                            " sur ",
-                            transaction.app?.public_name || 'Blaffa',
-                            " est ",
-                            transaction.status
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                        lineNumber: 164,
+                        lineNumber: 291,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "jsx-4d911afcc83ebd58" + " " + "w-full space-y-6 mb-12",
+                        className: "jsx-a285e8668f1fe836" + " " + "w-full bg-[#EBF5FF] rounded-2xl p-4 mb-6 border border-[#D1E9FF]",
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "jsx-4d911afcc83ebd58" + " " + "flex justify-between items-center",
+                                className: "jsx-a285e8668f1fe836" + " " + "flex items-center gap-2 mb-1",
                                 children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        className: "jsx-4d911afcc83ebd58" + " " + "text-lg text-gray-500 dark:text-gray-400",
-                                        children: "Méthode de paiement"
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                                        lineNumber: 171,
-                                        columnNumber: 25
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        className: "jsx-4d911afcc83ebd58" + " " + `text-lg font-medium ${theme.colors.text}`,
-                                        children: transaction.network?.public_name || transaction.payment_method || 'N/A'
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                                        lineNumber: 172,
-                                        columnNumber: 25
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                                lineNumber: 170,
-                                columnNumber: 21
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "jsx-4d911afcc83ebd58" + " " + "flex justify-between items-center",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        className: "jsx-4d911afcc83ebd58" + " " + "text-lg text-gray-500 dark:text-gray-400",
-                                        children: "Référence"
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                                        lineNumber: 178,
-                                        columnNumber: 25
-                                    }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "jsx-4d911afcc83ebd58" + " " + "flex items-center gap-2",
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                className: "jsx-4d911afcc83ebd58" + " " + `text-lg font-medium ${theme.colors.text} font-mono`,
-                                                children: transaction.reference
-                                            }, void 0, false, {
-                                                fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                                                lineNumber: 180,
-                                                columnNumber: 29
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                                onClick: ()=>copyToClipboard(transaction.reference),
-                                                className: "jsx-4d911afcc83ebd58" + " " + "p-1 rounded-md hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-400 hover:text-blue-500 transition-colors",
-                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$copy$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Copy$3e$__["Copy"], {
-                                                    size: 20
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                                                    lineNumber: 187,
-                                                    columnNumber: 33
-                                                }, this)
-                                            }, void 0, false, {
-                                                fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                                                lineNumber: 183,
-                                                columnNumber: 29
-                                            }, this)
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                                        lineNumber: 179,
-                                        columnNumber: 25
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                                lineNumber: 177,
-                                columnNumber: 21
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "jsx-4d911afcc83ebd58" + " " + "flex justify-between items-center",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        className: "jsx-4d911afcc83ebd58" + " " + "text-lg text-gray-500 dark:text-gray-400",
-                                        children: "Numéro de téléphone"
+                                        className: "jsx-a285e8668f1fe836" + " " + "bg-blue-500 rounded-full p-0.5 text-white",
+                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$clock$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Clock$3e$__["Clock"], {
+                                            size: 14,
+                                            className: "transform rotate-0"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                            lineNumber: 299,
+                                            columnNumber: 29
+                                        }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                                        lineNumber: 193,
+                                        lineNumber: 298,
                                         columnNumber: 25
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        className: "jsx-4d911afcc83ebd58" + " " + `text-lg font-medium ${theme.colors.text} font-mono`,
-                                        children: transaction.phone_number
+                                        className: "jsx-a285e8668f1fe836" + " " + "font-bold text-[#1E3A8A]",
+                                        children: "Message"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                                        lineNumber: 194,
+                                        lineNumber: 301,
                                         columnNumber: 25
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                                lineNumber: 192,
+                                lineNumber: 297,
                                 columnNumber: 21
                             }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "jsx-4d911afcc83ebd58" + " " + "flex justify-between items-center",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        className: "jsx-4d911afcc83ebd58" + " " + "text-lg text-gray-500 dark:text-gray-400",
-                                        children: "Émetteur de la facture"
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                                        lineNumber: 200,
-                                        columnNumber: 25
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        className: "jsx-4d911afcc83ebd58" + " " + `text-lg font-medium ${theme.colors.text}`,
-                                        children: transaction.user ? `${transaction.user.first_name} ${transaction.user.last_name}` : transaction.issuer || 'Utilisateur Blaffa'
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                                        lineNumber: 201,
-                                        columnNumber: 25
-                                    }, this)
-                                ]
-                            }, void 0, true, {
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                className: "jsx-a285e8668f1fe836" + " " + "text-[#1E3A8A] text-sm",
+                                children: transaction.error_message || ([
+                                    'pending',
+                                    'payment_init_success',
+                                    'en attente'
+                                ].includes(transaction.status?.toLowerCase()) ? 'Transaction en cours' : 'Aucune demande de paiement n’a été trouvée pour ce client.')
+                            }, void 0, false, {
                                 fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                                lineNumber: 199,
+                                lineNumber: 303,
                                 columnNumber: 21
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                        lineNumber: 169,
+                        lineNumber: 296,
+                        columnNumber: 17
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "jsx-a285e8668f1fe836" + " " + `w-full ${theme.colors.a_background} rounded-3xl p-6 border ${theme.mode === 'dark' ? 'border-gray-800' : 'border-gray-100'} shadow-sm mb-8`,
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                className: "jsx-a285e8668f1fe836" + " " + `text-lg font-bold ${theme.colors.text} mb-6`,
+                                children: "Informations de la transaction"
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                lineNumber: 310,
+                                columnNumber: 21
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "jsx-a285e8668f1fe836" + " " + "space-y-6",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "jsx-a285e8668f1fe836" + " " + "flex items-start gap-4",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "jsx-a285e8668f1fe836" + " " + "w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center shrink-0",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$credit$2d$card$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__CreditCard$3e$__["CreditCard"], {
+                                                    className: "text-white",
+                                                    size: 20
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                    lineNumber: 318,
+                                                    columnNumber: 33
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                lineNumber: 317,
+                                                columnNumber: 29
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "jsx-a285e8668f1fe836" + " " + "flex flex-col",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "jsx-a285e8668f1fe836" + " " + "text-gray-400 text-xs",
+                                                        children: "Application"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                        lineNumber: 321,
+                                                        columnNumber: 33
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "jsx-a285e8668f1fe836" + " " + `font-semibold ${theme.colors.text}`,
+                                                        children: transaction.app?.public_name || '1xBet'
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                        lineNumber: 322,
+                                                        columnNumber: 33
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                lineNumber: 320,
+                                                columnNumber: 29
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                        lineNumber: 316,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "jsx-a285e8668f1fe836" + " " + "flex items-start gap-4",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "jsx-a285e8668f1fe836" + " " + "w-10 h-10 bg-black rounded-lg flex items-center justify-center shrink-0",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$smartphone$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Smartphone$3e$__["Smartphone"], {
+                                                    className: "text-white",
+                                                    size: 20
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                    lineNumber: 329,
+                                                    columnNumber: 33
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                lineNumber: 328,
+                                                columnNumber: 29
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "jsx-a285e8668f1fe836" + " " + "flex flex-col text-sm",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "jsx-a285e8668f1fe836" + " " + "text-gray-400 text-xs",
+                                                        children: "Réseau"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                        lineNumber: 332,
+                                                        columnNumber: 33
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "jsx-a285e8668f1fe836" + " " + `font-semibold ${theme.colors.text}`,
+                                                        children: transaction.network?.public_name || transaction.payment_method || 'ORANGE BURKINA'
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                        lineNumber: 333,
+                                                        columnNumber: 33
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                lineNumber: 331,
+                                                columnNumber: 29
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                        lineNumber: 327,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "jsx-a285e8668f1fe836" + " " + "flex items-start gap-4",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "jsx-a285e8668f1fe836" + " " + "w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center shrink-0",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$phone$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Phone$3e$__["Phone"], {
+                                                    className: "text-gray-500",
+                                                    size: 20
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                    lineNumber: 342,
+                                                    columnNumber: 33
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                lineNumber: 341,
+                                                columnNumber: 29
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "jsx-a285e8668f1fe836" + " " + "flex flex-col",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "jsx-a285e8668f1fe836" + " " + "text-gray-400 text-xs",
+                                                        children: "Numéro"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                        lineNumber: 345,
+                                                        columnNumber: 33
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "jsx-a285e8668f1fe836" + " " + `font-semibold ${theme.colors.text}`,
+                                                        children: transaction.phone_number
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                        lineNumber: 346,
+                                                        columnNumber: 33
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                lineNumber: 344,
+                                                columnNumber: 29
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                        lineNumber: 340,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "jsx-a285e8668f1fe836" + " " + "flex items-start gap-4",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "jsx-a285e8668f1fe836" + " " + "w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center shrink-0 text-gray-400",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    className: "jsx-a285e8668f1fe836" + " " + "font-bold text-xl",
+                                                    children: "$"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                    lineNumber: 353,
+                                                    columnNumber: 33
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                lineNumber: 352,
+                                                columnNumber: 29
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "jsx-a285e8668f1fe836" + " " + "flex flex-col",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "jsx-a285e8668f1fe836" + " " + "text-gray-400 text-xs",
+                                                        children: "Montant"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                        lineNumber: 356,
+                                                        columnNumber: 33
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "jsx-a285e8668f1fe836" + " " + `font-semibold ${theme.colors.text}`,
+                                                        children: [
+                                                            "XOF ",
+                                                            transaction.amount
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                        lineNumber: 357,
+                                                        columnNumber: 33
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                lineNumber: 355,
+                                                columnNumber: 29
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                        lineNumber: 351,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "jsx-a285e8668f1fe836" + " " + "flex items-start gap-4",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "jsx-a285e8668f1fe836" + " " + "w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center shrink-0",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$hash$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Hash$3e$__["Hash"], {
+                                                    className: "text-gray-500",
+                                                    size: 20
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                    lineNumber: 364,
+                                                    columnNumber: 33
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                lineNumber: 363,
+                                                columnNumber: 29
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "jsx-a285e8668f1fe836" + " " + "flex flex-col flex-1 min-w-0",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "jsx-a285e8668f1fe836" + " " + "text-gray-400 text-xs",
+                                                        children: "Référence"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                        lineNumber: 367,
+                                                        columnNumber: 33
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: "jsx-a285e8668f1fe836" + " " + "flex items-center justify-between",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "jsx-a285e8668f1fe836" + " " + `font-semibold ${theme.colors.text} truncate`,
+                                                                children: transaction.reference
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                                lineNumber: 369,
+                                                                columnNumber: 37
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                                onClick: ()=>copyToClipboard(transaction.reference),
+                                                                className: "jsx-a285e8668f1fe836" + " " + "text-blue-400 hover:text-blue-500",
+                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$copy$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Copy$3e$__["Copy"], {
+                                                                    size: 16
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                                    lineNumber: 374,
+                                                                    columnNumber: 41
+                                                                }, this)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                                lineNumber: 370,
+                                                                columnNumber: 37
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                        lineNumber: 368,
+                                                        columnNumber: 33
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                lineNumber: 366,
+                                                columnNumber: 29
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                        lineNumber: 362,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "jsx-a285e8668f1fe836" + " " + "flex items-start gap-4",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "jsx-a285e8668f1fe836" + " " + "w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center shrink-0",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$clock$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Clock$3e$__["Clock"], {
+                                                    className: "text-gray-500",
+                                                    size: 20
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                    lineNumber: 383,
+                                                    columnNumber: 33
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                lineNumber: 382,
+                                                columnNumber: 29
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "jsx-a285e8668f1fe836" + " " + "flex flex-col",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "jsx-a285e8668f1fe836" + " " + "text-gray-400 text-xs",
+                                                        children: "Date"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                        lineNumber: 386,
+                                                        columnNumber: 33
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "jsx-a285e8668f1fe836" + " " + `font-semibold ${theme.colors.text}`,
+                                                        children: formatDate(transaction.created_at)
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                        lineNumber: 387,
+                                                        columnNumber: 33
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                lineNumber: 385,
+                                                columnNumber: 29
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                        lineNumber: 381,
+                                        columnNumber: 25
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "jsx-a285e8668f1fe836" + " " + "flex items-start gap-4",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "jsx-a285e8668f1fe836" + " " + "w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center shrink-0",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$smartphone$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Smartphone$3e$__["Smartphone"], {
+                                                    className: "text-gray-500",
+                                                    size: 20
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                    lineNumber: 396,
+                                                    columnNumber: 33
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                lineNumber: 395,
+                                                columnNumber: 29
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "jsx-a285e8668f1fe836" + " " + "flex flex-col",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "jsx-a285e8668f1fe836" + " " + "text-gray-400 text-xs",
+                                                        children: [
+                                                            transaction.app?.public_name || '1xBet',
+                                                            " ID"
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                        lineNumber: 399,
+                                                        columnNumber: 33
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "jsx-a285e8668f1fe836" + " " + `font-semibold ${theme.colors.text}`,
+                                                        children: transaction.user_app_id || transaction.transaction_reference || 'N/A'
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                        lineNumber: 400,
+                                                        columnNumber: 33
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                                lineNumber: 398,
+                                                columnNumber: 29
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                        lineNumber: 394,
+                                        columnNumber: 25
+                                    }, this)
+                                ]
+                            }, void 0, true, {
+                                fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                                lineNumber: 314,
+                                columnNumber: 21
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/app/transaction/[id]/page.tsx",
+                        lineNumber: 309,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                         onClick: ()=>window.open('https://wa.me/22553445327', '_blank'),
-                        className: "jsx-4d911afcc83ebd58" + " " + "w-full py-4 bg-[#ffc1bb] hover:bg-[#ffb1aa] text-[#ff6b62] rounded-xl text-xl font-medium transition-colors shadow-sm",
+                        className: "jsx-a285e8668f1fe836" + " " + "w-full py-4 bg-[#ffdedb] hover:bg-[#ffcfcc] text-[#ff6b62] rounded-2xl text-xl font-bold transition-colors shadow-sm mt-4",
                         children: "Contacter le support"
                     }, void 0, false, {
                         fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                        lineNumber: 208,
+                        lineNumber: 407,
                         columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/transaction/[id]/page.tsx",
-                lineNumber: 149,
+                lineNumber: 278,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$styled$2d$jsx$2f$style$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
-                id: "4d911afcc83ebd58",
-                children: ".animate-spin-slow.jsx-4d911afcc83ebd58{animation:3s linear infinite spin}@keyframes spin{0%{transform:rotate(0)}to{transform:rotate(360deg)}}"
+                id: "a285e8668f1fe836",
+                children: ".animate-spin-slow.jsx-a285e8668f1fe836{animation:3s linear infinite spin}@keyframes spin{0%{transform:rotate(0)}to{transform:rotate(360deg)}}"
             }, void 0, false, void 0, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/transaction/[id]/page.tsx",
-        lineNumber: 140,
+        lineNumber: 264,
         columnNumber: 9
     }, this);
 }

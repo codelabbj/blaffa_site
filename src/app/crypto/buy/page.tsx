@@ -6,7 +6,7 @@ import CryptoSelectionGrid from '@/components/CryptoSelectionGrid';
 export default function BuyCryptoPage() {
     const { theme } = useTheme();
     return (
-        <div className={`min-h-screen ${theme.colors.a_background} p-4 pt-6`}>
+        <div className={`min-h-screen ${theme.colors.a_background} px-6 pt-6`}>
             <CryptoSelectionGrid mode="buy" title="Achat" />
         </div>
     );

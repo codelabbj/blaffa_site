@@ -277,7 +277,7 @@ export default function CryptoPage() {
       >
         <FaArrowLeft className="text-xl" />
       </button>
-      <div className="w-full max-w-screen-sm">
+      <div className="w-full px-6">
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2 mb-6 sm:mb-8">
           <h1 className="text-xl sm:text-2xl font-bold text-center sm:text-left w-full sm:w-auto">{t("Cryptocurrencies")}</h1>
           <div className="flex justify-center sm:justify-end w-full sm:w-auto relative">{renderStatusButton()}</div>
@@ -313,7 +313,7 @@ export default function CryptoPage() {
             <div className="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-4 border-blue-500/30 border-t-blue-500"></div>
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
             {cryptos.map((crypto) => (
               <div
                 key={crypto.id}

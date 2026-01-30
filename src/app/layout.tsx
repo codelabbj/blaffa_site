@@ -74,7 +74,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="min-h-screen flex flex-col">
-      <main className={`flex-grow ${showBottomNav ? 'pb-20' : ''}`}>
+      <main className={`flex-grow ${showBottomNav ? 'pb-16' : ''}`}>
         {children}
       </main>
       {showBottomNav && <BottomNavbar />}
