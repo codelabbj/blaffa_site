@@ -202,7 +202,10 @@ if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelper
 "[project]/src/context/WebSocketContext.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
 "use strict";
 
+<<<<<<< HEAD
 // src/contexts/WebSocketContext.tsx
+=======
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
 __turbopack_context__.s([
     "WebSocketProvider",
     ()=>WebSocketProvider,
@@ -213,6 +216,10 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature(), _s1 = __turbopack_context__.k.signature();
+<<<<<<< HEAD
+=======
+// src/contexts/WebSocketContext.tsx
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
 'use client';
 ;
 const WebSocketContext = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["createContext"])(undefined);
@@ -976,6 +983,7 @@ const resources = {
     }
 };
 const initializeI18n = ()=>{
+<<<<<<< HEAD
     // Skip i18n initialization during SSR to prevent hydration issues
     if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
     ;
@@ -984,6 +992,12 @@ const initializeI18n = ()=>{
     const config = {
         resources,
         lng: savedLanguage,
+=======
+    // Configuration for i18next
+    const config = {
+        resources,
+        lng: 'fr',
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
         fallbackLng: 'fr',
         supportedLngs: [
             'fr',
@@ -1004,6 +1018,30 @@ const initializeI18n = ()=>{
         }
     };
     __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$i18next$2f$dist$2f$esm$2f$i18next$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].use(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$i18next$2d$browser$2d$languagedetector$2f$dist$2f$esm$2f$i18nextBrowserLanguageDetector$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"]).use(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$i18next$2f$dist$2f$es$2f$initReactI18next$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["initReactI18next"]).init(config);
+<<<<<<< HEAD
+=======
+    // .init({
+    //   resources,
+    //   fallbackLng: 'fr',
+    //   supportedLngs: ['en', 'fr'],
+    //   interpolation: {
+    //     escapeValue: false,
+    //   },
+    //   detection: {
+    //     order: ['localStorage', 'navigator'],
+    //     lookupLocalStorage: 'i18nextLng',
+    //     caches: ['localStorage'],
+    //   },
+    // });
+    // Set default language if not set
+    if ("TURBOPACK compile-time truthy", 1) {
+        const savedLanguage = localStorage.getItem('i18nextLng');
+        if (!savedLanguage) {
+            __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$i18next$2f$dist$2f$esm$2f$i18next$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].changeLanguage('fr');
+            localStorage.setItem('i18nextLng', 'fr');
+        }
+    }
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
     return __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$i18next$2f$dist$2f$esm$2f$i18next$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"];
 };
 const __TURBOPACK__default__export__ = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$i18next$2f$dist$2f$esm$2f$i18next$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"];
@@ -1014,6 +1052,23 @@ if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelper
 "[project]/src/app/layout.tsx [app-client] (ecmascript)", ((__turbopack_context__) => {
 "use strict";
 
+<<<<<<< HEAD
+=======
+__turbopack_context__.s([
+    "default",
+    ()=>RootLayout
+]);
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ThemeProvider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/ThemeProvider.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$WebSocketContext$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/context/WebSocketContext.tsx [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$navigation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/navigation.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$i18next$2f$dist$2f$es$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/react-i18next/dist/es/index.js [app-client] (ecmascript) <locals>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$i18next$2f$dist$2f$es$2f$I18nextProvider$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/react-i18next/dist/es/I18nextProvider.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$i18n$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/i18n.ts [app-client] (ecmascript)");
+;
+var _s = __turbopack_context__.k.signature();
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
 // 'use client';
 // import React from 'react';
 // import { ThemeProvider } from '../components/ThemeProvider';
@@ -1044,6 +1099,7 @@ if (typeof globalThis.$RefreshHelpers$ === 'object' && globalThis.$RefreshHelper
 //     </html>
 //   );
 // }
+<<<<<<< HEAD
 __turbopack_context__.s([
     "default",
     ()=>RootLayout
@@ -1058,6 +1114,8 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$i18
 var __TURBOPACK__imported__module__$5b$project$5d2f$i18n$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/i18n.ts [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
+=======
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
 'use client';
 ;
 ;
@@ -1111,7 +1169,10 @@ function RootLayout({ children }) {
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("html", {
         lang: i18n.language,
         className: "overflow-x-hidden",
+<<<<<<< HEAD
         suppressHydrationWarning: true,
+=======
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("head", {
                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("meta", {

@@ -579,13 +579,21 @@ function TransactionHistory() {
         }, void 0, false, {
             fileName: "[project]/src/components/TransactionHistory.tsx",
             lineNumber: 593,
+<<<<<<< HEAD
             columnNumber: 7
+=======
+            columnNumber: 9
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$arrow$2d$up$2d$right$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ArrowUpRight$3e$__["ArrowUpRight"], {
             className: "w-5 h-5"
         }, void 0, false, {
             fileName: "[project]/src/components/TransactionHistory.tsx",
             lineNumber: 595,
+<<<<<<< HEAD
             columnNumber: 7
+=======
+            columnNumber: 9
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
         }, this);
     };
     const getStatusIcon = (status)=>{
@@ -596,7 +604,11 @@ function TransactionHistory() {
                 }, void 0, false, {
                     fileName: "[project]/src/components/TransactionHistory.tsx",
                     lineNumber: 602,
+<<<<<<< HEAD
                     columnNumber: 16
+=======
+                    columnNumber: 18
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                 }, this);
             case 'accept':
                 return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$check$2d$big$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__CheckCircle$3e$__["CheckCircle"], {
@@ -604,7 +616,11 @@ function TransactionHistory() {
                 }, void 0, false, {
                     fileName: "[project]/src/components/TransactionHistory.tsx",
                     lineNumber: 604,
+<<<<<<< HEAD
                     columnNumber: 16
+=======
+                    columnNumber: 18
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                 }, this);
             case 'payment_init_success':
                 return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$clock$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Clock$3e$__["Clock"], {
@@ -612,7 +628,11 @@ function TransactionHistory() {
                 }, void 0, false, {
                     fileName: "[project]/src/components/TransactionHistory.tsx",
                     lineNumber: 606,
+<<<<<<< HEAD
                     columnNumber: 16
+=======
+                    columnNumber: 18
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                 }, this);
             case 'pending':
                 return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$clock$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Clock$3e$__["Clock"], {
@@ -620,7 +640,11 @@ function TransactionHistory() {
                 }, void 0, false, {
                     fileName: "[project]/src/components/TransactionHistory.tsx",
                     lineNumber: 608,
+<<<<<<< HEAD
                     columnNumber: 16
+=======
+                    columnNumber: 18
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                 }, this);
             case 'failed':
             case 'error':
@@ -629,7 +653,11 @@ function TransactionHistory() {
                 }, void 0, false, {
                     fileName: "[project]/src/components/TransactionHistory.tsx",
                     lineNumber: 611,
+<<<<<<< HEAD
                     columnNumber: 16
+=======
+                    columnNumber: 18
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                 }, this);
             default:
                 return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
@@ -637,7 +665,11 @@ function TransactionHistory() {
                 }, void 0, false, {
                     fileName: "[project]/src/components/TransactionHistory.tsx",
                     lineNumber: 613,
+<<<<<<< HEAD
                     columnNumber: 16
+=======
+                    columnNumber: 18
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                 }, this);
         }
     };
@@ -669,7 +701,11 @@ function TransactionHistory() {
         }
     };
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+<<<<<<< HEAD
         className: "rounded-2xl shadow-sm",
+=======
+        className: `rounded-2xl shadow-sm border border-gray-200 bg-gradient-to-br ${theme.colors.a_background} ${theme.colors.text}`,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "absolute top-20 -left-10 w-40 h-40 bg-orange-700/20 rounded-full blur-3xl animate-pulse-slow"
@@ -686,15 +722,26 @@ function TransactionHistory() {
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+<<<<<<< HEAD
                 className: "bg-white dark:bg-gray-800 shadow-md rounded-2xl p-6 w-full overflow-hidden",
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "p-6 border-b border-gray-200 dark:border-gray-700",
+=======
+                className: `${theme.colors.c_background} shadow-md rounded-2xl p-6 w-full overflow-hidden`,
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "p-6 border-b border-gray-200",
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "flex items-center justify-between",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+<<<<<<< HEAD
                                     className: "text-xl font-semibold dark:text-white text-gray-900",
+=======
+                                    className: "text-xl font-semibold",
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                     children: "Historique"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/TransactionHistory.tsx",
@@ -831,7 +878,11 @@ function TransactionHistory() {
                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: "grid gap-4",
                                     children: transactions.map((item, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+<<<<<<< HEAD
                                             className: "group relative w-full overflow-hidden rounded-2xl bg-white dark:bg-gradient-to-r dark:from-gray-800 dark:to-gray-700 backdrop-blur-sm border border-gray-200 dark:border-slate-600/50 hover:border-blue-500/50 transition-all duration-500 cursor-pointer hover:shadow-lg",
+=======
+                                            className: `group relative w-full overflow-hidden rounded-2xl bg-gradient-to-r ${theme.colors.s_background} backdrop-blur-sm border border-slate-600/50 hover:border-blue-500/50 transition-all duration-500 cursor-pointer hover:shadow-2xl hover:shadow-blue-500/10`,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                             onClick: ()=>openTransactionDetails(item),
                                             style: {
                                                 animation: `slideInUp 0.6s ease-out ${index * 100}ms both`
@@ -861,7 +912,11 @@ function TransactionHistory() {
                                                                                     className: `absolute inset-0 rounded-2xl ${item.transaction.type_trans === 'deposit' ? 'bg-gradient-to-br from-green-500/10 to-emerald-600/10' : 'bg-gradient-to-br from-blue-500/10 to-indigo-600/10'} opacity-0 group-hover:opacity-100 transition-opacity duration-500`
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                                     lineNumber: 735,
+=======
+                                                                                    lineNumber: 736,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                                     columnNumber: 29
                                                                                 }, this)
                                                                             ]
@@ -881,7 +936,11 @@ function TransactionHistory() {
                                                                                             children: item.transaction.type_trans === 'deposit' ? t('Deposit') : item.transaction.type_trans === 'withdrawal' ? t('Withdraw') : item.transaction.type_trans === 'buy' ? t('Buy') : item.transaction.type_trans === 'sale' ? t('Sale') : item.transaction.type_trans
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                                             lineNumber: 744,
+=======
+                                                                                            lineNumber: 746,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                                             columnNumber: 31
                                                                                         }, this),
                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -893,19 +952,31 @@ function TransactionHistory() {
                                                                                                     children: item.transaction.status === 'payment_init_success' ? 'payment_init_success' : formatStatusText(item.transaction.status)
                                                                                                 }, void 0, false, {
                                                                                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                                                     lineNumber: 749,
+=======
+                                                                                                    lineNumber: 751,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                                                     columnNumber: 33
                                                                                                 }, this)
                                                                                             ]
                                                                                         }, void 0, true, {
                                                                                             fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                                             lineNumber: 747,
+=======
+                                                                                            lineNumber: 749,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                                             columnNumber: 31
                                                                                         }, this)
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                                     lineNumber: 743,
+=======
+                                                                                    lineNumber: 745,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                                     columnNumber: 29
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -916,33 +987,53 @@ function TransactionHistory() {
                                                                                             children: item.transaction.phone_number
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                                             lineNumber: 754,
+=======
+                                                                                            lineNumber: 756,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                                             columnNumber: 31
                                                                                         }, this),
                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                                             children: "•"
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                                             lineNumber: 755,
+=======
+                                                                                            lineNumber: 757,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                                             columnNumber: 31
                                                                                         }, this),
                                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                                                             children: formatDate(item.transaction.created_at)
                                                                                         }, void 0, false, {
                                                                                             fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                                             lineNumber: 756,
+=======
+                                                                                            lineNumber: 758,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                                             columnNumber: 31
                                                                                         }, this)
                                                                                     ]
                                                                                 }, void 0, true, {
                                                                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                                     lineNumber: 753,
+=======
+                                                                                    lineNumber: 755,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                                     columnNumber: 29
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                             lineNumber: 742,
+=======
+                                                                            lineNumber: 744,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     ]
@@ -962,7 +1053,11 @@ function TransactionHistory() {
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                             lineNumber: 763,
+=======
+                                                                            lineNumber: 765,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                             columnNumber: 27
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -974,13 +1069,21 @@ function TransactionHistory() {
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                             lineNumber: 770,
+=======
+                                                                            lineNumber: 773,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                             columnNumber: 27
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                     lineNumber: 762,
+=======
+                                                                    lineNumber: 764,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -989,12 +1092,20 @@ function TransactionHistory() {
                                                                         className: "w-5 h-5 text-slate-400"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                         lineNumber: 777,
+=======
+                                                                        lineNumber: 780,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                     lineNumber: 776,
+=======
+                                                                    lineNumber: 779,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
@@ -1004,6 +1115,7 @@ function TransactionHistory() {
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+<<<<<<< HEAD
                                                             className: "sm:hidden space-y-3",
                                                             children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                 className: "flex items-center gap-3",
@@ -1100,6 +1212,121 @@ function TransactionHistory() {
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/TransactionHistory.tsx",
                                                             lineNumber: 782,
+=======
+                                                            className: "sm:hidden space-y-4",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "flex items-center space-x-3",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                            className: `relative w-12 h-12 rounded-2xl flex items-center justify-center flex-shrink-0 transition-all duration-500 group-hover:scale-110 group-hover:rotate-6 ${item.transaction.type_trans === 'deposit' ? 'bg-gradient-to-br from-green-500/20 to-emerald-600/20 text-green-400 shadow-lg shadow-green-500/20' : 'bg-gradient-to-br from-blue-500/20 to-indigo-600/20 text-blue-400 shadow-lg shadow-blue-500/20'}`,
+                                                                            children: getTransactionTypeIcon(item.transaction.type_trans)
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/src/components/TransactionHistory.tsx",
+                                                                            lineNumber: 788,
+                                                                            columnNumber: 27
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                            className: "flex-1 min-w-0",
+                                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
+                                                                                className: "font-semibold text-lg",
+                                                                                children: item.transaction.type_trans === 'deposit' ? t('Deposit') : item.transaction.type_trans === 'withdrawal' ? t('Withdraw') : item.transaction.type_trans === 'buy' ? t('Buy') : item.transaction.type_trans === 'sale' ? t('Sale') : item.transaction.type_trans
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/src/components/TransactionHistory.tsx",
+                                                                                lineNumber: 797,
+                                                                                columnNumber: 29
+                                                                            }, this)
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/src/components/TransactionHistory.tsx",
+                                                                            lineNumber: 796,
+                                                                            columnNumber: 27
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                            className: `flex items-center space-x-1 px-3 py-1 rounded-full text-xs font-medium ${getStatusBadgeClass(item.transaction.status)}`,
+                                                                            children: [
+                                                                                getStatusIcon(item.transaction.status),
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                                    className: "ml-1 capitalize",
+                                                                                    children: item.transaction.status === 'payment_init_success' ? 'payment_init_success' : formatStatusText(item.transaction.status)
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/src/components/TransactionHistory.tsx",
+                                                                                    lineNumber: 804,
+                                                                                    columnNumber: 29
+                                                                                }, this)
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/src/components/TransactionHistory.tsx",
+                                                                            lineNumber: 802,
+                                                                            columnNumber: 27
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/src/components/TransactionHistory.tsx",
+                                                                    lineNumber: 787,
+                                                                    columnNumber: 25
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "flex items-center justify-between",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                            className: "space-y-1",
+                                                                            children: [
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                    className: "text-sm text-slate-400 font-mono",
+                                                                                    children: item.transaction.phone_number
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/src/components/TransactionHistory.tsx",
+                                                                                    lineNumber: 811,
+                                                                                    columnNumber: 29
+                                                                                }, this),
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                    className: "text-sm text-slate-400",
+                                                                                    children: formatDate(item.transaction.created_at)
+                                                                                }, void 0, false, {
+                                                                                    fileName: "[project]/src/components/TransactionHistory.tsx",
+                                                                                    lineNumber: 812,
+                                                                                    columnNumber: 29
+                                                                                }, this),
+                                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                                    className: "text-xs text-slate-500 font-mono",
+                                                                                    children: [
+                                                                                        "#",
+                                                                                        item.transaction.reference.substring(0, 12),
+                                                                                        "..."
+                                                                                    ]
+                                                                                }, void 0, true, {
+                                                                                    fileName: "[project]/src/components/TransactionHistory.tsx",
+                                                                                    lineNumber: 813,
+                                                                                    columnNumber: 29
+                                                                                }, this)
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/src/components/TransactionHistory.tsx",
+                                                                            lineNumber: 810,
+                                                                            columnNumber: 27
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                            className: `font-bold text-xl ${item.transaction.type_trans === 'deposit' ? 'text-green-400' : 'text-blue-400'}`,
+                                                                            children: [
+                                                                                item.transaction.type_trans === 'deposit' ? '+' : '-',
+                                                                                formatAmount(item.transaction.amount)
+                                                                            ]
+                                                                        }, void 0, true, {
+                                                                            fileName: "[project]/src/components/TransactionHistory.tsx",
+                                                                            lineNumber: 818,
+                                                                            columnNumber: 27
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/src/components/TransactionHistory.tsx",
+                                                                    lineNumber: 809,
+                                                                    columnNumber: 25
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/src/components/TransactionHistory.tsx",
+                                                            lineNumber: 785,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
@@ -1114,12 +1341,20 @@ function TransactionHistory() {
                                                         className: "absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 via-blue-500/20 to-blue-500/20 blur-sm"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                         lineNumber: 816,
+=======
+                                                        lineNumber: 832,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                         columnNumber: 23
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                     lineNumber: 815,
+=======
+                                                    lineNumber: 831,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                     columnNumber: 21
                                                 }, this)
                                             ]
@@ -1147,25 +1382,41 @@ function TransactionHistory() {
                                             className: "animate-spin rounded-full h-8 w-8 border-3 border-blue-500/30 border-t-blue-500"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                             lineNumber: 828,
+=======
+                                            lineNumber: 844,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: "absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/10 to-blue-500/10 animate-pulse"
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                             lineNumber: 829,
+=======
+                                            lineNumber: 845,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                     lineNumber: 827,
+=======
+                                    lineNumber: 843,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                     columnNumber: 15
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                 lineNumber: 826,
+=======
+                                lineNumber: 842,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                 columnNumber: 13
                             }, this)
                         ]
@@ -1192,7 +1443,11 @@ function TransactionHistory() {
                                                             children: "Transaction Details"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                             lineNumber: 843,
+=======
+                                                            lineNumber: 859,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1200,13 +1455,21 @@ function TransactionHistory() {
                                                             children: "Review your transaction information"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                             lineNumber: 844,
+=======
+                                                            lineNumber: 860,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                     lineNumber: 842,
+=======
+                                                    lineNumber: 858,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1217,18 +1480,30 @@ function TransactionHistory() {
                                                         className: "group-hover:rotate-90 transition-transform duration-300"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                         lineNumber: 850,
+=======
+                                                        lineNumber: 866,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                     lineNumber: 846,
+=======
+                                                    lineNumber: 862,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                             lineNumber: 841,
+=======
+                                            lineNumber: 857,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1241,7 +1516,11 @@ function TransactionHistory() {
                                                         children: getTransactionTypeIcon(selectedTransaction.transaction.type_trans)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                         lineNumber: 857,
+=======
+                                                        lineNumber: 873,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                         columnNumber: 21
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1255,7 +1534,11 @@ function TransactionHistory() {
                                                                         children: selectedTransaction.transaction.type_trans === 'deposit' ? 'Deposit' : selectedTransaction.transaction.type_trans === 'withdrawal' ? 'Withdrawal' : selectedTransaction.transaction.type_trans === 'buy' ? 'Buy' : selectedTransaction.transaction.type_trans === 'sale' ? 'Sale' : selectedTransaction.transaction.type_trans
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                         lineNumber: 865,
+=======
+                                                                        lineNumber: 882,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1267,19 +1550,31 @@ function TransactionHistory() {
                                                                                 children: selectedTransaction.transaction.status === 'payment_init_success' ? 'payment_init_success' : formatStatusText(selectedTransaction.transaction.status)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                                 lineNumber: 870,
+=======
+                                                                                lineNumber: 887,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                                 columnNumber: 27
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                         lineNumber: 868,
+=======
+                                                                        lineNumber: 885,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                         columnNumber: 25
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                 lineNumber: 864,
+=======
+                                                                lineNumber: 881,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                 columnNumber: 23
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1289,37 +1584,61 @@ function TransactionHistory() {
                                                                         className: "w-4 h-4 mr-2"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                         lineNumber: 874,
+=======
+                                                                        lineNumber: 891,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                         columnNumber: 25
                                                                     }, this),
                                                                     formatDate(selectedTransaction.transaction.created_at)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                 lineNumber: 873,
+=======
+                                                                lineNumber: 890,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                 columnNumber: 23
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                         lineNumber: 863,
+=======
+                                                        lineNumber: 880,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                         columnNumber: 21
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                 lineNumber: 856,
+=======
+                                                lineNumber: 872,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                 columnNumber: 19
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                             lineNumber: 855,
+=======
+                                            lineNumber: 871,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                     lineNumber: 840,
+=======
+                                    lineNumber: 856,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1334,7 +1653,11 @@ function TransactionHistory() {
                                                     children: "Transaction Amount"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                     lineNumber: 886,
+=======
+                                                    lineNumber: 903,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1345,7 +1668,11 @@ function TransactionHistory() {
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                     lineNumber: 887,
+=======
+                                                    lineNumber: 904,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                     columnNumber: 21
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1353,23 +1680,39 @@ function TransactionHistory() {
                                                     children: selectedTransaction.transaction.type_trans === 'deposit' ? 'Received' : 'Sent'
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                     lineNumber: 894,
+=======
+                                                    lineNumber: 912,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                             lineNumber: 885,
+=======
+                                            lineNumber: 902,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                         lineNumber: 884,
+=======
+                                        lineNumber: 901,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                     lineNumber: 883,
+=======
+                                    lineNumber: 900,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1389,14 +1732,22 @@ function TransactionHistory() {
                                                                     className: "w-4 h-4 mr-2"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                     lineNumber: 908,
+=======
+                                                                    lineNumber: 926,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 "Transaction ID"
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                             lineNumber: 907,
+=======
+                                                            lineNumber: 925,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1410,7 +1761,11 @@ function TransactionHistory() {
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                     lineNumber: 912,
+=======
+                                                                    lineNumber: 930,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1421,29 +1776,49 @@ function TransactionHistory() {
                                                                         className: "group-hover:scale-110 transition-transform duration-300"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                         lineNumber: 917,
+=======
+                                                                        lineNumber: 935,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                     lineNumber: 913,
+=======
+                                                                    lineNumber: 931,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                             lineNumber: 911,
+=======
+                                                            lineNumber: 929,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                     lineNumber: 906,
+=======
+                                                    lineNumber: 924,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                 lineNumber: 905,
+=======
+                                                lineNumber: 923,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1458,14 +1833,22 @@ function TransactionHistory() {
                                                                     className: "w-4 h-4 mr-2"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                     lineNumber: 927,
+=======
+                                                                    lineNumber: 945,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 "Reference"
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                             lineNumber: 926,
+=======
+                                                            lineNumber: 944,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1476,7 +1859,11 @@ function TransactionHistory() {
                                                                     children: selectedTransaction.transaction.reference
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                     lineNumber: 931,
+=======
+                                                                    lineNumber: 949,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1487,29 +1874,49 @@ function TransactionHistory() {
                                                                         className: "group-hover:scale-110 transition-transform duration-300"
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                         lineNumber: 936,
+=======
+                                                                        lineNumber: 954,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                         columnNumber: 27
                                                                     }, this)
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                     lineNumber: 932,
+=======
+                                                                    lineNumber: 950,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                     columnNumber: 25
                                                                 }, this)
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                             lineNumber: 930,
+=======
+                                                            lineNumber: 948,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                     lineNumber: 925,
+=======
+                                                    lineNumber: 943,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                 lineNumber: 924,
+=======
+                                                lineNumber: 942,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1524,14 +1931,22 @@ function TransactionHistory() {
                                                                     className: "w-4 h-4 mr-2"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                     lineNumber: 946,
+=======
+                                                                    lineNumber: 964,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                     columnNumber: 25
                                                                 }, this),
                                                                 "Phone Number"
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                             lineNumber: 945,
+=======
+                                                            lineNumber: 963,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1539,18 +1954,30 @@ function TransactionHistory() {
                                                             children: selectedTransaction.transaction.phone_number
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                             lineNumber: 949,
+=======
+                                                            lineNumber: 967,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                             columnNumber: 23
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                     lineNumber: 944,
+=======
+                                                    lineNumber: 962,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                     columnNumber: 21
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                 lineNumber: 943,
+=======
+                                                lineNumber: 961,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                 columnNumber: 19
                                             }, this),
                                             selectedTransaction.transaction.network && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1565,14 +1992,22 @@ function TransactionHistory() {
                                                                     className: "w-4 h-4 mr-2"
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                                     lineNumber: 958,
+=======
+                                                                    lineNumber: 976,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                                     columnNumber: 27
                                                                 }, this),
                                                                 "Network"
                                                             ]
                                                         }, void 0, true, {
                                                             fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                             lineNumber: 957,
+=======
+                                                            lineNumber: 975,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                             columnNumber: 25
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1580,29 +2015,49 @@ function TransactionHistory() {
                                                             children: selectedTransaction.transaction.network.public_name || selectedTransaction.transaction.network.name
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                             lineNumber: 961,
+=======
+                                                            lineNumber: 979,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                             columnNumber: 25
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                     lineNumber: 956,
+=======
+                                                    lineNumber: 974,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                     columnNumber: 23
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                 lineNumber: 955,
+=======
+                                                lineNumber: 973,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                         lineNumber: 903,
+=======
+                                        lineNumber: 921,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                     lineNumber: 902,
+=======
+                                    lineNumber: 920,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1616,7 +2071,11 @@ function TransactionHistory() {
                                                 children: "Close"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                 lineNumber: 971,
+=======
+                                                lineNumber: 989,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1627,43 +2086,71 @@ function TransactionHistory() {
                                                         size: 16
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                         lineNumber: 981,
+=======
+                                                        lineNumber: 999,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                         columnNumber: 21
                                                     }, this),
                                                     "Copy Details"
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                                 lineNumber: 977,
+=======
+                                                lineNumber: 995,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                         lineNumber: 970,
+=======
+                                        lineNumber: 988,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                                     lineNumber: 969,
+=======
+                                    lineNumber: 987,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                             lineNumber: 838,
+=======
+                            lineNumber: 854,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                             columnNumber: 13
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/components/TransactionHistory.tsx",
+<<<<<<< HEAD
                         lineNumber: 837,
+=======
+                        lineNumber: 853,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                         columnNumber: 11
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/TransactionHistory.tsx",
                 lineNumber: 652,
+<<<<<<< HEAD
                 columnNumber: 7
+=======
+                columnNumber: 6
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
             }, this)
         ]
     }, void 0, true, {
@@ -1672,7 +2159,11 @@ function TransactionHistory() {
         columnNumber: 5
     }, this);
 }
+<<<<<<< HEAD
 _s(TransactionHistory, "Q7RlWXEXvK0egsCgxLJ0F4T2p+g=", false, function() {
+=======
+_s(TransactionHistory, "NhsPY/MLZIjOsUrIH9DXUktSfgk=", false, function() {
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$i18next$2f$dist$2f$es$2f$useTranslation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTranslation"],
         __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ThemeProvider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"]
@@ -1834,8 +2325,13 @@ __turbopack_context__.s([
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)"); // Removed MouseEvent import from react
+<<<<<<< HEAD
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$bell$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Bell$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/bell.js [app-client] (ecmascript) <export default as Bell>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$headphones$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Headphones$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/headphones.js [app-client] (ecmascript) <export default as Headphones>");
+=======
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$user$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__User$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/user.js [app-client] (ecmascript) <export default as User>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$bell$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Bell$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/bell.js [app-client] (ecmascript) <export default as Bell>");
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/image.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ThemeToggle$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/ThemeToggle.tsx [app-client] (ecmascript)");
 //import LanguageToggle from './LanguageToggle';
@@ -1962,7 +2458,11 @@ const DashboardHeader = ()=>{
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/DashboardHeader.tsx",
                                         lineNumber: 108,
+<<<<<<< HEAD
                                         columnNumber: 17
+=======
+                                        columnNumber: 15
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                     }, ("TURBOPACK compile-time value", void 0)),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                         className: "text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-600 bg-clip-text text-transparent",
@@ -1970,23 +2470,36 @@ const DashboardHeader = ()=>{
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/DashboardHeader.tsx",
                                         lineNumber: 109,
+<<<<<<< HEAD
                                         columnNumber: 17
+=======
+                                        columnNumber: 15
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                     }, ("TURBOPACK compile-time value", void 0))
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/DashboardHeader.tsx",
                                 lineNumber: 104,
+<<<<<<< HEAD
                                 columnNumber: 15
+=======
+                                columnNumber: 13
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                             }, ("TURBOPACK compile-time value", void 0))
                         }, void 0, false, {
                             fileName: "[project]/src/components/DashboardHeader.tsx",
                             lineNumber: 103,
+<<<<<<< HEAD
                             columnNumber: 13
+=======
+                            columnNumber: 11
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                         }, ("TURBOPACK compile-time value", void 0)),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             className: "flex items-center space-x-2 sm:space-x-4 flex-shrink-0",
                             children: [
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+<<<<<<< HEAD
                                     href: "/contact",
                                     className: "relative p-2 hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors",
                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$headphones$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Headphones$3e$__["Headphones"], {
@@ -2018,17 +2531,57 @@ const DashboardHeader = ()=>{
                                             fileName: "[project]/src/components/DashboardHeader.tsx",
                                             lineNumber: 125,
                                             columnNumber: 17
+=======
+                                    href: "/notifications",
+                                    className: "relative p-2 hover:text-gray-900 hover:bg-gray-100 rounded-full transition-colors",
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$bell$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Bell$3e$__["Bell"], {
+                                        className: "h-5 w-5 sm:h-6 sm:w-6"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/DashboardHeader.tsx",
+                                        lineNumber: 117,
+                                        columnNumber: 15
+                                    }, ("TURBOPACK compile-time value", void 0))
+                                }, void 0, false, {
+                                    fileName: "[project]/src/components/DashboardHeader.tsx",
+                                    lineNumber: 116,
+                                    columnNumber: 13
+                                }, ("TURBOPACK compile-time value", void 0)),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                    className: "w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center relative group",
+                                    href: "/profile",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$user$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__User$3e$__["User"], {
+                                            size: 16,
+                                            className: "text-sm text-white font-bold group-hover:scale-110 transition-transform"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/components/DashboardHeader.tsx",
+                                            lineNumber: 126,
+                                            columnNumber: 15
+                                        }, ("TURBOPACK compile-time value", void 0)),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "absolute inset-0 bg-blue-500 rounded-full animate-ping opacity-75 duration-1000 hidden group-hover:block"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/components/DashboardHeader.tsx",
+                                            lineNumber: 127,
+                                            columnNumber: 15
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                         }, ("TURBOPACK compile-time value", void 0))
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/components/DashboardHeader.tsx",
+<<<<<<< HEAD
                                     lineNumber: 122,
                                     columnNumber: 15
+=======
+                                    lineNumber: 125,
+                                    columnNumber: 13
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                 }, ("TURBOPACK compile-time value", void 0)),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: "w-8 h-8",
                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ThemeToggle$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                                         fileName: "[project]/src/components/DashboardHeader.tsx",
+<<<<<<< HEAD
                                         lineNumber: 129,
                                         columnNumber: 17
                                     }, ("TURBOPACK compile-time value", void 0))
@@ -2036,28 +2589,53 @@ const DashboardHeader = ()=>{
                                     fileName: "[project]/src/components/DashboardHeader.tsx",
                                     lineNumber: 128,
                                     columnNumber: 15
+=======
+                                        lineNumber: 131,
+                                        columnNumber: 15
+                                    }, ("TURBOPACK compile-time value", void 0))
+                                }, void 0, false, {
+                                    fileName: "[project]/src/components/DashboardHeader.tsx",
+                                    lineNumber: 130,
+                                    columnNumber: 13
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                 }, ("TURBOPACK compile-time value", void 0))
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/DashboardHeader.tsx",
                             lineNumber: 115,
+<<<<<<< HEAD
                             columnNumber: 13
+=======
+                            columnNumber: 11
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                         }, ("TURBOPACK compile-time value", void 0))
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/components/DashboardHeader.tsx",
                     lineNumber: 102,
+<<<<<<< HEAD
                     columnNumber: 11
+=======
+                    columnNumber: 9
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                 }, ("TURBOPACK compile-time value", void 0))
             }, void 0, false, {
                 fileName: "[project]/src/components/DashboardHeader.tsx",
                 lineNumber: 101,
+<<<<<<< HEAD
                 columnNumber: 9
+=======
+                columnNumber: 7
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
             }, ("TURBOPACK compile-time value", void 0))
         }, void 0, false, {
             fileName: "[project]/src/components/DashboardHeader.tsx",
             lineNumber: 100,
+<<<<<<< HEAD
             columnNumber: 7
+=======
+            columnNumber: 5
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
         }, ("TURBOPACK compile-time value", void 0))
     }, void 0, false);
 };
@@ -2381,7 +2959,13 @@ __turbopack_context__.s([
     ()=>Dashboard
 ]);
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/jsx-dev-runtime.js [app-client] (ecmascript)");
+<<<<<<< HEAD
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+=======
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$styled$2d$jsx$2f$style$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/styled-jsx/style.js [app-client] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/compiled/react/index.js [app-client] (ecmascript)");
+//import DashboardHeader from '@/components/DashboardHeader';
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$TransactionHistory$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/TransactionHistory.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$i18next$2f$dist$2f$es$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/react-i18next/dist/es/index.js [app-client] (ecmascript) <locals>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$i18next$2f$dist$2f$es$2f$useTranslation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/react-i18next/dist/es/useTranslation.js [app-client] (ecmascript)");
@@ -2391,10 +2975,23 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Dashboa
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$axios$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/axios.ts [app-client] (ecmascript)");
 //import Advertisement_Hero from '@/components/Advertisement_Hero';
 //import { ArrowDownLeft, ArrowUpRight, Ticket, CreditCard } from 'lucide-react';
+<<<<<<< HEAD
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$message$2d$circle$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__MessageCircle$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/message-circle.js [app-client] (ecmascript) <export default as MessageCircle>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$x$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__X$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/x.js [app-client] (ecmascript) <export default as X>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$send$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Send$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/send.js [app-client] (ecmascript) <export default as Send>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/image.js [app-client] (ecmascript)");
+=======
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$arrow$2d$down$2d$left$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ArrowDownLeft$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/arrow-down-left.js [app-client] (ecmascript) <export default as ArrowDownLeft>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$arrow$2d$up$2d$right$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ArrowUpRight$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/arrow-up-right.js [app-client] (ecmascript) <export default as ArrowUpRight>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$gift$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Gift$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/gift.js [app-client] (ecmascript) <export default as Gift>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$coins$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Coins$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/coins.js [app-client] (ecmascript) <export default as Coins>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$message$2d$circle$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__MessageCircle$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/message-circle.js [app-client] (ecmascript) <export default as MessageCircle>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$x$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__X$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/x.js [app-client] (ecmascript) <export default as X>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$send$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Send$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/send.js [app-client] (ecmascript) <export default as Send>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$download$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Download$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/download.js [app-client] (ecmascript) <export default as Download>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/image.js [app-client] (ecmascript)");
+//import ThemeToggle from '../../components/ThemeToggle';
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Advertisement_Hero$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/Advertisement_Hero.tsx [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
@@ -2409,12 +3006,20 @@ var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
+<<<<<<< HEAD
+=======
+;
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
 function Dashboard() {
     _s();
     const { t } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$i18next$2f$dist$2f$es$2f$useTranslation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTranslation"])();
     const [isLoading, setIsLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(true);
     const [isContactMenuOpen, setIsContactMenuOpen] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [telegramUrl, setTelegramUrl] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('https://t.me/manosservice'); // Default fallback
+<<<<<<< HEAD
+=======
+    const [whatsappUrl, setWhatsappUrl] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('https://wa.me/+2250566643821'); // Default fallback
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
     // const [animateHeader, setAnimateHeader] = useState(false);
     const { theme } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ThemeProvider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"])();
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
@@ -2423,7 +3028,11 @@ function Dashboard() {
             document.documentElement.classList.toggle('dark', savedTheme === 'dark');
         }
     }["Dashboard.useEffect"], []);
+<<<<<<< HEAD
     // Fetch settings to get telegram URL
+=======
+    // Fetch settings to get telegram URL and whatsapp phone
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
         "Dashboard.useEffect": ()=>{
             const fetchTelegramUrl = {
@@ -2442,10 +3051,23 @@ function Dashboard() {
                             if (settings?.telegram) {
                                 setTelegramUrl(settings.telegram);
                             }
+<<<<<<< HEAD
                         }
                     } catch (error) {
                         console.error('Error fetching telegram URL from settings:', error);
                     // Keep default fallback URL
+=======
+                            if (settings?.whatsapp_phone) {
+                                // Format the phone number for wa.me URL (remove non-numeric characters and ensure international format)
+                                const phoneNumber = settings.whatsapp_phone.replace(/\D/g, '');
+                                const indicator = phoneNumber.startsWith(settings.whatsapp_phone_indi) ? '' : settings.whatsapp_indicator;
+                                setWhatsappUrl(`https://wa.me/${phoneNumber}`);
+                            }
+                        }
+                    } catch (error) {
+                        console.error('Error fetching settings:', error);
+                    // Keep default fallback URLs
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                     }
                 }
             }["Dashboard.useEffect.fetchTelegramUrl"];
@@ -2471,6 +3093,7 @@ function Dashboard() {
         }
     }["Dashboard.useEffect"], []);
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+<<<<<<< HEAD
         className: "min-h-screen bg-gray-50 dark:bg-gradient-to-br dark:from-gray-900 dark:to-gray-800 font-sans relative overflow-hidden",
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2505,21 +3128,70 @@ function Dashboard() {
                         }, void 0, false, {
                             fileName: "[project]/src/app/dashboard/page.tsx",
                             lineNumber: 104,
+=======
+        className: "jsx-8ef9292e8989ee0c" + " " + `min-h-screen bg-gradient-to-br ${theme.colors.a_background} font-sans relative overflow-hidden`,
+        children: [
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$styled$2d$jsx$2f$style$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                id: "8ef9292e8989ee0c",
+                children: "@keyframes slideIn{0%{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}"
+            }, void 0, false, void 0, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "jsx-8ef9292e8989ee0c" + " " + "absolute top-20 -left-10 w-40 h-40 bg-blue-700/20 rounded-full blur-3xl animate-pulse-slow"
+            }, void 0, false, {
+                fileName: "[project]/src/app/dashboard/page.tsx",
+                lineNumber: 116,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "jsx-8ef9292e8989ee0c" + " " + "absolute bottom-20 right-10 w-60 h-60 bg-blue-700/10 rounded-full blur-3xl animate-pulse-slow"
+            }, void 0, false, {
+                fileName: "[project]/src/app/dashboard/page.tsx",
+                lineNumber: 117,
+                columnNumber: 7
+            }, this),
+            isLoading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                className: "jsx-8ef9292e8989ee0c" + " " + "absolute inset-0 bg-gray-900/90 z-50 flex items-center justify-center",
+                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "jsx-8ef9292e8989ee0c" + " " + "flex flex-col items-center gap-3",
+                    children: [
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "jsx-8ef9292e8989ee0c" + " " + "w-16 h-16 border-4 border-gray-700 border-t-blue-500 rounded-full animate-spin"
+                        }, void 0, false, {
+                            fileName: "[project]/src/app/dashboard/page.tsx",
+                            lineNumber: 123,
+                            columnNumber: 13
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                            className: "jsx-8ef9292e8989ee0c" + " " + "text-gray-400",
+                            children: "Loading Blaffa..."
+                        }, void 0, false, {
+                            fileName: "[project]/src/app/dashboard/page.tsx",
+                            lineNumber: 124,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/dashboard/page.tsx",
+<<<<<<< HEAD
                     lineNumber: 102,
+=======
+                    lineNumber: 122,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                     columnNumber: 11
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/dashboard/page.tsx",
+<<<<<<< HEAD
                 lineNumber: 101,
+=======
+                lineNumber: 121,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                 columnNumber: 9
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$DashboardHeader$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                 fileName: "[project]/src/app/dashboard/page.tsx",
+<<<<<<< HEAD
                 lineNumber: 110,
                 columnNumber: 7
             }, this),
@@ -2772,16 +3444,478 @@ function Dashboard() {
                                                 fileName: "[project]/src/app/dashboard/page.tsx",
                                                 lineNumber: 177,
                                                 columnNumber: 15
+=======
+                lineNumber: 130,
+                columnNumber: 7
+            }, this),
+            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("main", {
+                className: "jsx-8ef9292e8989ee0c" + " " + "py-4 md:py-6 px-4 md:px-6",
+                children: [
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "jsx-8ef9292e8989ee0c" + " " + "mb-8",
+                        children: [
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                                className: "jsx-8ef9292e8989ee0c" + " " + "text-3xl font-bold mb-2",
+                                children: "Bienvenue sur Blaffa"
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/dashboard/page.tsx",
+                                lineNumber: 136,
+                                columnNumber: 11
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                className: "jsx-8ef9292e8989ee0c" + " " + " ",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                    href: "https://api.blaffa.net/download_apk",
+                                    download: true,
+                                    className: "jsx-8ef9292e8989ee0c" + " " + "inline-flex items-center gap-2 bg-blue-600 text-white font-semibold px-4 py-2 rounded-full shadow hover:bg-blue-700 active:bg-blue-800 transition-colors",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$download$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Download$3e$__["Download"], {
+                                            size: 18
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/dashboard/page.tsx",
+                                            lineNumber: 143,
+                                            columnNumber: 15
+                                        }, this),
+                                        "Télécharger l'application mobile"
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/app/dashboard/page.tsx",
+                                    lineNumber: 138,
+                                    columnNumber: 13
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/dashboard/page.tsx",
+                                lineNumber: 137,
+                                columnNumber: 11
+                            }, this)
+                        ]
+                    }, void 0, true, {
+                        fileName: "[project]/src/app/dashboard/page.tsx",
+                        lineNumber: 135,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "jsx-8ef9292e8989ee0c" + " " + `relative overflow-hidden rounded-3xl -mx-4 px-4 md:mx-0 md:px-8 py-4 md:py-8 `,
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$Advertisement_Hero$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
+                            fileName: "[project]/src/app/dashboard/page.tsx",
+                            lineNumber: 150,
+                            columnNumber: 10
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/dashboard/page.tsx",
+                        lineNumber: 149,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "jsx-8ef9292e8989ee0c" + " " + "grid grid-cols-1 lg:grid-cols-3 gap-8",
+                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "jsx-8ef9292e8989ee0c" + " " + "lg:col-span-2 space-y-6",
+                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "jsx-8ef9292e8989ee0c" + " " + `md:relative md:overflow-hidden md:bg-gradient-to-br md:${theme.colors.a_background} md:rounded-3xl p-4 md:p-8 md:text-white`,
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "jsx-8ef9292e8989ee0c" + " " + "hidden md:block absolute top-0 right-0 w-32 h-32 bg-white/10 rounded-full -translate-y-16 translate-x-16"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/dashboard/page.tsx",
+                                        lineNumber: 159,
+                                        columnNumber: 17
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "jsx-8ef9292e8989ee0c" + " " + "hidden md:block absolute bottom-0 left-0 w-24 h-24 bg-white/5 rounded-full translate-y-12 -translate-x-12"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/dashboard/page.tsx",
+                                        lineNumber: 160,
+                                        columnNumber: 17
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "jsx-8ef9292e8989ee0c" + " " + "relative z-10",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "jsx-8ef9292e8989ee0c" + " " + "flex gap-1 justify-center md:hidden",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                                        href: "/crypto",
+                                                        className: "jsx-8ef9292e8989ee0c" + " " + "group relative flex-1 flex flex-col items-center justify-center p-2 transition-all duration-300 active:scale-95",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "jsx-8ef9292e8989ee0c" + " " + "w-12 h-12 rounded-lg bg-gradient-to-br from-yellow-400 to-yellow-600 flex items-center justify-center mb-1 group-active:scale-90 transition-transform shadow-lg shadow-yellow-500/25",
+                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$coins$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Coins$3e$__["Coins"], {
+                                                                    size: 20,
+                                                                    className: "text-white drop-shadow-sm"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                    lineNumber: 168,
+                                                                    columnNumber: 25
+                                                                }, this)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                lineNumber: 167,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "jsx-8ef9292e8989ee0c" + " " + "font-medium text-[10px] ",
+                                                                children: t("Crypto")
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                lineNumber: 170,
+                                                                columnNumber: 23
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/app/dashboard/page.tsx",
+                                                        lineNumber: 166,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                                        href: "/deposit",
+                                                        className: "jsx-8ef9292e8989ee0c" + " " + "group relative flex-1 flex flex-col items-center justify-center p-2 transition-all duration-300 active:scale-95",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "jsx-8ef9292e8989ee0c" + " " + "w-12 h-12 rounded-lg bg-gradient-to-br from-red-400 to-red-600 flex items-center justify-center mb-1 group-active:scale-90 transition-transform shadow-lg shadow-red-500/25",
+                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$arrow$2d$up$2d$right$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ArrowUpRight$3e$__["ArrowUpRight"], {
+                                                                    size: 20,
+                                                                    className: "text-white drop-shadow-sm"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                    lineNumber: 175,
+                                                                    columnNumber: 25
+                                                                }, this)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                lineNumber: 174,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "jsx-8ef9292e8989ee0c" + " " + "font-medium text-[10px] ",
+                                                                children: t("Deposit")
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                lineNumber: 177,
+                                                                columnNumber: 23
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/app/dashboard/page.tsx",
+                                                        lineNumber: 173,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                                        href: "/withdraw",
+                                                        className: "jsx-8ef9292e8989ee0c" + " " + "group relative flex-1 flex flex-col items-center justify-center p-2 transition-all duration-300 active:scale-95",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "jsx-8ef9292e8989ee0c" + " " + "w-12 h-12 rounded-lg bg-gradient-to-br from-blue-400 to-blue-600 flex items-center justify-center mb-1 group-active:scale-90 transition-transform shadow-lg shadow-blue-500/25",
+                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$arrow$2d$down$2d$left$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ArrowDownLeft$3e$__["ArrowDownLeft"], {
+                                                                    size: 20,
+                                                                    className: "text-white drop-shadow-sm"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                    lineNumber: 182,
+                                                                    columnNumber: 25
+                                                                }, this)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                lineNumber: 181,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "jsx-8ef9292e8989ee0c" + " " + "font-medium text-[10px] ",
+                                                                children: t("Withdraw")
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                lineNumber: 184,
+                                                                columnNumber: 23
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/app/dashboard/page.tsx",
+                                                        lineNumber: 180,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                                        href: "/coupon",
+                                                        className: "jsx-8ef9292e8989ee0c" + " " + "group relative flex-1 flex flex-col items-center justify-center p-2 transition-all duration-300 active:scale-95",
+                                                        children: [
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "jsx-8ef9292e8989ee0c" + " " + "w-12 h-12 rounded-lg bg-gradient-to-br from-orange-400 to-orange-600 flex items-center justify-center mb-1 group-active:scale-90 transition-transform shadow-lg shadow-orange-500/25",
+                                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$gift$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Gift$3e$__["Gift"], {
+                                                                    size: 20,
+                                                                    className: "text-white drop-shadow-sm"
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                    lineNumber: 189,
+                                                                    columnNumber: 25
+                                                                }, this)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                lineNumber: 188,
+                                                                columnNumber: 23
+                                                            }, this),
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "jsx-8ef9292e8989ee0c" + " " + "font-medium text-[10px] ",
+                                                                children: t("Coupon")
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                lineNumber: 191,
+                                                                columnNumber: 23
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/app/dashboard/page.tsx",
+                                                        lineNumber: 187,
+                                                        columnNumber: 21
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/app/dashboard/page.tsx",
+                                                lineNumber: 164,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "jsx-8ef9292e8989ee0c" + " " + "hidden md:grid grid-cols-4 gap-4",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                                        href: "/crypto",
+                                                        className: "jsx-8ef9292e8989ee0c" + " " + "bg-gradient-to-br from-yellow-400 to-yellow-600 backdrop-blur-sm rounded-2xl p-4 hover:bg-white/15 transition-all duration-300 cursor-pointer group border border-white/5 hover:border-white/20",
+                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "jsx-8ef9292e8989ee0c" + " " + "flex flex-col lg:flex-row lg:items-center lg:gap-3",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "jsx-8ef9292e8989ee0c" + " " + "relative mb-3 lg:mb-0",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                            className: "jsx-8ef9292e8989ee0c" + " " + "w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-lg shadow-yellow-500/25",
+                                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$coins$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Coins$3e$__["Coins"], {
+                                                                                className: "w-6 h-6 text-white drop-shadow-sm"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                                lineNumber: 202,
+                                                                                columnNumber: 29
+                                                                            }, this)
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                            lineNumber: 201,
+                                                                            columnNumber: 27
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                            className: "jsx-8ef9292e8989ee0c" + " " + "absolute -top-1 -right-1 w-3 h-3 bg-yellow-300 rounded-full opacity-60 group-hover:opacity-80 transition-opacity"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                            lineNumber: 204,
+                                                                            columnNumber: 27
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                    lineNumber: 200,
+                                                                    columnNumber: 25
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "jsx-8ef9292e8989ee0c" + " " + "text-sm font-medium text-white/90 group-hover:text-white transition-colors",
+                                                                    children: t("Crypto")
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                    lineNumber: 206,
+                                                                    columnNumber: 25
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/src/app/dashboard/page.tsx",
+                                                            lineNumber: 199,
+                                                            columnNumber: 23
+                                                        }, this)
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/dashboard/page.tsx",
+                                                        lineNumber: 198,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                                        href: "/deposit",
+                                                        className: "jsx-8ef9292e8989ee0c" + " " + "bg-gradient-to-br from-red-400 to-red-600 backdrop-blur-sm rounded-2xl p-4 hover:bg-white/15 transition-all duration-300 cursor-pointer group border border-white/5 hover:border-white/20",
+                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "jsx-8ef9292e8989ee0c" + " " + "flex flex-col lg:flex-row lg:items-center lg:gap-3",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "jsx-8ef9292e8989ee0c" + " " + "relative mb-3 lg:mb-0",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                            className: "jsx-8ef9292e8989ee0c" + " " + "w-12 h-12 bg-gradient-to-br from-red-400 to-red-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-lg shadow-red-500/25",
+                                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$arrow$2d$up$2d$right$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ArrowUpRight$3e$__["ArrowUpRight"], {
+                                                                                className: "w-6 h-6 text-white drop-shadow-sm"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                                lineNumber: 216,
+                                                                                columnNumber: 29
+                                                                            }, this)
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                            lineNumber: 215,
+                                                                            columnNumber: 27
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                            className: "jsx-8ef9292e8989ee0c" + " " + "absolute -top-1 -right-1 w-3 h-3 bg-red-300 rounded-full opacity-60 group-hover:opacity-80 transition-opacity"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                            lineNumber: 218,
+                                                                            columnNumber: 27
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                    lineNumber: 214,
+                                                                    columnNumber: 25
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "jsx-8ef9292e8989ee0c" + " " + "text-sm font-medium text-white/90 group-hover:text-white transition-colors",
+                                                                    children: t("Deposit")
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                    lineNumber: 220,
+                                                                    columnNumber: 25
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/src/app/dashboard/page.tsx",
+                                                            lineNumber: 213,
+                                                            columnNumber: 23
+                                                        }, this)
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/dashboard/page.tsx",
+                                                        lineNumber: 212,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                                        href: "/withdraw",
+                                                        className: "jsx-8ef9292e8989ee0c" + " " + "bg-gradient-to-br from-blue-400 to-blue-600 backdrop-blur-sm rounded-2xl p-4 hover:bg-white/15 transition-all duration-300 cursor-pointer group border border-white/5 hover:border-white/20",
+                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "jsx-8ef9292e8989ee0c" + " " + "flex flex-col lg:flex-row lg:items-center lg:gap-3",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "jsx-8ef9292e8989ee0c" + " " + "relative mb-3 lg:mb-0",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                            className: "jsx-8ef9292e8989ee0c" + " " + "w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-lg shadow-blue-500/25",
+                                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$arrow$2d$down$2d$left$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__ArrowDownLeft$3e$__["ArrowDownLeft"], {
+                                                                                className: "w-6 h-6 text-white drop-shadow-sm"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                                lineNumber: 230,
+                                                                                columnNumber: 29
+                                                                            }, this)
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                            lineNumber: 229,
+                                                                            columnNumber: 27
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                            className: "jsx-8ef9292e8989ee0c" + " " + "absolute -top-1 -right-1 w-3 h-3 bg-blue-300 rounded-full opacity-60 group-hover:opacity-80 transition-opacity"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                            lineNumber: 232,
+                                                                            columnNumber: 27
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                    lineNumber: 228,
+                                                                    columnNumber: 25
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "jsx-8ef9292e8989ee0c" + " " + "text-sm font-medium text-white/90 group-hover:text-white transition-colors",
+                                                                    children: t("Withdraw")
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                    lineNumber: 234,
+                                                                    columnNumber: 25
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/src/app/dashboard/page.tsx",
+                                                            lineNumber: 227,
+                                                            columnNumber: 23
+                                                        }, this)
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/dashboard/page.tsx",
+                                                        lineNumber: 226,
+                                                        columnNumber: 21
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                                        href: "/coupon",
+                                                        className: "jsx-8ef9292e8989ee0c" + " " + "bg-gradient-to-br from-orange-400 to-orange-600 backdrop-blur-sm rounded-2xl p-4 hover:bg-white/15 transition-all duration-300 cursor-pointer group border border-white/5 hover:border-white/20",
+                                                        children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            className: "jsx-8ef9292e8989ee0c" + " " + "flex flex-col lg:flex-row lg:items-center lg:gap-3",
+                                                            children: [
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    className: "jsx-8ef9292e8989ee0c" + " " + "relative mb-3 lg:mb-0",
+                                                                    children: [
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                            className: "jsx-8ef9292e8989ee0c" + " " + "w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-xl flex items-center justify-center group-hover:scale-105 transition-transform duration-300 shadow-lg shadow-orange-500/25",
+                                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$gift$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Gift$3e$__["Gift"], {
+                                                                                className: "w-6 h-6 text-white drop-shadow-sm"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                                lineNumber: 244,
+                                                                                columnNumber: 29
+                                                                            }, this)
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                            lineNumber: 243,
+                                                                            columnNumber: 27
+                                                                        }, this),
+                                                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                            className: "jsx-8ef9292e8989ee0c" + " " + "absolute -top-1 -right-1 w-3 h-3 bg-orange-300 rounded-full opacity-60 group-hover:opacity-80 transition-opacity"
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                            lineNumber: 246,
+                                                                            columnNumber: 27
+                                                                        }, this)
+                                                                    ]
+                                                                }, void 0, true, {
+                                                                    fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                    lineNumber: 242,
+                                                                    columnNumber: 25
+                                                                }, this),
+                                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                    className: "jsx-8ef9292e8989ee0c" + " " + "text-sm font-medium text-white/90 group-hover:text-white transition-colors",
+                                                                    children: t("Coupon")
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/app/dashboard/page.tsx",
+                                                                    lineNumber: 248,
+                                                                    columnNumber: 25
+                                                                }, this)
+                                                            ]
+                                                        }, void 0, true, {
+                                                            fileName: "[project]/src/app/dashboard/page.tsx",
+                                                            lineNumber: 241,
+                                                            columnNumber: 23
+                                                        }, this)
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/dashboard/page.tsx",
+                                                        lineNumber: 240,
+                                                        columnNumber: 21
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/app/dashboard/page.tsx",
+                                                lineNumber: 196,
+                                                columnNumber: 19
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/dashboard/page.tsx",
+<<<<<<< HEAD
                                         lineNumber: 170,
                                         columnNumber: 13
+=======
+                                        lineNumber: 162,
+                                        columnNumber: 17
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/dashboard/page.tsx",
+<<<<<<< HEAD
                                 lineNumber: 148,
                                 columnNumber: 11
                             }, this)
@@ -2903,11 +4037,72 @@ function Dashboard() {
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/dashboard/page.tsx",
                                                 lineNumber: 211,
+=======
+                                lineNumber: 158,
+                                columnNumber: 15
+                            }, this)
+                        }, void 0, false, {
+                            fileName: "[project]/src/app/dashboard/page.tsx",
+                            lineNumber: 155,
+                            columnNumber: 13
+                        }, this)
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/dashboard/page.tsx",
+                        lineNumber: 153,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("br", {
+                        className: "jsx-8ef9292e8989ee0c"
+                    }, void 0, false, {
+                        fileName: "[project]/src/app/dashboard/page.tsx",
+                        lineNumber: 258,
+                        columnNumber: 11
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$TransactionHistory$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
+                        fileName: "[project]/src/app/dashboard/page.tsx",
+                        lineNumber: 262,
+                        columnNumber: 9
+                    }, this),
+                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                        className: "jsx-8ef9292e8989ee0c" + " " + "fixed bottom-24 right-6 z-40",
+                        children: [
+                            isContactMenuOpen && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                className: "jsx-8ef9292e8989ee0c" + " " + "absolute bottom-20 right-0 flex flex-col-reverse gap-3 mb-2",
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                        href: telegramUrl,
+                                        target: "_blank",
+                                        rel: "noopener noreferrer",
+                                        onClick: ()=>setIsContactMenuOpen(false),
+                                        className: "jsx-8ef9292e8989ee0c" + " " + "flex items-center gap-3 bg-white hover:bg-blue-50 rounded-full px-4 py-2 shadow-lg transition-all duration-300 animate-[slideIn_0.3s_ease-out] transform hover:scale-105",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "jsx-8ef9292e8989ee0c" + " " + "text-sm font-medium text-gray-700",
+                                                children: "Telegram"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/dashboard/page.tsx",
+                                                lineNumber: 277,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "jsx-8ef9292e8989ee0c" + " " + "w-12 h-12 bg-blue-500 rounded-full flex items-center justify-center shadow-md",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$send$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Send$3e$__["Send"], {
+                                                    className: "w-6 h-6 text-white"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/dashboard/page.tsx",
+                                                    lineNumber: 279,
+                                                    columnNumber: 19
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/dashboard/page.tsx",
+                                                lineNumber: 278,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                                 columnNumber: 17
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/dashboard/page.tsx",
+<<<<<<< HEAD
                                         lineNumber: 195,
                                         columnNumber: 15
                                     }, this),
@@ -2938,38 +4133,133 @@ function Dashboard() {
                                         fileName: "[project]/src/app/dashboard/page.tsx",
                                         lineNumber: 227,
                                         columnNumber: 13
+=======
+                                        lineNumber: 270,
+                                        columnNumber: 15
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
+                                        href: whatsappUrl,
+                                        target: "_blank",
+                                        rel: "noopener noreferrer",
+                                        onClick: ()=>setIsContactMenuOpen(false),
+                                        className: "jsx-8ef9292e8989ee0c" + " " + "flex items-center gap-3 bg-white hover:bg-green-50 rounded-full px-4 py-2 shadow-lg transition-all duration-300 animate-[slideIn_0.3s_ease-out_0.1s_backwards] transform hover:scale-105",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "jsx-8ef9292e8989ee0c" + " " + "text-sm font-medium text-gray-700",
+                                                children: "WhatsApp"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/dashboard/page.tsx",
+                                                lineNumber: 291,
+                                                columnNumber: 17
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "jsx-8ef9292e8989ee0c" + " " + "w-12 h-12 bg-green-500 rounded-full flex items-center justify-center shadow-md",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$image$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
+                                                    src: "/whatsapp.png",
+                                                    width: "24",
+                                                    height: "24",
+                                                    className: "w-6 h-6",
+                                                    alt: "whatsapp"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/dashboard/page.tsx",
+                                                    lineNumber: 293,
+                                                    columnNumber: 19
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/dashboard/page.tsx",
+                                                lineNumber: 292,
+                                                columnNumber: 17
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/app/dashboard/page.tsx",
+                                        lineNumber: 284,
+                                        columnNumber: 15
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/dashboard/page.tsx",
+<<<<<<< HEAD
                                 lineNumber: 192,
+=======
+                                lineNumber: 268,
+                                columnNumber: 13
+                            }, this),
+                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                onClick: ()=>setIsContactMenuOpen(!isContactMenuOpen),
+                                className: "jsx-8ef9292e8989ee0c" + " " + "group flex items-center justify-center w-16 h-16 md:w-20 md:h-20 bg-blue-600 hover:bg-blue-700 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 active:scale-95",
+                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "jsx-8ef9292e8989ee0c" + " " + `transform transition-transform duration-300 ${isContactMenuOpen ? 'rotate-90' : 'rotate-0'}`,
+                                    children: isContactMenuOpen ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$x$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__X$3e$__["X"], {
+                                        className: "w-8 h-8 text-white"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/dashboard/page.tsx",
+                                        lineNumber: 307,
+                                        columnNumber: 17
+                                    }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$message$2d$circle$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__MessageCircle$3e$__["MessageCircle"], {
+                                        className: "w-8 h-8 text-white"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/dashboard/page.tsx",
+                                        lineNumber: 309,
+                                        columnNumber: 17
+                                    }, this)
+                                }, void 0, false, {
+                                    fileName: "[project]/src/app/dashboard/page.tsx",
+                                    lineNumber: 305,
+                                    columnNumber: 13
+                                }, this)
+                            }, void 0, false, {
+                                fileName: "[project]/src/app/dashboard/page.tsx",
+                                lineNumber: 300,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/dashboard/page.tsx",
+<<<<<<< HEAD
                         lineNumber: 183,
+=======
+                        lineNumber: 265,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$footer$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {}, void 0, false, {
                         fileName: "[project]/src/app/dashboard/page.tsx",
+<<<<<<< HEAD
                         lineNumber: 244,
+=======
+                        lineNumber: 315,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/dashboard/page.tsx",
+<<<<<<< HEAD
                 lineNumber: 113,
+=======
+                lineNumber: 133,
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
                 columnNumber: 7
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/dashboard/page.tsx",
+<<<<<<< HEAD
         lineNumber: 93,
         columnNumber: 5
     }, this);
 }
 _s(Dashboard, "YboIJ05hAlWGuM3sJhjjNQaRrwQ=", false, function() {
+=======
+        lineNumber: 101,
+        columnNumber: 5
+    }, this);
+}
+_s(Dashboard, "AaWBKfGDPCr1HPKbVxS9TUdSp2A=", false, function() {
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$i18next$2f$dist$2f$es$2f$useTranslation$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTranslation"],
         __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ThemeProvider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"]

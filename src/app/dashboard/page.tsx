@@ -27,6 +27,7 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true);
   const [isContactMenuOpen, setIsContactMenuOpen] = useState(false);
   const [telegramUrl, setTelegramUrl] = useState('https://t.me/manosservice'); // Default fallback
+  const [whatsappUrl, setWhatsappUrl] = useState('https://wa.me/+2250566643821'); // Default fallback
   // const [animateHeader, setAnimateHeader] = useState(false);
   const { theme } = useTheme();
 
@@ -56,10 +57,17 @@ export default function Dashboard() {
           if (settings?.telegram) {
             setTelegramUrl(settings.telegram);
           }
+
+          if (settings?.whatsapp_phone) {
+            // Format the phone number for wa.me URL (remove non-numeric characters and ensure international format)
+            const phoneNumber = settings.whatsapp_phone.replace(/\D/g, '');
+            const indicator = settings.whatsapp_phone_indi;
+            setWhatsappUrl(`https://wa.me/${indicator}${phoneNumber}`);
+          }
         }
       } catch (error) {
-        console.error('Error fetching telegram URL from settings:', error);
-        // Keep default fallback URL
+        console.error('Error fetching settings:', error);
+        // Keep default fallback URLs
       }
     };
 

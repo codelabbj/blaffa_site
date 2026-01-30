@@ -1,8 +1,15 @@
 var R=require("../../chunks/ssr/[turbopack]_runtime.js")("server/app/dashboard/page.js")
+<<<<<<< HEAD
 R.c("server/chunks/ssr/node_modules_next_dist_a6894cfc._.js")
 R.c("server/chunks/ssr/[root-of-the-server]__23b9afe8._.js")
 R.c("server/chunks/ssr/node_modules_473cc24e._.js")
 R.c("server/chunks/ssr/[root-of-the-server]__e8a2741f._.js")
+=======
+R.c("server/chunks/ssr/node_modules_next_dist_a99e55f6._.js")
+R.c("server/chunks/ssr/[root-of-the-server]__23b9afe8._.js")
+R.c("server/chunks/ssr/node_modules_e2d1c5df._.js")
+R.c("server/chunks/ssr/[externals]__e8a2741f._.js")
+>>>>>>> 7983d4038f7f87f3fc3aa81dfd480520f6f38a37
 R.c("server/chunks/ssr/src_app_5b2047f8._.js")
 R.c("server/chunks/ssr/node_modules_next_dist_client_components_builtin_global-error_ece394eb.js")
 R.c("server/chunks/ssr/src_app_layout_tsx_8753bd60._.js")
