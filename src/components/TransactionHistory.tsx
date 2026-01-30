@@ -563,7 +563,7 @@ export default function TransactionHistory() {
 
   // Show transaction details in page
   const openTransactionDetails = (transaction: HistoricItem) => {
-    router.push(`/transaction/${transaction.transaction.id}`);
+    router.push(`/transaction/detail?id=${transaction.transaction.id}`);
   };
 
   // Copy transaction ID or reference to clipboard

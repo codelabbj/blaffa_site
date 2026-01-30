@@ -117,7 +117,7 @@ export default function LandingPage() {
       {/* Dashboard Header - Matching Reference Image */}
       {/* Dashboard Header - Updated with Login/Register buttons */}
       <header className={`bg-gradient-to-br ${theme.colors.a_background} border-b border-gray-200 dark:border-gray-800 sticky top-0 z-50`}>
-        <div className="max-w-md mx-auto sm:max-w-lg md:max-w-2xl lg:max-w-4xl px-4">
+        <div className="w-full px-6">
           <div className="flex items-center justify-between h-16">
             {/* Left - Logo Only */}
             <div className="flex items-center">
@@ -144,7 +144,7 @@ export default function LandingPage() {
       </header>
 
       {/* Main Content */}
-      <main className="py-4 px-4 max-w-md mx-auto sm:max-w-lg md:max-w-2xl lg:max-w-4xl">
+      <main className="py-4 px-6 w-full">
         {/* Hero Banner */}
         <div className="mb-6">
           <Advertisement_Hero />

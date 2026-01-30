@@ -118,7 +118,7 @@ export default function StaticTransactionHistory() {
 
     // Show transaction details
     const openTransactionDetails = (transaction: HistoricItem) => {
-        router.push(`/transaction/${transaction.transaction.id}`);
+        router.push(`/transaction/detail?id=${transaction.transaction.id}`);
     };
 
     return (

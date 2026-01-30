@@ -447,7 +447,7 @@ export default function AllTransactionsPage() {
                       animation: `slideInUp 0.6s ease-out ${index * 100}ms both`,
                     }}
                     onClick={() => {
-                      router.push(`/transaction/${tx.id}`);
+                      router.push(`/transaction/detail?id=${tx.id}`);
                     }}
                   >
                     <div className="relative p-5 w-full">

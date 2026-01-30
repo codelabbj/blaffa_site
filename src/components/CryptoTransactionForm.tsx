@@ -20,7 +20,7 @@ interface Network {
   id: string;
   name: string;
   public_name: string;
-  country_code: string;
+  country_code?: string;
   image?: string;
   indication?: string;
 }

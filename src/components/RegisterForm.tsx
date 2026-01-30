@@ -102,7 +102,7 @@ export default function RegisterForm() {
     };
 
     return (
-        <div className="w-full max-w-md mx-auto p-4 sm:p-6">
+        <div className="w-full p-4 sm:p-6">
             {/* Progress Bar */}
             <div className="flex items-center justify-between mb-8">
                 {[1, 2, 3].map((s) => (

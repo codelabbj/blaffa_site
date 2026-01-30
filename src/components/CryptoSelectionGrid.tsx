@@ -25,6 +25,8 @@ interface Network {
     id: string;
     name: string;
     public_name: string;
+    country_code?: string;
+    indication?: string;
     image?: string;
 }
 

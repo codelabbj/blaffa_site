@@ -116,7 +116,7 @@ export default function LoginForm() {
     };
 
     return (
-        <div className="w-full max-w-md mx-auto p-6 bg-transparent">
+        <div className="w-full p-6 bg-transparent">
             {/* Header content matches image */}
             <div className="mb-8 ">
                 <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-900 mb-2">Vous êtes de retour</h1>
