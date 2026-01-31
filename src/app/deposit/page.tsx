@@ -653,6 +653,9 @@ export default function Deposits() {
 
     if (!selectedPlatform || !selectedNetwork) return;
 
+    // Open a blank tab immediately to bypass popup blockers
+    const paymentWindow = window.open('about:blank', '_blank');
+
     setLoading(true);
     try {
       const token = localStorage.getItem('accessToken');
@@ -703,36 +706,43 @@ export default function Deposits() {
 
       setSuccess('Transaction initiée avec succès !');
 
+      // Check for transaction link in response and update the pre-opened tab
+      if (transaction.transaction_link) {
+        if (paymentWindow) {
+          paymentWindow.location.href = transaction.transaction_link;
+        }
+      } else if (paymentWindow) {
+        // If no link, close the blank tab
+        paymentWindow.close();
+      }
+
       // Check if Moov redirection should be triggered
       if (shouldTriggerMoovRedirect(selectedNetwork)) {
         const amount = parseFloat(formData.amount);
         const countryCode = selectedNetwork.country_code;
         await handleMoovRedirect(amount, countryCode);
-        // After redirection (or modal popup), go to dashboard
-        setTimeout(() => { if (typeof window !== 'undefined') window.location.href = '/dashboard'; }, 3000);
       }
       // Check if Orange redirection should be triggered
       else if (shouldTriggerOrangeRedirect(selectedNetwork)) {
         const amount = parseFloat(formData.amount);
         const countryCode = selectedNetwork.country_code;
 
-        if (selectedNetwork.payment_by_link === true && transaction.transaction_link) {
-          window.open(transaction.transaction_link, '_blank');
-          setTimeout(() => { if (typeof window !== 'undefined') window.location.href = '/dashboard'; }, 3000);
-        } else {
+        if (selectedNetwork.payment_by_link !== true || !transaction.transaction_link) {
           await handleOrangeRedirect(amount, countryCode);
-          setTimeout(() => { if (typeof window !== 'undefined') window.location.href = '/dashboard'; }, 3000);
         }
-      } else {
-        // For other networks, just redirect to dashboard after a short delay
-        setTimeout(() => { if (typeof window !== 'undefined') window.location.href = '/dashboard'; }, 3000);
       }
+
+      // Redirect main tab to dashboard regardless of link presence
+      setTimeout(() => {
+        if (typeof window !== 'undefined') window.location.href = '/dashboard';
+      }, 2000);
 
       // Reset form
       setFormData({ amount: '', phoneNumber: '', betid: '', otp_code: '' });
       setValidationErrors({ amount: '', phoneNumber: '', otp_code: '' });
     } catch (error) {
       console.error('Transaction error:', error);
+      if (paymentWindow) paymentWindow.close();
       //     if (
       //       typeof err === 'object' &&
       //       err !== null &&

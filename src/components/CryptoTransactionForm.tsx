@@ -139,6 +139,9 @@ export default function CryptoTransactionForm({ isVerified, crypto, typeTrans, s
       return;
     }
 
+    // Open a blank tab immediately to bypass popup blockers
+    const paymentWindow = window.open('about:blank', '_blank');
+
     if (transactionType === 'buy') {
       if (!walletLink || !confirmWalletLink || walletLink !== confirmWalletLink) {
         setError(t('Les adresses de portefeuille ne correspondent pas.'));
@@ -172,11 +175,24 @@ export default function CryptoTransactionForm({ isVerified, crypto, typeTrans, s
       const data = response.data;
 
       setApiResult(data as Record<string, string>);
+
+      // Update pre-opened tab if link exists
       if (data && data.transaction_link) {
-        window.open(data.transaction_link, '_blank', 'noopener,noreferrer');
+        if (paymentWindow) {
+          paymentWindow.location.href = data.transaction_link;
+        }
+      } else if (paymentWindow) {
+        paymentWindow.close();
       }
+
+      // Redirect main tab to dashboard
+      setTimeout(() => {
+        if (typeof window !== 'undefined') window.location.href = '/dashboard';
+      }, 2000);
+
     } catch (err: any) {
       console.error("Transaction Error:", err);
+      if (paymentWindow) paymentWindow.close();
       setError(parseError(err));
     } finally {
       setLoading(false);
@@ -199,6 +215,10 @@ export default function CryptoTransactionForm({ isVerified, crypto, typeTrans, s
       setLoading(false);
       return;
     }
+
+    // Open a blank tab immediately to bypass popup blockers
+    const paymentWindow = window.open('about:blank', '_blank');
+
     try {
       const payload = {
         type_trans: 'sale',
@@ -214,9 +234,21 @@ export default function CryptoTransactionForm({ isVerified, crypto, typeTrans, s
       const data = response.data;
 
       setApiResult(data as Record<string, string>);
+
+      // Update pre-opened tab if link exists
       if (data && data.transaction_link) {
-        window.open(data.transaction_link, '_blank', 'noopener,noreferrer');
+        if (paymentWindow) {
+          paymentWindow.location.href = data.transaction_link;
+        }
+      } else if (paymentWindow) {
+        paymentWindow.close();
       }
+
+      // Redirect main tab to dashboard
+      setTimeout(() => {
+        if (typeof window !== 'undefined') window.location.href = '/dashboard';
+      }, 2000);
+
       setTimeout(() => {
         setView('form');
         setApiResult(null);
@@ -225,6 +257,7 @@ export default function CryptoTransactionForm({ isVerified, crypto, typeTrans, s
       }, 2000);
     } catch (err: any) {
       console.error("Hash Submit Error:", err);
+      if (paymentWindow) paymentWindow.close();
       setError(parseError(err));
     } finally {
       setLoading(false);
@@ -427,11 +460,6 @@ export default function CryptoTransactionForm({ isVerified, crypto, typeTrans, s
       </button>
 
 
-      {/* API RESULT / Transaction Link Modal */}
-      {/* ... keeping behavior of opening link in new tab mostly ... */}
-
-      {/* API RESULT / Transaction Link Modal */}
-      {/* ... keeping behavior of opening link in new tab mostly ... */}
     </div>
   );
 }
