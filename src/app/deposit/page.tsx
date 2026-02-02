@@ -1471,116 +1471,92 @@ export default function Deposits() {
         );
       case 'summary':
         return (
-          <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            {/* Hero Card */}
-            <div className={`relative overflow-hidden bg-gradient-to-r from-[#002d72] to-[#1a4384] rounded-3xl p-8 text-white shadow-xl`}>
-              <div className="relative z-10 flex items-center gap-6">
-                <div className="bg-white/20 backdrop-blur-md p-4 rounded-2xl">
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-10 w-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 10h18M7 15h1m4 0h1m-7 4h12a3 3 0 003-3V8a3 3 0 00-3-3H6a3 3 0 00-3 3v8a3 3 0 003 3z" />
-                  </svg>
-                </div>
-                <div>
-                  <h3 className="text-2xl font-bold mb-1 font-outfit uppercase">Confirmer le dépôt</h3>
-                  <p className="text-blue-100 opacity-80 uppercase tracking-wide text-sm font-medium">Vérifiez vos informations</p>
-                </div>
-              </div>
-              <div className="absolute top-0 right-0 -mr-12 -mt-12 bg-white/10 w-48 h-48 rounded-full blur-3xl"></div>
+          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            {/* Header */}
+            <div className="text-center mb-6">
+              <h3 className={`text-2xl font-bold ${theme.colors.text}`}>Confirmer le dépôt</h3>
             </div>
 
-            {/* Detail Cards Container */}
-            <div className="space-y-4">
-              {/* Application Card */}
-              <div className={`flex items-center gap-5 p-5 ${theme.mode === 'dark' ? 'bg-slate-800' : 'bg-white'} border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-slate-100'} rounded-3xl shadow-sm hover:shadow-md transition-all`}>
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center p-2 ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-slate-50'}`}>
-                  {selectedPlatform?.image ? (
-                    <img src={selectedPlatform.image} alt="" className="w-10 h-10 object-contain rounded-lg" />
-                  ) : (
-                    <div className="w-8 h-8 bg-blue-100 rounded-lg"></div>
-                  )}
-                </div>
-                <div className="flex-1">
-                  <p className={`text-sm ${theme.colors.d_text} opacity-50 font-medium uppercase tracking-wider mb-0.5`}>Application</p>
-                  <p className={`text-xl font-bold ${theme.colors.text} tracking-tight`}>{selectedPlatform?.public_name || selectedPlatform?.name}</p>
+            {/* Main Summary Card */}
+            <div className={`${theme.colors.a_background} border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-slate-200'} rounded-3xl overflow-hidden shadow-sm`}>
+
+              {/* Amount Section */}
+              <div className={`py-6 text-center bg-gradient-to-b ${theme.mode === 'dark' ? 'from-blue-900/10 to-transparent' : 'from-blue-50 to-transparent'}`}>
+                <div className={`text-5xl font-extrabold ${theme.colors.text} tracking-tight`}>
+                  {new Intl.NumberFormat('fr-FR').format(parseInt(formData.amount))} <span className="text-2xl align-top opacity-60 font-bold">F</span>
                 </div>
               </div>
 
-              {/* User ID Card */}
-              <div className={`flex items-center gap-5 p-5 ${theme.mode === 'dark' ? 'bg-slate-800' : 'bg-white'} border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-slate-100'} rounded-3xl shadow-sm hover:shadow-md transition-all`}>
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${theme.mode === 'dark' ? 'bg-green-900/20' : 'bg-green-50'}`}>
-                  <svg xmlns="http://www.w3.org/2000/svg" className={`h-7 w-7 ${theme.mode === 'dark' ? 'text-green-400' : 'text-green-600'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                  </svg>
-                </div>
-                <div className="flex-1">
-                  <p className={`text-sm ${theme.colors.d_text} opacity-50 font-medium uppercase tracking-wider mb-0.5`}>ID Utilisateur</p>
-                  <p className={`text-xl font-bold ${theme.colors.text} tracking-wider`}>{selectedBetId}</p>
-                </div>
-              </div>
+              {/* Details List */}
+              <div className="px-6 pb-6 space-y-4">
+                {/* Divider */}
+                <div className={`h-px w-full ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-slate-100'}`}></div>
 
-              {/* Network Card */}
-              <div className={`flex items-center gap-5 p-5 ${theme.mode === 'dark' ? 'bg-slate-800' : 'bg-white'} border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-slate-100'} rounded-3xl shadow-sm hover:shadow-md transition-all`}>
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center p-2 ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-slate-50'}`}>
-                  {selectedNetwork?.image ? (
-                    <img src={selectedNetwork.image} alt="" className="w-10 h-10 object-contain" />
-                  ) : (
-                    <div className="w-8 h-8 bg-orange-100 rounded-lg"></div>
-                  )}
+                {/* Platform */}
+                <div className="flex items-center justify-between">
+                  <span className={`${theme.colors.d_text} opacity-60 text-sm`}>Plateforme</span>
+                  <div className="flex items-center gap-2">
+                    {selectedPlatform?.image && (
+                      <img src={selectedPlatform.image} alt="" className="w-5 h-5 object-contain" />
+                    )}
+                    <span className={`font-semibold ${theme.colors.text}`}>{selectedPlatform?.public_name || selectedPlatform?.name}</span>
+                  </div>
                 </div>
-                <div className="flex-1">
-                  <p className={`text-sm ${theme.colors.d_text} opacity-50 font-medium uppercase tracking-wider mb-0.5`}>Réseau</p>
-                  <p className={`text-xl font-bold ${theme.colors.text} tracking-tight`}>{(selectedNetwork?.public_name || selectedNetwork?.name)?.toUpperCase()}</p>
-                </div>
-              </div>
 
-              {/* Phone Card */}
-              <div className={`flex items-center gap-5 p-5 ${theme.mode === 'dark' ? 'bg-slate-800' : 'bg-white'} border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-slate-100'} rounded-3xl shadow-sm hover:shadow-md transition-all`}>
-                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center ${theme.mode === 'dark' ? 'bg-purple-900/20' : 'bg-purple-50'}`}>
-                  <Phone className={`h-7 w-7 ${theme.mode === 'dark' ? 'text-purple-400' : 'text-purple-600'}`} />
+                {/* ID */}
+                <div className="flex items-center justify-between">
+                  <span className={`${theme.colors.d_text} opacity-60 text-sm`}>ID Utilisateur</span>
+                  <span className={`font-mono font-medium ${theme.colors.text} bg-gray-100 dark:bg-slate-800 px-2 py-0.5 rounded text-sm`}>{selectedBetId}</span>
                 </div>
-                <div className="flex-1">
-                  <p className={`text-sm ${theme.colors.d_text} opacity-50 font-medium uppercase tracking-wider mb-0.5`}>Numéro de téléphone</p>
-                  <p className={`text-xl font-bold ${theme.colors.text} tracking-wider`}>{formatPhoneWithCountryCode(selectedPhone?.phone || '')}</p>
+
+                {/* Network */}
+                <div className="flex items-center justify-between">
+                  <span className={`${theme.colors.d_text} opacity-60 text-sm`}>Moyen de paiement</span>
+                  <div className="flex items-center gap-2">
+                    {selectedNetwork?.image && (
+                      <img src={selectedNetwork.image} alt="" className="w-5 h-5 object-contain" />
+                    )}
+                    <span className={`font-semibold ${theme.colors.text}`}>{selectedNetwork?.public_name || selectedNetwork?.name}</span>
+                  </div>
+                </div>
+
+                {/* Phone */}
+                <div className="flex items-center justify-between">
+                  <span className={`${theme.colors.d_text} opacity-60 text-sm`}>Téléphone</span>
+                  <span className={`font-semibold ${theme.colors.text}`}>{formatPhoneWithCountryCode(selectedPhone?.phone || '')}</span>
                 </div>
               </div>
             </div>
 
+            {/* Warning - Minimalist */}
+            <p className={`text-xs text-center ${theme.colors.d_text} opacity-50 px-6 leading-relaxed`}>
+              En confirmant, vous acceptez d'initier cette transaction sur le numéro indiqué.
+            </p>
 
-            {/* Warning Alert */}
-            <div className={`p-5 rounded-3xl flex items-start gap-4 ${theme.mode === 'dark' ? 'bg-amber-900/10 border border-amber-900/50' : 'bg-amber-50 border border-amber-100'}`}>
-              <div className={`mt-0.5 p-2 rounded-xl ${theme.mode === 'dark' ? 'bg-amber-900/30' : 'bg-white shadow-sm'}`}>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-              </div>
-              <p className={`text-sm font-medium ${theme.mode === 'dark' ? 'text-amber-200/70' : 'text-amber-700/80'} leading-relaxed`}>
-                Assurez-vous que toutes les informations sont correctes avant de confirmer.
-              </p>
-            </div>
-
-            {/* Final Action Button */}
-            <div className="pt-4 flex flex-col gap-4">
+            {/* Action Buttons */}
+            <div className="flex flex-col gap-3 pt-2">
               <button
                 onClick={handleSubmit}
                 disabled={loading}
-                className="w-full h-18 bg-[#002d72] hover:bg-[#001d4a] text-white font-bold text-xl rounded-full shadow-xl shadow-blue-900/20 transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-3 py-6"
+                className="w-full h-14 bg-[#002d72] hover:bg-[#001d4a] text-white font-bold text-lg rounded-2xl shadow-lg shadow-blue-900/10 transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
+                style={{ backgroundColor: theme.mode === 'dark' ? theme.colors.primary : '#002d72' }}
               >
                 {loading ? (
                   <>
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                     <span>Traitement...</span>
                   </>
                 ) : (
-                  <span>Confirmer</span>
+                  <span>Confirmer le dépôt</span>
                 )}
               </button>
 
               <button
                 onClick={() => setCurrentStep('enterDetails')}
                 disabled={loading}
-                className={`w-full py-4 text-center font-bold text-lg ${theme.colors.d_text} opacity-50 hover:opacity-100 transition-opacity disabled:opacity-30`}
+                className={`w-full py-3 text-center font-bold text-sm ${theme.colors.d_text} opacity-50 hover:opacity-100 transition-opacity`}
               >
-                Retour pour modification
+                Modifier les informations
               </button>
             </div>
           </div>

@@ -645,7 +645,7 @@ export default function TransactionHistory() {
   };
 
   return (
-    <div className={`mt-8 ${theme.colors.a_background} rounded-[2.5rem] shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden`}>
+    <div className={`mt-4 ${theme.colors.a_background} rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden`}>
       <div className="w-full overflow-hidden">
         {/* Header with title and controls */}
         <div className="px-6 py-4 flex items-center justify-between">
@@ -709,26 +709,26 @@ export default function TransactionHistory() {
                     onClick={() => openTransactionDetails(item)}
                   >
 
-                    <div className="relative p-6 w-full">
+                    <div className="relative p-4 w-full">
                       {/* Unified Layout (Simplified dots design for all screens) */}
                       <div className="w-full">
                         <div className="flex items-center justify-between w-full">
-                          <div className="flex items-center gap-4">
+                          <div className="flex items-center gap-3">
                             {/* Stylized Dots Icon - Light gray circle with 3 blue dots */}
-                            <div className={`w-12 h-12 rounded-full ${theme.mode === 'dark' ? 'bg-gray-700' : 'bg-gray-50'} flex items-center justify-center flex-shrink-0`}>
+                            <div className={`w-10 h-10 rounded-full ${theme.mode === 'dark' ? 'bg-gray-700' : 'bg-gray-50'} flex items-center justify-center flex-shrink-0`}>
                               <div className="flex gap-0.5">
-                                <div className={`w-1.5 h-1.5 rounded-full ${theme.mode === 'dark' ? 'bg-[#60a5fa]' : 'bg-[#3b82f6]'}`}></div>
-                                <div className={`w-1.5 h-1.5 rounded-full ${theme.mode === 'dark' ? 'bg-[#60a5fa]' : 'bg-[#3b82f6]'}`}></div>
-                                <div className={`w-1.5 h-1.5 rounded-full ${theme.mode === 'dark' ? 'bg-[#60a5fa]' : 'bg-[#3b82f6]'}`}></div>
+                                <div className={`w-1 h-1 rounded-full ${theme.mode === 'dark' ? 'bg-[#60a5fa]' : 'bg-[#3b82f6]'}`}></div>
+                                <div className={`w-1 h-1 rounded-full ${theme.mode === 'dark' ? 'bg-[#60a5fa]' : 'bg-[#3b82f6]'}`}></div>
+                                <div className={`w-1 h-1 rounded-full ${theme.mode === 'dark' ? 'bg-[#60a5fa]' : 'bg-[#3b82f6]'}`}></div>
                               </div>
                             </div>
 
                             {/* Transaction Info */}
                             <div className="flex flex-col">
-                              <h3 className={`font-medium text-[1.05rem] ${theme.colors.text} leading-tight`}>
+                              <h3 className={`font-semibold text-sm ${theme.colors.text} leading-tight`}>
                                 {item.transaction.type_trans === 'deposit' ? 'Dépôt' : item.transaction.type_trans === 'withdrawal' ? 'Retrait' : item.transaction.type_trans}
                               </h3>
-                              <p className={`text-[0.85rem] ${theme.mode === 'dark' ? 'text-gray-400' : 'text-gray-500'} font-normal`}>
+                              <p className={`text-xs ${theme.mode === 'dark' ? 'text-gray-400' : 'text-gray-500'} font-normal`}>
                                 {formatDate(item.transaction.created_at)}
                               </p>
                             </div>
@@ -736,11 +736,23 @@ export default function TransactionHistory() {
 
                           {/* Amount and Status */}
                           <div className="text-right">
-                            <div className={`font-medium text-[1rem] ${theme.colors.text}`}>
+                            <div className={`font-bold text-sm ${theme.colors.text}`}>
                               XOF {item.transaction.amount}
                             </div>
-                            <p className={`text-[0.85rem] ${theme.mode === 'dark' ? 'text-gray-500' : 'text-[#b3b3b3]'} font-normal`}>
-                              {item.transaction.status === 'pending' ? 'pending' : item.transaction.status}
+                            <p className={`text-[10px] md:text-xs uppercase tracking-wide ${
+                              item.transaction.status.toLowerCase() === 'expired' 
+                                ? 'text-red-500' 
+                                : ['completed', 'accept', 'success', 'successful'].includes(item.transaction.status.toLowerCase())
+                                  ? 'text-green-500'
+                                  : (theme.mode === 'dark' ? 'text-gray-500' : 'text-[#b3b3b3]')
+                            } font-normal`}>
+                              {item.transaction.status.toLowerCase() === 'expired' 
+                                ? 'EXPIRED' 
+                                : ['completed', 'accept', 'success', 'successful'].includes(item.transaction.status.toLowerCase())
+                                  ? 'SUCCESS'
+                                  : item.transaction.status === 'pending' 
+                                    ? 'pending' 
+                                    : item.transaction.status}
                             </p>
                           </div>
                         </div>

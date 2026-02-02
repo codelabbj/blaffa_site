@@ -146,30 +146,30 @@ const CouponPage = () => {
 
       {/* Header */}
       <header className={`bg-transparent sticky top-0 z-50`}>
-        <div className="w-full px-6 h-20 flex items-center justify-between">
+        <div className="w-full px-6 h-16 flex items-center justify-between">
           <button onClick={() => router.back()} className={`p-2 -ml-2 rounded-full ${theme.colors.hover} transition-colors`}>
-            <ArrowLeft className={theme.colors.text} size={28} />
+            <ArrowLeft className={theme.colors.text} size={24} />
           </button>
-          <h1 className={`text-2xl font-bold ${theme.colors.text}`}>Coupon</h1>
-          <div className="w-10"></div>
+          <h1 className={`text-lg font-bold ${theme.colors.text}`}>Coupon</h1>
+          <div className="w-8"></div>
         </div>
       </header>
 
       <main className="w-full p-6 space-y-6">
         {/* User Card */}
-        <div className={`${theme.colors.a_background} p-8 rounded-[2rem] shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col gap-8 border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-gray-50'}`}>
+        <div className={`${theme.colors.a_background} p-5 rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col gap-6 border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-gray-50'}`}>
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-5">
-              <div className={`w-16 h-16 rounded-2xl ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-[#E8E8E8]'} flex items-center justify-center ${theme.mode === 'dark' ? 'text-slate-300' : 'text-[#999999]'} font-bold text-2xl`}>
+            <div className="flex items-center gap-4">
+              <div className={`w-12 h-12 rounded-xl ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-[#E8E8E8]'} flex items-center justify-center ${theme.mode === 'dark' ? 'text-slate-300' : 'text-[#999999]'} font-bold text-lg`}>
                 {getInitials(userProfile?.first_name, userProfile?.last_name)}
               </div>
               <div>
-                <h3 className={`font-bold text-xl ${theme.colors.text}`}>
+                <h3 className={`font-bold text-base ${theme.colors.text}`}>
                   {userProfile ? `${userProfile.first_name} ${userProfile.last_name}` : 'Anonyme'}
                 </h3>
-                <div className="flex gap-0.5 mt-1">
+                <div className="flex gap-0.5 mt-0.5">
                   {[1, 2, 3, 4, 5].map(i => (
-                    <Star key={i} size={18} className={i <= 4 ? "fill-yellow-400 text-yellow-400" : "text-gray-200 fill-gray-200"} />
+                    <Star key={i} size={14} className={i <= 4 ? "fill-yellow-400 text-yellow-400" : "text-gray-200 fill-gray-200"} />
                   ))}
                 </div>
               </div>
@@ -177,22 +177,22 @@ const CouponPage = () => {
             {(userProfile?.can_publish_coupons || userProfile?.is_staff) && (
               <button
                 onClick={() => router.push('/coupon/create')}
-                className="w-12 h-12 rounded-xl bg-[#002d72] flex items-center justify-center text-white shadow-lg active:scale-95 transition-transform"
+                className="w-10 h-10 rounded-xl bg-[#002d72] flex items-center justify-center text-white shadow-lg active:scale-95 transition-transform"
               >
-                <Plus size={28} strokeWidth={3} />
+                <Plus size={24} strokeWidth={3} />
               </button>
             )}
           </div>
 
           {/* Stats Bar */}
-          <div className="flex gap-4">
-            <div className={`flex-1 ${theme.colors.a_background} border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-gray-100'} rounded-2xl p-4 text-center`}>
-              <div className={`text-3xl font-black ${theme.mode === 'dark' ? 'text-blue-400' : 'text-[#002d72]'} leading-none`}>0</div>
-              <div className={`text-[0.8rem] ${theme.colors.d_text} opacity-60 font-medium mt-2`}>Mes coupons</div>
+          <div className="flex gap-3">
+            <div className={`flex-1 ${theme.colors.a_background} border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-gray-100'} rounded-2xl p-3 text-center`}>
+              <div className={`text-xl font-black ${theme.mode === 'dark' ? 'text-blue-400' : 'text-[#002d72]'} leading-none`}>0</div>
+              <div className={`text-xs ${theme.colors.d_text} opacity-60 font-medium mt-1`}>Mes coupons</div>
             </div>
-            <div className={`flex-1 ${theme.colors.a_background} border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-gray-100'} rounded-2xl p-4 text-center`}>
-              <div className="text-3xl font-black text-green-600 leading-none">0 FCFA</div>
-              <div className={`text-[0.8rem] ${theme.colors.d_text} opacity-60 font-medium mt-2`}>Bonus</div>
+            <div className={`flex-1 ${theme.colors.a_background} border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-gray-100'} rounded-2xl p-3 text-center`}>
+              <div className="text-xl font-black text-green-600 leading-none">0 FCFA</div>
+              <div className={`text-xs ${theme.colors.d_text} opacity-60 font-medium mt-1`}>Bonus</div>
             </div>
           </div>
         </div>
@@ -202,41 +202,41 @@ const CouponPage = () => {
           {/* "Tous" Category */}
           <button
             onClick={() => setSelectedPlatformId(null)}
-            className={`flex-shrink-0 ${theme.colors.a_background} px-6 py-4 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex items-center gap-3 border transition-all
+            className={`flex-shrink-0 ${theme.colors.a_background} px-4 py-3 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex items-center gap-2 border transition-all
               ${selectedPlatformId === null
                 ? 'border-blue-600 ring-2 ring-blue-600/20'
                 : theme.mode === 'dark' ? 'border-slate-800' : 'border-transparent opacity-60 hover:opacity-100'}`}
           >
-            <div className={`w-10 h-10 rounded-lg ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-gray-50'} flex items-center justify-center`}>
-              <Trophy className={selectedPlatformId === null ? "text-blue-600" : "text-gray-400"} size={20} />
+            <div className={`w-8 h-8 rounded-lg ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-gray-50'} flex items-center justify-center`}>
+              <Trophy className={selectedPlatformId === null ? "text-blue-600" : "text-gray-400"} size={16} />
             </div>
-            <span className={`font-bold text-lg ${selectedPlatformId === null ? 'text-blue-600' : theme.colors.text}`}>Tous</span>
+            <span className={`font-bold text-sm ${selectedPlatformId === null ? 'text-blue-600' : theme.colors.text}`}>Tous</span>
           </button>
 
           {platformsLoading ? (
             [1, 2, 3].map(i => (
-              <div key={i} className={`flex-shrink-0 w-32 h-16 ${theme.mode === 'dark' ? 'bg-slate-800' : 'bg-gray-100'} rounded-2xl animate-pulse`}></div>
+              <div key={i} className={`flex-shrink-0 w-32 h-14 ${theme.mode === 'dark' ? 'bg-slate-800' : 'bg-gray-100'} rounded-2xl animate-pulse`}></div>
             ))
           ) : (
             platforms.map((platform) => (
               <button
                 key={platform.id}
                 onClick={() => setSelectedPlatformId(platform.id)}
-                className={`flex-shrink-0 ${theme.colors.a_background} px-5 py-4 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex items-center gap-3 border transition-all
+                className={`flex-shrink-0 ${theme.colors.a_background} px-4 py-3 rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.02)] flex items-center gap-2 border transition-all
                   ${selectedPlatformId === platform.id
                     ? 'border-blue-600 ring-2 ring-blue-600/20'
                     : theme.mode === 'dark' ? 'border-slate-800' : 'border-transparent opacity-60 hover:opacity-100'}`}
               >
-                <div className={`w-10 h-10 rounded-lg ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-gray-50'} flex items-center justify-center p-1`}>
+                <div className={`w-8 h-8 rounded-lg ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-gray-50'} flex items-center justify-center p-1`}>
                   {platform.image ? (
-                    <img src={platform.image} alt="" className="w-8 h-8 object-contain" />
+                    <img src={platform.image} alt="" className="w-6 h-6 object-contain" />
                   ) : (
-                    <div className="w-8 h-8 bg-blue-600 rounded-md flex items-center justify-center text-white font-bold text-xs">
+                    <div className="w-6 h-6 bg-blue-600 rounded-md flex items-center justify-center text-white font-bold text-[10px]">
                       {platform.name.charAt(0)}
                     </div>
                   )}
                 </div>
-                <span className={`font-bold text-lg ${selectedPlatformId === platform.id ? 'text-blue-600' : theme.colors.text}`}>
+                <span className={`font-bold text-sm ${selectedPlatformId === platform.id ? 'text-blue-600' : theme.colors.text}`}>
                   {platform.public_name || platform.name}
                 </span>
               </button>
@@ -264,67 +264,68 @@ const CouponPage = () => {
         ) : (
           <div className="space-y-6">
             {coupons.map((coupon) => (
-              <div key={coupon.id} className={`${theme.colors.a_background} rounded-[2.5rem] p-8 shadow-[0_4px_25px_rgba(0,0,0,0.04)] border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-transparent'} transition-all hover:shadow-lg`}>
+              <div key={coupon.id} className={`${theme.colors.a_background} rounded-3xl p-5 shadow-[0_4px_25px_rgba(0,0,0,0.04)] border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-transparent'} transition-all hover:shadow-lg`}>
                 {/* Author Info */}
-                <div className="flex items-center gap-5 mb-6">
-                  <div className={`w-16 h-16 rounded-[1.25rem] ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-[#E8E8E8]'} ${theme.mode === 'dark' ? 'text-slate-400' : 'text-[#999999]'} flex items-center justify-center font-bold text-2xl`}>
+                <div className="flex items-center gap-4 mb-4">
+                  <div className={`w-12 h-12 rounded-xl ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-[#E8E8E8]'} ${theme.mode === 'dark' ? 'text-slate-400' : 'text-[#999999]'} flex items-center justify-center font-bold text-lg`}>
                     {getInitials(coupon.author_first_name, coupon.author_last_name)}
                   </div>
                   <div>
-                    <h3 className={`font-bold text-[1.3rem] ${theme.colors.text}`}>{coupon.author_first_name} {coupon.author_last_name}</h3>
-                    <div className="flex gap-0.5 mt-1">
+                    <h3 className={`font-bold text-base ${theme.colors.text}`}>{coupon.author_first_name} {coupon.author_last_name}</h3>
+                    <div className="flex gap-0.5 mt-0.5">
                       {[1, 2, 3, 4, 5].map(i => (
-                        <Star key={i} size={18} className={i <= Math.round(coupon.author_rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-200 fill-gray-200"} />
+                        <Star key={i} size={14} className={i <= Math.round(coupon.author_rating) ? "fill-yellow-400 text-yellow-400" : "text-gray-200 fill-gray-200"} />
                       ))}
                     </div>
                   </div>
                 </div>
 
                 {/* Bet Type Pill */}
-                <div className="inline-flex items-center gap-2 bg-[#E9F3FF] dark:bg-blue-900/30 text-[#1976D2] dark:text-blue-300 text-[1rem] px-5 py-2.5 rounded-xl font-bold mb-6">
-                  <LinkIcon size={16} />
+                <div className="inline-flex items-center gap-1.5 bg-[#E9F3FF] dark:bg-blue-900/30 text-[#1976D2] dark:text-blue-300 text-xs px-3 py-1.5 rounded-lg font-bold mb-4">
+                  <LinkIcon size={14} />
                   {coupon.coupon_type === 'combine' ? `Combiné (${coupon.match_count} matchs)` : 'Simple'}
                 </div>
 
                 {/* Côte & Platform */}
-                <div className="flex justify-between items-end mb-8">
+                <div className="flex justify-between items-end mb-6">
                   <div>
-                    <div className={`${theme.colors.d_text} opacity-60 text-[1.1rem] font-medium leading-none`}>Côte totale: <span className={`text-[1.8rem] font-black ml-1 ${theme.colors.text}`}>{coupon.cote}</span></div>
+                    <div className={`${theme.colors.d_text} opacity-60 text-xs uppercase tracking-wide font-medium leading-none`}>Côte totale: <span className={`text-2xl font-black ml-1 ${theme.colors.text}`}>{coupon.cote}</span></div>
                   </div>
-                  <div className={`flex items-center gap-3 ${theme.mode === 'dark' ? 'bg-slate-800 border-slate-700' : 'bg-[#F8F9FA] border-gray-100'} py-2.5 px-5 rounded-[1.5rem] shadow-sm border`}>
-                    <div className="w-6 h-6 rounded flex items-center justify-center overflow-hidden">
+                  <div className={`flex items-center gap-2 ${theme.mode === 'dark' ? 'bg-slate-800 border-slate-700' : 'bg-[#F8F9FA] border-gray-100'} py-1.5 px-3 rounded-xl shadow-sm border`}>
+                    <div className="w-5 h-5 rounded flex items-center justify-center overflow-hidden">
                       <img src={coupon.bet_app.image} alt="app" className="w-full h-full object-contain" />
                     </div>
-                    <span className={`font-bold text-sm ${theme.colors.text}`}>{coupon.bet_app.public_name}</span>
+                    <span className={`font-bold text-xs ${theme.colors.text}`}>{coupon.bet_app.public_name}</span>
                   </div>
                 </div>
 
-                <hr className={`border-gray-50 ${theme.mode === 'dark' ? 'border-slate-700/50' : ''} mb-6`} />
+                <hr className={`border-gray-50 ${theme.mode === 'dark' ? 'border-slate-700/50' : ''} mb-4`} />
 
                 {/* Footer Actions */}
                 <div className="flex items-center justify-between">
-                  <div className={`flex items-center gap-6 ${theme.mode === 'dark' ? 'text-slate-400' : 'text-[#999999]'}`}>                    <div className="flex items-center gap-2">
-                    <ThumbsUp size={24} className={coupon.user_liked ? "text-blue-500 fill-blue-500" : ""} />
-                    <span className="font-bold text-lg">{coupon.likes}</span>
-                  </div>
-                    <div className="flex items-center gap-2">
-                      <ThumbsDown size={24} className={coupon.user_disliked ? "text-red-500 fill-red-500" : ""} />
-                      <span className="font-bold text-lg">{coupon.dislikes}</span>
+                  <div className={`flex items-center gap-4 ${theme.mode === 'dark' ? 'text-slate-400' : 'text-[#999999]'}`}>
+                    <div className="flex items-center gap-1.5">
+                      <ThumbsUp size={18} className={coupon.user_liked ? "text-blue-500 fill-blue-500" : ""} />
+                      <span className="font-bold text-sm">{coupon.likes}</span>
                     </div>
-                    <div className="flex items-center gap-1.5 ml-1">
-                      <Star size={24} className="fill-yellow-400 text-yellow-400" />
-                      <span className={`font-bold text-lg ${theme.colors.text}`}>{coupon.average_rating || '4.5'}</span>
+                    <div className="flex items-center gap-1.5">
+                      <ThumbsDown size={18} className={coupon.user_disliked ? "text-red-500 fill-red-500" : ""} />
+                      <span className="font-bold text-sm">{coupon.dislikes}</span>
+                    </div>
+                    <div className="flex items-center gap-1 ml-1">
+                      <Star size={18} className="fill-yellow-400 text-yellow-400" />
+                      <span className={`font-bold text-sm ${theme.colors.text}`}>{coupon.average_rating || '4.5'}</span>
                     </div>
                   </div>
 
                   <button
                     onClick={() => handleCopy(coupon.code, coupon.id)}
-                    className={`flex items-center gap-3 px-6 py-4 rounded-[1.25rem] text-[1.1rem] font-black transition-all shadow-sm active:scale-95
+                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-black transition-all shadow-sm active:scale-95
                       ${copiedId === coupon.id
                         ? 'bg-green-100 text-green-700 border border-green-200'
                         : 'bg-[#ECF2FF] text-[#002d72] dark:text-blue-300'}`}
                   >
-                    {copiedId === coupon.id ? <Check size={20} strokeWidth={3} /> : <div className="p-1 rounded bg-white/60 dark:bg-gray-800/60"><Copy size={18} /></div>}
+                    {copiedId === coupon.id ? <Check size={16} strokeWidth={3} /> : <div className="p-0.5 rounded bg-white/60 dark:bg-gray-800/60"><Copy size={14} /></div>}
                     <span>{coupon.code}</span>
                   </button>
                 </div>

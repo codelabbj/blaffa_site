@@ -247,6 +247,31 @@ export default function NotificationsPage() {
     return date.toLocaleDateString();
   };
 
+  // Render notification content with clickable links
+  const renderContentWithLinks = (content: string) => {
+    // URL regex pattern
+    const urlPattern = /(https?:\/\/[^\s]+)/g;
+    const parts = content.split(urlPattern);
+
+    return parts.map((part, index) => {
+      if (part.match(urlPattern)) {
+        return (
+          <a
+            key={index}
+            href={part}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {part}
+          </a>
+        );
+      }
+      return <span key={index}>{part}</span>;
+    });
+  };
+
   // Setup WebSocket (same as in NotificationBell)
   const setupWebSocket = () => {
     const accessToken = localStorage.getItem('accessToken');
@@ -490,15 +515,15 @@ export default function NotificationsPage() {
             </div>
           </div>
         ) : (
-          <div className="space-y-2">
+          <div className="space-y-6">
             {notifications.map((notification, index) => (
               <div
                 key={notification.id}
                 ref={index === notifications.length - 1 ? lastNotificationElement : null}
-                className={`relative bg-gradient-to-br ${theme.colors.background} rounded-lg border ${notification.is_read
-                  ? 'border-gray-200 dark:border-gray-700'
-                  : 'border-orange-200 dark:border-orange-800 bg-orange-50 dark:bg-orange-900/10'
-                  } p-4 hover:shadow-md transition-shadow cursor-pointer ${selectedNotifications.has(notification.id) ? 'ring-2 ring-blue-500' : ''
+                className={`group relative bg-gradient-to-br ${theme.colors.background} rounded-xl border-2 transition-all duration-200 ${notification.is_read
+                  ? 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+                  : 'border-blue-300 dark:border-blue-700 bg-blue-50/50 dark:bg-blue-900/10 hover:border-blue-400 dark:hover:border-blue-600 shadow-sm'
+                  } p-5 hover:shadow-lg cursor-pointer ${selectedNotifications.has(notification.id) ? 'ring-2 ring-blue-500 ring-offset-2' : ''
                   }`}
                 onClick={() => {
                   if (isSelectionMode) {
@@ -508,55 +533,63 @@ export default function NotificationsPage() {
                   }
                 }}
               >
-                <div className="flex items-start space-x-3">
+                <div className="flex items-start gap-4">
+                  {/* Selection Checkbox */}
                   {isSelectionMode && (
                     <div className="flex-shrink-0 mt-1">
                       <input
                         type="checkbox"
                         checked={selectedNotifications.has(notification.id)}
                         onChange={() => toggleNotificationSelection(notification.id)}
-                        className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
+                        className="h-5 w-5 text-blue-600 rounded border-gray-300 focus:ring-blue-500 cursor-pointer"
                       />
                     </div>
                   )}
 
+                  {/* Unread Indicator */}
+                  {!isSelectionMode && !notification.is_read && (
+                    <div className="flex-shrink-0 mt-2">
+                      <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse shadow-lg shadow-blue-500/50" />
+                    </div>
+                  )}
+
+                  {/* Content */}
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center justify-between">
-                      <h3 className={`text-sm font-medium ${notification.is_read
-                        ? `${theme.colors.text}`
-                        : `${theme.colors.text} font-semibold`
+                    <div className="flex items-start justify-between gap-3 mb-2">
+                      <h3 className={`text-base font-semibold leading-tight ${notification.is_read
+                        ? `${theme.colors.text} opacity-80`
+                        : `${theme.colors.text}`
                         }`}>
                         {notification.title}
                       </h3>
-                      <div className="flex items-center space-x-2">
-                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <span className="text-xs font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
                           {formatDate(notification.created_at)}
                         </span>
-                        {!notification.is_read && (
-                          <div className="w-2 h-2 bg-orange-500 rounded-full" />
-                        )}
                       </div>
                     </div>
-                    <p className={`mt-1 text-sm ${notification.is_read
-                      ? `${theme.colors.text}`
-                      : `${theme.colors.text}`
+                    <p className={`text-sm leading-relaxed ${notification.is_read
+                      ? 'text-gray-600 dark:text-gray-400'
+                      : 'text-gray-700 dark:text-gray-300'
                       }`}>
-                      {notification.content}
+                      {renderContentWithLinks(notification.content)}
                     </p>
                   </div>
-                </div>
 
-                {!isSelectionMode && !notification.is_read && (
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      markAsRead(notification.id);
-                    }}
-                    className="absolute top-4 right-4 p-1 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
-                  >
-                    <Check className="h-4 w-4 text-gray-400 hover:text-green-600" />
-                  </button>
-                )}
+                  {/* Mark as Read Button */}
+                  {!isSelectionMode && !notification.is_read && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        markAsRead(notification.id);
+                      }}
+                      className="flex-shrink-0 p-2 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200"
+                      title="Marquer comme lu"
+                    >
+                      <Check className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                    </button>
+                  )}
+                </div>
               </div>
             ))}
 
