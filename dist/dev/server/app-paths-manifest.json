@@ -1,8 +1,0 @@
-{
-  "/coupon/page": "app/coupon/page.js",
-  "/dashboard/page": "app/dashboard/page.js",
-  "/deposit/page": "app/deposit/page.js",
-  "/login/page": "app/login/page.js",
-  "/notifications/page": "app/notifications/page.js",
-  "/page": "app/page.js"
-}

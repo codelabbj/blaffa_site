@@ -1257,19 +1257,7 @@ export default function Withdraw() {
     }
   };
 
-  // Format phone number with country code for display
-  const formatPhoneWithCountryCode = (phone: string) => {
-    if (!phone) return '';
-    const indication = selectedNetwork?.indication || '+226';
-    // If phone already contains indication
-    if (phone.startsWith('+') || phone.startsWith('00')) return phone;
 
-    // Clean phone number
-    const cleanPhone = phone.replace(/\s+/g, '');
-
-    // Add indication if not present
-    return `${indication} ${cleanPhone}`;
-  };
 
   // Get current step title
   const getCurrentStepTitle = () => {
