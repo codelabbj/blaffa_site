@@ -212,13 +212,13 @@ export default function AllTransactionsPage() {
       return <span className="bg-green-500/10 text-green-500 text-xs font-medium me-2 px-2.5 py-0.5 rounded">payment_init_success</span>;
     }
     const statusMap: Record<string, { text: string; className: string }> = {
-      completed: { text: 'Terminé', className: 'bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300' },
-      accept: { text: 'accepter', className: 'bg-green-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300' },
+      completed: { text: 'success', className: 'bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300' },
+      accept: { text: 'success', className: 'bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300' },
       pending: { text: 'En cours', className: 'bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300' },
       failed: { text: 'Échoué', className: 'bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300' },
       error: { text: 'Échoué', className: 'bg-red-100 text-red-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-red-900 dark:text-red-300' },
       default: { text: status, className: 'bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300' },
-      Approve: { text: 'Approve', className: 'bg-green-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-yellow-900 dark:text-yellow-300' },
+      Approve: { text: 'success', className: 'bg-green-100 text-green-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-green-900 dark:text-green-300' },
     };
     const { text, className } = statusMap[status.toLowerCase()] || statusMap.default;
     return <span className={className}>{text}</span>;
@@ -475,10 +475,13 @@ export default function AllTransactionsPage() {
                           <div className={`font-bold text-lg ${theme.colors.text}`}>
                             XOF {tx.amount}
                           </div>
-                          <p className={`text-sm font-medium ${tx.status === 'completed' ? 'text-green-500' :
-                            tx.status === 'pending' ? 'text-orange-400' : 'text-red-500'
+                          <p className={`text-sm font-medium ${['completed', 'accept', 'approve', 'success', 'successful', 'payment_init_success'].includes(tx.status?.toLowerCase())
+                            ? 'text-green-500'
+                            : ['pending', 'en attente'].includes(tx.status?.toLowerCase())
+                              ? 'text-orange-400'
+                              : 'text-red-500'
                             }`}>
-                            {tx.status}
+                            {['completed', 'accept', 'approve', 'success', 'successful', 'payment_init_success'].includes(tx.status?.toLowerCase()) ? 'success' : tx.status}
                           </p>
                         </div>
                       </div>

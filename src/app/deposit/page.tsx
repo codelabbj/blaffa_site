@@ -1116,7 +1116,7 @@ export default function Deposits() {
                 className="w-full py-4 border border-[#002d72] dark:border-blue-400 rounded-2xl flex items-center justify-center gap-3 text-[#002d72] dark:text-blue-400 font-bold text-lg hover:bg-blue-50 dark:hover:bg-blue-900/10 transition-colors"
               >
                 <Plus size={24} strokeWidth={2.5} />
-                Créer un nouvel ID
+                Ajouter un nouvel ID
               </button>
             </div>
 

@@ -739,19 +739,18 @@ export default function TransactionHistory() {
                             <div className={`font-bold text-sm ${theme.colors.text}`}>
                               XOF {item.transaction.amount}
                             </div>
-                            <p className={`text-[10px] md:text-xs uppercase tracking-wide ${
-                              item.transaction.status.toLowerCase() === 'expired' 
-                                ? 'text-red-500' 
+                            <p className={`text-[10px] md:text-xs tracking-wide ${item.transaction.status.toLowerCase() === 'expired'
+                              ? 'text-red-500'
+                              : ['completed', 'accept', 'success', 'successful'].includes(item.transaction.status.toLowerCase())
+                                ? 'text-green-500'
+                                : (theme.mode === 'dark' ? 'text-gray-500' : 'text-[#b3b3b3]')
+                              } font-normal`}>
+                              {item.transaction.status.toLowerCase() === 'expired'
+                                ? 'EXPIRED'
                                 : ['completed', 'accept', 'success', 'successful'].includes(item.transaction.status.toLowerCase())
-                                  ? 'text-green-500'
-                                  : (theme.mode === 'dark' ? 'text-gray-500' : 'text-[#b3b3b3]')
-                            } font-normal`}>
-                              {item.transaction.status.toLowerCase() === 'expired' 
-                                ? 'EXPIRED' 
-                                : ['completed', 'accept', 'success', 'successful'].includes(item.transaction.status.toLowerCase())
-                                  ? 'SUCCESS'
-                                  : item.transaction.status === 'pending' 
-                                    ? 'pending' 
+                                  ? 'success'
+                                  : item.transaction.status === 'pending'
+                                    ? 'pending'
                                     : item.transaction.status}
                             </p>
                           </div>
