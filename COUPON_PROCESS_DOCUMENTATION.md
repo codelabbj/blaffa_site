@@ -179,11 +179,11 @@ Content-Type: application/json
 
 ---
 
-## 2. Noter un Coupon
+## 2. Voter pour un Coupon (Like/Dislike)
 
 ### Endpoint
 ```
-POST /coupons/<coupon_id>/rate/
+POST /coupons/<coupon_id>/vote/
 ```
 
 ### Permissions
@@ -192,6 +192,16 @@ POST /coupons/<coupon_id>/rate/
   - Cette permission est accordée automatiquement aux utilisateurs avec :
     - Au moins 1 mois d'ancienneté
     - Au moins 15 000 FCFA de transactions acceptées
+
+### Description
+Ce système remplace la notation par étoiles classique. Il s'agit d'un système de **Like / Dislike** (J'aime / Je n'aime pas) avec des règles spécifiques.
+
+### Règles Business
+1. **Un vote par jour et par auteur** : Un utilisateur ne peut voter pour qu'un seul coupon d'un même auteur par jour (24h).
+2. **Pas de vote sur ses propres coupons** : Un auteur ne peut pas voter pour ses créations.
+3. **Toggle (Bascule)** :
+   - Si l'utilisateur envoie le **même vote** (ex: Like sur un coupon déjà Liké) → **Le vote est supprimé** (annulé).
+   - Si l'utilisateur envoie le **vote opposé** (ex: Dislike sur un coupon Liké) → **Le vote est mis à jour** (devient Dislike).
 
 ### Requête
 
@@ -204,63 +214,124 @@ Content-Type: application/json
 **Body :**
 ```json
 {
-  "rating": 5
+  "vote_type": "like"
 }
 ```
+*Ou `dislike`*
 
 **Champs :**
-- `rating` (requis) : Note entre 1 et 5 étoiles
+- `vote_type` (requis) : `"like"` ou `"dislike"`
 
 ### Réponse
 
-**Succès (201 Created) :**
+**Succès (200 OK) :**
 ```json
 {
-  "message": "Note enregistrée avec succès",
-  "new_average": 4.50,
-  "amount_earned": 1.00
+  "message": "Vote like enregistré avec succès",
+  "coupon": {
+    "id": "uuid-coupon",
+    "likes": 15,
+    "dislikes": 2,
+    "user_liked": true,
+    "user_disliked": false,
+    "author_coupon_points": 120
+  },
+  "amount_earned": 1.00,
+  "points_delta": 1
 }
 ```
 
+*Notes sur la réponse :*
+- `user_liked` / `user_disliked` : Indiquent l'état actuel du vote de l'utilisateur sur ce coupon.
+- `amount_earned` : Montant gagné (ou perdu) par l'auteur suite à ce vote.
+- `points_delta` : Variation des points de l'auteur.
+
 **Erreurs possibles :**
-- `403 Forbidden` : L'utilisateur n'a pas l'autorisation de noter
-- `404 Not Found` : Le coupon n'existe pas
+- `403 Forbidden` : Pas autorisé à voter.
 - `400 Bad Request` : 
-  - L'utilisateur a déjà noté ce coupon
-  - La note n'est pas entre 1 et 5
+  - "Vous avez déjà voté aujourd'hui sur un coupon de cet auteur."
+  - "Vous ne pouvez pas voter sur votre propre coupon."
 
-### Processus interne
-
-1. **Vérification de la permission** (`can_rate_coupons`)
-2. **Vérification de l'existence du coupon**
-3. **Vérification du vote unique** : Un utilisateur ne peut noter qu'une seule fois par coupon
-4. **Validation de la note** (1-5 étoiles)
-5. **Création du vote** (`CouponRating`) :
-   ```python
-   CouponRating.objects.create(
-       user=request.user,
-       coupon=coupon,
-       rating=rating_value
-   )
-   ```
-6. **Mise à jour des statistiques du coupon** :
-   - `total_ratings += 1`
-   - `sum_ratings += rating.rating`
-   - `average_rating = sum_ratings / total_ratings`
-7. **Rémunération de l'auteur** (si `author.can_publish_coupons = True`) :
-   - Montant par vote = `Setting.monetization_amount` (par défaut 1.00 XOF)
-   - Crédit immédiat dans le portefeuille (`CouponWallet`)
-   - Création d'un historique de paiement (`CouponPayout`)
-
-### Contraintes
-
-- **Un vote par utilisateur** : `unique_together = ['user', 'coupon']` dans `CouponRating`
-- **Note valide** : Entre 1 et 5 étoiles uniquement
-- **Transaction atomique** : Toute l'opération est dans une transaction pour garantir la cohérence
+### Processus interne (Monétisation)
+- **Like** : Ajoute `monetization_amount` (ex: 1 FCFA) au `CouponWallet` de l'auteur. Ajoute 1 point.
+- **Dislike** : Retire `monetization_amount` au `CouponWallet` de l'auteur.
+- **Suppression (Annulation)** : Inverse l'effet précédent (retire l'argent gagné si c'était un like).
 
 ---
 
-## 3. Obtenir la Liste des Coupons
+## 3. Commentaires et Avis sur l'Auteur (Profil)
+
+En plus des coupons, les utilisateurs peuvent interagir directement sur le profil des auteurs (Tipsters) via des commentaires et des évaluations globales.
+
+### A. Commentaires Auteur
+
+**1. Créer un commentaire**
+- **Endpoint** : `POST /author-comments/`
+- **Body** :
+  ```json
+  {
+    "coupon_author_id": "uuid-de-l-auteur-du-coupon",
+    "content": "Super pronostiqueur, merci !",
+    "parent_id": "uuid-commentaire-parent" (optionnel, pour répondre)
+  }
+  ```
+- **Réponse** : Retourne l'objet commentaire créé.
+- **Note** : Les commentaires sont "soft deleted" (marqués comme supprimés mais conservés en base).
+
+**2. Lister les commentaires**
+- **Endpoint** : `GET /author-comments/list/?coupon_author_id=<uuid>`
+- **Description** : Récupère les commentaires de premier niveau pour un auteur donné. Les réponses (`replies`) sont imbriquées dans chaque commentaire.
+- **Réponse** : Liste d'objets commentaires.
+
+**3. Supprimer un commentaire**
+- **Endpoint** : `DELETE /author-comments/<comment_id>/`
+- **Règle** : Un utilisateur ne peut supprimer que ses propres commentaires.
+
+### B. Évaluation Auteur (Like/Dislike Profil)
+
+Les utilisateurs peuvent "Aimer" ou "Ne pas aimer" un auteur globalement.
+
+**Endpoint** : `POST /author-ratings/`
+
+**Body** :
+```json
+{
+  "coupon_author_id": "uuid-de-l-auteur",
+  "is_like": true
+}
+```
+*Mettre `false` pour dislike.*
+
+**Réponse** :
+```json
+{
+  "id": "...",
+  "user": { ... },
+  "is_like": true,
+  ...
+}
+```
+
+### C. Statistiques Auteur
+
+Pour obtenir les compteurs agrégés (nombre de commentaires, total likes/dislikes reçus).
+
+**Endpoint** : `GET /author-stats/<user_id>/`
+
+**Réponse** :
+```json
+{
+  "user": { ... },
+  "total_comments": 42,
+  "total_likes": 150,
+  "total_dislikes": 5,
+  "updated_at": "..."
+}
+```
+
+---
+
+## 4. Obtenir la Liste des Coupons
 
 ### Endpoint
 ```
@@ -382,9 +453,9 @@ GET /coupon?bet_app=uuid-app&page=1&page_size=20
   "bet_app": ForeignKey(AppName),
   "author": ForeignKey(User),
   "likes_count": Integer (default=0),
+  "dislikes_count": Integer (default=0),
   "total_ratings": Integer (default=0),
-  "sum_ratings": Integer (default=0),
-  "average_rating": Decimal(3,2) (default=0.00)
+  "sum_ratings": Integer (default=0)
 }
 ```
 
@@ -395,8 +466,34 @@ GET /coupon?bet_app=uuid-app&page=1&page_size=20
   "id": UUID,
   "user": ForeignKey(User),
   "coupon": ForeignKey(Coupon),
-  "rating": Integer (1-5),
+  "is_like": Boolean (True=Like, False=Dislike),
   "created_at": DateTime
+}
+```
+
+### AuthorComment (Nouveau)
+
+```python
+{
+  "id": UUID,
+  "author": ForeignKey(User),
+  "coupon_author": ForeignKey(User),
+  "content": Text,
+  "parent": ForeignKey(Self, null=True),
+  "is_deleted": Boolean (default=False),
+  "created_at": DateTime
+}
+```
+
+### AuthorStats (Nouveau)
+
+```python
+{
+  "user": OneToOneField(User),
+  "total_comments": Integer,
+  "total_likes": Integer,
+  "total_dislikes": Integer,
+  "updated_at": DateTime
 }
 ```
 
@@ -554,40 +651,39 @@ curl -X POST https://api.example.com/coupon \
   }'
 ```
 
-### Exemple 2 : Noter un coupon
+### Exemple 2 : Voter pour un coupon (Like)
 
 ```bash
-curl -X POST https://api.example.com/coupons/123e4567-e89b-12d3-a456-426614174000/rate/ \
+curl -X POST https://api.example.com/coupons/123e4567-e89b-12d3-a456-426614174000/vote/ \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "rating": 5
+    "vote_type": "like"
   }'
 ```
 
-### Exemple 3 : Lister les coupons
+### Exemple 3 : Commenter un auteur
 
-**Sans authentification :**
 ```bash
-curl -X GET "https://api.example.com/coupon?bet_app=123e4567-e89b-12d3-a456-426614174000&page=1"
-```
-
-**Avec authentification (pour avoir user_rating et can_rate) :**
-```bash
-curl -X GET "https://api.example.com/coupon?bet_app=123e4567-e89b-12d3-a456-426614174000&page=1" \
-  -H "Authorization: Bearer YOUR_TOKEN"
+curl -X POST https://api.example.com/author-comments/ \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "coupon_author_id": "uuid-auteur",
+    "content": "Excellent travail !"
+  }'
 ```
 
 ---
 
 ## Notes Importantes
 
-1. **Un vote par utilisateur** : Un utilisateur ne peut noter qu'une seule fois chaque coupon
-2. **Rémunération immédiate** : L'auteur reçoit l'argent directement dans son portefeuille
-3. **Statistiques en temps réel** : Les statistiques (`average_rating`, `total_ratings`) sont mises à jour immédiatement après chaque vote
-4. **Filtrage temporel** : Seuls les coupons des dernières 24 heures sont affichés dans la liste
-5. **Transaction atomique** : La notation est effectuée dans une transaction pour garantir la cohérence des données
-6. **Accès public à la liste** : L'endpoint `GET /coupon` est accessible sans authentification. Les champs `user_rating` et `can_rate` seront `null`/`false` si l'utilisateur n'est pas connecté
+1. **Un vote par jour et par auteur** : Limite pour éviter les abus et le spam de votes.
+2. **Rémunération dynamique** : Le solde varie en temps réel selon les likes (gain) et dislikes (perte ou neutre).
+3. **Statistiques en temps réel** : Les compteurs `likes_count` et `dislikes_count` sont mis à jour immédiatement.
+4. **Suppression de vote** : Si un utilisateur refait le même vote, cela annule son vote précédent.
+5. **Filtrage temporel** : Seuls les coupons des dernières 24 heures sont affichés dans la liste principale.
+6. **Transaction atomique** : Toutes les opérations (vote, argent, points) sont atomiques.
 
 ---
 
@@ -599,4 +695,6 @@ curl -X GET "https://api.example.com/coupon?bet_app=123e4567-e89b-12d3-a456-4266
 - `GET /coupon-wallet` : Consulter son portefeuille coupon
 - `GET /user/coupon-stats/` : Statistiques de ses coupons publiés
 - `POST /coupon-wallet-withdraw` : Retirer de l'argent du portefeuille coupon
-
+- `POST /author-comments/` : Poster un commentaire sur le profil d'un auteur
+- `POST /author-ratings/` : Liker/Disliker le profil d'un auteur
+- `GET /author-stats/<user_id>/` : Voir les stats (likes/dislikes) d'un auteur

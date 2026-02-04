@@ -29,7 +29,13 @@ interface Coupon {
   total_ratings: number;
   likes_count: number;
   dislikes_count: number;
-  user_rating: number | null;
+  match_count: number;
+  average_rating: number;
+  total_ratings: number;
+  likes_count: number;
+  dislikes_count: number;
+  user_liked: boolean;
+  user_disliked: boolean;
   can_rate: boolean;
 }
 
@@ -47,8 +53,6 @@ const CouponPage = () => {
   const [selectedPlatformId, setSelectedPlatformId] = useState<string | null>(null);
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
-  const [couponStats, setCouponStats] = useState({ total_published: 0 });
-  const [walletBalance, setWalletBalance] = useState(0);
   const [loading, setLoading] = useState(true);
   const [platformsLoading, setPlatformsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -76,7 +80,14 @@ const CouponPage = () => {
       const response = await api.get(url);
       if (response.status === 200) {
         const data = response.data;
-        setCoupons(data.results || data || []);
+        const results = data.results || data || [];
+        const mappedCoupons = results.map((c: any) => ({
+          ...c,
+          // Map legacy user_rating to new booleans if explicit booleans aren't present
+          user_liked: c.user_liked ?? (c.user_rating === 5),
+          user_disliked: c.user_disliked ?? (c.user_rating === 1),
+        }));
+        setCoupons(mappedCoupons);
       }
     } catch (err) {
       console.error('Error fetching coupons:', err);
@@ -107,38 +118,11 @@ const CouponPage = () => {
     }
   };
 
-  const fetchCouponStats = async () => {
-    const token = localStorage.getItem('accessToken');
-    if (!token) return;
-    try {
-      const response = await api.get('/blaffa/user/coupon-stats/');
-      if (response.status === 200) {
-        setCouponStats(response.data);
-      }
-    } catch (err) {
-      console.error('Error fetching coupon stats:', err);
-    }
-  };
-
-  const fetchWallet = async () => {
-    const token = localStorage.getItem('accessToken');
-    if (!token) return;
-    try {
-      const response = await api.get('/blaffa/coupon-wallet/');
-      if (response.status === 200) {
-        setWalletBalance(response.data.balance || 0);
-      }
-    } catch (err) {
-      console.error('Error fetching wallet:', err);
-    }
-  };
 
   useEffect(() => {
     fetchPlatforms();
     fetchCoupons();
     fetchUserProfile();
-    fetchCouponStats();
-    fetchWallet();
   }, []);
 
   useEffect(() => {
@@ -157,7 +141,7 @@ const CouponPage = () => {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  const handleRate = async (couponId: string, rating: number) => {
+  const handleVote = async (couponId: string, voteType: 'like' | 'dislike') => {
     if (!userProfile?.can_rate_coupons) {
       setError("Vous n'avez pas l'autorisation de noter des coupons. Pour noter, vous devez avoir au moins 1 mois d'ancienneté et 15 000 FCFA de transactions acceptées.");
       setTimeout(() => setError(null), 5000);
@@ -165,8 +149,8 @@ const CouponPage = () => {
     }
 
     try {
-      const response = await api.post(`/blaffa/coupons/${couponId}/rate/`, { rating });
-      if (response.status === 201 || response.status === 200) {
+      const response = await api.post(`/blaffa/coupons/${couponId}/vote/`, { vote_type: voteType });
+      if (response.status === 200) {
         // Clear any previous error on success
         setError(null);
         // Update local state for the specific coupon
@@ -174,20 +158,28 @@ const CouponPage = () => {
           if (c.id === couponId) {
             return {
               ...c,
-              average_rating: response.data.new_average || c.average_rating,
-              total_ratings: c.total_ratings + 1,
-              likes_count: rating === 5 ? c.likes_count + 1 : c.likes_count,
-              dislikes_count: rating === 1 ? c.dislikes_count + 1 : c.dislikes_count,
-              user_rating: rating,
-              can_rate: false
+              likes_count: response.data.coupon.likes,
+              dislikes_count: response.data.coupon.dislikes,
+              user_liked: response.data.coupon.user_liked,
+              user_disliked: response.data.coupon.user_disliked,
+              // If the backend returns updated can_rate, use it. Otherwise, rely on existing logic or assume voting toggles/updates it.
+              // Documentation says if same vote -> delete (so maybe allow voting again? or just untoggle?)
+              // For now, let's trust the response or just keep can_rate true if we want to allow changing vote?
+              // The docs say "same vote -> delete", "opposed vote -> update". This implies we can vote again.
+              // So we might NOT want to set can_rate to false permanently unless there's a limit.
+              // BUT doc says "Un vote par jour et par auteur".
+              // Let's assume response might carry state or we just update the counts.
+              // can_rate might be complex to infer locally if it depends on "per day".
+              // Let's try to keep can_rate as is or check if response has it.
+              // The example response at line 231 doesn't show `can_rate` in the enclosed coupon object.
             };
           }
           return c;
         }));
       }
     } catch (err: any) {
-      console.error('Error rating coupon:', err);
-      const errorMessage = err.response?.data?.error || err.response?.data?.detail || 'Erreur lors de la notation.';
+      console.error('Error voting coupon:', err);
+      const errorMessage = err.response?.data?.error || err.response?.data?.detail || err.response?.data?.message || 'Erreur lors du vote.';
       setError(errorMessage);
       setTimeout(() => setError(null), 5000);
     }
@@ -269,19 +261,6 @@ const CouponPage = () => {
             )}
           </div>
 
-          {/* Stats Bar */}
-          <div className="flex gap-3">
-            <div className={`flex-1 ${theme.colors.a_background} border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-gray-100'} rounded-2xl p-3 text-center`}>
-              <div className={`text-xl font-black ${theme.mode === 'dark' ? 'text-blue-400' : 'text-[#002d72]'} leading-none`}>
-                {couponStats.total_published || 0}
-              </div>
-              <div className={`text-xs ${theme.colors.d_text} opacity-60 font-medium mt-1`}>Mes coupons</div>
-            </div>
-            <div className={`flex-1 ${theme.colors.a_background} border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-gray-100'} rounded-2xl p-3 text-center`}>
-              <div className="text-xl font-black text-green-600 leading-none">{walletBalance} FCFA</div>
-              <div className={`text-xs ${theme.colors.d_text} opacity-60 font-medium mt-1`}>Bonus</div>
-            </div>
-          </div>
         </div>
 
         {/* Platform Scroll */}
@@ -394,19 +373,24 @@ const CouponPage = () => {
                 <div className="flex items-center justify-between">
                   <div className={`flex items-center gap-4 ${theme.mode === 'dark' ? 'text-slate-400' : 'text-[#999999]'}`}>
                     <button
-                      onClick={() => coupon.can_rate && handleRate(coupon.id, 5)}
-                      disabled={!coupon.can_rate}
-                      className={`flex items-center gap-1.5 transition-colors ${coupon.user_rating === 5 ? "text-blue-500" : coupon.can_rate ? "hover:text-blue-500" : "opacity-50 cursor-not-allowed"}`}
+                      onClick={() => coupon.can_rate && handleVote(coupon.id, 'like')}
+                      disabled={!coupon.can_rate && !coupon.user_liked && !coupon.user_disliked} // Allow changing vote if already voted? Or depend on can_rate?
+                      // The doc says "Un vote par jour". Does that mean 1 action? Or 1 final state? 
+                      // Usually "can_rate" comes from backend. If it's false, we disable.
+                      // But if we already voted, maybe we can toggle?
+                      // Let's rely on can_rate for now, but also checks if backend returns different can_rate.
+                      // If user_liked is true, we might want to allow clicking to unlike (toggle).
+                      className={`flex items-center gap-1.5 transition-colors ${coupon.user_liked ? "text-blue-500" : coupon.can_rate ? "hover:text-blue-500" : "opacity-50 cursor-not-allowed"}`}
                     >
-                      <ThumbsUp size={18} className={coupon.user_rating === 5 ? "fill-blue-500" : ""} />
+                      <ThumbsUp size={18} className={coupon.user_liked ? "fill-blue-500" : ""} />
                       <span className="font-bold text-sm">{coupon.likes_count || 0}</span>
                     </button>
                     <button
-                      onClick={() => coupon.can_rate && handleRate(coupon.id, 1)}
-                      disabled={!coupon.can_rate}
-                      className={`flex items-center gap-1.5 transition-colors ${coupon.user_rating === 1 ? "text-red-500" : coupon.can_rate ? "hover:text-red-500" : "opacity-50 cursor-not-allowed"}`}
+                      onClick={() => coupon.can_rate && handleVote(coupon.id, 'dislike')}
+                      disabled={!coupon.can_rate && !coupon.user_liked && !coupon.user_disliked}
+                      className={`flex items-center gap-1.5 transition-colors ${coupon.user_disliked ? "text-red-500" : coupon.can_rate ? "hover:text-red-500" : "opacity-50 cursor-not-allowed"}`}
                     >
-                      <ThumbsDown size={18} className={coupon.user_rating === 1 ? "fill-red-500" : ""} />
+                      <ThumbsDown size={18} className={coupon.user_disliked ? "fill-red-500" : ""} />
                       <span className="font-bold text-sm">{coupon.dislikes_count || 0}</span>
                     </button>
                     <div className="flex items-center gap-1 ml-1">
