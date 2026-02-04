@@ -123,10 +123,6 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$re
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$client$2f$app$2d$dir$2f$link$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/next/dist/client/app-dir/link.js [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ThemeProvider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/ThemeProvider.tsx [app-client] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$axios$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/axios.ts [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$firebase$2f$app$2f$dist$2f$esm$2f$index$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/firebase/app/dist/esm/index.esm.js [app-client] (ecmascript) <locals>");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$firebase$2f$app$2f$dist$2f$esm$2f$index$2e$esm2017$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@firebase/app/dist/esm/index.esm2017.js [app-client] (ecmascript)");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$firebase$2f$messaging$2f$dist$2f$esm$2f$index$2e$esm$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$locals$3e$__ = __turbopack_context__.i("[project]/node_modules/firebase/messaging/dist/esm/index.esm.js [app-client] (ecmascript) <locals>");
-var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$firebase$2f$messaging$2f$dist$2f$esm$2f$index$2e$esm2017$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/node_modules/@firebase/messaging/dist/esm/index.esm2017.js [app-client] (ecmascript)");
 ;
 var _s = __turbopack_context__.k.signature();
 'use client';
@@ -135,17 +131,6 @@ var _s = __turbopack_context__.k.signature();
 ;
 ;
 ;
-;
-;
-const firebaseConfig = {
-    apiKey: "AIzaSyCpYf8cR98sJ9Vw12ARlXFUqJyy3PSI1Vg",
-    authDomain: "betpay-509eb.firebaseapp.com",
-    projectId: "betpay-509eb",
-    storageBucket: "betpay-509eb.firebasestorage.app",
-    messagingSenderId: "827338495555",
-    appId: "1:827338495555:web:9949d7c2caffe2b599e6f6",
-    vapidKey: "BFHKpREc3F52Eb4uBMUMmfuQQBj7yd_5IjXK248ZeVKO7axslH2S3s09DEo5r1zwQ3Apz4xZnNiyNBmx3vVNv38"
-};
 function LoginForm() {
     _s();
     // const { t } = useTranslation();
@@ -156,23 +141,6 @@ function LoginForm() {
     const [rememberMe, setRememberMe] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [isLoading, setIsLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [notification, setNotification] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
-    const initializeFCM = async ()=>{
-        try {
-            const app = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$firebase$2f$app$2f$dist$2f$esm$2f$index$2e$esm2017$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["initializeApp"])(firebaseConfig);
-            const messaging = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$firebase$2f$messaging$2f$dist$2f$esm$2f$index$2e$esm2017$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getMessaging"])(app);
-            const permission = await Notification.requestPermission();
-            if (permission === 'granted') {
-                const currentToken = await (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f40$firebase$2f$messaging$2f$dist$2f$esm$2f$index$2e$esm2017$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["getToken"])(messaging, {
-                    vapidKey: firebaseConfig.vapidKey
-                });
-                return currentToken;
-            }
-            return null;
-        } catch (error) {
-            console.error('Error initializing FCM:', error);
-            return null;
-        }
-    };
     const handleSubmit = async (e)=>{
         e.preventDefault();
         setIsLoading(true);
@@ -200,22 +168,12 @@ function LoginForm() {
                 localStorage.setItem('userId', data.id.toString());
             }
             __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$axios$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].defaults.headers.common['Authorization'] = `Bearer ${access}`;
-            // Initialize FCM
+            // Initialize Push Notifications
             try {
-                const fcmToken = await initializeFCM();
-                if (fcmToken) {
-                    await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$axios$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].post(`/blaffa/devices/`, {
-                        registration_id: fcmToken,
-                        type: 'web'
-                    }, {
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${access}`
-                        }
-                    });
-                }
-            } catch (fcmError) {
-                console.error('FCM Error:', fcmError);
+                const { initializePushNotifications } = await __turbopack_context__.A("[project]/src/lib/push-notifications.ts [app-client] (ecmascript, async loader)");
+                await initializePushNotifications();
+            } catch (pushError) {
+                console.error('Push Notification Initialization Error:', pushError);
             }
             setNotification({
                 type: 'success',
@@ -251,7 +209,7 @@ function LoginForm() {
                         children: "Vous êtes de retour"
                     }, void 0, false, {
                         fileName: "[project]/src/components/LoginForm.tsx",
-                        lineNumber: 122,
+                        lineNumber: 84,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -259,13 +217,13 @@ function LoginForm() {
                         children: "Faisons en sorte que cette journée soit exceptionnelle"
                     }, void 0, false, {
                         fileName: "[project]/src/components/LoginForm.tsx",
-                        lineNumber: 123,
+                        lineNumber: 85,
                         columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/LoginForm.tsx",
-                lineNumber: 121,
+                lineNumber: 83,
                 columnNumber: 13
             }, this),
             notification && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -273,7 +231,7 @@ function LoginForm() {
                 children: notification.message
             }, void 0, false, {
                 fileName: "[project]/src/components/LoginForm.tsx",
-                lineNumber: 128,
+                lineNumber: 90,
                 columnNumber: 17
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -288,7 +246,7 @@ function LoginForm() {
                                 children: "Email"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/LoginForm.tsx",
-                                lineNumber: 138,
+                                lineNumber: 100,
                                 columnNumber: 21
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -300,13 +258,13 @@ function LoginForm() {
                                 required: true
                             }, void 0, false, {
                                 fileName: "[project]/src/components/LoginForm.tsx",
-                                lineNumber: 139,
+                                lineNumber: 101,
                                 columnNumber: 21
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/LoginForm.tsx",
-                        lineNumber: 137,
+                        lineNumber: 99,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -317,7 +275,7 @@ function LoginForm() {
                                 children: "Mot de passe"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/LoginForm.tsx",
-                                lineNumber: 151,
+                                lineNumber: 113,
                                 columnNumber: 21
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -332,7 +290,7 @@ function LoginForm() {
                                         required: true
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/LoginForm.tsx",
-                                        lineNumber: 153,
+                                        lineNumber: 115,
                                         columnNumber: 25
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -343,30 +301,30 @@ function LoginForm() {
                                             size: 20
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/LoginForm.tsx",
-                                            lineNumber: 166,
+                                            lineNumber: 128,
                                             columnNumber: 45
                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$eye$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Eye$3e$__["Eye"], {
                                             size: 20
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/LoginForm.tsx",
-                                            lineNumber: 166,
+                                            lineNumber: 128,
                                             columnNumber: 68
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/LoginForm.tsx",
-                                        lineNumber: 161,
+                                        lineNumber: 123,
                                         columnNumber: 25
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/LoginForm.tsx",
-                                lineNumber: 152,
+                                lineNumber: 114,
                                 columnNumber: 21
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/LoginForm.tsx",
-                        lineNumber: 150,
+                        lineNumber: 112,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -382,7 +340,7 @@ function LoginForm() {
                                         className: "w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/LoginForm.tsx",
-                                        lineNumber: 174,
+                                        lineNumber: 136,
                                         columnNumber: 25
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -390,13 +348,13 @@ function LoginForm() {
                                         children: "Se Souvenir"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/LoginForm.tsx",
-                                        lineNumber: 180,
+                                        lineNumber: 142,
                                         columnNumber: 25
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/LoginForm.tsx",
-                                lineNumber: 173,
+                                lineNumber: 135,
                                 columnNumber: 21
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -405,13 +363,13 @@ function LoginForm() {
                                 children: "Mot de passe oublié ?"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/LoginForm.tsx",
-                                lineNumber: 183,
+                                lineNumber: 145,
                                 columnNumber: 21
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/LoginForm.tsx",
-                        lineNumber: 172,
+                        lineNumber: 134,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -421,7 +379,7 @@ function LoginForm() {
                         children: isLoading ? 'Connexion...' : 'Connexion'
                     }, void 0, false, {
                         fileName: "[project]/src/components/LoginForm.tsx",
-                        lineNumber: 189,
+                        lineNumber: 151,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -437,30 +395,30 @@ function LoginForm() {
                                     children: "S'inscrire"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/LoginForm.tsx",
-                                    lineNumber: 201,
+                                    lineNumber: 163,
                                     columnNumber: 25
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/LoginForm.tsx",
-                            lineNumber: 199,
+                            lineNumber: 161,
                             columnNumber: 21
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/components/LoginForm.tsx",
-                        lineNumber: 198,
+                        lineNumber: 160,
                         columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/LoginForm.tsx",
-                lineNumber: 134,
+                lineNumber: 96,
                 columnNumber: 13
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/LoginForm.tsx",
-        lineNumber: 119,
+        lineNumber: 81,
         columnNumber: 9
     }, this);
 }

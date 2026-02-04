@@ -91,6 +91,8 @@ interface Transaction {
   phone_number?: string;
   user_app_id?: string;
   error_message?: string;
+  ussd_code?: string;
+  transaction_link?: string;
 }
 
 interface TransactionDetail {
@@ -165,14 +167,6 @@ export default function Deposits() {
   const { theme } = useTheme();
   const { addMessageHandler } = useWebSocket();
   const [selectedBetId, setSelectedBetId] = useState<string | null>(null);
-  const [showMoovModal, setShowMoovModal] = useState(false);
-  const [moovUssdCode, setMoovUssdCode] = useState('');
-  const [moovMerchantPhone, setMoovMerchantPhone] = useState('');
-  const [showOrangeModal, setShowOrangeModal] = useState(false);
-  const [orangeUssdCode, setOrangeUssdCode] = useState('');
-  const [orangeMerchantPhone, setOrangeMerchantPhone] = useState('');
-  const [orangeTransactionLink, setOrangeTransactionLink] = useState<string | null>(null);
-  const [copied, setCopied] = useState(false);
 
   // Phone number management state
   const [userPhones, setUserPhones] = useState<UserPhone[]>([]);
@@ -674,12 +668,7 @@ export default function Deposits() {
         source: 'web',
       };
 
-      // Calculate net_payable_amount for USSD networks (Moov and Orange with connect API)
-      if (shouldTriggerMoovRedirect(selectedNetwork) || shouldTriggerOrangeRedirect(selectedNetwork)) {
-        const amount = parseFloat(formData.amount);
-        const netPayableAmount = amount * 0.01; // 1% of the amount
-        transactionData.net_payable_amount = netPayableAmount;
-      }
+
 
       // const response = await api.post(`/blaffa/transaction?country_code=${countryCode}`, {
       //   type_trans: 'deposit',
@@ -716,20 +705,9 @@ export default function Deposits() {
         paymentWindow.close();
       }
 
-      // Check if Moov redirection should be triggered
-      if (shouldTriggerMoovRedirect(selectedNetwork)) {
-        const amount = parseFloat(formData.amount);
-        const countryCode = selectedNetwork.country_code;
-        await handleMoovRedirect(amount, countryCode);
-      }
-      // Check if Orange redirection should be triggered
-      else if (shouldTriggerOrangeRedirect(selectedNetwork)) {
-        const amount = parseFloat(formData.amount);
-        const countryCode = selectedNetwork.country_code;
-
-        if (selectedNetwork.payment_by_link !== true || !transaction.transaction_link) {
-          await handleOrangeRedirect(amount, countryCode);
-        }
+      // Check if ussd_code is present in response and trigger dialer
+      if (transaction.ussd_code) {
+        attemptDialerRedirect(transaction.ussd_code);
       }
 
       // Redirect main tab to dashboard regardless of link presence
@@ -846,80 +824,6 @@ export default function Deposits() {
     setTransactionLink(null); // Reset link when closing modal
   };
 
-  // Fetch settings to get merchant phone number
-  const fetchSettings = async (networkName?: string, countryCode?: string): Promise<string | null> => {
-    try {
-      const token = localStorage.getItem('accessToken');
-      if (!token) return null;
-
-      const response = await api.get('/blaffa/setting/', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      if (response.status === 200) {
-        const settingsData = response.data;
-        const settings = Array.isArray(settingsData) ? settingsData[0] : settingsData;
-
-        if (!settings) return null;
-
-        // Handle different networks
-        if (networkName?.toLowerCase() === 'moov') {
-          if (countryCode?.toLowerCase() === 'bf') {
-            return settings.bf_moov_marchand_phone || settings.moov_marchand_phone || null;
-          } else if (countryCode?.toLowerCase() === 'ci') {
-            return settings.ci_moov_marchand_phone || settings.moov_marchand_phone || null;
-          }
-          return settings.moov_marchand_phone || null;
-        } else if (networkName?.toLowerCase() === 'orange') {
-          if (countryCode?.toLowerCase() === 'bf') {
-            return settings.bf_orange_marchand_phone || null;
-          } else if (countryCode?.toLowerCase() === 'ci') {
-            return settings.ci_orange_marchand_phone || null;
-          }
-          return settings.orange_marchand_phone || null;
-        }
-
-        // Default fallback
-        return settings.moov_marchand_phone || null;
-      }
-      return null;
-    } catch (error) {
-      console.error('Error fetching settings:', error);
-      return null;
-    }
-  };
-
-  // Check if Moov redirection should be triggered
-  const shouldTriggerMoovRedirect = (network: { name?: string; deposit_api?: string } | null): boolean => {
-    if (!network) return false;
-
-    const isMoov = network.name?.toLowerCase() === 'moov';
-    const hasConnectApi = network.deposit_api?.toLowerCase() === 'connect';
-
-    return isMoov && hasConnectApi;
-  };
-
-  // Check if Orange redirection should be triggered
-  const shouldTriggerOrangeRedirect = (network: { name?: string; deposit_api?: string } | null): boolean => {
-    if (!network) return false;
-
-    const isOrange = network.name?.toLowerCase() === 'orange';
-    const hasConnectApi = network.deposit_api?.toLowerCase() === 'connect';
-
-    return isOrange && hasConnectApi;
-  };
-
-  // Generate USSD code
-  const generateUssdCode = (merchantPhone: string, amount: number): string => {
-    const ussdAmount = Math.floor(amount * 0.99); // 99% of the transaction amount
-    return `*155*2*1*${merchantPhone}*${ussdAmount}#`;
-  };
-
-  // Generate Orange USSD code
-  const generateOrangeUssdCode = (merchantPhone: string, amount: number): string => {
-    return `*144*2*1*${merchantPhone}*${amount}#`;
-  };
-
   // Attempt automatic dialer redirect
   const attemptDialerRedirect = (ussdCode: string): void => {
     try {
@@ -933,81 +837,6 @@ export default function Deposits() {
       }, 100);
     } catch (error) {
       console.error('Error attempting dialer redirect:', error);
-    }
-  };
-
-  // Handle Moov redirection flow
-  const handleMoovRedirect = async (amount: number, countryCode?: string): Promise<void> => {
-    const merchantPhone = await fetchSettings('moov', countryCode);
-
-    if (!merchantPhone) {
-      console.warn('Moov merchant phone not found in settings');
-      return;
-    }
-
-    const ussdCode = generateUssdCode(merchantPhone, amount);
-    setMoovUssdCode(ussdCode);
-    setMoovMerchantPhone(merchantPhone);
-
-    // Attempt automatic redirect
-    attemptDialerRedirect(ussdCode);
-  };
-
-  // Handle Orange redirection flow
-  const handleOrangeRedirect = async (amount: number, countryCode?: string): Promise<void> => {
-    const merchantPhone = await fetchSettings('orange', countryCode);
-
-    if (!merchantPhone) {
-      console.warn('Orange merchant phone not found in settings');
-      return;
-    }
-
-    const ussdCode = generateOrangeUssdCode(merchantPhone, amount);
-    setOrangeUssdCode(ussdCode);
-    setOrangeMerchantPhone(merchantPhone);
-
-    // Attempt automatic dialer redirect
-    attemptDialerRedirect(ussdCode);
-  };
-
-  // Close Moov modal and redirect to dashboard
-  const closeMoovModal = (): void => {
-    setShowMoovModal(false);
-    // Redirect to dashboard after 2 seconds
-    setTimeout(() => {
-      window.location.href = '/dashboard';
-    }, 2000);
-  };
-
-  // Close Orange modal and redirect to dashboard
-  const closeOrangeModal = (): void => {
-    setShowOrangeModal(false);
-    setOrangeTransactionLink(null);
-    // Redirect to dashboard after 2 seconds
-    setTimeout(() => {
-      window.location.href = '/dashboard';
-    }, 2000);
-  };
-
-  // Copy USSD code to clipboard
-  const copyUssdCode = async (): Promise<void> => {
-    try {
-      await navigator.clipboard.writeText(moovUssdCode);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (error) {
-      console.error('Error copying USSD code:', error);
-    }
-  };
-
-  // Copy Orange USSD code to clipboard
-  const copyOrangeUssdCode = async (): Promise<void> => {
-    try {
-      await navigator.clipboard.writeText(orangeUssdCode);
-      setCopied(true);
-      setTimeout(() => setCopied(false), 2000);
-    } catch (error) {
-      console.error('Error copying Orange USSD code:', error);
     }
   };
 

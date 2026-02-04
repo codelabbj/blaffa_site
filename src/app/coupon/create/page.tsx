@@ -24,6 +24,7 @@ const CreateCouponPage = () => {
     const [couponType, setCouponType] = useState<'single' | 'combine'>('single');
     const [cote, setCote] = useState('');
     const [selectedPlatformId, setSelectedPlatformId] = useState<string | null>(null);
+    const [matchCount, setMatchCount] = useState('1');
     const [error, setError] = useState<string | null>(null);
     const [success, setSuccess] = useState(false);
 
@@ -44,6 +45,15 @@ const CreateCouponPage = () => {
         fetchPlatforms();
     }, []);
 
+    useEffect(() => {
+        const count = parseInt(matchCount) || 0;
+        if (count > 1) {
+            setCouponType('combine');
+        } else {
+            setCouponType('single');
+        }
+    }, [matchCount]);
+
     const handleSubmit = async () => {
         if (!selectedPlatformId || !cote) return;
 
@@ -54,7 +64,8 @@ const CreateCouponPage = () => {
                 bet_app_id: selectedPlatformId,
                 code: couponCode,
                 cote: cote,
-                coupon_type: couponType
+                coupon_type: couponType,
+                match_count: parseInt(matchCount) || 1
             });
 
             if (response.status === 201) {
@@ -105,7 +116,22 @@ const CreateCouponPage = () => {
                             />
                         </div>
 
-                        {/* Type de Coupon */}
+                        {/* Nombre de matchs */}
+                        <div className="space-y-3">
+                            <label className={`block text-sm font-semibold ${theme.colors.text}`}>
+                                Nombre de matchs
+                            </label>
+                            <input
+                                type="number"
+                                min="1"
+                                value={matchCount}
+                                onChange={(e) => setMatchCount(e.target.value)}
+                                placeholder="Ex: 5"
+                                className={`w-full p-5 rounded-2xl border ${theme.mode === 'dark' ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-gray-200 text-gray-900'} focus:ring-2 focus:ring-blue-500 outline-none transition-all placeholder:text-gray-400`}
+                            />
+                        </div>
+
+                        {/* Type de Coupon (Display only) */}
                         <div className="space-y-3">
                             <label className={`block text-sm font-semibold ${theme.colors.text}`}>
                                 Type de coupon
@@ -115,21 +141,18 @@ const CreateCouponPage = () => {
                                     { id: 'single', label: 'Simple' },
                                     { id: 'combine', label: 'Combiné' }
                                 ].map((type) => (
-                                    <button
+                                    <div
                                         key={type.id}
-                                        onClick={() => setCouponType(type.id as any)}
                                         className={`w-full p-5 rounded-2xl border flex items-center justify-between transition-all ${couponType === type.id
-                                            ? 'border-blue-700 bg-blue-50/50 dark:bg-blue-900/20'
-                                            : theme.mode === 'dark' ? 'border-slate-800 bg-slate-800' : 'border-gray-200 bg-white'
+                                            ? 'border-blue-700 bg-blue-50/50 dark:bg-blue-900/20 opacity-100'
+                                            : 'opacity-40 grayscale border-slate-200 dark:border-slate-800'
                                             }`}
                                     >
                                         <span className={`font-medium ${theme.colors.text}`}>{type.label}</span>
-                                        {couponType === type.id ? (
+                                        {couponType === type.id && (
                                             <CheckCircle2 size={24} className="text-[#002d72]" />
-                                        ) : (
-                                            <Circle size={24} className="text-gray-300" />
                                         )}
-                                    </button>
+                                    </div>
                                 ))}
                             </div>
                         </div>

@@ -25,11 +25,11 @@ interface Coupon {
   coupon_type: 'combine' | 'single';
   cote: string;
   match_count: number;
-  likes: number;
-  dislikes: number;
   average_rating: number;
-  user_liked: boolean;
-  user_disliked: boolean;
+  total_ratings: number;
+  likes_count: number;
+  dislikes_count: number;
+  user_rating: number | null;
   can_rate: boolean;
 }
 
@@ -38,6 +38,7 @@ interface UserProfile {
   last_name: string;
   email: string;
   can_publish_coupons: boolean;
+  can_rate_coupons: boolean;
   is_staff: boolean;
 }
 
@@ -46,6 +47,8 @@ const CouponPage = () => {
   const [selectedPlatformId, setSelectedPlatformId] = useState<string | null>(null);
   const [coupons, setCoupons] = useState<Coupon[]>([]);
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [couponStats, setCouponStats] = useState({ total_published: 0 });
+  const [walletBalance, setWalletBalance] = useState(0);
   const [loading, setLoading] = useState(true);
   const [platformsLoading, setPlatformsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -95,6 +98,7 @@ const CouponPage = () => {
           last_name: profileData.last_name,
           email: profileData.email,
           can_publish_coupons: profileData.can_publish_coupons,
+          can_rate_coupons: profileData.can_rate_coupons,
           is_staff: profileData.is_staff
         });
       }
@@ -103,10 +107,38 @@ const CouponPage = () => {
     }
   };
 
+  const fetchCouponStats = async () => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) return;
+    try {
+      const response = await api.get('/blaffa/user/coupon-stats/');
+      if (response.status === 200) {
+        setCouponStats(response.data);
+      }
+    } catch (err) {
+      console.error('Error fetching coupon stats:', err);
+    }
+  };
+
+  const fetchWallet = async () => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) return;
+    try {
+      const response = await api.get('/blaffa/coupon-wallet/');
+      if (response.status === 200) {
+        setWalletBalance(response.data.balance || 0);
+      }
+    } catch (err) {
+      console.error('Error fetching wallet:', err);
+    }
+  };
+
   useEffect(() => {
     fetchPlatforms();
     fetchCoupons();
     fetchUserProfile();
+    fetchCouponStats();
+    fetchWallet();
   }, []);
 
   useEffect(() => {
@@ -123,6 +155,42 @@ const CouponPage = () => {
     navigator.clipboard.writeText(text);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  const handleRate = async (couponId: string, rating: number) => {
+    if (!userProfile?.can_rate_coupons) {
+      setError("Vous n'avez pas l'autorisation de noter des coupons. Pour noter, vous devez avoir au moins 1 mois d'ancienneté et 15 000 FCFA de transactions acceptées.");
+      setTimeout(() => setError(null), 5000);
+      return;
+    }
+
+    try {
+      const response = await api.post(`/blaffa/coupons/${couponId}/rate/`, { rating });
+      if (response.status === 201 || response.status === 200) {
+        // Clear any previous error on success
+        setError(null);
+        // Update local state for the specific coupon
+        setCoupons(prevCoupons => prevCoupons.map(c => {
+          if (c.id === couponId) {
+            return {
+              ...c,
+              average_rating: response.data.new_average || c.average_rating,
+              total_ratings: c.total_ratings + 1,
+              likes_count: rating === 5 ? c.likes_count + 1 : c.likes_count,
+              dislikes_count: rating === 1 ? c.dislikes_count + 1 : c.dislikes_count,
+              user_rating: rating,
+              can_rate: false
+            };
+          }
+          return c;
+        }));
+      }
+    } catch (err: any) {
+      console.error('Error rating coupon:', err);
+      const errorMessage = err.response?.data?.error || err.response?.data?.detail || 'Erreur lors de la notation.';
+      setError(errorMessage);
+      setTimeout(() => setError(null), 5000);
+    }
   };
 
   const getInitials = (first?: string, last?: string) => {
@@ -156,6 +224,23 @@ const CouponPage = () => {
       </header>
 
       <main className="w-full p-6 space-y-6">
+        {/* Error Banner */}
+        {error && (
+          <div className="fixed top-20 left-6 right-6 z-50 animate-in fade-in slide-in-from-top-4 duration-300">
+            <div className={`p-4 rounded-2xl border ${theme.mode === 'dark' ? 'bg-red-900/20 border-red-500/50 text-red-400' : 'bg-red-50 border-red-200 text-red-600'} flex items-center gap-3 shadow-lg backdrop-blur-md`}>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+              <span className="font-medium text-sm">{error}</span>
+              <button onClick={() => setError(null)} className="ml-auto p-1 hover:bg-red-100 dark:hover:bg-red-900/40 rounded-full transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                  <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        )}
+
         {/* User Card */}
         <div className={`${theme.colors.a_background} p-5 rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col gap-6 border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-gray-50'}`}>
           <div className="flex items-center justify-between">
@@ -187,11 +272,13 @@ const CouponPage = () => {
           {/* Stats Bar */}
           <div className="flex gap-3">
             <div className={`flex-1 ${theme.colors.a_background} border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-gray-100'} rounded-2xl p-3 text-center`}>
-              <div className={`text-xl font-black ${theme.mode === 'dark' ? 'text-blue-400' : 'text-[#002d72]'} leading-none`}>0</div>
+              <div className={`text-xl font-black ${theme.mode === 'dark' ? 'text-blue-400' : 'text-[#002d72]'} leading-none`}>
+                {couponStats.total_published || 0}
+              </div>
               <div className={`text-xs ${theme.colors.d_text} opacity-60 font-medium mt-1`}>Mes coupons</div>
             </div>
             <div className={`flex-1 ${theme.colors.a_background} border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-gray-100'} rounded-2xl p-3 text-center`}>
-              <div className="text-xl font-black text-green-600 leading-none">0 FCFA</div>
+              <div className="text-xl font-black text-green-600 leading-none">{walletBalance} FCFA</div>
               <div className={`text-xs ${theme.colors.d_text} opacity-60 font-medium mt-1`}>Bonus</div>
             </div>
           </div>
@@ -283,7 +370,9 @@ const CouponPage = () => {
                 {/* Bet Type Pill */}
                 <div className="inline-flex items-center gap-1.5 bg-[#E9F3FF] dark:bg-blue-900/30 text-[#1976D2] dark:text-blue-300 text-xs px-3 py-1.5 rounded-lg font-bold mb-4">
                   <LinkIcon size={14} />
-                  {coupon.coupon_type === 'combine' ? `Combiné (${coupon.match_count} matchs)` : 'Simple'}
+                  {coupon.coupon_type === 'combine'
+                    ? `Combiné (${coupon.match_count} matchs)`
+                    : `Simple (${coupon.match_count} match)`}
                 </div>
 
                 {/* Côte & Platform */}
@@ -304,17 +393,27 @@ const CouponPage = () => {
                 {/* Footer Actions */}
                 <div className="flex items-center justify-between">
                   <div className={`flex items-center gap-4 ${theme.mode === 'dark' ? 'text-slate-400' : 'text-[#999999]'}`}>
-                    <div className="flex items-center gap-1.5">
-                      <ThumbsUp size={18} className={coupon.user_liked ? "text-blue-500 fill-blue-500" : ""} />
-                      <span className="font-bold text-sm">{coupon.likes}</span>
-                    </div>
-                    <div className="flex items-center gap-1.5">
-                      <ThumbsDown size={18} className={coupon.user_disliked ? "text-red-500 fill-red-500" : ""} />
-                      <span className="font-bold text-sm">{coupon.dislikes}</span>
-                    </div>
+                    <button
+                      onClick={() => coupon.can_rate && handleRate(coupon.id, 5)}
+                      disabled={!coupon.can_rate}
+                      className={`flex items-center gap-1.5 transition-colors ${coupon.user_rating === 5 ? "text-blue-500" : coupon.can_rate ? "hover:text-blue-500" : "opacity-50 cursor-not-allowed"}`}
+                    >
+                      <ThumbsUp size={18} className={coupon.user_rating === 5 ? "fill-blue-500" : ""} />
+                      <span className="font-bold text-sm">{coupon.likes_count || 0}</span>
+                    </button>
+                    <button
+                      onClick={() => coupon.can_rate && handleRate(coupon.id, 1)}
+                      disabled={!coupon.can_rate}
+                      className={`flex items-center gap-1.5 transition-colors ${coupon.user_rating === 1 ? "text-red-500" : coupon.can_rate ? "hover:text-red-500" : "opacity-50 cursor-not-allowed"}`}
+                    >
+                      <ThumbsDown size={18} className={coupon.user_rating === 1 ? "fill-red-500" : ""} />
+                      <span className="font-bold text-sm">{coupon.dislikes_count || 0}</span>
+                    </button>
                     <div className="flex items-center gap-1 ml-1">
                       <Star size={18} className="fill-yellow-400 text-yellow-400" />
-                      <span className={`font-bold text-sm ${theme.colors.text}`}>{coupon.average_rating || '4.5'}</span>
+                      <span className={`font-bold text-sm ${theme.colors.text}`}>
+                        {typeof coupon.average_rating === 'number' ? coupon.average_rating.toFixed(1) : coupon.average_rating}
+                      </span>
                     </div>
                   </div>
 

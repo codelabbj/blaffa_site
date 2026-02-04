@@ -41,11 +41,11 @@ const messaging = firebase.messaging();
 // Optional: Add background message handler
 messaging.onBackgroundMessage((payload) => {
   console.log('[firebase-messaging-sw.js] Received background message ', payload);
-  
+
   const notificationTitle = payload.notification.title;
   const notificationOptions = {
     body: payload.notification.body,
-    icon: '/logo.png' // Path to your app icon
+    icon: '/logo.jpg' // Updated to match existing logo.jpg in public/
   };
 
   self.registration.showNotification(notificationTitle, notificationOptions);

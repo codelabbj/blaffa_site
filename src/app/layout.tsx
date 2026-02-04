@@ -64,6 +64,14 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
 
     // Update HTML lang attribute
     document.documentElement.lang = lang;
+
+    // Initialize push notifications if user is logged in
+    const accessToken = localStorage.getItem('accessToken');
+    if (accessToken) {
+      import('../lib/push-notifications').then(({ initializePushNotifications }) => {
+        initializePushNotifications();
+      }).catch(err => console.error('Failed to load push notifications utility:', err));
+    }
   }, [pathname, searchParams]);
 
   // Check if current path is an auth page (login or register)

@@ -6,19 +6,6 @@ import { Eye, EyeOff } from 'lucide-react';
 import Link from 'next/link';
 import { useTheme } from './ThemeProvider';
 import api from '@/lib/axios';
-import { initializeApp } from 'firebase/app';
-import { getMessaging, getToken } from 'firebase/messaging';
-
-const firebaseConfig = {
-    apiKey: "AIzaSyCpYf8cR98sJ9Vw12ARlXFUqJyy3PSI1Vg",
-    authDomain: "betpay-509eb.firebaseapp.com",
-    projectId: "betpay-509eb",
-    storageBucket: "betpay-509eb.firebasestorage.app",
-    messagingSenderId: "827338495555",
-    appId: "1:827338495555:web:9949d7c2caffe2b599e6f6",
-    vapidKey: "BFHKpREc3F52Eb4uBMUMmfuQQBj7yd_5IjXK248ZeVKO7axslH2S3s09DEo5r1zwQ3Apz4xZnNiyNBmx3vVNv38"
-};
-
 export default function LoginForm() {
     // const { t } = useTranslation();
     const { theme } = useTheme();
@@ -29,25 +16,6 @@ export default function LoginForm() {
     const [rememberMe, setRememberMe] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [notification, setNotification] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
-
-    const initializeFCM = async () => {
-        try {
-            const app = initializeApp(firebaseConfig);
-            const messaging = getMessaging(app);
-            const permission = await Notification.requestPermission();
-
-            if (permission === 'granted') {
-                const currentToken = await getToken(messaging, {
-                    vapidKey: firebaseConfig.vapidKey
-                });
-                return currentToken;
-            }
-            return null;
-        } catch (error) {
-            console.error('Error initializing FCM:', error);
-            return null;
-        }
-    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -80,18 +48,12 @@ export default function LoginForm() {
 
             api.defaults.headers.common['Authorization'] = `Bearer ${access}`;
 
-            // Initialize FCM
+            // Initialize Push Notifications
             try {
-                const fcmToken = await initializeFCM();
-                if (fcmToken) {
-                    await api.post(
-                        `/blaffa/devices/`,
-                        { registration_id: fcmToken, type: 'web' },
-                        { headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${access}` } }
-                    );
-                }
-            } catch (fcmError) {
-                console.error('FCM Error:', fcmError);
+                const { initializePushNotifications } = await import('@/lib/push-notifications');
+                await initializePushNotifications();
+            } catch (pushError) {
+                console.error('Push Notification Initialization Error:', pushError);
             }
 
             setNotification({ type: 'success', message: 'Connexion réussie! Redirection...' });
