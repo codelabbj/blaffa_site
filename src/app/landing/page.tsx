@@ -26,6 +26,7 @@ export default function LandingPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [isContactMenuOpen, setIsContactMenuOpen] = useState(false);
   const [telegramUrl, setTelegramUrl] = useState('https://t.me/manosservice'); // Default fallback
+  const [downloadApkLink, setDownloadApkLink] = useState('https://blaffa.net/blaffa.apk'); // Default fallback
   // const [animateHeader, setAnimateHeader] = useState(false);
   const { theme } = useTheme();
 
@@ -59,6 +60,10 @@ export default function LandingPage() {
           // Save to localStorage for offline/fallback use
           localStorage.setItem('settingsCache', JSON.stringify(settings));
         }
+
+        if (settings?.download_apk_link) {
+          setDownloadApkLink(settings.download_apk_link);
+        }
       } catch (error) {
         console.error('Error fetching telegram URL from settings:', error);
         // Try to load from cache
@@ -69,6 +74,9 @@ export default function LandingPage() {
             if (settings?.telegram) {
               setTelegramUrl(settings.telegram);
               console.log('Loaded settings from cache');
+            }
+            if (settings?.download_apk_link) {
+              setDownloadApkLink(settings.download_apk_link);
             }
           } catch (parseErr) {
             console.error('Failed to parse cached settings:', parseErr);
@@ -150,7 +158,7 @@ export default function LandingPage() {
           {/* Smart Professional Android Download Action */}
           <div className="flex justify-center md:justify-end">
             <a
-              href="https://blaffa.net/blaffa.apk"
+              href={downloadApkLink}
               target="_blank"
               rel="noopener noreferrer"
               className={`inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 dark:bg-slate-800/10 backdrop-blur-md border border-gray-200 dark:border-gray-800 rounded-full hover:bg-white/20 transition-all duration-300 group shadow-sm`}
@@ -175,18 +183,18 @@ export default function LandingPage() {
           {/* Achat Button - Filled */}
           <a
             href="/crypto/buy"
-            className="bg-[#1e3a8a] hover:bg-[#1e40af] text-white rounded-3xl py-4 px-6 flex items-center justify-center gap-3 transition-all duration-300 active:scale-95 shadow-lg"
+            className="bg-[#1e3a8a] hover:bg-[#1e40af] text-white rounded-3xl py-3 px-6 flex items-center justify-center gap-3 transition-all duration-300 active:scale-95 shadow-lg"
           >
-            <BitcoinIcon className="w-6 h-6" />
+            <BitcoinIcon className="w-5 h-5" />
             <span className="font-semibold text-lg">Achat</span>
           </a>
 
           {/* Vente Button - Outlined */}
           <a
             href="/crypto/sell"
-            className="bg-transparent border-2 border-[#1e3a8a] text-[#1e3a8a] dark:text-white dark:border-white hover:bg-[#1e3a8a]/5 rounded-3xl py-4 px-6 flex items-center justify-center gap-3 transition-all duration-300 active:scale-95"
+            className="bg-transparent border-2 border-[#1e3a8a] text-[#1e3a8a] dark:text-white dark:border-white hover:bg-[#1e3a8a]/5 rounded-3xl py-3 px-6 flex items-center justify-center gap-3 transition-all duration-300 active:scale-95"
           >
-            <BitcoinIcon className="w-6 h-6" />
+            <BitcoinIcon className="w-5 h-5" />
             <span className="font-semibold text-lg">Vente</span>
           </a>
         </div>
@@ -198,34 +206,34 @@ export default function LandingPage() {
           <div className="flex justify-around items-start gap-4">
             {/* Depot - Stylized Receive/Hand Icon */}
             <a href="/deposit" className="flex flex-col items-center gap-2 group">
-              <div className="w-20 h-20 rounded-full bg-[#FFF0F0] dark:bg-red-900/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <svg className="w-10 h-10 text-[#FF4D4D] dark:text-red-400 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-16 h-16 rounded-full bg-[#FFF0F0] dark:bg-red-900/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <svg className="w-8 h-8 text-[#FF4D4D] dark:text-red-400 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
                 </svg>
               </div>
-              <span className={`text-sm font-medium ${theme.colors.text}`}>Depot</span>
+              <span className={`text-[13px] font-medium ${theme.colors.text}`}>Depot</span>
             </a>
 
             {/* Retrait - Stylized Sent/Paper Plane Icon */}
             <a href="/withdraw" className="flex flex-col items-center gap-2 group">
-              <div className="w-20 h-20 rounded-full bg-[#FFF0F0] dark:bg-red-900/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <svg className="w-10 h-10 text-[#FF4D4D] dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-16 h-16 rounded-full bg-[#FFF0F0] dark:bg-red-900/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <svg className="w-8 h-8 text-[#FF4D4D] dark:text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
                 </svg>
               </div>
-              <span className={`text-sm font-medium ${theme.colors.text}`}>Retrait</span>
+              <span className={`text-[13px] font-medium ${theme.colors.text}`}>Retrait</span>
             </a>
 
             {/* Coupon - Stylized Ticket with % Icon */}
             <a href="/coupon" className="flex flex-col items-center gap-2 group">
-              <div className="w-20 h-20 rounded-full bg-[#FFF0F0] dark:bg-red-900/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <svg className="w-10 h-10 text-[#FF4D4D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="w-16 h-16 rounded-full bg-[#FFF0F0] dark:bg-red-900/10 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <svg className="w-8 h-8 text-[#FF4D4D]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M7 7h.01" />
                   <text x="12" y="16" fontSize="10" fill="currentColor" textAnchor="middle" fontWeight="bold" stroke="none">%</text>
                 </svg>
               </div>
-              <span className={`text-sm font-medium ${theme.colors.text}`}>Coupon</span>
+              <span className={`text-[13px] font-medium ${theme.colors.text}`}>Coupon</span>
             </a>
           </div>
         </div>

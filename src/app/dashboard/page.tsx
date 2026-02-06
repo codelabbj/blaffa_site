@@ -28,6 +28,7 @@ export default function Dashboard() {
   const [isContactMenuOpen, setIsContactMenuOpen] = useState(false);
   const [telegramUrl, setTelegramUrl] = useState('https://t.me/manosservice'); // Default fallback
   const [whatsappUrl, setWhatsappUrl] = useState('https://wa.me/+2250566643821'); // Default fallback
+  const [downloadApkLink, setDownloadApkLink] = useState('https://blaffa.net/blaffa.apk'); // Default fallback
   // const [animateHeader, setAnimateHeader] = useState(false);
   const { theme } = useTheme();
 
@@ -56,6 +57,10 @@ export default function Dashboard() {
 
           if (settings?.telegram) {
             setTelegramUrl(settings.telegram);
+          }
+
+          if (settings?.download_apk_link) {
+            setDownloadApkLink(settings.download_apk_link);
           }
 
           if (settings?.whatsapp_phone) {
@@ -143,7 +148,7 @@ export default function Dashboard() {
           {/* Smart Professional Android Download Action */}
           <div className="flex justify-center md:justify-end">
             <a
-              href="https://blaffa.net/blaffa.apk"
+              href={downloadApkLink}
               target="_blank"
               rel="noopener noreferrer"
               className={`inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 dark:bg-slate-800/10 backdrop-blur-md border border-gray-200 dark:border-gray-800 rounded-full hover:bg-white/20 transition-all duration-300 group shadow-sm`}

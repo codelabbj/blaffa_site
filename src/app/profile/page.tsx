@@ -24,6 +24,7 @@ export default function Profile() {
     phoneCode: '',
     phoneNumber: '',
     phone: '',
+    isVerified: false,
   });
 
   const [loading, setLoading] = useState(true);
@@ -55,6 +56,7 @@ export default function Profile() {
           email: profileData.email || '',
           phoneNumber: profileData.phone_number || '',
           phone: profileData.phone || '',
+          isVerified: profileData.status === 'verify',
         }));
 
         setIsUpdate(profileData.is_update === true);
@@ -179,43 +181,54 @@ export default function Profile() {
       </Head>
 
       {/* Redesigned Navy Blue Header */}
-      <div className="bg-[#002d72] pt-16 pb-12 px-6 relative animate-in fade-in duration-700">
+      <div className="bg-[#002d72] pt-12 pb-10 px-6 relative animate-in fade-in duration-700">
         {/* Edit Button in Top Right */}
         <button
           onClick={() => router.push('/profile/edit')}
-          className="absolute top-8 right-6 w-10 h-10 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all shadow-sm"
+          className="absolute top-8 right-6 w-9 h-9 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all shadow-sm"
         >
-          <Pencil size={18} className="text-white" />
+          <Pencil size={16} className="text-white" />
         </button>
 
         <div className="flex flex-col items-center">
           {/* Circular Avatar */}
-          <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center mb-6 shadow-xl border-4 border-white/10">
-            <User size={50} className="text-[#002d72] stroke-[1.5]" />
+          <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center mb-5 shadow-xl border-4 border-white/10">
+            <User size={40} className="text-[#002d72] stroke-[1.5]" />
           </div>
 
           {/* User Info */}
-          <h1 className="text-2xl font-bold text-white mb-2 tracking-tight">
+          <h1 className="text-xl font-bold text-white mb-1 tracking-tight">
             {formData.firstName} {formData.lastName}
           </h1>
-          <p className="text-blue-100/70 text-sm mb-1 font-medium">{formData.email}</p>
-          <p className="text-blue-100/70 text-sm font-medium">
+          <p className="text-blue-100/70 text-xs mb-1 font-medium">{formData.email}</p>
+          <p className="text-blue-100/70 text-xs font-medium">
             {formData.phoneCode || '+229'} {formData.phone || formData.phoneNumber}
           </p>
         </div>
       </div>
 
       {/* Parameters Section */}
-      <div className="px-6 py-10 w-full space-y-5">
-        <h3 className="text-gray-400 text-lg font-bold mb-4 ml-1">Paramètres</h3>
+      <div className="px-6 py-6 w-full space-y-4">
+        <h3 className="text-gray-400 text-base font-bold mb-3 ml-1">Paramètres</h3>
 
         <div className="space-y-3">
           {/* Status Card */}
           <div className={`w-full p-5 ${theme.mode === 'dark' ? 'bg-[#1a1a1a] border-gray-800' : 'bg-white border-gray-100'} border rounded-3xl flex items-center shadow-sm`}>
-            <div className="w-8 h-8 rounded-full bg-[#e8f5e9] flex items-center justify-center mr-4">
-              <CheckCircle2 size={20} className="text-[#4caf50]" />
-            </div>
-            <span className="text-[#4caf50] font-bold">Compte vérifié avec succès</span>
+            {formData.isVerified ? (
+              <>
+                <div className="w-8 h-8 rounded-full bg-[#e8f5e9] flex items-center justify-center mr-4">
+                  <CheckCircle2 size={20} className="text-[#4caf50]" />
+                </div>
+                <span className="text-[#4caf50] font-bold">Compte vérifié avec succès</span>
+              </>
+            ) : (
+              <>
+                <div className="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center mr-4">
+                  <HelpCircle size={20} className="text-yellow-600" />
+                </div>
+                <span className="text-yellow-600 font-bold">Compte non vérifié</span>
+              </>
+            )}
           </div>
 
           {/* Dark Mode Card */}
@@ -245,12 +258,12 @@ export default function Profile() {
             const content = (
               <>
                 <div className="flex items-center gap-4">
-                  <div className="w-11 h-11 rounded-full bg-gray-50 dark:bg-gray-800/50 flex items-center justify-center group-hover:bg-blue-50 dark:group-hover:bg-blue-900/20 transition-colors">
-                    <item.icon size={22} className="text-gray-500 group-hover:text-blue-500 transition-colors" />
+                  <div className="w-10 h-10 rounded-full bg-gray-50 dark:bg-gray-800/50 flex items-center justify-center group-hover:bg-blue-50 dark:group-hover:bg-blue-900/20 transition-colors">
+                    <item.icon size={20} className="text-gray-500 group-hover:text-blue-500 transition-colors" />
                   </div>
-                  <span className={`text-lg font-bold ${theme.colors.text}`}>{item.label}</span>
+                  <span className={`text-base font-bold ${theme.colors.text}`}>{item.label}</span>
                 </div>
-                <ChevronRight size={24} className="text-gray-300 group-hover:text-gray-500 transition-colors" />
+                <ChevronRight size={20} className="text-gray-300 group-hover:text-gray-500 transition-colors" />
               </>
             );
 
@@ -259,7 +272,7 @@ export default function Profile() {
                 <Link
                   key={idx}
                   href={item.path}
-                  className={`w-full p-5 ${theme.mode === 'dark' ? 'bg-[#1a1a1a] border-gray-800' : 'bg-white border-gray-100'} border rounded-3xl flex items-center justify-between shadow-sm active:scale-[0.98] transition-all group`}
+                  className={`w-full p-4 ${theme.mode === 'dark' ? 'bg-[#1a1a1a] border-gray-800' : 'bg-white border-gray-100'} border rounded-3xl flex items-center justify-between shadow-sm active:scale-[0.98] transition-all group`}
                 >
                   {content}
                 </Link>
@@ -270,7 +283,7 @@ export default function Profile() {
               <button
                 key={idx}
                 onClick={item.onClick}
-                className={`w-full p-5 ${theme.mode === 'dark' ? 'bg-[#1a1a1a] border-gray-800' : 'bg-white border-gray-100'} border rounded-3xl flex items-center justify-between shadow-sm active:scale-[0.98] transition-all group`}
+                className={`w-full p-4 ${theme.mode === 'dark' ? 'bg-[#1a1a1a] border-gray-800' : 'bg-white border-gray-100'} border rounded-3xl flex items-center justify-between shadow-sm active:scale-[0.98] transition-all group`}
               >
                 {content}
               </button>

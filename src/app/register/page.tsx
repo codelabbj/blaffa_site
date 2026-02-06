@@ -1,9 +1,37 @@
 'use client';
 
+import { useState, useEffect } from 'react';
 import RegisterForm from '../../components/RegisterForm';
 import Image from 'next/image';
 
 export default function RegisterPage() {
+    const [downloadApkLink, setDownloadApkLink] = useState('https://blaffa.net/blaffa.apk');
+
+    useEffect(() => {
+        const fetchSettings = async () => {
+            try {
+                const response = await fetch('https://api.blaffa.net/blaffa/setting/', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                if (response.ok) {
+                    const settingsData = await response.json();
+                    const settings = Array.isArray(settingsData) ? settingsData[0] : settingsData;
+                    if (settings?.download_apk_link) {
+                        setDownloadApkLink(settings.download_apk_link);
+                    }
+                }
+            } catch (error) {
+                console.error('Error fetching settings for download link:', error);
+            }
+        };
+
+        fetchSettings();
+    }, []);
+
     return (
         <div className="min-h-screen bg-white flex flex-col pt-10 px-4 sm:px-6 lg:px-8">
             {/* Top Bar with Logo */}
@@ -19,7 +47,7 @@ export default function RegisterPage() {
                 {/* Android Download Button */}
                 <div className="mt-8 flex justify-center">
                     <a
-                        href="https://blaffa.net/blaffa.apk"
+                        href={downloadApkLink}
                         target="_blank"
                         rel="noopener noreferrer"
                         className={`inline-flex items-center gap-2 px-4 py-1.5 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-full hover:bg-slate-100 transition-all duration-300 group shadow-sm`}
