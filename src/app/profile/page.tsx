@@ -24,7 +24,7 @@ export default function Profile() {
     phoneCode: '',
     phoneNumber: '',
     phone: '',
-    isVerified: false,
+    status: '',
   });
 
   const [loading, setLoading] = useState(true);
@@ -56,7 +56,7 @@ export default function Profile() {
           email: profileData.email || '',
           phoneNumber: profileData.phone_number || '',
           phone: profileData.phone || '',
-          isVerified: profileData.status === 'verify',
+          status: profileData.status || '',
         }));
 
         setIsUpdate(profileData.is_update === true);
@@ -214,12 +214,19 @@ export default function Profile() {
         <div className="space-y-3">
           {/* Status Card */}
           <div className={`w-full p-5 ${theme.mode === 'dark' ? 'bg-[#1a1a1a] border-gray-800' : 'bg-white border-gray-100'} border rounded-3xl flex items-center shadow-sm`}>
-            {formData.isVerified ? (
+            {formData.status === 'verify' ? (
               <>
                 <div className="w-8 h-8 rounded-full bg-[#e8f5e9] flex items-center justify-center mr-4">
                   <CheckCircle2 size={20} className="text-[#4caf50]" />
                 </div>
                 <span className="text-[#4caf50] font-bold">Compte vérifié avec succès</span>
+              </>
+            ) : formData.status === 'pending' ? (
+              <>
+                <div className="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center mr-4">
+                  <CheckCircle2 size={20} className="text-yellow-600" />
+                </div>
+                <span className="text-yellow-600 font-bold">Vérification en cours</span>
               </>
             ) : (
               <>
