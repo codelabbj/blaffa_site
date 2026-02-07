@@ -4,7 +4,7 @@ import Head from 'next/head';
 import { useTheme } from '../../components/ThemeProvider';
 import api from '@/lib/axios';
 import { useRouter } from 'next/navigation';
-import { ArrowLeft, Star, ThumbsUp, ThumbsDown, Copy, Check, Plus, Link as LinkIcon, Trophy } from 'lucide-react';
+import { ArrowLeft, Star, ThumbsUp, ThumbsDown, Copy, Check, Plus, Link as LinkIcon, Trophy, MessageCircle, X, Send } from 'lucide-react';
 
 // Unified interfaces matching the actual JSON response
 interface BetApp {
@@ -14,11 +14,28 @@ interface BetApp {
   public_name: string;
 }
 
+interface CommentAuthor {
+  id: string;
+  email: string;
+  first_name: string;
+  last_name: string;
+}
+
+interface Comment {
+  id: string;
+  content: string;
+  created_at: string;
+  author: CommentAuthor;
+  parent_id: string | null;
+  replies?: Comment[];
+}
+
 interface Coupon {
   id: string;
   created_at: string;
   code: string;
   bet_app: BetApp;
+  author: string;
   author_first_name: string;
   author_last_name: string;
   author_rating: number;
@@ -29,14 +46,10 @@ interface Coupon {
   total_ratings: number;
   likes_count: number;
   dislikes_count: number;
-  match_count: number;
-  average_rating: number;
-  total_ratings: number;
-  likes_count: number;
-  dislikes_count: number;
   user_liked: boolean;
   user_disliked: boolean;
   can_rate: boolean;
+  total_comments?: number;
 }
 
 interface UserProfile {
@@ -57,6 +70,15 @@ const CouponPage = () => {
   const [platformsLoading, setPlatformsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [copiedId, setCopiedId] = useState<string | null>(null);
+
+  // Comment-related state
+  const [showCommentModal, setShowCommentModal] = useState(false);
+  const [selectedCoupon, setSelectedCoupon] = useState<Coupon | null>(null);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [commentText, setCommentText] = useState('');
+  const [commentsLoading, setCommentsLoading] = useState(false);
+  const [replyingTo, setReplyingTo] = useState<Comment | null>(null);
+
   const { theme } = useTheme();
   const router = useRouter();
 
@@ -183,6 +205,93 @@ const CouponPage = () => {
       setError(errorMessage);
       setTimeout(() => setError(null), 5000);
     }
+  };
+
+  const fetchComments = async (couponAuthorId: string) => {
+    setCommentsLoading(true);
+    try {
+      const response = await api.get(`/blaffa/author-comments/list/?coupon_author_id=${couponAuthorId}`);
+      if (response.status === 200) {
+        setComments(response.data || []);
+      }
+    } catch (err) {
+      console.error('Error fetching comments:', err);
+      setError('Erreur lors du chargement des commentaires.');
+      setTimeout(() => setError(null), 3000);
+    } finally {
+      setCommentsLoading(false);
+    }
+  };
+
+  const createComment = async (couponId: string, content: string, parentId: string | null = null) => {
+    if (!content.trim()) return;
+
+    try {
+      const payload: any = {
+        coupon_id: couponId,
+        content: content.trim()
+      };
+
+      if (parentId) {
+        payload.parent_id = parentId;
+      }
+
+      const response = await api.post('/blaffa/author-comments/', payload);
+      if (response.status === 200 || response.status === 201) {
+        // Refresh comments after creating
+        if (selectedCoupon) {
+          await fetchComments(selectedCoupon.author);
+
+          // Update comment count in the coupon list
+          setCoupons(prevCoupons => prevCoupons.map(c => {
+            if (c.id === couponId) {
+              return {
+                ...c,
+                total_comments: (c.total_comments || 0) + 1
+              };
+            }
+            return c;
+          }));
+        }
+
+        setCommentText('');
+        setReplyingTo(null);
+      }
+    } catch (err: any) {
+      console.error('Error creating comment:', err);
+      const errorMessage = err.response?.data?.error || err.response?.data?.detail || 'Erreur lors de la création du commentaire.';
+      setError(errorMessage);
+      setTimeout(() => setError(null), 3000);
+    }
+  };
+
+  const handleOpenComments = (coupon: Coupon) => {
+    setSelectedCoupon(coupon);
+    setShowCommentModal(true);
+    fetchComments(coupon.author);
+  };
+
+  const handleCloseComments = () => {
+    setShowCommentModal(false);
+    setSelectedCoupon(null);
+    setComments([]);
+    setCommentText('');
+    setReplyingTo(null);
+  };
+
+  const handleSendComment = () => {
+    if (selectedCoupon && commentText.trim()) {
+      createComment(selectedCoupon.id, commentText, replyingTo?.id || null);
+    }
+  };
+
+  const formatCommentDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('fr-FR', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
   };
 
   const getInitials = (first?: string, last?: string) => {
@@ -393,6 +502,13 @@ const CouponPage = () => {
                       <ThumbsDown size={18} className={coupon.user_disliked ? "fill-red-500" : ""} />
                       <span className="font-bold text-sm">{coupon.dislikes_count || 0}</span>
                     </button>
+                    <button
+                      onClick={() => handleOpenComments(coupon)}
+                      className="flex items-center gap-1.5 transition-colors hover:text-blue-500"
+                    >
+                      <MessageCircle size={18} />
+                      <span className="font-bold text-sm">{coupon.total_comments || 0}</span>
+                    </button>
                     <div className="flex items-center gap-1 ml-1">
                       <Star size={18} className="fill-yellow-400 text-yellow-400" />
                       <span className={`font-bold text-sm ${theme.colors.text}`}>
@@ -414,6 +530,149 @@ const CouponPage = () => {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Comment Modal */}
+        {showCommentModal && selectedCoupon && (
+          <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+            {/* Backdrop */}
+            <div
+              className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+              onClick={handleCloseComments}
+            />
+
+            {/* Modal */}
+            <div className={`relative w-full sm:max-w-lg sm:mx-4 ${theme.colors.a_background} sm:rounded-3xl flex flex-col max-h-[90vh] sm:max-h-[80vh] h-full sm:h-auto shadow-2xl`}>
+              {/* Header */}
+              <div className={`flex items-center justify-between p-6 border-b ${theme.mode === 'dark' ? 'border-slate-700' : 'border-gray-100'}`}>
+                <h2 className={`text-xl font-bold ${theme.colors.text}`}>Commentaires</h2>
+                <button
+                  onClick={handleCloseComments}
+                  className={`p-2 rounded-full ${theme.colors.hover} transition-colors`}
+                >
+                  <X size={24} className={theme.colors.text} />
+                </button>
+              </div>
+
+              {/* Comments List */}
+              <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                {commentsLoading ? (
+                  <div className="flex flex-col items-center justify-center py-12 gap-3">
+                    <div className="w-10 h-10 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
+                    <p className="text-gray-400 text-sm">Chargement des commentaires...</p>
+                  </div>
+                ) : comments.length === 0 ? (
+                  <div className="flex flex-col items-center justify-center py-12 gap-3">
+                    <MessageCircle size={48} className="text-gray-300" />
+                    <p className="text-gray-400 text-sm">Aucun commentaire pour le moment</p>
+                    <p className="text-gray-400 text-xs">Soyez le premier à commenter !</p>
+                  </div>
+                ) : (
+                  comments.map((comment) => (
+                    <div key={comment.id} className="space-y-3">
+                      {/* Main Comment */}
+                      <div className="flex gap-3">
+                        <div className={`w-10 h-10 rounded-full ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-gray-200'} flex items-center justify-center flex-shrink-0`}>
+                          <span className={`font-bold text-sm ${theme.mode === 'dark' ? 'text-slate-300' : 'text-gray-600'}`}>
+                            {getInitials(comment.author.first_name, comment.author.last_name)}
+                          </span>
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-baseline gap-2 mb-1">
+                            <span className={`font-bold text-sm ${theme.colors.text}`}>
+                              {comment.author.first_name} {comment.author.last_name}
+                            </span>
+                            <span className="text-xs text-gray-400">
+                              {formatCommentDate(comment.created_at)}
+                            </span>
+                          </div>
+                          <p className={`text-sm ${theme.colors.text} leading-relaxed`}>
+                            {comment.content}
+                          </p>
+                          <button
+                            onClick={() => setReplyingTo(comment)}
+                            className="text-xs text-blue-500 hover:text-blue-600 mt-2 font-medium"
+                          >
+                            Répondre
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Nested Replies */}
+                      {comment.replies && comment.replies.length > 0 && (
+                        <div className="ml-12 space-y-3">
+                          {comment.replies.map((reply) => (
+                            <div key={reply.id} className="flex gap-3">
+                              <div className={`w-8 h-8 rounded-full ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-gray-200'} flex items-center justify-center flex-shrink-0`}>
+                                <span className={`font-bold text-xs ${theme.mode === 'dark' ? 'text-slate-300' : 'text-gray-600'}`}>
+                                  {getInitials(reply.author.first_name, reply.author.last_name)}
+                                </span>
+                              </div>
+                              <div className="flex-1">
+                                <div className="flex items-baseline gap-2 mb-1">
+                                  <span className={`font-bold text-sm ${theme.colors.text}`}>
+                                    {reply.author.first_name} {reply.author.last_name}
+                                  </span>
+                                  <span className="text-xs text-gray-400">
+                                    {formatCommentDate(reply.created_at)}
+                                  </span>
+                                </div>
+                                <p className={`text-sm ${theme.colors.text} leading-relaxed`}>
+                                  {reply.content}
+                                </p>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ))
+                )}
+              </div>
+
+              {/* Reply Indicator */}
+              {replyingTo && (
+                <div className={`px-6 py-2 border-t ${theme.mode === 'dark' ? 'border-slate-700 bg-slate-800/50' : 'border-gray-100 bg-gray-50'} flex items-center justify-between`}>
+                  <span className="text-sm text-gray-500">
+                    Répondre à <span className="font-semibold">{replyingTo.author.first_name}</span>
+                  </span>
+                  <button
+                    onClick={() => setReplyingTo(null)}
+                    className="text-xs text-gray-400 hover:text-gray-600"
+                  >
+                    Annuler
+                  </button>
+                </div>
+              )}
+
+              {/* Input Area */}
+              <div className={`p-6 border-t ${theme.mode === 'dark' ? 'border-slate-700' : 'border-gray-100'}`}>
+                <div className="flex items-center gap-3">
+                  <input
+                    type="text"
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && handleSendComment()}
+                    placeholder="Écrire un commentaire..."
+                    className={`flex-1 px-4 py-3 rounded-xl border ${theme.mode === 'dark'
+                      ? 'bg-slate-800 border-slate-700 text-white placeholder-slate-400'
+                      : 'bg-white border-gray-200 text-gray-900 placeholder-gray-400'
+                      } focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all`}
+                  />
+                  <button
+                    onClick={handleSendComment}
+                    disabled={!commentText.trim()}
+                    className={`p-3 rounded-xl transition-all ${commentText.trim()
+                      ? 'bg-blue-600 hover:bg-blue-700 active:scale-95'
+                      : 'bg-gray-300 cursor-not-allowed'
+                      }`}
+                  >
+                    <Send size={20} className="text-white" />
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </main>
