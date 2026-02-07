@@ -480,52 +480,40 @@ const CouponPage = () => {
 
                 {/* Footer Actions */}
                 <div className="flex items-center justify-between">
-                  <div className={`flex items-center gap-4 ${theme.mode === 'dark' ? 'text-slate-400' : 'text-[#999999]'}`}>
+                  <div className="flex items-center gap-4">
                     <button
                       onClick={() => coupon.can_rate && handleVote(coupon.id, 'like')}
-                      disabled={!coupon.can_rate && !coupon.user_liked && !coupon.user_disliked} // Allow changing vote if already voted? Or depend on can_rate?
-                      // The doc says "Un vote par jour". Does that mean 1 action? Or 1 final state? 
-                      // Usually "can_rate" comes from backend. If it's false, we disable.
-                      // But if we already voted, maybe we can toggle?
-                      // Let's rely on can_rate for now, but also checks if backend returns different can_rate.
-                      // If user_liked is true, we might want to allow clicking to unlike (toggle).
-                      className={`flex items-center gap-1.5 transition-colors ${coupon.user_liked ? "text-blue-500" : coupon.can_rate ? "hover:text-blue-500" : "opacity-50 cursor-not-allowed"}`}
+                      disabled={!coupon.can_rate && !coupon.user_liked && !coupon.user_disliked}
+                      className={`flex items-center gap-1.5 transition-colors ${coupon.user_liked ? "text-blue-600" : "text-[#1976D2] opacity-80 hover:opacity-100"}`}
                     >
-                      <ThumbsUp size={18} className={coupon.user_liked ? "fill-blue-500" : ""} />
-                      <span className="font-bold text-sm">{coupon.likes_count || 0}</span>
+                      <ThumbsUp size={20} className={coupon.user_liked ? "fill-blue-600" : ""} />
+                      <span className="text-sm font-medium">{coupon.likes_count || 0}</span>
                     </button>
                     <button
                       onClick={() => coupon.can_rate && handleVote(coupon.id, 'dislike')}
                       disabled={!coupon.can_rate && !coupon.user_liked && !coupon.user_disliked}
-                      className={`flex items-center gap-1.5 transition-colors ${coupon.user_disliked ? "text-red-500" : coupon.can_rate ? "hover:text-red-500" : "opacity-50 cursor-not-allowed"}`}
+                      className={`flex items-center gap-1.5 transition-colors ${coupon.user_disliked ? "text-red-400" : "text-[#EF9A9A] opacity-80 hover:opacity-100"}`}
                     >
-                      <ThumbsDown size={18} className={coupon.user_disliked ? "fill-red-500" : ""} />
-                      <span className="font-bold text-sm">{coupon.dislikes_count || 0}</span>
+                      <ThumbsDown size={20} className={coupon.user_disliked ? "fill-red-400" : ""} />
+                      <span className="text-sm font-medium">{coupon.dislikes_count || 0}</span>
                     </button>
                     <button
                       onClick={() => handleOpenComments(coupon)}
-                      className="flex items-center gap-1.5 transition-colors hover:text-blue-500"
+                      className="flex items-center gap-1.5 transition-colors text-[#999999] hover:text-gray-600"
                     >
-                      <MessageCircle size={18} />
-                      <span className="font-bold text-sm">{coupon.total_comments || 0}</span>
+                      <MessageCircle size={20} />
+                      <span className="text-sm font-medium">{coupon.total_comments || 0} Com.</span>
                     </button>
-                    <div className="flex items-center gap-1 ml-1">
-                      <Star size={18} className="fill-yellow-400 text-yellow-400" />
-                      <span className={`font-bold text-sm ${theme.colors.text}`}>
-                        {typeof coupon.average_rating === 'number' ? coupon.average_rating.toFixed(1) : coupon.average_rating}
-                      </span>
-                    </div>
                   </div>
 
                   <button
                     onClick={() => handleCopy(coupon.code, coupon.id)}
-                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-black transition-all shadow-sm active:scale-95
+                    className={`flex items-center gap-2 px-6 py-2 rounded-2xl text-sm font-bold transition-all shadow-sm active:scale-95
                       ${copiedId === coupon.id
                         ? 'bg-green-100 text-green-700 border border-green-200'
-                        : 'bg-[#ECF2FF] text-[#002d72] dark:text-blue-300'}`}
+                        : 'bg-[#ECF2FF] text-[#002d72] dark:text-[#002d72]'}`}
                   >
-                    {copiedId === coupon.id ? <Check size={16} strokeWidth={3} /> : <div className="p-0.5 rounded bg-white/60 dark:bg-gray-800/60"><Copy size={14} /></div>}
-                    <span>{coupon.code}</span>
+                    {copiedId === coupon.id ? <Check size={16} strokeWidth={3} /> : <div className="flex items-center gap-2"><Copy size={16} /> <span className="uppercase">{coupon.code}</span></div>}
                   </button>
                 </div>
               </div>
