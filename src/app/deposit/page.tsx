@@ -286,7 +286,7 @@ export default function Deposits() {
 
         if (token) {
           promises.push(
-            api.get('/blaffa/network/?type=deposit', {
+            api.get('/blaffa/network-v2/?type=deposit', {
               headers: { Authorization: `Bearer ${token}` }
             }).then(res => setNetworks(res.data))
           );

@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 // import Footer from '@/components/footer';
 import { useTheme } from '../../components/ThemeProvider';
 import api from '@/lib/axios';
+import { transformDriveLink, formatWhatsAppLink } from '@/lib/link-utils';
 
 //import Advertisement_Hero from '@/components/Advertisement_Hero';
 //import { ArrowDownLeft, ArrowUpRight, Ticket, CreditCard } from 'lucide-react';
@@ -26,9 +27,9 @@ export default function Dashboard() {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [isContactMenuOpen, setIsContactMenuOpen] = useState(false);
-  const [telegramUrl, setTelegramUrl] = useState('https://t.me/manosservice'); // Default fallback
-  const [whatsappUrl, setWhatsappUrl] = useState('https://wa.me/+2250566643821'); // Default fallback
-  const [downloadApkLink, setDownloadApkLink] = useState('https://blaffa.net/blaffa.apk'); // Default fallback
+  const [telegramUrl, setTelegramUrl] = useState('');
+  const [whatsappUrl, setWhatsappUrl] = useState('');
+  const [downloadApkLink, setDownloadApkLink] = useState('');
   // const [animateHeader, setAnimateHeader] = useState(false);
   const { theme } = useTheme();
 
@@ -40,16 +41,11 @@ export default function Dashboard() {
 
 
 
-  // Fetch settings to get telegram URL
+  // Fetch settings to get links and configurations
   useEffect(() => {
-    const fetchTelegramUrl = async () => {
+    const fetchSettings = async () => {
       try {
-        const token = localStorage.getItem('accessToken');
-        if (!token) return;
-
-        const response = await api.get('/blaffa/setting/', {
-          headers: { Authorization: `Bearer ${token}` }
-        });
+        const response = await api.get('/blaffa/setting/');
 
         if (response.status === 200) {
           const settingsData = response.data;
@@ -59,24 +55,21 @@ export default function Dashboard() {
             setTelegramUrl(settings.telegram);
           }
 
-          if (settings?.download_apk_link) {
-            setDownloadApkLink(settings.download_apk_link);
+          const rawDownloadLink = settings?.dowload_apk_link || settings?.download_apk_link;
+          if (rawDownloadLink) {
+            setDownloadApkLink(rawDownloadLink);
           }
 
           if (settings?.whatsapp_phone) {
-            // Format the phone number for wa.me URL (remove non-numeric characters and ensure international format)
-            const phoneNumber = settings.whatsapp_phone.replace(/\D/g, '');
-            const indicator = settings.whatsapp_phone_indi;
-            setWhatsappUrl(`https://wa.me/${indicator}${phoneNumber}`);
+            setWhatsappUrl(formatWhatsAppLink(settings.whatsapp_phone_indi, settings.whatsapp_phone));
           }
         }
       } catch (error) {
         console.error('Error fetching settings:', error);
-        // Keep default fallback URLs
       }
     };
 
-    fetchTelegramUrl();
+    fetchSettings();
   }, []);
 
   // Simulates loading state

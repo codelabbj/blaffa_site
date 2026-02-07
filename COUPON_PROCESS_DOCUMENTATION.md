@@ -8,7 +8,7 @@ Le système de coupons permet aux utilisateurs autorisés de publier des codes p
 
 ### Endpoints Principaux
 - **Créer un coupon** : `POST /coupon` (nécessite `can_publish_coupons` ou `is_staff`)
-- **Noter un coupon** : `POST /coupons/<coupon_id>/rate/` (nécessite `can_rate_coupons`)
+- **Noter un coupon** : `POST /coupons/<coupon_id>/vote/` (nécessite `can_rate_coupons`)
 - **Liste des coupons** : `GET /coupon` (avec pagination)
 
 ### Champs User à Vérifier
@@ -270,22 +270,27 @@ En plus des coupons, les utilisateurs peuvent interagir directement sur le profi
 - **Body** :
   ```json
   {
-    "coupon_author_id": "uuid-de-l-auteur-du-coupon",
+    "coupon_id": "uuid-du-coupon",
     "content": "Super pronostiqueur, merci !",
     "parent_id": "uuid-commentaire-parent" (optionnel, pour répondre)
   }
   ```
-- **Réponse** : Retourne l'objet commentaire créé.
-- **Note** : Les commentaires sont "soft deleted" (marqués comme supprimés mais conservés en base).
+- **Réponse** : Retourne l'objet commentaire créé, incluant le `coupon`, le `coupon_author` et le `user`.
+- **Note** : Les commentaires sont liés à l'auteur mais aussi au coupon spécifique.
 
 **2. Lister les commentaires**
 - **Endpoint** : `GET /author-comments/list/?coupon_author_id=<uuid>`
 - **Description** : Récupère les commentaires de premier niveau pour un auteur donné. Les réponses (`replies`) sont imbriquées dans chaque commentaire.
 - **Réponse** : Liste d'objets commentaires.
 
-**3. Supprimer un commentaire**
+**3. Modifier un commentaire**
+- **Endpoint** : `PATCH /author-comments/<comment_id>/`
+- **Body** : `{"content": "Nouveau contenu"}`
+- **Règle** : Uniquement pour ses propres commentaires.
+
+**4. Supprimer un commentaire**
 - **Endpoint** : `DELETE /author-comments/<comment_id>/`
-- **Règle** : Un utilisateur ne peut supprimer que ses propres commentaires.
+- **Règle** : Un utilisateur ne peut supprimer que ses propres commentaires (Soft delete).
 
 ### B. Évaluation Auteur (Like/Dislike Profil)
 
@@ -296,7 +301,7 @@ Les utilisateurs peuvent "Aimer" ou "Ne pas aimer" un auteur globalement.
 **Body** :
 ```json
 {
-  "coupon_author_id": "uuid-de-l-auteur",
+  "coupon_id": "uuid-du-coupon",
   "is_like": true
 }
 ```
@@ -307,6 +312,8 @@ Les utilisateurs peuvent "Aimer" ou "Ne pas aimer" un auteur globalement.
 {
   "id": "...",
   "user": { ... },
+  "coupon_author": { ... },
+  "coupon": { ... },
   "is_like": true,
   ...
 }
@@ -383,7 +390,20 @@ GET /coupon?bet_app=uuid-app&page=1&page_size=20
       "average_rating": 4.50,
       "total_ratings": 20,
       "user_rating": 5,
-      "can_rate": false
+      "can_rate": false,
+      "comments": [
+        {
+          "id": "uuid-comment-1",
+          "content": "Excellent coupon !",
+          "created_at": "2024-02-06T12:00:00Z",
+          "author": {
+            "id": "uuid-user-a",
+            "email": "user@gmail.com",
+            "first_name": "Alice",
+            "last_name": "Sero"
+          }
+        }
+      ]
     },
     {
       "id": "uuid-coupon-2",
@@ -400,7 +420,8 @@ GET /coupon?bet_app=uuid-app&page=1&page_size=20
       "average_rating": 3.75,
       "total_ratings": 8,
       "user_rating": null,
-      "can_rate": true
+      "can_rate": true,
+      "comments": []
     }
   ]
 }
@@ -418,6 +439,8 @@ GET /coupon?bet_app=uuid-app&page=1&page_size=20
 - `total_ratings` : Nombre total de votes reçus
 - `user_rating` : Note donnée par l'utilisateur actuel (`null` si pas connecté ou pas encore voté)
 - `can_rate` : Indique si l'utilisateur actuel peut noter ce coupon (`false` si non connecté)
+- `comments` : Liste des 5 derniers commentaires (avec les infos de l'auteur de chaque commentaire)
+- `total_comments` : Nombre total de commentaires non supprimés sur ce coupon
 
 ### Processus interne
 
@@ -478,9 +501,23 @@ GET /coupon?bet_app=uuid-app&page=1&page_size=20
   "id": UUID,
   "author": ForeignKey(User),
   "coupon_author": ForeignKey(User),
+  "coupon": ForeignKey(Coupon),
   "content": Text,
   "parent": ForeignKey(Self, null=True),
   "is_deleted": Boolean (default=False),
+  "created_at": DateTime
+}
+```
+
+### AuthorCouponRating (Nouveau)
+
+```python
+{
+  "id": UUID,
+  "user": ForeignKey(User),
+  "coupon_author": ForeignKey(User),
+  "coupon": ForeignKey(Coupon),
+  "is_like": Boolean (True=Like, False=Dislike),
   "created_at": DateTime
 }
 ```
@@ -537,103 +574,16 @@ L'auteur reçoit une rémunération uniquement si :
 Le modèle `User` expose trois champs spécifiques aux coupons que le frontend peut utiliser pour déterminer les permissions :
 
 #### 1. `can_publish_coupons` (Boolean)
-- **Type** : `BooleanField`
-- **Valeur par défaut** : `false`
-- **Description** : Indique si l'utilisateur peut publier des coupons
-- **Utilisation frontend** : 
-  - Afficher/masquer le bouton "Créer un coupon"
-  - Autoriser l'accès à l'endpoint `POST /coupon`
-- **Attribution** : Manuelle par un administrateur
-
-**Exemple de vérification frontend :**
-```javascript
-if (user.can_publish_coupons || user.is_staff) {
-  // Afficher le bouton "Créer un coupon"
-  // Autoriser l'accès à POST /coupon
-}
-```
+- **Indique si l'utilisateur peut publier des coupons.**
+- Utilisation : Afficher bouton "Créer un coupon".
 
 #### 2. `can_rate_coupons` (Boolean)
-- **Type** : `BooleanField`
-- **Valeur par défaut** : `false`
-- **Description** : Indique si l'utilisateur peut noter des coupons
-- **Utilisation frontend** :
-  - Afficher/masquer les boutons de notation (étoiles 1-5)
-  - Autoriser l'accès à l'endpoint `POST /coupons/<coupon_id>/rate/`
-- **Attribution** : Automatique via une tâche Celery (`grant_coupon_rating_permissions`)
-
-**Critères d'attribution automatique :**
-- Au moins **1 mois d'ancienneté** (`date_joined <= 1 mois`)
-- Au moins **15 000 FCFA** de transactions acceptées (`status="accept"`)
-
-**Exemple de vérification frontend :**
-```javascript
-if (user.can_rate_coupons && coupon.can_rate) {
-  // Afficher les boutons de notation
-  // Autoriser l'accès à POST /coupons/{coupon_id}/rate/
-}
-```
+- **Indique si l'utilisateur peut voter (Like/Dislike).**
+- Utilisation : Afficher les pouces haut/bas.
+- Attribution auto : > 1 mois ancienneté + 15k transactions.
 
 #### 3. `coupon_points` (Decimal)
-- **Type** : `DecimalField(max_digits=10, decimal_places=2)`
-- **Valeur par défaut** : `0.00`
-- **Description** : Points gagnés par l'utilisateur (non utilisé actuellement dans le système de rémunération)
-- **Utilisation frontend** : Affichage informatif (optionnel)
-
-### Publier des Coupons (`can_publish_coupons`)
-
-Attribuée manuellement par un administrateur.
-
-**Vérification backend :**
-```python
-if not (request.user.is_staff or request.user.can_publish_coupons):
-    return Response(status=status.HTTP_403_FORBIDDEN)
-```
-
-### Noter des Coupons (`can_rate_coupons`)
-
-Attribuée automatiquement via une tâche Celery (`grant_coupon_rating_permissions`) aux utilisateurs qui :
-- Ont au moins **1 mois d'ancienneté** (`date_joined <= 1 mois`)
-- Ont effectué au moins **15 000 FCFA** de transactions acceptées (`status="accept"`)
-
-**Vérification backend :**
-```python
-if not request.user.can_rate_coupons:
-    return Response(
-        {"error": "Vous n'avez pas l'autorisation de noter des coupons"},
-        status=status.HTTP_403_FORBIDDEN,
-    )
-```
-
-### Recommandations pour le Frontend
-
-1. **Vérifier les permissions avant d'afficher les actions** :
-   - Utiliser `user.can_publish_coupons` pour afficher le bouton de création
-   - Utiliser `user.can_rate_coupons` pour afficher les boutons de notation
-
-2. **Gérer les erreurs 403** :
-   - Si l'utilisateur tente de créer un coupon sans permission → Afficher un message explicatif
-   - Si l'utilisateur tente de noter sans permission → Afficher les critères d'éligibilité
-
-3. **Utiliser le champ `can_rate` du coupon** :
-   - Le champ `can_rate` dans la réponse de `GET /coupon` combine :
-     - La permission `can_rate_coupons` de l'utilisateur
-     - Le fait qu'il n'ait pas déjà voté pour ce coupon
-   - Utiliser ce champ pour une vérification rapide côté frontend
-
-4. **Exemple de structure User pour le frontend** :
-```json
-{
-  "id": "uuid-user",
-  "email": "user@example.com",
-  "first_name": "John",
-  "last_name": "Doe",
-  "is_staff": false,
-  "can_publish_coupons": true,
-  "can_rate_coupons": true,
-  "coupon_points": 0.00
-}
-```
+- Points de réputation de l'auteur.
 
 ---
 
@@ -669,8 +619,20 @@ curl -X POST https://api.example.com/author-comments/ \
   -H "Authorization: Bearer YOUR_TOKEN" \
   -H "Content-Type: application/json" \
   -d '{
-    "coupon_author_id": "uuid-auteur",
+    "coupon_id": "uuid-du-coupon",
     "content": "Excellent travail !"
+  }'
+```
+
+### Exemple 4 : Liker un auteur (via un coupon)
+
+```bash
+curl -X POST https://api.example.com/author-ratings/ \
+  -H "Authorization: Bearer YOUR_TOKEN" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "coupon_id": "uuid-du-coupon",
+    "is_like": true
   }'
 ```
 
@@ -684,6 +646,7 @@ curl -X POST https://api.example.com/author-comments/ \
 4. **Suppression de vote** : Si un utilisateur refait le même vote, cela annule son vote précédent.
 5. **Filtrage temporel** : Seuls les coupons des dernières 24 heures sont affichés dans la liste principale.
 6. **Transaction atomique** : Toutes les opérations (vote, argent, points) sont atomiques.
+7. **Interactions liées au Coupon** : Les commentaires (`AuthorComment`) et les notations auteur (`AuthorCouponRating`) sont liés à l'auteur mais **DOIVENT** être initiés via un `coupon_id`. Cela permet de savoir quel coupon a suscité l'interaction.
 
 ---
 
@@ -695,6 +658,6 @@ curl -X POST https://api.example.com/author-comments/ \
 - `GET /coupon-wallet` : Consulter son portefeuille coupon
 - `GET /user/coupon-stats/` : Statistiques de ses coupons publiés
 - `POST /coupon-wallet-withdraw` : Retirer de l'argent du portefeuille coupon
-- `POST /author-comments/` : Poster un commentaire sur le profil d'un auteur
-- `POST /author-ratings/` : Liker/Disliker le profil d'un auteur
+- `POST /author-comments/` : Poster un commentaire sur le profil d'un auteur (via un coupon)
+- `POST /author-ratings/` : Liker/Disliker le profil d'un auteur (via un coupon)
 - `GET /author-stats/<user_id>/` : Voir les stats (likes/dislikes) d'un auteur

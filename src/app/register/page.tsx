@@ -3,9 +3,10 @@
 import { useState, useEffect } from 'react';
 import RegisterForm from '../../components/RegisterForm';
 import Image from 'next/image';
+import { transformDriveLink } from '@/lib/link-utils';
 
 export default function RegisterPage() {
-    const [downloadApkLink, setDownloadApkLink] = useState('https://blaffa.net/blaffa.apk');
+    const [downloadApkLink, setDownloadApkLink] = useState('');
 
     useEffect(() => {
         const fetchSettings = async () => {
@@ -20,8 +21,9 @@ export default function RegisterPage() {
                 if (response.ok) {
                     const settingsData = await response.json();
                     const settings = Array.isArray(settingsData) ? settingsData[0] : settingsData;
-                    if (settings?.download_apk_link) {
-                        setDownloadApkLink(settings.download_apk_link);
+                    const rawDownloadLink = settings?.dowload_apk_link || settings?.download_apk_link;
+                    if (rawDownloadLink) {
+                        setDownloadApkLink(rawDownloadLink);
                     }
                 }
             } catch (error) {

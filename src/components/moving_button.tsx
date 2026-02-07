@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
+import { transformDriveLink } from '@/lib/link-utils';
 
 export default function MovingDownloadButton() {
   const [position, setPosition] = useState({ x: 20, y: 20 });
   const [direction, setDirection] = useState({ x: 1, y: 1 });
   const [windowSize, setWindowSize] = useState({ width: 0, height: 0 });
-  const [downloadApkLink, setDownloadApkLink] = useState('https://blaffa.net/blaffa.apk');
+  const [downloadApkLink, setDownloadApkLink] = useState('');
 
   // Fetch settings to get dynamic download link
   useEffect(() => {
@@ -20,8 +21,9 @@ export default function MovingDownloadButton() {
         if (response.ok) {
           const settingsData = await response.json();
           const settings = Array.isArray(settingsData) ? settingsData[0] : settingsData;
-          if (settings?.download_apk_link) {
-            setDownloadApkLink(settings.download_apk_link);
+          const rawDownloadLink = settings?.dowload_apk_link || settings?.download_apk_link;
+          if (rawDownloadLink) {
+            setDownloadApkLink(rawDownloadLink);
           }
         }
       } catch (error) {
@@ -95,6 +97,7 @@ export default function MovingDownloadButton() {
   }, [direction, windowSize]);
 
   const handleClick = () => {
+    if (!downloadApkLink) return;
     window.open(downloadApkLink, '_blank');
   };
 

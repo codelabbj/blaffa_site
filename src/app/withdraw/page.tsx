@@ -100,7 +100,7 @@ interface UserPhone {
 export default function Withdraw() {
   const router = useRouter();
   const { t } = useTranslation();
-  const [currentStep, setCurrentStep] = useState<'selectId' | 'selectNetwork' | 'selectPhone' | 'manageBetId' | 'enterDetails' | 'addPhone' | 'summary'>('selectId');
+  const [currentStep, setCurrentStep] = useState<'selectId' | 'selectNetwork' | 'selectPhone' | 'manageBetId' | 'enterDetails' | 'addPhone' | 'summary' | 'withdrawHelp'>('selectId');
   const [selectedPlatform, setSelectedPlatform] = useState<App | null>(null);
   const [platforms, setPlatforms] = useState<App[]>([]);
   const [selectedNetwork, setSelectedNetwork] = useState<Network | null>(null);
@@ -265,7 +265,7 @@ export default function Withdraw() {
 
         if (token) {
           promises.push(
-            api.get('/blaffa/network/?type=withdrawal', {
+            api.get('/blaffa/network-v2/?type=withdrawal', {
               headers: { Authorization: `Bearer ${token}` }
             }).then(res => setNetworks(res.data))
           );
@@ -359,7 +359,7 @@ export default function Withdraw() {
   // Phone management handlers
   const handlePhoneSelect = (phone: UserPhone) => {
     setSelectedPhone(phone);
-    setCurrentStep('enterDetails');
+    setCurrentStep('withdrawHelp');
   };
 
 
@@ -965,6 +965,87 @@ export default function Withdraw() {
           </div>
         );
 
+      case 'withdrawHelp':
+        return (
+          <div className="flex flex-col h-full animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="flex-1 space-y-8">
+              {/* Title Section */}
+              <div className="text-center space-y-2">
+                <h3 className={`text-2xl font-bold ${theme.colors.text}`}>Besoin d'aide ?</h3>
+                <p className={`text-sm ${theme.colors.d_text} opacity-60 max-w-[280px] mx-auto leading-relaxed`}>
+                  Consultez nos tutoriels vidéo pour faciliter votre retrait.
+                </p>
+              </div>
+
+              {/* Tutorial Cards */}
+              <div className="space-y-4 pt-4">
+                {selectedPlatform?.withdrawal_link && (
+                  <button
+                    onClick={() => window.open(selectedPlatform.withdrawal_link, '_blank')}
+                    className="w-full bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl p-4 flex items-center justify-between shadow-sm hover:shadow-md transition-all active:scale-[0.98]"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-14 h-14 bg-red-600 rounded-xl flex items-center justify-center text-white flex-shrink-0">
+                        <svg viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8">
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                      </div>
+                      <div className="text-left">
+                        <div className="text-xs text-slate-400 font-medium">Tutoriel vidéo</div>
+                        <div className={`font-bold text-sm ${theme.colors.text} leading-tight mt-1`}>
+                          Comment obtenir un code de <br /> retrait avec {selectedPlatform?.public_name || selectedPlatform?.name} ?
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-slate-300">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  </button>
+                )}
+
+                {selectedPlatform?.why_withdrawal_fail && (
+                  <button
+                    onClick={() => window.open(selectedPlatform.why_withdrawal_fail, '_blank')}
+                    className="w-full bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 rounded-2xl p-4 flex items-center justify-between shadow-sm hover:shadow-md transition-all active:scale-[0.98]"
+                  >
+                    <div className="flex items-center gap-4">
+                      <div className="w-14 h-14 bg-red-600 rounded-xl flex items-center justify-center text-white flex-shrink-0">
+                        <svg viewBox="0 0 24 24" fill="currentColor" className="w-8 h-8">
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                      </div>
+                      <div className="text-left">
+                        <div className="text-xs text-slate-400 font-medium">Tutoriel vidéo</div>
+                        <div className={`font-bold text-sm ${theme.colors.text} leading-tight mt-1`}>
+                          Pourquoi mon retrait a <br /> échoué ?
+                        </div>
+                      </div>
+                    </div>
+                    <div className="text-slate-300">
+                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                      </svg>
+                    </div>
+                  </button>
+                )}
+              </div>
+            </div>
+
+            {/* Bottom Action Button */}
+            <div className="mt-12 mb-8">
+              <button
+                onClick={() => setCurrentStep('enterDetails')}
+                className="w-full h-16 bg-[#002d72] hover:bg-[#001d4a] text-white font-bold text-lg rounded-2xl shadow-lg shadow-blue-900/10 transition-all active:scale-[0.98] flex items-center justify-center"
+                style={{ backgroundColor: theme.mode === 'dark' ? theme.colors.primary : '#002d72' }}
+              >
+                J'ai déjà un code de retrait
+              </button>
+            </div>
+          </div>
+        );
+
       case 'enterDetails':
         return (
           <div className={`min-h-screen ${theme.colors.a_background}`}>
@@ -977,7 +1058,7 @@ export default function Withdraw() {
                 <ArrowLeft size={28} className="text-gray-900 dark:text-gray-100" />
               </button>
               <h3 className={`text-xl font-bold ${theme.colors.text}`}>
-                5. Confirmer le retrait
+                6. Informations de retrait
               </h3>
             </div>
 
@@ -1075,55 +1156,6 @@ export default function Withdraw() {
                 </div>
               </div>
 
-              {/* Youtube Buttons */}
-              <div className="space-y-3">
-                {selectedPlatform?.withdrawal_link && (
-                  <button
-                    type="button"
-                    onClick={() => window.open(selectedPlatform.withdrawal_link, '_blank')}
-                    className="w-full p-4 rounded-xl border border-gray-200 bg-white dark:bg-slate-800 dark:border-slate-700 flex items-center justify-between shadow-sm"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center text-white">
-                        {/* Youtube Play Icon */}
-                        <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M8 5v14l11-7z" /></svg>
-                      </div>
-                      <div className="text-left w-full">
-                        <div className="text-xs text-gray-500 text-left">Tutoriel vidéo</div>
-                        <div className={`font-bold text-sm ${theme.colors.text} text-red-600 text-left uppercase text-xs truncate max-w-[200px]`}>Comment obtenir un code de retrait avec {selectedPlatform?.public_name || selectedPlatform?.name} ?</div>
-                      </div>
-                    </div>
-                    <div className="text-red-500">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                  </button>
-                )}
-
-                {selectedPlatform?.why_withdrawal_fail && (
-                  <button
-                    type="button"
-                    onClick={() => window.open(selectedPlatform.why_withdrawal_fail, '_blank')}
-                    className="w-full p-4 rounded-xl border border-gray-200 bg-white dark:bg-slate-800 dark:border-slate-700 flex items-center justify-between shadow-sm"
-                  >
-                    <div className="flex items-center gap-4">
-                      <div className="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center text-white">
-                        <svg viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6"><path d="M8 5v14l11-7z" /></svg>
-                      </div>
-                      <div className="text-left w-full">
-                        <div className="text-xs text-gray-500 text-left">Tutoriel vidéo</div>
-                        <div className={`font-bold text-sm ${theme.colors.text} text-red-600 text-left uppercase text-xs`}>Pourquoi mon retrait a échoué ?</div>
-                      </div>
-                    </div>
-                    <div className="text-red-500">
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                        <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                      </svg>
-                    </div>
-                  </button>
-                )}
-              </div>
 
               {/* Submit Button */}
               <div className="pt-6 pb-20">
@@ -1272,6 +1304,8 @@ export default function Withdraw() {
         return "Retrait - Numéro de télé...";
       case 'enterDetails':
         return "Retrait - Informations";
+      case 'withdrawHelp':
+        return "Aide Retrait";
       case 'summary':
         return "Confirmer le retrait";
       default:
@@ -1366,8 +1400,10 @@ export default function Withdraw() {
                 setCurrentStep('manageBetId');
               } else if (currentStep === 'selectPhone') {
                 setCurrentStep('selectNetwork');
-              } else if (currentStep === 'enterDetails') {
+              } else if (currentStep === 'withdrawHelp') {
                 setCurrentStep('selectPhone');
+              } else if (currentStep === 'enterDetails') {
+                setCurrentStep('withdrawHelp');
               } else if (currentStep === 'summary') {
                 setCurrentStep('enterDetails');
               }

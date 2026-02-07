@@ -308,7 +308,7 @@ function Deposits() {
                             fetchPlatforms()
                         ];
                         if (token) {
-                            promises.push(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$axios$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].get('/blaffa/network/?type=deposit', {
+                            promises.push(__TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$axios$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].get('/blaffa/network-v2/?type=deposit', {
                                 headers: {
                                     Authorization: `Bearer ${token}`
                                 }

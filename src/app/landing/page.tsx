@@ -6,6 +6,7 @@ import StaticTransactionHistory from '@/components/StaticTransactionHistory';
 import { useTranslation } from 'react-i18next';
 // import Footer from '@/components/footer';
 import { useTheme } from '../../components/ThemeProvider';
+import { transformDriveLink } from '@/lib/link-utils';
 
 //import Advertisement_Hero from '@/components/Advertisement_Hero';
 //import { ArrowDownLeft, ArrowUpRight, Ticket, CreditCard } from 'lucide-react';
@@ -25,8 +26,8 @@ export default function LandingPage() {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [isContactMenuOpen, setIsContactMenuOpen] = useState(false);
-  const [telegramUrl, setTelegramUrl] = useState('https://t.me/manosservice'); // Default fallback
-  const [downloadApkLink, setDownloadApkLink] = useState('https://blaffa.net/blaffa.apk'); // Default fallback
+  const [telegramUrl, setTelegramUrl] = useState('');
+  const [downloadApkLink, setDownloadApkLink] = useState('');
   // const [animateHeader, setAnimateHeader] = useState(false);
   const { theme } = useTheme();
 
@@ -61,8 +62,9 @@ export default function LandingPage() {
           localStorage.setItem('settingsCache', JSON.stringify(settings));
         }
 
-        if (settings?.download_apk_link) {
-          setDownloadApkLink(settings.download_apk_link);
+        const rawDownloadLink = settings?.dowload_apk_link || settings?.download_apk_link;
+        if (rawDownloadLink) {
+          setDownloadApkLink(rawDownloadLink);
         }
       } catch (error) {
         console.error('Error fetching telegram URL from settings:', error);
@@ -75,8 +77,9 @@ export default function LandingPage() {
               setTelegramUrl(settings.telegram);
               console.log('Loaded settings from cache');
             }
-            if (settings?.download_apk_link) {
-              setDownloadApkLink(settings.download_apk_link);
+            const rawDownloadLink = settings?.dowload_apk_link || settings?.download_apk_link;
+            if (rawDownloadLink) {
+              setDownloadApkLink(rawDownloadLink);
             }
           } catch (parseErr) {
             console.error('Failed to parse cached settings:', parseErr);
