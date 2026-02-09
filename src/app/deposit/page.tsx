@@ -164,6 +164,7 @@ export default function Deposits() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedTransaction, setSelectedTransaction] = useState<TransactionDetail | null>(null);
   const [transactionLink, setTransactionLink] = useState<string | null>(null);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
   const { theme } = useTheme();
   const { addMessageHandler } = useWebSocket();
   const [selectedBetId, setSelectedBetId] = useState<string | null>(null);
@@ -182,6 +183,7 @@ export default function Deposits() {
     const handleTransactionLink = (data: WebSocketMessage) => {
       if (data.type === 'transaction_link' && data.data) {
         setTransactionLink(data.data); // Save the link for the modal button
+        setShowPaymentModal(true); // Open the modal
       }
     };
     const removeHandler = addMessageHandler(handleTransactionLink);
@@ -692,9 +694,10 @@ export default function Deposits() {
 
       setSuccess('Transaction initiée avec succès !');
 
-      // Check for transaction link in response and open it
+      // Check for transaction link in response and show modal
       if (transaction.transaction_link) {
-        window.open(transaction.transaction_link, '_blank');
+        setTransactionLink(transaction.transaction_link);
+        setShowPaymentModal(true);
       }
 
       // Check if ussd_code is present in response and trigger dialer
@@ -702,10 +705,12 @@ export default function Deposits() {
         attemptDialerRedirect(transaction.ussd_code);
       }
 
-      // Redirect main tab to dashboard regardless of link presence
-      setTimeout(() => {
-        if (typeof window !== 'undefined') window.location.href = '/dashboard';
-      }, 2000);
+      // Only redirect main tab to dashboard if there's no payment link or ussd code
+      if (!transaction.transaction_link && !transaction.ussd_code) {
+        setTimeout(() => {
+          if (typeof window !== 'undefined') window.location.href = '/dashboard';
+        }, 2000);
+      }
 
       // Reset form
       setFormData({ amount: '', phoneNumber: '', betid: '', otp_code: '' });
@@ -1553,6 +1558,53 @@ export default function Deposits() {
 
 
 
+
+      {/* Continue Payment Modal */}
+      {showPaymentModal && transactionLink && (
+        <div className="fixed inset-0 bg-white/10 dark:bg-black/20 backdrop-blur-2xl flex items-center justify-center p-4 z-50 modal-backdrop">
+          <div className={`${theme.colors.background} rounded-3xl shadow-2xl w-full max-w-sm modal-content overflow-hidden border border-white/20 dark:border-gray-800`}>
+            <div className="p-8 text-center">
+              <div className="w-20 h-20 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg className="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                </svg>
+              </div>
+
+              <h3 className={`text-2xl font-bold mb-8 tracking-tight ${theme.colors.text}`}>Paiement requis</h3>
+
+              <div className="space-y-3">
+                <a
+                  href={transactionLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => {
+                    setShowPaymentModal(false);
+                    setTimeout(() => {
+                      if (typeof window !== 'undefined') window.location.href = '/dashboard';
+                    }, 100);
+                  }}
+                  className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl text-lg font-bold transition-all shadow-lg shadow-blue-900/20 flex items-center justify-center gap-3 active:scale-[0.98]"
+                >
+                  Continuer le paiement
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </a>
+
+                <button
+                  onClick={() => {
+                    setShowPaymentModal(false);
+                    if (typeof window !== 'undefined') window.location.href = '/dashboard';
+                  }}
+                  className="w-full py-3 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 font-medium transition-colors"
+                >
+                  Retour au tableau de bord
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Edit Phone Modal */}
       {

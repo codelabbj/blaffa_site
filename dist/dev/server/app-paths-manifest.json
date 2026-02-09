@@ -1,8 +1,6 @@
 {
-  "/all_transactions/page": "app/all_transactions/page.js",
+  "/_not-found/page": "app/_not-found/page.js",
   "/dashboard/page": "app/dashboard/page.js",
-  "/login/page": "app/login/page.js",
-  "/page": "app/page.js",
-  "/profile/page": "app/profile/page.js",
-  "/transaction/detail/page": "app/transaction/detail/page.js"
+  "/deposit/page": "app/deposit/page.js",
+  "/page": "app/page.js"
 }
