@@ -187,11 +187,12 @@ function TransactionDetailContent() {
         return status;
     };
 
-    const getStatusSubtext = (status: string) => {
+    const getStatusSubtext = (status: string, transType: string) => {
         const s = status.toLowerCase();
-        if (['pending', 'payment_init_success', 'en attente'].includes(s)) return 'Transaction en cours';
-        if (['completed', 'accept', 'approve', 'success'].includes(s)) return 'Transaction réussie';
-        if (['failed', 'error', 'fail', 'echec'].includes(s)) return 'Transaction échouée';
+        const type = transType.charAt(0).toUpperCase() + transType.slice(1);
+        if (['pending', 'payment_init_success', 'en attente'].includes(s)) return `${type} en cours`;
+        if (['completed', 'accept', 'approve', 'success'].includes(s)) return `${type} réussi`;
+        if (['failed', 'error', 'fail', 'echec'].includes(s)) return `${type} échoué`;
         return '';
     };
 
@@ -245,7 +246,7 @@ function TransactionDetailContent() {
                         <ArrowLeft className={theme.colors.text} size={24} />
                     </button>
                     <h1 className={`flex-1 text-center text-xl font-bold ${theme.colors.text} mr-10`}>
-                        Détails de la transaction
+                        Détails du paiement
                     </h1>
                 </div>
 
@@ -259,7 +260,7 @@ function TransactionDetailContent() {
                     </h2>
 
                     <p className="text-gray-500 text-center mb-10 px-4">
-                        Nous n'avons pas pu charger les informations. L'ID de la transaction est <strong>{id || 'inconnu'}</strong>.
+                        Nous n'avons pas pu charger les informations. L'ID est <strong>{id || 'inconnu'}</strong>.
                     </p>
 
                     <button
@@ -291,7 +292,7 @@ function TransactionDetailContent() {
                     <ArrowLeft className={theme.colors.text} size={24} />
                 </button>
                 <h1 className={`flex-1 text-center text-xl font-bold ${theme.colors.text} mr-10`}>
-                    Détails de la transaction
+                    Détails du {transaction.type_trans}
                 </h1>
             </div>
 
@@ -304,7 +305,7 @@ function TransactionDetailContent() {
                     {getStatusText(transaction.status)}
                 </h2>
                 <p className="text-gray-400 text-sm mb-6">
-                    {getStatusSubtext(transaction.status)}
+                    {getStatusSubtext(transaction.status, transaction.type_trans)}
                 </p>
                 <div className={`text-3xl font-black ${theme.colors.text} mb-8`}>
                     XOF {transaction.amount}
@@ -317,17 +318,22 @@ function TransactionDetailContent() {
                         <span className="font-bold text-[#1E3A8A] dark:text-blue-300">Message</span>
                     </div>
                     <p className="text-[#1E3A8A] dark:text-blue-200 text-sm">
-                        {transaction.error_message || (['pending', 'payment_init_success', 'en attente'].includes(transaction.status?.toLowerCase()) ? 'Transaction en cours' : (['completed', 'accept', 'approve', 'success'].includes(transaction.status?.toLowerCase()) ? 'Dépôt effectué avec succès.' : 'Aucune demande de paiement n’a été trouvée pour ce client.'))}
+                        {transaction.error_message || (['pending', 'payment_init_success', 'en attente'].includes(transaction.status?.toLowerCase()) ? `${transaction.type_trans} en cours` : (['completed', 'accept', 'approve', 'success'].includes(transaction.status?.toLowerCase()) ? `Paiement effectué avec succès.` : 'Aucune demande de paiement n’a été trouvée pour ce client.'))}
                     </p>
                 </div>
 
                 {/* Transaction Information Card */}
                 <div className={`w-full ${theme.mode === 'dark' ? 'bg-[#1a1a1a] border-gray-800' : 'bg-white border-gray-100'} rounded-3xl p-6 border shadow-sm mb-8`}>
                     <h3 className={`text-lg font-bold ${theme.colors.text} mb-6`}>
-                        Informations de la transaction
+                        Informations du {transaction.type_trans}
                     </h3>
 
                     <div className="space-y-6">
+                        <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-4">
+                            <span className="text-gray-400 text-sm">Type</span>
+                            <span className={`font-bold uppercase ${theme.colors.text}`}>{transaction.type_trans}</span>
+                        </div>
+
                         <div className="flex items-start gap-4">
                             <div className="w-10 h-10 flex items-center justify-center shrink-0">
                                 {transaction.app?.image ? (
@@ -442,7 +448,8 @@ function TransactionDetailContent() {
                             const appName = transaction.app?.public_name || 'App';
                             const appId = (transaction as any).user_app_id || transaction.transaction_reference || 'N/A';
 
-                            const message = `Bonjour moi c'est ${firstName} ${lastName}, j'ai besoin d'aide concernant ma transaction.\nRéférence: ${ref}\nMontant: XOF ${amount}\nRéseau: ${network}\nTéléphone: ${phone}\n*${appName} ID:* ${appId}`;
+                            const transType = transaction.type_trans;
+                            const message = `Bonjour moi c'est ${firstName} ${lastName}, j'ai besoin d'aide concernant mon ${transType}.\nRéférence: ${ref}\nMontant: XOF ${amount}\nRéseau: ${network}\nTéléphone: ${phone}\n*${appName} ID:* ${appId}`;
 
                             window.open(`https://wa.me/22553445327?text=${encodeURIComponent(message)}`, '_blank');
                         }}

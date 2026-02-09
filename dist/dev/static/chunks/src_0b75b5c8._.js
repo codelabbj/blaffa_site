@@ -333,25 +333,26 @@ function TransactionDetailContent() {
         ].includes(s)) return 'Échec';
         return status;
     };
-    const getStatusSubtext = (status)=>{
+    const getStatusSubtext = (status, transType)=>{
         const s = status.toLowerCase();
+        const type = transType.charAt(0).toUpperCase() + transType.slice(1);
         if ([
             'pending',
             'payment_init_success',
             'en attente'
-        ].includes(s)) return 'Transaction en cours';
+        ].includes(s)) return `${type} en cours`;
         if ([
             'completed',
             'accept',
             'approve',
             'success'
-        ].includes(s)) return 'Transaction réussie';
+        ].includes(s)) return `${type} réussi`;
         if ([
             'failed',
             'error',
             'fail',
             'echec'
-        ].includes(s)) return 'Transaction échouée';
+        ].includes(s)) return `${type} échoué`;
         return '';
     };
     const getStatusColor = (status)=>{
@@ -393,12 +394,12 @@ function TransactionDetailContent() {
                 className: "animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"
             }, void 0, false, {
                 fileName: "[project]/src/app/transaction/detail/page.tsx",
-                lineNumber: 235,
+                lineNumber: 236,
                 columnNumber: 17
             }, this)
         }, void 0, false, {
             fileName: "[project]/src/app/transaction/detail/page.tsx",
-            lineNumber: 234,
+            lineNumber: 235,
             columnNumber: 13
         }, this);
     }
@@ -417,26 +418,26 @@ function TransactionDetailContent() {
                                 size: 24
                             }, void 0, false, {
                                 fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                lineNumber: 245,
+                                lineNumber: 246,
                                 columnNumber: 25
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/transaction/detail/page.tsx",
-                            lineNumber: 244,
+                            lineNumber: 245,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
                             className: `flex-1 text-center text-xl font-bold ${theme.colors.text} mr-10`,
-                            children: "Détails de la transaction"
+                            children: "Détails du paiement"
                         }, void 0, false, {
                             fileName: "[project]/src/app/transaction/detail/page.tsx",
-                            lineNumber: 247,
+                            lineNumber: 248,
                             columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/transaction/detail/page.tsx",
-                    lineNumber: 243,
+                    lineNumber: 244,
                     columnNumber: 17
                 }, this),
                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -449,12 +450,12 @@ function TransactionDetailContent() {
                                 className: "stroke-[1.2]"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                lineNumber: 254,
+                                lineNumber: 255,
                                 columnNumber: 25
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/transaction/detail/page.tsx",
-                            lineNumber: 253,
+                            lineNumber: 254,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -462,25 +463,25 @@ function TransactionDetailContent() {
                             children: error || (!id ? 'ID manquant' : 'Transaction introuvable')
                         }, void 0, false, {
                             fileName: "[project]/src/app/transaction/detail/page.tsx",
-                            lineNumber: 257,
+                            lineNumber: 258,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                             className: "text-gray-500 text-center mb-10 px-4",
                             children: [
-                                "Nous n'avons pas pu charger les informations. L'ID de la transaction est ",
+                                "Nous n'avons pas pu charger les informations. L'ID est ",
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("strong", {
                                     children: id || 'inconnu'
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                    lineNumber: 262,
-                                    columnNumber: 98
+                                    lineNumber: 263,
+                                    columnNumber: 80
                                 }, this),
                                 "."
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/transaction/detail/page.tsx",
-                            lineNumber: 261,
+                            lineNumber: 262,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -489,7 +490,7 @@ function TransactionDetailContent() {
                             children: "Réessayer"
                         }, void 0, false, {
                             fileName: "[project]/src/app/transaction/detail/page.tsx",
-                            lineNumber: 265,
+                            lineNumber: 266,
                             columnNumber: 21
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -498,19 +499,19 @@ function TransactionDetailContent() {
                             children: "Retour"
                         }, void 0, false, {
                             fileName: "[project]/src/app/transaction/detail/page.tsx",
-                            lineNumber: 272,
+                            lineNumber: 273,
                             columnNumber: 21
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/transaction/detail/page.tsx",
-                    lineNumber: 252,
+                    lineNumber: 253,
                     columnNumber: 17
                 }, this)
             ]
         }, void 0, true, {
             fileName: "[project]/src/app/transaction/detail/page.tsx",
-            lineNumber: 242,
+            lineNumber: 243,
             columnNumber: 13
         }, this);
     }
@@ -528,26 +529,29 @@ function TransactionDetailContent() {
                             size: 24
                         }, void 0, false, {
                             fileName: "[project]/src/app/transaction/detail/page.tsx",
-                            lineNumber: 291,
+                            lineNumber: 292,
                             columnNumber: 21
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                        lineNumber: 287,
+                        lineNumber: 288,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
                         className: "jsx-a285e8668f1fe836" + " " + `flex-1 text-center text-xl font-bold ${theme.colors.text} mr-10`,
-                        children: "Détails de la transaction"
-                    }, void 0, false, {
+                        children: [
+                            "Détails du ",
+                            transaction.type_trans
+                        ]
+                    }, void 0, true, {
                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                        lineNumber: 293,
+                        lineNumber: 294,
                         columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/transaction/detail/page.tsx",
-                lineNumber: 286,
+                lineNumber: 287,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -558,7 +562,7 @@ function TransactionDetailContent() {
                         children: getStatusIcon(transaction.status)
                     }, void 0, false, {
                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                        lineNumber: 299,
+                        lineNumber: 300,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
@@ -566,15 +570,15 @@ function TransactionDetailContent() {
                         children: getStatusText(transaction.status)
                     }, void 0, false, {
                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                        lineNumber: 303,
+                        lineNumber: 304,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                         className: "jsx-a285e8668f1fe836" + " " + "text-gray-400 text-sm mb-6",
-                        children: getStatusSubtext(transaction.status)
+                        children: getStatusSubtext(transaction.status, transaction.type_trans)
                     }, void 0, false, {
                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                        lineNumber: 306,
+                        lineNumber: 307,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -585,7 +589,7 @@ function TransactionDetailContent() {
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                        lineNumber: 309,
+                        lineNumber: 310,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -599,7 +603,7 @@ function TransactionDetailContent() {
                                         className: "text-blue-400"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                        lineNumber: 316,
+                                        lineNumber: 317,
                                         columnNumber: 25
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -607,13 +611,13 @@ function TransactionDetailContent() {
                                         children: "Message"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                        lineNumber: 317,
+                                        lineNumber: 318,
                                         columnNumber: 25
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                lineNumber: 315,
+                                lineNumber: 316,
                                 columnNumber: 21
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -622,21 +626,21 @@ function TransactionDetailContent() {
                                     'pending',
                                     'payment_init_success',
                                     'en attente'
-                                ].includes(transaction.status?.toLowerCase()) ? 'Transaction en cours' : [
+                                ].includes(transaction.status?.toLowerCase()) ? `${transaction.type_trans} en cours` : [
                                     'completed',
                                     'accept',
                                     'approve',
                                     'success'
-                                ].includes(transaction.status?.toLowerCase()) ? 'Dépôt effectué avec succès.' : 'Aucune demande de paiement n’a été trouvée pour ce client.')
+                                ].includes(transaction.status?.toLowerCase()) ? `Paiement effectué avec succès.` : 'Aucune demande de paiement n’a été trouvée pour ce client.')
                             }, void 0, false, {
                                 fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                lineNumber: 319,
+                                lineNumber: 320,
                                 columnNumber: 21
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                        lineNumber: 314,
+                        lineNumber: 315,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -644,15 +648,43 @@ function TransactionDetailContent() {
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
                                 className: "jsx-a285e8668f1fe836" + " " + `text-lg font-bold ${theme.colors.text} mb-6`,
-                                children: "Informations de la transaction"
-                            }, void 0, false, {
+                                children: [
+                                    "Informations du ",
+                                    transaction.type_trans
+                                ]
+                            }, void 0, true, {
                                 fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                lineNumber: 326,
+                                lineNumber: 327,
                                 columnNumber: 21
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "jsx-a285e8668f1fe836" + " " + "space-y-6",
                                 children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "jsx-a285e8668f1fe836" + " " + "flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-4",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "jsx-a285e8668f1fe836" + " " + "text-gray-400 text-sm",
+                                                children: "Type"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/transaction/detail/page.tsx",
+                                                lineNumber: 333,
+                                                columnNumber: 29
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "jsx-a285e8668f1fe836" + " " + `font-bold uppercase ${theme.colors.text}`,
+                                                children: transaction.type_trans
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/transaction/detail/page.tsx",
+                                                lineNumber: 334,
+                                                columnNumber: 29
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/app/transaction/detail/page.tsx",
+                                        lineNumber: 332,
+                                        columnNumber: 25
+                                    }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "jsx-a285e8668f1fe836" + " " + "flex items-start gap-4",
                                         children: [
@@ -668,7 +700,7 @@ function TransactionDetailContent() {
                                                     className: "jsx-a285e8668f1fe836" + " " + "w-8 h-8 object-contain rounded"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                    lineNumber: 334,
+                                                    lineNumber: 340,
                                                     columnNumber: 37
                                                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     className: "jsx-a285e8668f1fe836" + " " + "w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white",
@@ -676,17 +708,17 @@ function TransactionDetailContent() {
                                                         size: 20
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                        lineNumber: 340,
+                                                        lineNumber: 346,
                                                         columnNumber: 41
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                    lineNumber: 339,
+                                                    lineNumber: 345,
                                                     columnNumber: 37
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                lineNumber: 332,
+                                                lineNumber: 338,
                                                 columnNumber: 29
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -697,7 +729,7 @@ function TransactionDetailContent() {
                                                         children: "Application"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                        lineNumber: 345,
+                                                        lineNumber: 351,
                                                         columnNumber: 33
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -705,19 +737,19 @@ function TransactionDetailContent() {
                                                         children: transaction.app?.public_name || '1xBet'
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                        lineNumber: 346,
+                                                        lineNumber: 352,
                                                         columnNumber: 33
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                lineNumber: 344,
+                                                lineNumber: 350,
                                                 columnNumber: 29
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                        lineNumber: 331,
+                                        lineNumber: 337,
                                         columnNumber: 25
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -735,7 +767,7 @@ function TransactionDetailContent() {
                                                     className: "jsx-a285e8668f1fe836" + " " + "w-8 h-8 object-contain rounded"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                    lineNumber: 353,
+                                                    lineNumber: 359,
                                                     columnNumber: 37
                                                 }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     className: "jsx-a285e8668f1fe836" + " " + "w-10 h-10 bg-black rounded-lg flex items-center justify-center shrink-0",
@@ -744,17 +776,17 @@ function TransactionDetailContent() {
                                                         size: 20
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                        lineNumber: 359,
+                                                        lineNumber: 365,
                                                         columnNumber: 41
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                    lineNumber: 358,
+                                                    lineNumber: 364,
                                                     columnNumber: 37
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                lineNumber: 351,
+                                                lineNumber: 357,
                                                 columnNumber: 29
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -765,7 +797,7 @@ function TransactionDetailContent() {
                                                         children: "Réseau"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                        lineNumber: 364,
+                                                        lineNumber: 370,
                                                         columnNumber: 33
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -773,19 +805,19 @@ function TransactionDetailContent() {
                                                         children: transaction.network?.public_name || transaction.payment_method || 'ORANGE BURKINA'
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                        lineNumber: 365,
+                                                        lineNumber: 371,
                                                         columnNumber: 33
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                lineNumber: 363,
+                                                lineNumber: 369,
                                                 columnNumber: 29
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                        lineNumber: 350,
+                                        lineNumber: 356,
                                         columnNumber: 25
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -798,12 +830,12 @@ function TransactionDetailContent() {
                                                     size: 20
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                    lineNumber: 373,
+                                                    lineNumber: 379,
                                                     columnNumber: 33
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                lineNumber: 372,
+                                                lineNumber: 378,
                                                 columnNumber: 29
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -814,7 +846,7 @@ function TransactionDetailContent() {
                                                         children: "Numéro"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                        lineNumber: 376,
+                                                        lineNumber: 382,
                                                         columnNumber: 33
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -822,19 +854,19 @@ function TransactionDetailContent() {
                                                         children: transaction.phone_number
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                        lineNumber: 377,
+                                                        lineNumber: 383,
                                                         columnNumber: 33
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                lineNumber: 375,
+                                                lineNumber: 381,
                                                 columnNumber: 29
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                        lineNumber: 371,
+                                        lineNumber: 377,
                                         columnNumber: 25
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -847,12 +879,12 @@ function TransactionDetailContent() {
                                                     children: "$"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                    lineNumber: 383,
+                                                    lineNumber: 389,
                                                     columnNumber: 33
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                lineNumber: 382,
+                                                lineNumber: 388,
                                                 columnNumber: 29
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -863,7 +895,7 @@ function TransactionDetailContent() {
                                                         children: "Montant"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                        lineNumber: 386,
+                                                        lineNumber: 392,
                                                         columnNumber: 33
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -874,19 +906,19 @@ function TransactionDetailContent() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                        lineNumber: 387,
+                                                        lineNumber: 393,
                                                         columnNumber: 33
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                lineNumber: 385,
+                                                lineNumber: 391,
                                                 columnNumber: 29
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                        lineNumber: 381,
+                                        lineNumber: 387,
                                         columnNumber: 25
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -899,12 +931,12 @@ function TransactionDetailContent() {
                                                     size: 20
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                    lineNumber: 393,
+                                                    lineNumber: 399,
                                                     columnNumber: 33
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                lineNumber: 392,
+                                                lineNumber: 398,
                                                 columnNumber: 29
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -915,7 +947,7 @@ function TransactionDetailContent() {
                                                         children: "Référence"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                        lineNumber: 396,
+                                                        lineNumber: 402,
                                                         columnNumber: 33
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -926,7 +958,7 @@ function TransactionDetailContent() {
                                                                 children: transaction.reference
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                                lineNumber: 398,
+                                                                lineNumber: 404,
                                                                 columnNumber: 37
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -936,30 +968,30 @@ function TransactionDetailContent() {
                                                                     size: 20
                                                                 }, void 0, false, {
                                                                     fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                                    lineNumber: 403,
+                                                                    lineNumber: 409,
                                                                     columnNumber: 41
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                                lineNumber: 399,
+                                                                lineNumber: 405,
                                                                 columnNumber: 37
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                        lineNumber: 397,
+                                                        lineNumber: 403,
                                                         columnNumber: 33
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                lineNumber: 395,
+                                                lineNumber: 401,
                                                 columnNumber: 29
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                        lineNumber: 391,
+                                        lineNumber: 397,
                                         columnNumber: 25
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -972,12 +1004,12 @@ function TransactionDetailContent() {
                                                     size: 20
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                    lineNumber: 411,
+                                                    lineNumber: 417,
                                                     columnNumber: 33
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                lineNumber: 410,
+                                                lineNumber: 416,
                                                 columnNumber: 29
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -988,7 +1020,7 @@ function TransactionDetailContent() {
                                                         children: "Date"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                        lineNumber: 414,
+                                                        lineNumber: 420,
                                                         columnNumber: 33
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -996,19 +1028,19 @@ function TransactionDetailContent() {
                                                         children: formatDate(transaction.created_at)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                        lineNumber: 415,
+                                                        lineNumber: 421,
                                                         columnNumber: 33
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                lineNumber: 413,
+                                                lineNumber: 419,
                                                 columnNumber: 29
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                        lineNumber: 409,
+                                        lineNumber: 415,
                                         columnNumber: 25
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1021,12 +1053,12 @@ function TransactionDetailContent() {
                                                     size: 20
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                    lineNumber: 423,
+                                                    lineNumber: 429,
                                                     columnNumber: 33
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                lineNumber: 422,
+                                                lineNumber: 428,
                                                 columnNumber: 29
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1040,7 +1072,7 @@ function TransactionDetailContent() {
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                        lineNumber: 426,
+                                                        lineNumber: 432,
                                                         columnNumber: 33
                                                     }, this),
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1048,31 +1080,31 @@ function TransactionDetailContent() {
                                                         children: transaction.user_app_id || transaction.transaction_reference || 'N/A'
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                        lineNumber: 427,
+                                                        lineNumber: 433,
                                                         columnNumber: 33
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                                lineNumber: 425,
+                                                lineNumber: 431,
                                                 columnNumber: 29
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                        lineNumber: 421,
+                                        lineNumber: 427,
                                         columnNumber: 25
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/transaction/detail/page.tsx",
-                                lineNumber: 330,
+                                lineNumber: 331,
                                 columnNumber: 21
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                        lineNumber: 325,
+                        lineNumber: 326,
                         columnNumber: 17
                     }, this),
                     ![
@@ -1090,14 +1122,15 @@ function TransactionDetailContent() {
                             const phone = transaction.phone_number;
                             const appName = transaction.app?.public_name || 'App';
                             const appId = transaction.user_app_id || transaction.transaction_reference || 'N/A';
-                            const message = `Bonjour moi c'est ${firstName} ${lastName}, j'ai besoin d'aide concernant ma transaction.\nRéférence: ${ref}\nMontant: XOF ${amount}\nRéseau: ${network}\nTéléphone: ${phone}\n*${appName} ID:* ${appId}`;
+                            const transType = transaction.type_trans;
+                            const message = `Bonjour moi c'est ${firstName} ${lastName}, j'ai besoin d'aide concernant mon ${transType}.\nRéférence: ${ref}\nMontant: XOF ${amount}\nRéseau: ${network}\nTéléphone: ${phone}\n*${appName} ID:* ${appId}`;
                             window.open(`https://wa.me/22553445327?text=${encodeURIComponent(message)}`, '_blank');
                         },
                         className: "jsx-a285e8668f1fe836" + " " + "w-full py-4 bg-[#ffdedb] hover:bg-[#ffcfcc] text-[#ff6b62] rounded-2xl text-xl font-bold transition-colors shadow-sm mt-4",
                         children: "Contacter le support"
                     }, void 0, false, {
                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                        lineNumber: 434,
+                        lineNumber: 440,
                         columnNumber: 21
                     }, this),
                     [
@@ -1111,13 +1144,13 @@ function TransactionDetailContent() {
                         children: "Retour à l'historique"
                     }, void 0, false, {
                         fileName: "[project]/src/app/transaction/detail/page.tsx",
-                        lineNumber: 456,
+                        lineNumber: 463,
                         columnNumber: 21
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/transaction/detail/page.tsx",
-                lineNumber: 298,
+                lineNumber: 299,
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$styled$2d$jsx$2f$style$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"], {
@@ -1127,7 +1160,7 @@ function TransactionDetailContent() {
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/transaction/detail/page.tsx",
-        lineNumber: 284,
+        lineNumber: 285,
         columnNumber: 9
     }, this);
 }
@@ -1147,22 +1180,22 @@ function TransactionDetailPage() {
                 className: "animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"
             }, void 0, false, {
                 fileName: "[project]/src/app/transaction/detail/page.tsx",
-                lineNumber: 482,
+                lineNumber: 489,
                 columnNumber: 17
             }, void 0)
         }, void 0, false, {
             fileName: "[project]/src/app/transaction/detail/page.tsx",
-            lineNumber: 481,
+            lineNumber: 488,
             columnNumber: 13
         }, void 0),
         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(TransactionDetailContent, {}, void 0, false, {
             fileName: "[project]/src/app/transaction/detail/page.tsx",
-            lineNumber: 485,
+            lineNumber: 492,
             columnNumber: 13
         }, this)
     }, void 0, false, {
         fileName: "[project]/src/app/transaction/detail/page.tsx",
-        lineNumber: 480,
+        lineNumber: 487,
         columnNumber: 9
     }, this);
 }

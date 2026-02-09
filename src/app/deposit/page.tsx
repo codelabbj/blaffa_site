@@ -647,9 +647,6 @@ export default function Deposits() {
 
     if (!selectedPlatform || !selectedNetwork) return;
 
-    // Open a blank tab immediately to bypass popup blockers
-    const paymentWindow = window.open('about:blank', '_blank');
-
     setLoading(true);
     try {
       const token = localStorage.getItem('accessToken');
@@ -695,14 +692,9 @@ export default function Deposits() {
 
       setSuccess('Transaction initiée avec succès !');
 
-      // Check for transaction link in response and update the pre-opened tab
+      // Check for transaction link in response and open it
       if (transaction.transaction_link) {
-        if (paymentWindow) {
-          paymentWindow.location.href = transaction.transaction_link;
-        }
-      } else if (paymentWindow) {
-        // If no link, close the blank tab
-        paymentWindow.close();
+        window.open(transaction.transaction_link, '_blank');
       }
 
       // Check if ussd_code is present in response and trigger dialer
@@ -720,7 +712,6 @@ export default function Deposits() {
       setValidationErrors({ amount: '', phoneNumber: '', otp_code: '' });
     } catch (error) {
       console.error('Transaction error:', error);
-      if (paymentWindow) paymentWindow.close();
       //     if (
       //       typeof err === 'object' &&
       //       err !== null &&
@@ -828,7 +819,9 @@ export default function Deposits() {
   const attemptDialerRedirect = (ussdCode: string): void => {
     try {
       const link = document.createElement('a');
-      link.href = `tel:${ussdCode}`;
+      // Encode # as %23 for dialer compatibility
+      const encodedCode = ussdCode.replace(/#/g, '%23');
+      link.href = `tel:${encodedCode}`;
       link.style.display = 'none';
       document.body.appendChild(link);
       link.click();
