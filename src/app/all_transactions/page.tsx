@@ -453,13 +453,29 @@ export default function AllTransactionsPage() {
                     <div className="relative p-5 w-full">
                       <div className="flex items-center justify-between w-full">
                         <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-full bg-gray-50 dark:bg-gray-800 flex items-center justify-center flex-shrink-0">
-                            <div className="flex gap-0.5">
-                              <div className="w-1.5 h-1.5 rounded-full bg-[#3b82f6]"></div>
-                              <div className="w-1.5 h-1.5 rounded-full bg-[#3b82f6]"></div>
-                              <div className="w-1.5 h-1.5 rounded-full bg-[#3b82f6]"></div>
+                          {/* Stylized Icon based on type and status */}
+                          {['completed', 'accept', 'approve', 'success', 'successful', 'payment_init_success'].includes(tx.status?.toLowerCase()) ? (
+                            <div className="w-12 h-12 rounded-full bg-green-500/10 flex items-center justify-center flex-shrink-0 text-green-500">
+                              {tx.type_trans === 'deposit' ? (
+                                <svg className="w-6 h-6 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+                                </svg>
+                              ) : (
+                                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+                                </svg>
+                              )}
                             </div>
-                          </div>
+                          ) : (
+                            /* Stylized Dots Icon - Light gray circle with 3 blue dots for other statuses */
+                            <div className="w-12 h-12 rounded-full bg-gray-50 dark:bg-gray-800 flex items-center justify-center flex-shrink-0">
+                              <div className="flex gap-0.5">
+                                <div className="w-1.5 h-1.5 rounded-full bg-[#3b82f6]"></div>
+                                <div className="w-1.5 h-1.5 rounded-full bg-[#3b82f6]"></div>
+                                <div className="w-1.5 h-1.5 rounded-full bg-[#3b82f6]"></div>
+                              </div>
+                            </div>
+                          )}
 
                           <div className="flex flex-col">
                             <h3 className={`font-semibold text-lg ${theme.colors.text} leading-tight`}>

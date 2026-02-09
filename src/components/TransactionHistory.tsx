@@ -714,14 +714,29 @@ export default function TransactionHistory() {
                       <div className="w-full">
                         <div className="flex items-center justify-between w-full">
                           <div className="flex items-center gap-3">
-                            {/* Stylized Dots Icon - Light gray circle with 3 blue dots */}
-                            <div className={`w-10 h-10 rounded-full ${theme.mode === 'dark' ? 'bg-gray-700' : 'bg-gray-50'} flex items-center justify-center flex-shrink-0`}>
-                              <div className="flex gap-0.5">
-                                <div className={`w-1 h-1 rounded-full ${theme.mode === 'dark' ? 'bg-[#60a5fa]' : 'bg-[#3b82f6]'}`}></div>
-                                <div className={`w-1 h-1 rounded-full ${theme.mode === 'dark' ? 'bg-[#60a5fa]' : 'bg-[#3b82f6]'}`}></div>
-                                <div className={`w-1 h-1 rounded-full ${theme.mode === 'dark' ? 'bg-[#60a5fa]' : 'bg-[#3b82f6]'}`}></div>
+                            {/* Stylized Icon based on type and status */}
+                            {['completed', 'accept', 'success', 'successful', 'payment_init_success'].includes(item.transaction.status.toLowerCase()) ? (
+                              <div className={`w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center flex-shrink-0 text-green-500`}>
+                                {item.transaction.type_trans === 'deposit' ? (
+                                  <svg className="w-5 h-5 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+                                  </svg>
+                                ) : (
+                                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+                                  </svg>
+                                )}
                               </div>
-                            </div>
+                            ) : (
+                              /* Stylized Dots Icon - Light gray circle with 3 blue dots for other statuses */
+                              <div className={`w-10 h-10 rounded-full ${theme.mode === 'dark' ? 'bg-gray-700' : 'bg-gray-50'} flex items-center justify-center flex-shrink-0`}>
+                                <div className="flex gap-0.5">
+                                  <div className={`w-1 h-1 rounded-full ${theme.mode === 'dark' ? 'bg-[#60a5fa]' : 'bg-[#3b82f6]'}`}></div>
+                                  <div className={`w-1 h-1 rounded-full ${theme.mode === 'dark' ? 'bg-[#60a5fa]' : 'bg-[#3b82f6]'}`}></div>
+                                  <div className={`w-1 h-1 rounded-full ${theme.mode === 'dark' ? 'bg-[#60a5fa]' : 'bg-[#3b82f6]'}`}></div>
+                                </div>
+                              </div>
+                            )}
 
                             {/* Transaction Info */}
                             <div className="flex flex-col">

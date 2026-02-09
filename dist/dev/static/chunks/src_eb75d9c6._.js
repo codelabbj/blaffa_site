@@ -839,7 +839,59 @@ function AllTransactionsPage() {
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                         className: "flex items-center gap-4",
                                                         children: [
-                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                            [
+                                                                'completed',
+                                                                'accept',
+                                                                'approve',
+                                                                'success',
+                                                                'successful',
+                                                                'payment_init_success'
+                                                            ].includes(tx.status?.toLowerCase()) ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                className: "w-12 h-12 rounded-full bg-green-500/10 flex items-center justify-center flex-shrink-0 text-green-500",
+                                                                children: tx.type_trans === 'deposit' ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                                                                    className: "w-6 h-6 rotate-180",
+                                                                    fill: "none",
+                                                                    stroke: "currentColor",
+                                                                    viewBox: "0 0 24 24",
+                                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                                                        strokeLinecap: "round",
+                                                                        strokeLinejoin: "round",
+                                                                        strokeWidth: 2,
+                                                                        d: "M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/src/app/all_transactions/page.tsx",
+                                                                        lineNumber: 461,
+                                                                        columnNumber: 35
+                                                                    }, this)
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/app/all_transactions/page.tsx",
+                                                                    lineNumber: 460,
+                                                                    columnNumber: 33
+                                                                }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                                                                    className: "w-6 h-6",
+                                                                    fill: "none",
+                                                                    stroke: "currentColor",
+                                                                    viewBox: "0 0 24 24",
+                                                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                                                        strokeLinecap: "round",
+                                                                        strokeLinejoin: "round",
+                                                                        strokeWidth: 2,
+                                                                        d: "M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/src/app/all_transactions/page.tsx",
+                                                                        lineNumber: 465,
+                                                                        columnNumber: 35
+                                                                    }, this)
+                                                                }, void 0, false, {
+                                                                    fileName: "[project]/src/app/all_transactions/page.tsx",
+                                                                    lineNumber: 464,
+                                                                    columnNumber: 33
+                                                                }, this)
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/app/all_transactions/page.tsx",
+                                                                lineNumber: 458,
+                                                                columnNumber: 29
+                                                            }, this) : /* Stylized Dots Icon - Light gray circle with 3 blue dots for other statuses */ /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                 className: "w-12 h-12 rounded-full bg-gray-50 dark:bg-gray-800 flex items-center justify-center flex-shrink-0",
                                                                 children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                     className: "flex gap-0.5",
@@ -848,33 +900,33 @@ function AllTransactionsPage() {
                                                                             className: "w-1.5 h-1.5 rounded-full bg-[#3b82f6]"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/app/all_transactions/page.tsx",
-                                                                            lineNumber: 458,
-                                                                            columnNumber: 31
+                                                                            lineNumber: 473,
+                                                                            columnNumber: 33
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                             className: "w-1.5 h-1.5 rounded-full bg-[#3b82f6]"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/app/all_transactions/page.tsx",
-                                                                            lineNumber: 459,
-                                                                            columnNumber: 31
+                                                                            lineNumber: 474,
+                                                                            columnNumber: 33
                                                                         }, this),
                                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                             className: "w-1.5 h-1.5 rounded-full bg-[#3b82f6]"
                                                                         }, void 0, false, {
                                                                             fileName: "[project]/src/app/all_transactions/page.tsx",
-                                                                            lineNumber: 460,
-                                                                            columnNumber: 31
+                                                                            lineNumber: 475,
+                                                                            columnNumber: 33
                                                                         }, this)
                                                                     ]
                                                                 }, void 0, true, {
                                                                     fileName: "[project]/src/app/all_transactions/page.tsx",
-                                                                    lineNumber: 457,
-                                                                    columnNumber: 29
+                                                                    lineNumber: 472,
+                                                                    columnNumber: 31
                                                                 }, this)
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/all_transactions/page.tsx",
-                                                                lineNumber: 456,
-                                                                columnNumber: 27
+                                                                lineNumber: 471,
+                                                                columnNumber: 29
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                 className: "flex flex-col",
@@ -884,7 +936,7 @@ function AllTransactionsPage() {
                                                                         children: tx.type_trans === 'deposit' ? 'Dépôt' : tx.type_trans === 'withdrawal' ? 'Retrait' : tx.type_trans
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/all_transactions/page.tsx",
-                                                                        lineNumber: 465,
+                                                                        lineNumber: 481,
                                                                         columnNumber: 29
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -892,13 +944,13 @@ function AllTransactionsPage() {
                                                                         children: formatDate(tx.created_at)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/app/all_transactions/page.tsx",
-                                                                        lineNumber: 468,
+                                                                        lineNumber: 484,
                                                                         columnNumber: 29
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/all_transactions/page.tsx",
-                                                                lineNumber: 464,
+                                                                lineNumber: 480,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
@@ -918,7 +970,7 @@ function AllTransactionsPage() {
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/app/all_transactions/page.tsx",
-                                                                lineNumber: 475,
+                                                                lineNumber: 491,
                                                                 columnNumber: 27
                                                             }, this),
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -943,13 +995,13 @@ function AllTransactionsPage() {
                                                                 ].includes(tx.status?.toLowerCase()) ? 'success' : tx.status
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/all_transactions/page.tsx",
-                                                                lineNumber: 478,
+                                                                lineNumber: 494,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
                                                     }, void 0, true, {
                                                         fileName: "[project]/src/app/all_transactions/page.tsx",
-                                                        lineNumber: 474,
+                                                        lineNumber: 490,
                                                         columnNumber: 25
                                                     }, this)
                                                 ]
@@ -967,7 +1019,7 @@ function AllTransactionsPage() {
                                             className: "absolute bottom-0 left-20 right-0 h-[1px] bg-gray-100 dark:bg-gray-800/50"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/all_transactions/page.tsx",
-                                            lineNumber: 489,
+                                            lineNumber: 505,
                                             columnNumber: 21
                                         }, this)
                                     ]
@@ -983,12 +1035,12 @@ function AllTransactionsPage() {
                                     className: "animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/all_transactions/page.tsx",
-                                    lineNumber: 496,
+                                    lineNumber: 512,
                                     columnNumber: 17
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/all_transactions/page.tsx",
-                                lineNumber: 495,
+                                lineNumber: 511,
                                 columnNumber: 15
                             }, this)
                         ]

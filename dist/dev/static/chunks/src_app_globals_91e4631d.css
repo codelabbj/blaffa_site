@@ -3503,6 +3503,10 @@
     stroke-width: 1.5px;
   }
 
+  .stroke-\[2\.5\] {
+    stroke-width: 2.5px;
+  }
+
   .object-contain {
     object-fit: contain;
   }

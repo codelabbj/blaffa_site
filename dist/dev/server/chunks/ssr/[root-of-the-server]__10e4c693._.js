@@ -856,7 +856,58 @@ function TransactionHistory() {
                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                 className: "flex items-center gap-3",
                                                                 children: [
-                                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                    [
+                                                                        'completed',
+                                                                        'accept',
+                                                                        'success',
+                                                                        'successful',
+                                                                        'payment_init_success'
+                                                                    ].includes(item.transaction.status.toLowerCase()) ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                                        className: `w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center flex-shrink-0 text-green-500`,
+                                                                        children: item.transaction.type_trans === 'deposit' ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                                                                            className: "w-5 h-5 rotate-180",
+                                                                            fill: "none",
+                                                                            stroke: "currentColor",
+                                                                            viewBox: "0 0 24 24",
+                                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                                                                strokeLinecap: "round",
+                                                                                strokeLinejoin: "round",
+                                                                                strokeWidth: 2,
+                                                                                d: "M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/src/components/TransactionHistory.tsx",
+                                                                                lineNumber: 722,
+                                                                                columnNumber: 37
+                                                                            }, this)
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/src/components/TransactionHistory.tsx",
+                                                                            lineNumber: 721,
+                                                                            columnNumber: 35
+                                                                        }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                                                                            className: "w-5 h-5",
+                                                                            fill: "none",
+                                                                            stroke: "currentColor",
+                                                                            viewBox: "0 0 24 24",
+                                                                            children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                                                                strokeLinecap: "round",
+                                                                                strokeLinejoin: "round",
+                                                                                strokeWidth: 2,
+                                                                                d: "M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"
+                                                                            }, void 0, false, {
+                                                                                fileName: "[project]/src/components/TransactionHistory.tsx",
+                                                                                lineNumber: 726,
+                                                                                columnNumber: 37
+                                                                            }, this)
+                                                                        }, void 0, false, {
+                                                                            fileName: "[project]/src/components/TransactionHistory.tsx",
+                                                                            lineNumber: 725,
+                                                                            columnNumber: 35
+                                                                        }, this)
+                                                                    }, void 0, false, {
+                                                                        fileName: "[project]/src/components/TransactionHistory.tsx",
+                                                                        lineNumber: 719,
+                                                                        columnNumber: 31
+                                                                    }, this) : /* Stylized Dots Icon - Light gray circle with 3 blue dots for other statuses */ /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                         className: `w-10 h-10 rounded-full ${theme.mode === 'dark' ? 'bg-gray-700' : 'bg-gray-50'} flex items-center justify-center flex-shrink-0`,
                                                                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                             className: "flex gap-0.5",
@@ -865,33 +916,33 @@ function TransactionHistory() {
                                                                                     className: `w-1 h-1 rounded-full ${theme.mode === 'dark' ? 'bg-[#60a5fa]' : 'bg-[#3b82f6]'}`
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/components/TransactionHistory.tsx",
-                                                                                    lineNumber: 720,
-                                                                                    columnNumber: 33
+                                                                                    lineNumber: 734,
+                                                                                    columnNumber: 35
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                                     className: `w-1 h-1 rounded-full ${theme.mode === 'dark' ? 'bg-[#60a5fa]' : 'bg-[#3b82f6]'}`
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/components/TransactionHistory.tsx",
-                                                                                    lineNumber: 721,
-                                                                                    columnNumber: 33
+                                                                                    lineNumber: 735,
+                                                                                    columnNumber: 35
                                                                                 }, this),
                                                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                                     className: `w-1 h-1 rounded-full ${theme.mode === 'dark' ? 'bg-[#60a5fa]' : 'bg-[#3b82f6]'}`
                                                                                 }, void 0, false, {
                                                                                     fileName: "[project]/src/components/TransactionHistory.tsx",
-                                                                                    lineNumber: 722,
-                                                                                    columnNumber: 33
+                                                                                    lineNumber: 736,
+                                                                                    columnNumber: 35
                                                                                 }, this)
                                                                             ]
                                                                         }, void 0, true, {
                                                                             fileName: "[project]/src/components/TransactionHistory.tsx",
-                                                                            lineNumber: 719,
-                                                                            columnNumber: 31
+                                                                            lineNumber: 733,
+                                                                            columnNumber: 33
                                                                         }, this)
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/TransactionHistory.tsx",
-                                                                        lineNumber: 718,
-                                                                        columnNumber: 29
+                                                                        lineNumber: 732,
+                                                                        columnNumber: 31
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                                         className: "flex flex-col",
@@ -901,7 +952,7 @@ function TransactionHistory() {
                                                                                 children: item.transaction.type_trans === 'deposit' ? 'Dépôt' : item.transaction.type_trans === 'withdrawal' ? 'Retrait' : item.transaction.type_trans
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/components/TransactionHistory.tsx",
-                                                                                lineNumber: 728,
+                                                                                lineNumber: 743,
                                                                                 columnNumber: 31
                                                                             }, this),
                                                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -909,13 +960,13 @@ function TransactionHistory() {
                                                                                 children: formatDate(item.transaction.created_at)
                                                                             }, void 0, false, {
                                                                                 fileName: "[project]/src/components/TransactionHistory.tsx",
-                                                                                lineNumber: 731,
+                                                                                lineNumber: 746,
                                                                                 columnNumber: 31
                                                                             }, this)
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/src/components/TransactionHistory.tsx",
-                                                                        lineNumber: 727,
+                                                                        lineNumber: 742,
                                                                         columnNumber: 29
                                                                     }, this)
                                                                 ]
@@ -935,7 +986,7 @@ function TransactionHistory() {
                                                                         ]
                                                                     }, void 0, true, {
                                                                         fileName: "[project]/src/components/TransactionHistory.tsx",
-                                                                        lineNumber: 739,
+                                                                        lineNumber: 754,
                                                                         columnNumber: 29
                                                                     }, this),
                                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -953,13 +1004,13 @@ function TransactionHistory() {
                                                                         ].includes(item.transaction.status.toLowerCase()) ? 'success' : item.transaction.status === 'pending' ? 'pending' : item.transaction.status
                                                                     }, void 0, false, {
                                                                         fileName: "[project]/src/components/TransactionHistory.tsx",
-                                                                        lineNumber: 742,
+                                                                        lineNumber: 757,
                                                                         columnNumber: 29
                                                                     }, this)
                                                                 ]
                                                             }, void 0, true, {
                                                                 fileName: "[project]/src/components/TransactionHistory.tsx",
-                                                                lineNumber: 738,
+                                                                lineNumber: 753,
                                                                 columnNumber: 27
                                                             }, this)
                                                         ]
@@ -984,12 +1035,12 @@ function TransactionHistory() {
                                                     className: "absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 via-blue-500/20 to-blue-500/20 blur-sm"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/components/TransactionHistory.tsx",
-                                                    lineNumber: 763,
+                                                    lineNumber: 778,
                                                     columnNumber: 23
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/components/TransactionHistory.tsx",
-                                                lineNumber: 762,
+                                                lineNumber: 777,
                                                 columnNumber: 21
                                             }, this)
                                         ]
@@ -1017,25 +1068,25 @@ function TransactionHistory() {
                                         className: "animate-spin rounded-full h-8 w-8 border-3 border-blue-500/30 border-t-blue-500"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TransactionHistory.tsx",
-                                        lineNumber: 775,
+                                        lineNumber: 790,
                                         columnNumber: 17
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: "absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/10 to-blue-500/10 animate-pulse"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/TransactionHistory.tsx",
-                                        lineNumber: 776,
+                                        lineNumber: 791,
                                         columnNumber: 17
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/TransactionHistory.tsx",
-                                lineNumber: 774,
+                                lineNumber: 789,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/components/TransactionHistory.tsx",
-                            lineNumber: 773,
+                            lineNumber: 788,
                             columnNumber: 13
                         }, this)
                     ]
