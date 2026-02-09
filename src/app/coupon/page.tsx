@@ -210,9 +210,11 @@ const CouponPage = () => {
   const fetchComments = async (couponAuthorId: string) => {
     setCommentsLoading(true);
     try {
-      const response = await api.get(`/blaffa/author-comments/list/?coupon_author_id=${couponAuthorId}`);
+      const response = await api.get(`/blaffa/author-comments/?coupon_author_id=${couponAuthorId}`);
       if (response.status === 200) {
-        setComments(response.data || []);
+        // Handle paginated response: response.data.results is the comments array
+        const fetchedComments = response.data.results || response.data || [];
+        setComments(Array.isArray(fetchedComments) ? fetchedComments : []);
       }
     } catch (err) {
       console.error('Error fetching comments:', err);
@@ -287,10 +289,12 @@ const CouponPage = () => {
 
   const formatCommentDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('fr-FR', {
+    return date.toLocaleString('fr-FR', {
       day: 'numeric',
       month: 'long',
-      year: 'numeric'
+      year: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
     });
   };
 
@@ -501,7 +505,18 @@ const CouponPage = () => {
                       onClick={() => handleOpenComments(coupon)}
                       className="flex items-center gap-1.5 transition-colors text-[#999999] hover:text-gray-600"
                     >
-                      <MessageCircle size={20} />
+                      <svg
+                        width="20"
+                        height="20"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2Z" fill="currentColor" />
+                        <rect x="6" y="6" width="12" height="2" rx="1" fill="white" />
+                        <rect x="6" y="10" width="12" height="2" rx="1" fill="white" />
+                        <rect x="6" y="14" width="8" height="2" rx="1" fill="white" />
+                      </svg>
                       <span className="text-sm font-medium">{coupon.total_comments || 0} Com.</span>
                     </button>
                   </div>
@@ -552,7 +567,19 @@ const CouponPage = () => {
                   </div>
                 ) : comments.length === 0 ? (
                   <div className="flex flex-col items-center justify-center py-12 gap-3">
-                    <MessageCircle size={48} className="text-gray-300" />
+                    <svg
+                      width="48"
+                      height="48"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="text-gray-300"
+                    >
+                      <path d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2Z" fill="currentColor" />
+                      <rect x="6" y="6" width="12" height="2" rx="1" fill="white" />
+                      <rect x="6" y="10" width="12" height="2" rx="1" fill="white" />
+                      <rect x="6" y="14" width="8" height="2" rx="1" fill="white" />
+                    </svg>
                     <p className="text-gray-400 text-sm">Aucun commentaire pour le moment</p>
                     <p className="text-gray-400 text-xs">Soyez le premier à commenter !</p>
                   </div>
@@ -567,27 +594,29 @@ const CouponPage = () => {
                           </span>
                         </div>
                         <div className="flex-1">
-                          <div className="flex items-baseline gap-2 mb-1">
+                          <div className="flex flex-col mb-1">
                             <span className={`font-bold text-sm ${theme.colors.text}`}>
                               {comment.author.first_name} {comment.author.last_name}
                             </span>
-                            <span className="text-xs text-gray-400">
+                            <span className="text-[10px] text-gray-400">
                               {formatCommentDate(comment.created_at)}
                             </span>
                           </div>
                           <p className={`text-sm ${theme.colors.text} leading-relaxed`}>
                             {comment.content}
                           </p>
+                          {/* 
                           <button
                             onClick={() => setReplyingTo(comment)}
                             className="text-xs text-blue-500 hover:text-blue-600 mt-2 font-medium"
                           >
                             Répondre
                           </button>
+                          */}
                         </div>
                       </div>
 
-                      {/* Nested Replies */}
+                      {/* Nested Replies - Commented out for now
                       {comment.replies && comment.replies.length > 0 && (
                         <div className="ml-12 space-y-3">
                           {comment.replies.map((reply) => (
@@ -614,12 +643,13 @@ const CouponPage = () => {
                           ))}
                         </div>
                       )}
+                      */}
                     </div>
                   ))
                 )}
               </div>
 
-              {/* Reply Indicator */}
+              {/* Reply Indicator - Commented out for now
               {replyingTo && (
                 <div className={`px-6 py-2 border-t ${theme.mode === 'dark' ? 'border-slate-700 bg-slate-800/50' : 'border-gray-100 bg-gray-50'} flex items-center justify-between`}>
                   <span className="text-sm text-gray-500">
@@ -633,6 +663,7 @@ const CouponPage = () => {
                   </button>
                 </div>
               )}
+              */}
 
               {/* Input Area */}
               <div className={`p-6 border-t ${theme.mode === 'dark' ? 'border-slate-700' : 'border-gray-100'}`}>

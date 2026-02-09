@@ -1,5 +1,5 @@
 {
+  "/coupon/create/page": "app/coupon/create/page.js",
   "/coupon/page": "app/coupon/page.js",
-  "/dashboard/page": "app/dashboard/page.js",
-  "/page": "app/page.js"
+  "/dashboard/page": "app/dashboard/page.js"
 }
