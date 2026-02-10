@@ -320,6 +320,9 @@ const resources = {
             //Left side Content
             "Secure Global Payments": "Secure Global Payments",
             "Fast, secure transactions with real-time tracking": "Fast, secure transactions with real-time tracking",
+            "Download mobile app": "Download mobile app",
+            "For downloading the mobile app on android devices you will be ask to add your email account": "For downloading the mobile app on android devices you will be ask to add your email account",
+            "Click here to continue": "Click here to continue",
             "Bank-level Security": "Bank-level Security",
             "Simple Payments": "Simple Payments",
             "Mobile Money": "Mobile Money",
@@ -631,6 +634,9 @@ const resources = {
             //Left side Content
             "Secure Global Payments": "Paiements mondiaux sécurisés",
             "Fast, secure transactions with real-time tracking": "Transactions rapides et sécurisées avec suivi en temps réel",
+            "Download mobile app": "Télécharger l'application mobile",
+            "For downloading the mobile app on android devices you will be ask to add your email account": "Pour télécharger l'application mobile sur les appareils Android, il vous sera demandé d'ajouter votre compte e-mail",
+            "Click here to continue": "Cliquez ici pour continuer",
             "Bank-level Security": "Sécurité de niveau bancaire",
             "Mobile Money": "Argent mobile",
             "Simple Payment": "Paiement simple",

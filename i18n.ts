@@ -11,6 +11,9 @@ const resources = {
       //Left side Content
       "Secure Global Payments": "Secure Global Payments",
       "Fast, secure transactions with real-time tracking": "Fast, secure transactions with real-time tracking",
+      "Download mobile app": "Download mobile app",
+      "For downloading the mobile app on android devices you will be ask to add your email account": "For downloading the mobile app on android devices you will be ask to add your email account",
+      "Click here to continue": "Click here to continue",
       "Bank-level Security": "Bank-level Security",
       "Simple Payments": "Simple Payments",
       "Mobile Money": "Mobile Money",
@@ -24,16 +27,16 @@ const resources = {
       "© 2025 Blaffa. All rights reserved .": "© 2025 blaffa. All rights reserved .",
 
 
-      
+
       // Dashboard Header translations
-      "Welcome to our amazing platform" : "Welcome to our amazing platform",
-      "Discover incredible opportunities" : "Discover incredible opportunities",
+      "Welcome to our amazing platform": "Welcome to our amazing platform",
+      "Discover incredible opportunities": "Discover incredible opportunities",
       "DEPOSIT": "DEPOSIT",
       "WITHDRAW": "WITHDRAW",
       "Transaction History": "Transaction History",
       "Hello": "Hello",
 
-      "theme":"theme",
+      "theme": "theme",
 
       // AuthForm translations
       "Welcome to Blaffa": "Welcome to Blaffa",
@@ -63,22 +66,22 @@ const resources = {
       "An unexpected error occurred.": "An unexpected error occurred.",
       "if you cant see it check your Junk folder as well": "if you cant see it check your Junk folder as well",
       "Log in": "Log in",
-      "Verify Code":"Verify Code",
-      "Confirm New Password":"Confirm New Password",
-      "OTP verified successfully":"OTP verified successfully",
-      "Create a new password for your account":"Create a new password for your account",
-      "if you cant see it check your Junk older as well":"if you cant see it check your Junk older as well",
-      "Forgot Password":"Forgot Password",
-      "Enter Verification Code":"Enter Verification Code",
-      "We sent a code to your email. Please enter it below.":"We sent a code to your email. Please enter it below.",
-      "Enter your email to receive a verification code":"Enter your email to receive a verification code",
-      
+      "Verify Code": "Verify Code",
+      "Confirm New Password": "Confirm New Password",
+      "OTP verified successfully": "OTP verified successfully",
+      "Create a new password for your account": "Create a new password for your account",
+      "if you cant see it check your Junk older as well": "if you cant see it check your Junk older as well",
+      "Forgot Password": "Forgot Password",
+      "Enter Verification Code": "Enter Verification Code",
+      "We sent a code to your email. Please enter it below.": "We sent a code to your email. Please enter it below.",
+      "Enter your email to receive a verification code": "Enter your email to receive a verification code",
 
-      "Send Verification Code" : "Send Verification Code",
+
+      "Send Verification Code": "Send Verification Code",
       "Back to Login": "Back to Login",
 
-      "OTP has been sent to your email', 'if you cant see it check your Junk older as well":"OTP has been sent to your email', 'if you cant see it check your Junk older as well",
-      
+      "OTP has been sent to your email', 'if you cant see it check your Junk older as well": "OTP has been sent to your email', 'if you cant see it check your Junk older as well",
+
 
 
       // Profile Page translations
@@ -94,14 +97,14 @@ const resources = {
       "Mobile Number": "Mobile Number",
       "Update Details": "Update Details",
       "Reset Password": "Reset Password",
-      "Add New Bet ID" : "Add New Bet ID",
-      "App Name" : "App Name",
-      "Select App" : "Select App",
-      "Saved Bet IDs" : "Saved Bet IDs",
-      "User Bet ID" : "User Bet ID",
-      "Enter your bet ID" : "Enter your bet ID",
-      "Add Bet ID" : "Add Bet ID",
-      "No bet IDs saved yet" : "No bet IDs saved yet",
+      "Add New Bet ID": "Add New Bet ID",
+      "App Name": "App Name",
+      "Select App": "Select App",
+      "Saved Bet IDs": "Saved Bet IDs",
+      "User Bet ID": "User Bet ID",
+      "Enter your bet ID": "Enter your bet ID",
+      "Add Bet ID": "Add Bet ID",
+      "No bet IDs saved yet": "No bet IDs saved yet",
       "Note": "Note",
       "To update your password, enter the old password and the new one you want to use": "To update your password, enter the old password and the new one you want to use",
       "Old Password": "Old Password",
@@ -124,21 +127,21 @@ const resources = {
       "You will lose access to all your transactions and account history.": "You will lose access to all your transactions and account history.",
       "Type your email to confirm deletion": "Type your email to confirm deletion",
       "This action will permanently delete your account and all associated data. This cannot be undone.": "This action will permanently delete your account and all associated data. This cannot be undone.",
-      "All account data will be immediately erased from our systems." : "All account data will be immediately erased from our systems.",
+      "All account data will be immediately erased from our systems.": "All account data will be immediately erased from our systems.",
       "Use strong, unique passwords": "Use strong, unique passwords",
-      "Update your password regularly" : "Update your password regularly",
-      "History" : "History",
-      "View All" : "View All",
+      "Update your password regularly": "Update your password regularly",
+      "History": "History",
+      "View All": "View All",
       "MY ID": "MY ID",
 
       // Transaction History translations
       "No transactions found": "No transactions found",
-      "You haven't made any transactions yet.":"You haven't made any transactions yet.",
-      "Loading transactions...": "Loading transactions...", 
+      "You haven't made any transactions yet.": "You haven't made any transactions yet.",
+      "Loading transactions...": "Loading transactions...",
       "Failed to fetch transactions": "Failed to fetch transactions",
       "You must be logged in to view transactions.": "You must be logged in to view transactions.",
       "Failed to load transactions. Please try again.": "Failed to load transactions. Please try again.",
-      
+
       "All": "All",
       "Deposits": "Deposits",
       "Withdraw": "Withdraw",
@@ -168,20 +171,20 @@ const resources = {
 
 
       "Available Coupons": "Available Coupons",
-      "No Coupons Available":"No Coupons Available",
-      "Check back later!":"Check back later!",
+      "No Coupons Available": "No Coupons Available",
+      "Check back later!": "Check back later!",
 
 
       // Withdraw Page translations
-      "Withdraw Funds":"Withdraw Funds",
-      
+      "Withdraw Funds": "Withdraw Funds",
+
       "Withdraw from your account": "Withdraw from your account",
       "Please fill in all fields": "Please fill in all fields",
       "Phone numbers do not match": "Phone numbers do not match",
       "Withdrawal request submitted successfully!": "Withdrawal request submitted successfully!",
       "Something went wrong. Please try again.": "Something went wrong. Please try again.",
       "Network error. Please check your connection and try again.": "Network error. Please check your connection and try again.",
-     
+
       "Take Note": "Take Note",
       "The currency of your account must be in XOF": "The currency of your account must be in XOF",
       "CITY": "CITY",
@@ -190,14 +193,14 @@ const resources = {
       "Enter ID": "Enter ID",
       "Withdrawal Code": "Withdrawal Code",
       "Enter your withdrawal code": "Enter your withdrawal code",
-      
+
       "Enter number": "Enter number",
       "Confirm Number": "Confirm Number",
       "Enter Confirm number": "Enter Confirm number",
       "Network": "Network",
       "Processing...": "Processing...",
       "Submit my request": "Submit my request",
-      
+
       // New withdraw page translations
       "Amount": "Amount",
       "Enter amount to withdraw": "Enter amount to withdraw",
@@ -224,46 +227,46 @@ const resources = {
 
       //Deposit Page translations
       "Deposit Funds": "Deposit Funds",
-      "Select Network":"Select Network",
-      "Select Bet ID":"Select Bet ID",
-      "Enter Details":"Enter Details",
-      "Select Your Betting Platform":"Select Your Betting Platform",
-     
-      
-      "Back to Bet IDs":"Back to Bet IDs",
-      "Phone Number":"Phone Number",
+      "Select Network": "Select Network",
+      "Select Bet ID": "Select Bet ID",
+      "Enter Details": "Enter Details",
+      "Select Your Betting Platform": "Select Your Betting Platform",
 
-      "Submit":"Submit",
+
+      "Back to Bet IDs": "Back to Bet IDs",
+      "Phone Number": "Phone Number",
+
+      "Submit": "Submit",
 
       "Click to continue payment": "Click to continue payment",
-      
-      
-      
+
+
+
       "Make deposits to your account": "Make deposits to your account",
       "Make your deposits to your account here": "Make your deposits to your account here",
-      
+
       "IMPORTANT": "IMPORTANT",
       "Your account currency must be in XOF.": "Your account currency must be in XOF.",
-      
+
       "Enter your ID": "Enter your ID",
-      "Enter or select your betting app ID" : "Enter or select your betting app ID",
+      "Enter or select your betting app ID": "Enter or select your betting app ID",
       "This is your 1xbet user ID": "This is your 1xbet user ID",
-      "Enter your betting app ID or select from saved IDs." : "Enter your betting app ID or select from saved IDs.",
-      "You are entering a new ID. Defaulting to 1xbet app." : "You are entering a new ID. Defaulting to 1xbet app.",
+      "Enter your betting app ID or select from saved IDs.": "Enter your betting app ID or select from saved IDs.",
+      "You are entering a new ID. Defaulting to 1xbet app.": "You are entering a new ID. Defaulting to 1xbet app.",
       "Saved IDs": "Saved IDs",
       "Selected App": "Select App id",
-      "Betting App ID" : "Betting App ID",
-      "Unknown App" : "Unknown ",
+      "Betting App ID": "Betting App ID",
+      "Unknown App": "Unknown ",
       // "Amount": "Amount",
       "Enter deposit amount": "Enter deposit amount",
 
-      "Selected Bet ID":"Selected Bet ID",
-      
+      "Selected Bet ID": "Selected Bet ID",
+
       "Enter your mobile money number": "Enter your mobile money number",
       "Your mobile money number": "Your mobile money number",
-      
+
       "Please select a network": "Please select a network",
-      
+
       "Proceed": "Proceed",
       "Deposit successful! Transaction ID:": "Deposit successful! Transaction ID:",
       "Failed to load necessary data. Please try again later.": "Failed to load necessary data. Please try again later.",
@@ -294,7 +297,7 @@ const resources = {
       "ID de pari ajouté avec succès !": "ID de pari ajouté avec succès !",
       "Bet ID added successfully!": "Bet ID added successfully!",
       "Fermer": "Fermer",
-      
+
       "Failed to add bet ID": "Failed to add bet ID",
 
       "Veuillez sélectionner une application et saisir un ID de pari.": "Veuillez sélectionner une application et saisir un ID de pari.",
@@ -365,6 +368,9 @@ const resources = {
       //Left side Content
       "Secure Global Payments": "Paiements mondiaux sécurisés",
       "Fast, secure transactions with real-time tracking": "Transactions rapides et sécurisées avec suivi en temps réel",
+      "Download mobile app": "Télécharger l'application mobile",
+      "For downloading the mobile app on android devices you will be ask to add your email account": "Pour télécharger l'application mobile sur les appareils Android, il vous sera demandé d'ajouter votre compte e-mail",
+      "Click here to continue": "Cliquez ici pour continuer",
       "Bank-level Security": "Sécurité de niveau bancaire",
       "Mobile Money": "Argent mobile",
       "Simple Payment": "Paiement simple",
@@ -391,8 +397,8 @@ const resources = {
       "MY ID": "MON ID",
 
       //Hero
-      "Welcome to our amazing platform" : "Bienvenue sur notre incroyable plateforme",
-      "Discover incredible opportunities" : "Découvrez des opportunités incroyables",
+      "Welcome to our amazing platform": "Bienvenue sur notre incroyable plateforme",
+      "Discover incredible opportunities": "Découvrez des opportunités incroyables",
 
       // AuthForm translations
       "Welcome to Blaffa": "Bienvenue sur Blaffa",
@@ -423,20 +429,20 @@ const resources = {
       "if you cant see it check your Junk folder as well": "si vous ne le voyez pas, vérifiez également votre dossier indésirable",
       "Log in": "Se connecter",
 
-      "Verify Code":"Vérifier le code",
-      "Confirm New Password":"Confirmez le nouveau mot de passe",
-      "OTP verified successfully":"OTP vérifié avec succès",
-      "Create a new password for your account":"Créez un nouveau mot de passe pour votre compte",
-      "if you cant see it check your Junk older as well":"si vous ne le voyez pas, vérifiez également votre dossier indésirable",
-      "Forgot Password":"Mot de passe oublié",
-      "Enter Verification Code":"Entrez le code de vérification",
-      "We sent a code to your email. Please enter it below.":"Nous avons envoyé un code à votre email. Veuillez l'entrer ci-dessous.",
-      "Enter your email to receive a verification code":"Entrez votre email pour recevoir un code de vérification",
-      
-      "Send Verification Code":"Envoyer le code de vérification",
-      "Back to Login":"Retour à la connexion",
+      "Verify Code": "Vérifier le code",
+      "Confirm New Password": "Confirmez le nouveau mot de passe",
+      "OTP verified successfully": "OTP vérifié avec succès",
+      "Create a new password for your account": "Créez un nouveau mot de passe pour votre compte",
+      "if you cant see it check your Junk older as well": "si vous ne le voyez pas, vérifiez également votre dossier indésirable",
+      "Forgot Password": "Mot de passe oublié",
+      "Enter Verification Code": "Entrez le code de vérification",
+      "We sent a code to your email. Please enter it below.": "Nous avons envoyé un code à votre email. Veuillez l'entrer ci-dessous.",
+      "Enter your email to receive a verification code": "Entrez votre email pour recevoir un code de vérification",
 
-      "OTP has been sent to your email', 'if you cant see it check your Junk older as well":"OTP a été envoyé à votre email', 'si vous ne le voyez pas, vérifiez également votre dossier indésirable",
+      "Send Verification Code": "Envoyer le code de vérification",
+      "Back to Login": "Retour à la connexion",
+
+      "OTP has been sent to your email', 'if you cant see it check your Junk older as well": "OTP a été envoyé à votre email', 'si vous ne le voyez pas, vérifiez également votre dossier indésirable",
 
 
       // Profile Page translations
@@ -452,14 +458,14 @@ const resources = {
       "Mobile Number": "Numéro de téléphone",
       "Update Details": "Mettre à jour les informations",
       "Reset Password": "Réinitialiser le mot de passe",
-      "Add New Bet ID" : "Ajouter un nouvel identifiant de pari",
-      "App Name" : "Nom de l'application",
-      "Select App" : "Sélectionner l'application",
-      "Saved Bet IDs" : "Identifiants de pari enregistrés",
-      "User Bet ID" : "Identifiant de pari utilisateur",
-      "Enter your bet ID" : "Saisir votre identifiant de pari",
-      "Add Bet ID" : "Ajouter un identifiant de pari",
-      "No bet IDs saved yet" : "Aucun identifiant de pari enregistré pour le moment",
+      "Add New Bet ID": "Ajouter un nouvel identifiant de pari",
+      "App Name": "Nom de l'application",
+      "Select App": "Sélectionner l'application",
+      "Saved Bet IDs": "Identifiants de pari enregistrés",
+      "User Bet ID": "Identifiant de pari utilisateur",
+      "Enter your bet ID": "Saisir votre identifiant de pari",
+      "Add Bet ID": "Ajouter un identifiant de pari",
+      "No bet IDs saved yet": "Aucun identifiant de pari enregistré pour le moment",
       "Note": "Remarque",
       "To update your password, enter the old password and the new one you want to use": "Pour mettre à jour votre mot de passe, entrez l'ancien mot de passe et le nouveau que vous souhaitez utiliser",
       "Old Password": "Ancien mot de passe",
@@ -484,27 +490,27 @@ const resources = {
       "You will lose access to all your transactions and account history.": "Vous perdrez l'accès à toutes vos transactions et à l'historique de votre compte.",
       "Type your email to confirm deletion": "Tapez votre email pour confirmer la suppression",
       "This action will permanently delete your account and all associated data. This cannot be undone.": "Cette action supprimera définitivement votre compte et toutes les données associées. Cela ne peut pas être annulé.",
-      "All account data will be immediately erased from our systems." : "Toutes les données du compte seront immédiatement effacées de nos systèmes.",
+      "All account data will be immediately erased from our systems.": "Toutes les données du compte seront immédiatement effacées de nos systèmes.",
       "Are you sure you want to delete your account?": "Êtes-vous sûr de vouloir supprimer votre compte ?",
       "Use strong, unique passwords": "Utilisez des mots de passe forts et uniques",
-      "Update your password regularly" : "Mettez à jour votre mot de passe régulièrement",
+      "Update your password regularly": "Mettez à jour votre mot de passe régulièrement",
       "Your password has been reset successfully!": "Votre mot de passe a été réinitialisé avec succès !",
       "Your password has been updated successfully!": "Votre mot de passe a été mis à jour avec succès !",
       "Your password has been updated successfully.": "Votre mot de passe a été mis à jour avec succès.",
-      
-      "Check back later!":"Revoyez plus tard !",
-      "No Coupons Available":"Aucun coupon disponible",
-      "Available Coupons":"Coupons disponibles",
+
+      "Check back later!": "Revoyez plus tard !",
+      "No Coupons Available": "Aucun coupon disponible",
+      "Available Coupons": "Coupons disponibles",
 
 
       // Transaction History translations
       "No transactions found": "Aucune transaction trouvée",
-      "You haven't made any transactions yet." : "Vous n'avez pas encore fait de transactions.",
+      "You haven't made any transactions yet.": "Vous n'avez pas encore fait de transactions.",
       "Loading transactions...": "Chargement des transactions...",
       "Failed to fetch transactions": "Échec de la récupération des transactions",
       "You must be logged in to view transactions.": "Vous devez être connecté pour voir les transactions.",
       "Failed to load transactions. Please try again.": "Échec du chargement des transactions. Veuillez réessayer.",
-      
+
       "All": "Tous",
       "Deposits": "Dépôts",
       "Withdraw": "Retrait",
@@ -534,7 +540,7 @@ const resources = {
 
 
       // Withdraw Page translations
-      "Phone Number":"Numéro de téléphone",
+      "Phone Number": "Numéro de téléphone",
       "Withdraw from your account": "Retirer de votre compte",
       "Please fill in all fields": "Veuillez remplir tous les champs",
       "Phone numbers do not match": "Les numéros de téléphone ne correspondent pas",
@@ -555,7 +561,7 @@ const resources = {
       "Network": "Réseau",
       "Processing...": "Traitement...",
       "Submit my request": "Soumettre ma demande",
-      
+
       // New withdraw page translations
       "Amount": "Montant",
       "Enter amount to withdraw": "Entrez le montant à retirer",
@@ -581,19 +587,19 @@ const resources = {
       // "Back": "Retour",
 
 
-      "Withdraw Funds":"Retirer des fonds",
-      
-      // Deposit Page translations
-      "Deposit Funds":"Déposer des fonds",
-      "Select Bet ID":"Sélectionnez l'ID de pari",
-      "Enter Details":"Entrez les détails",
-      "Select Network":"Sélectionnez le réseau",
-      "Select Your Betting Platform":"Sélectionnez votre plateforme de paris",
-     
-      "Back to Bet IDs":"Retour aux ID de pari",
-      "Selected Bet ID":"ID de pari sélectionné",
+      "Withdraw Funds": "Retirer des fonds",
 
-      "Submit":"Soumettre",
+      // Deposit Page translations
+      "Deposit Funds": "Déposer des fonds",
+      "Select Bet ID": "Sélectionnez l'ID de pari",
+      "Enter Details": "Entrez les détails",
+      "Select Network": "Sélectionnez le réseau",
+      "Select Your Betting Platform": "Sélectionnez votre plateforme de paris",
+
+      "Back to Bet IDs": "Retour aux ID de pari",
+      "Selected Bet ID": "ID de pari sélectionné",
+
+      "Submit": "Soumettre",
 
       "Deposit to your account": "Déposez sur votre compte",
       "Deposit to your account here": "Déposez sur votre compte ici",
@@ -602,28 +608,28 @@ const resources = {
 
       "Make deposits to your account": "Effectuez des dépôts sur votre compte",
       "Make your deposits to your account here": "Effectuez vos dépôts sur votre compte ici",
-      
+
       "IMPORTANT": "IMPORTANT",
       "Your account currency must be in XOF.": "La devise de votre compte doit être en XOF.",
-      
+
       "Enter your 1xbet user ID": "Entrez votre ID utilisateur 1xbet",
       "Enter your ID": "Entrez votre ID",
-      "Enter or select your betting app ID" : "Entrez ou sélectionnez votre ID de l'application de paris",
-      "Enter your betting app ID or select from saved IDs.":" Entrez votre ID de l'application de paris ou sélectionnez-en un enregistré.",
+      "Enter or select your betting app ID": "Entrez ou sélectionnez votre ID de l'application de paris",
+      "Enter your betting app ID or select from saved IDs.": " Entrez votre ID de l'application de paris ou sélectionnez-en un enregistré.",
       "Selected App": "Sélectionnez l'ID",
       "Saved IDs": "IDs enregistrés",
-      "Unknown App" : "Appareil inconnu",
+      "Unknown App": "Appareil inconnu",
 
 
       "This is your 1xbet user ID": "Ceci est votre ID utilisateur 1xbet",
       // "Amount": "Montant",
       "Enter deposit amount": "Entrez le montant du dépôt",
-      
+
       "Enter your mobile money number": "Entrez votre numéro de mobile money",
       "Your mobile money number": "Votre numéro de mobile money",
-      
+
       "Please select a network": "Veuillez sélectionner un réseau",
-      
+
       "Proceed": "Procéder",
       "Deposit successful! Transaction ID:": "Dépôt réussi ! ID de transaction :",
       "Failed to load necessary data. Please try again later.": "Échec du chargement des données nécessaires. Veuillez réessayer plus tard.",
@@ -722,9 +728,9 @@ const resources = {
 //   order: ['localStorage', 'navigator'], // Try localStorage first, then browser language
 //   lookupLocalStorage: 'i18nextLng', // Key to store language in localStorage
 //   caches: ['localStorage'], // Only use localStorage for persistence
- 
+
 //   //fallbackLng: 'fr', // Default to French if no language is detected
-  
+
 // });
 export const initializeI18n = () => {
   // Skip i18n initialization during SSR to prevent hydration issues
