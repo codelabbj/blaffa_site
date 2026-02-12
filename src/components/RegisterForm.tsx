@@ -1,10 +1,23 @@
 'use client';
 
-import { useState } from 'react';
-import { Eye, EyeOff, ChevronDown, Check } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { Eye, EyeOff, ChevronDown, Check, Search } from 'lucide-react';
 import Link from 'next/link';
 import api from '@/lib/axios';
 import Image from 'next/image';
+
+// Country data with flags and codes
+const countries = [
+    { name: 'Burkina Faso', code: '+226', flag: '🇧🇫' },
+    { name: 'Bénin', code: '+229', flag: '🇧🇯' },
+    { name: "Côte d'Ivoire", code: '+225', flag: '🇨🇮' },
+    { name: 'Sénégal', code: '+221', flag: '🇸🇳' },
+    { name: 'Togo', code: '+228', flag: '🇹🇬' },
+    { name: 'Mali', code: '+223', flag: '🇲🇱' },
+    { name: 'Niger', code: '+227', flag: '🇳🇪' },
+    { name: 'Ghana', code: '+233', flag: '🇬🇭' },
+    { name: 'Nigeria', code: '+234', flag: '🇳🇬' },
+];
 
 export default function RegisterForm() {
     const [step, setStep] = useState(1);
@@ -16,8 +29,12 @@ export default function RegisterForm() {
     const [firstName, setFirstName] = useState('');
     const [email, setEmail] = useState('');
 
-    // Country code defaults to Burkina Faso (+226) as per image, but logically adaptable
+    // Country code dropdown state
     const [countryCode, setCountryCode] = useState('+226');
+    const [selectedCountry, setSelectedCountry] = useState(countries[0]);
+    const [isCountryDropdownOpen, setIsCountryDropdownOpen] = useState(false);
+    const [countrySearch, setCountrySearch] = useState('');
+    const dropdownRef = useRef<HTMLDivElement>(null);
     const [phone, setPhone] = useState('');
 
     const [password, setPassword] = useState('');
@@ -25,6 +42,30 @@ export default function RegisterForm() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [termsAccepted, setTermsAccepted] = useState(false);
+
+    // Close dropdown when clicking outside
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+                setIsCountryDropdownOpen(false);
+            }
+        };
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const handleCountrySelect = (country: typeof countries[0]) => {
+        setSelectedCountry(country);
+        setCountryCode(country.code);
+        setIsCountryDropdownOpen(false);
+        setCountrySearch('');
+    };
+
+    const filteredCountries = countries.filter(country =>
+        country.name.toLowerCase().includes(countrySearch.toLowerCase()) ||
+        country.code.includes(countrySearch)
+    );
 
     const handleNext = (e: React.FormEvent) => {
         e.preventDefault();
@@ -182,21 +223,63 @@ export default function RegisterForm() {
                     <div className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-300">
                         <div>
                             <label className="block text-gray-800 text-base font-medium mb-1.5">Téléphone</label>
-                            <div className="flex rounded-xl border border-gray-200 bg-gray-50 overflow-hidden focus-within:ring-2 focus-within:ring-[#002d72] focus-within:border-transparent transition-all">
-                                {/* Country Code Selector (Visual) */}
-                                <div className="flex items-center px-3 border-r border-gray-200 bg-white">
-                                    <div className="w-6 h-4 relative overflow-hidden rounded-sm mr-2">
-                                        {/* Simple CSS flag or image placeholder. Using a generic colored div for BF flag approximation if needed, or just Emoji if compatible */}
-                                        {/* Burkina Faso Flag approximation */}
-                                        <div className="flex flex-col h-full w-full">
-                                            <div className="h-1/2 bg-[#EF3340]"></div>
-                                            <div className="h-1/2 bg-[#009739]"></div>
-                                            {/* Star currently omitted for simplicity or use emoji 🇧🇫 */}
+                            <div className="flex rounded-xl border border-gray-200 bg-gray-50 overflow-visible focus-within:ring-2 focus-within:ring-[#002d72] focus-within:border-transparent transition-all relative">
+                                {/* Country Code Selector (Interactive Dropdown) */}
+                                <div className="relative" ref={dropdownRef}>
+                                    <button
+                                        type="button"
+                                        onClick={() => setIsCountryDropdownOpen(!isCountryDropdownOpen)}
+                                        className="flex items-center px-3 py-3.5 border-r border-gray-200 bg-white hover:bg-gray-50 transition-colors cursor-pointer"
+                                    >
+                                        <span className="text-2xl mr-2">{selectedCountry.flag}</span>
+                                        <span className="text-gray-900 font-medium mr-1">{selectedCountry.code}</span>
+                                        <ChevronDown size={16} className={`text-gray-400 transition-transform ${isCountryDropdownOpen ? 'rotate-180' : ''}`} />
+                                    </button>
+
+                                    {/* Dropdown Menu */}
+                                    {isCountryDropdownOpen && (
+                                        <div className="absolute top-full left-0 mt-2 w-80 bg-white rounded-2xl shadow-2xl border border-gray-200 z-50 overflow-hidden">
+                                            {/* Search Input */}
+                                            <div className="p-4 border-b border-gray-200">
+                                                <div className="relative">
+                                                    <input
+                                                        type="text"
+                                                        value={countrySearch}
+                                                        onChange={(e) => setCountrySearch(e.target.value)}
+                                                        placeholder="Search country"
+                                                        className="w-full pl-4 pr-10 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#002d72] focus:border-transparent outline-none text-sm"
+                                                    />
+                                                    <Search size={18} className="absolute right-3 top-1/2 -translate-y-1/2 text-blue-500" />
+                                                </div>
+                                            </div>
+
+                                            {/* Country List */}
+                                            <div className="max-h-64 overflow-y-auto">
+                                                {filteredCountries.length > 0 ? (
+                                                    filteredCountries.map((country) => (
+                                                        <button
+                                                            key={country.code}
+                                                            type="button"
+                                                            onClick={() => handleCountrySelect(country)}
+                                                            className="w-full flex items-center justify-between px-6 py-3.5 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0"
+                                                        >
+                                                            <div className="flex items-center gap-3">
+                                                                <span className="text-2xl">{country.flag}</span>
+                                                                <span className="text-gray-900 font-medium text-sm">{country.name}</span>
+                                                            </div>
+                                                            <span className="text-gray-900 font-semibold text-sm">{country.code}</span>
+                                                        </button>
+                                                    ))
+                                                ) : (
+                                                    <div className="px-6 py-8 text-center text-gray-400 text-sm">
+                                                        No countries found
+                                                    </div>
+                                                )}
+                                            </div>
                                         </div>
-                                    </div>
-                                    <span className="text-gray-900 font-medium">{countryCode}</span>
-                                    {/* <ChevronDown size={16} className="ml-1 text-gray-400" /> */}
+                                    )}
                                 </div>
+
                                 <input
                                     type="tel"
                                     value={phone}
