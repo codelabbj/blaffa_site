@@ -135,12 +135,50 @@ function LoginForm() {
     _s();
     // const { t } = useTranslation();
     const { theme } = (0, __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ThemeProvider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"])();
+    // Login states
     const [email, setEmail] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
     const [password, setPassword] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
     const [showPassword, setShowPassword] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [rememberMe, setRememberMe] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [isLoading, setIsLoading] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
     const [notification, setNotification] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(null);
+    // Forgot password states
+    const [isForgotPassword, setIsForgotPassword] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [forgotPasswordStep, setForgotPasswordStep] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(1); // 1: Email, 2: OTP, 3: New Password, 4: Success
+    const [forgotEmail, setForgotEmail] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
+    const [otp, setOtp] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])([
+        '',
+        '',
+        '',
+        ''
+    ]); // 4 digit OTP
+    const [newPassword, setNewPassword] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
+    const [confirmNewPassword, setConfirmNewPassword] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])('');
+    const [showNewPassword, setShowNewPassword] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [showConfirmPassword, setShowConfirmPassword] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [resendTimer, setResendTimer] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useState"])(0);
+    // OTP input refs
+    const otpRefs = [
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null),
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null),
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null),
+        (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useRef"])(null)
+    ];
+    // Resend timer countdown
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$index$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useEffect"])({
+        "LoginForm.useEffect": ()=>{
+            if (resendTimer > 0) {
+                const timer = setTimeout({
+                    "LoginForm.useEffect.timer": ()=>setResendTimer(resendTimer - 1)
+                }["LoginForm.useEffect.timer"], 1000);
+                return ({
+                    "LoginForm.useEffect": ()=>clearTimeout(timer)
+                })["LoginForm.useEffect"];
+            }
+        }
+    }["LoginForm.useEffect"], [
+        resendTimer
+    ]);
     const handleSubmit = async (e)=>{
         e.preventDefault();
         setIsLoading(true);
@@ -198,6 +236,453 @@ function LoginForm() {
             setIsLoading(false);
         }
     };
+    const handleForgotPasswordSubmit = async (e)=>{
+        e.preventDefault();
+        setIsLoading(true);
+        setNotification(null);
+        try {
+            if (forgotPasswordStep === 1) {
+                // Step 1: Send OTP
+                await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$axios$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].post('/auth/send_otp', {
+                    email: forgotEmail
+                });
+                setNotification({
+                    type: 'success',
+                    message: 'OTP envoyé à votre email.'
+                });
+                setForgotPasswordStep(2);
+                setResendTimer(116); // Start 116 second countdown
+            } else if (forgotPasswordStep === 2) {
+                // Step 2: Verify OTP and move to password reset
+                const otpCode = otp.join('');
+                if (otpCode.length !== 4) {
+                    setNotification({
+                        type: 'error',
+                        message: 'Veuillez entrer le code complet.'
+                    });
+                    setIsLoading(false);
+                    return;
+                }
+                setForgotPasswordStep(3);
+            } else if (forgotPasswordStep === 3) {
+                // Step 3: Reset password
+                if (newPassword !== confirmNewPassword) {
+                    setNotification({
+                        type: 'error',
+                        message: 'Les mots de passe ne correspondent pas.'
+                    });
+                    setIsLoading(false);
+                    return;
+                }
+                const otpCode = otp.join('');
+                await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$axios$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].post('/auth/reset_password', {
+                    otp: otpCode,
+                    new_password: newPassword,
+                    confirm_new_password: confirmNewPassword
+                });
+                setForgotPasswordStep(4);
+                // Auto redirect after 3 seconds
+                setTimeout(()=>{
+                    handleBackToLogin();
+                }, 3000);
+            }
+        } catch (error) {
+            console.error('Forgot password error:', error);
+            let message = 'Une erreur est survenue.';
+            if (error.response?.data?.message) {
+                message = error.response.data.message;
+            }
+            setNotification({
+                type: 'error',
+                message
+            });
+        } finally{
+            setIsLoading(false);
+        }
+    };
+    const handleOtpChange = (index, value)=>{
+        if (!/^\d*$/.test(value)) return; // Only allow digits
+        const newOtp = [
+            ...otp
+        ];
+        newOtp[index] = value.slice(-1); // Only take last character
+        setOtp(newOtp);
+        // Auto-focus next input
+        if (value && index < 3) {
+            otpRefs[index + 1].current?.focus();
+        }
+    };
+    const handleOtpKeyDown = (index, e)=>{
+        if (e.key === 'Backspace' && !otp[index] && index > 0) {
+            otpRefs[index - 1].current?.focus();
+        }
+    };
+    const handleResendOtp = async ()=>{
+        if (resendTimer > 0) return;
+        try {
+            await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$axios$2e$ts__$5b$app$2d$client$5d$__$28$ecmascript$29$__["default"].post('/auth/send_otp', {
+                email: forgotEmail
+            });
+            setNotification({
+                type: 'success',
+                message: 'OTP renvoyé à votre email.'
+            });
+            setResendTimer(116);
+        } catch (error) {
+            setNotification({
+                type: 'error',
+                message: 'Erreur lors de l\'envoi de l\'OTP.'
+            });
+        }
+    };
+    const handleBackToLogin = ()=>{
+        setIsForgotPassword(false);
+        setForgotPasswordStep(1);
+        setForgotEmail('');
+        setOtp([
+            '',
+            '',
+            '',
+            ''
+        ]);
+        setNewPassword('');
+        setConfirmNewPassword('');
+        setNotification(null);
+    };
+    // Render forgot password flow
+    if (isForgotPassword) {
+        return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+            className: "w-full p-6 bg-transparent",
+            children: [
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: "mb-8",
+                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
+                        className: "text-2xl font-semibold text-gray-700 dark:text-gray-700 mb-2",
+                        children: "Réinitialiser le mot de passe"
+                    }, void 0, false, {
+                        fileName: "[project]/src/components/LoginForm.tsx",
+                        lineNumber: 206,
+                        columnNumber: 21
+                    }, this)
+                }, void 0, false, {
+                    fileName: "[project]/src/components/LoginForm.tsx",
+                    lineNumber: 205,
+                    columnNumber: 17
+                }, this),
+                notification && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                    className: `mb-4 p-3 rounded text-sm ${notification.type === "success" ? "bg-green-100 text-green-700" : "bg-red-50 text-red-500"}`,
+                    children: notification.message
+                }, void 0, false, {
+                    fileName: "[project]/src/components/LoginForm.tsx",
+                    lineNumber: 211,
+                    columnNumber: 21
+                }, this),
+                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
+                    onSubmit: handleForgotPasswordSubmit,
+                    className: "space-y-6",
+                    children: [
+                        forgotPasswordStep === 1 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "space-y-2",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            className: "block text-sm font-normal text-gray-700",
+                                            children: "Adresse email pour recevoir l'OTP"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/components/LoginForm.tsx",
+                                            lineNumber: 221,
+                                            columnNumber: 33
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                            type: "email",
+                                            value: forgotEmail,
+                                            onChange: (e)=>setForgotEmail(e.target.value),
+                                            className: "w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all",
+                                            required: true
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/components/LoginForm.tsx",
+                                            lineNumber: 222,
+                                            columnNumber: 33
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/components/LoginForm.tsx",
+                                    lineNumber: 220,
+                                    columnNumber: 29
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    type: "submit",
+                                    disabled: isLoading,
+                                    className: "w-full bg-[#1e40af] hover:bg-[#1e3a8a] text-white font-medium py-4 rounded-xl shadow-lg transition-all duration-300 disabled:opacity-70",
+                                    children: "Réinitialiser le mot de passe"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/components/LoginForm.tsx",
+                                    lineNumber: 231,
+                                    columnNumber: 29
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "text-center",
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        type: "button",
+                                        onClick: handleBackToLogin,
+                                        className: "text-sm text-[#1e40af] hover:underline font-medium",
+                                        children: "Retour"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/LoginForm.tsx",
+                                        lineNumber: 240,
+                                        columnNumber: 33
+                                    }, this)
+                                }, void 0, false, {
+                                    fileName: "[project]/src/components/LoginForm.tsx",
+                                    lineNumber: 239,
+                                    columnNumber: 29
+                                }, this)
+                            ]
+                        }, void 0, true),
+                        forgotPasswordStep === 2 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "space-y-4",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            className: "block text-sm font-normal text-gray-700",
+                                            children: "Entrez le code"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/components/LoginForm.tsx",
+                                            lineNumber: 255,
+                                            columnNumber: 33
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "flex gap-3 justify-center",
+                                            children: otp.map((digit, index)=>/*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                    ref: otpRefs[index],
+                                                    type: "text",
+                                                    inputMode: "numeric",
+                                                    maxLength: 1,
+                                                    value: digit,
+                                                    onChange: (e)=>handleOtpChange(index, e.target.value),
+                                                    onKeyDown: (e)=>handleOtpKeyDown(index, e),
+                                                    className: "w-16 h-16 text-center text-2xl font-semibold rounded-xl border-2 border-[#1e40af] bg-white text-gray-900 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition-all"
+                                                }, index, false, {
+                                                    fileName: "[project]/src/components/LoginForm.tsx",
+                                                    lineNumber: 258,
+                                                    columnNumber: 41
+                                                }, this))
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/components/LoginForm.tsx",
+                                            lineNumber: 256,
+                                            columnNumber: 33
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/components/LoginForm.tsx",
+                                    lineNumber: 254,
+                                    columnNumber: 29
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    type: "submit",
+                                    disabled: isLoading,
+                                    className: "w-full bg-[#1e40af] hover:bg-[#1e3a8a] text-white font-medium py-4 rounded-xl shadow-lg transition-all duration-300 disabled:opacity-70",
+                                    children: "Réinitialiser le mot de passe"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/components/LoginForm.tsx",
+                                    lineNumber: 273,
+                                    columnNumber: 29
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "text-center space-y-1",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                            className: "text-sm font-medium text-gray-700",
+                                            children: "Pas reçu de code?"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/components/LoginForm.tsx",
+                                            lineNumber: 282,
+                                            columnNumber: 33
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            type: "button",
+                                            onClick: handleResendOtp,
+                                            disabled: resendTimer > 0,
+                                            className: `text-sm ${resendTimer > 0 ? 'text-gray-400' : 'text-[#1e40af] hover:underline'}`,
+                                            children: [
+                                                "Appuyez ici pour renvoyer l'OTP ",
+                                                resendTimer > 0 && `dans ${resendTimer} secondes`
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/components/LoginForm.tsx",
+                                            lineNumber: 283,
+                                            columnNumber: 33
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/components/LoginForm.tsx",
+                                    lineNumber: 281,
+                                    columnNumber: 29
+                                }, this)
+                            ]
+                        }, void 0, true),
+                        forgotPasswordStep === 3 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "space-y-4",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("label", {
+                                            className: "block text-sm font-normal text-gray-700",
+                                            children: "Nouveau mot de passe"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/components/LoginForm.tsx",
+                                            lineNumber: 299,
+                                            columnNumber: 33
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "relative",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                    type: showNewPassword ? "text" : "password",
+                                                    value: newPassword,
+                                                    onChange: (e)=>setNewPassword(e.target.value),
+                                                    placeholder: "ex: Tim00225@",
+                                                    className: "w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all placeholder:text-gray-400",
+                                                    required: true
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/components/LoginForm.tsx",
+                                                    lineNumber: 302,
+                                                    columnNumber: 37
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    type: "button",
+                                                    onClick: ()=>setShowNewPassword(!showNewPassword),
+                                                    className: "absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500",
+                                                    children: showNewPassword ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$eye$2d$off$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__EyeOff$3e$__["EyeOff"], {
+                                                        size: 20
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/LoginForm.tsx",
+                                                        lineNumber: 315,
+                                                        columnNumber: 60
+                                                    }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$eye$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Eye$3e$__["Eye"], {
+                                                        size: 20
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/LoginForm.tsx",
+                                                        lineNumber: 315,
+                                                        columnNumber: 83
+                                                    }, this)
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/components/LoginForm.tsx",
+                                                    lineNumber: 310,
+                                                    columnNumber: 37
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/components/LoginForm.tsx",
+                                            lineNumber: 301,
+                                            columnNumber: 33
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                            className: "relative",
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
+                                                    type: showConfirmPassword ? "text" : "password",
+                                                    value: confirmNewPassword,
+                                                    onChange: (e)=>setConfirmNewPassword(e.target.value),
+                                                    placeholder: "ex: Tim00225@",
+                                                    className: "w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50 text-gray-900 focus:ring-2 focus:ring-blue-600 focus:border-transparent outline-none transition-all placeholder:text-gray-400",
+                                                    required: true
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/components/LoginForm.tsx",
+                                                    lineNumber: 320,
+                                                    columnNumber: 37
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                    type: "button",
+                                                    onClick: ()=>setShowConfirmPassword(!showConfirmPassword),
+                                                    className: "absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500",
+                                                    children: showConfirmPassword ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$eye$2d$off$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__EyeOff$3e$__["EyeOff"], {
+                                                        size: 20
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/LoginForm.tsx",
+                                                        lineNumber: 333,
+                                                        columnNumber: 64
+                                                    }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$eye$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Eye$3e$__["Eye"], {
+                                                        size: 20
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/components/LoginForm.tsx",
+                                                        lineNumber: 333,
+                                                        columnNumber: 87
+                                                    }, this)
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/components/LoginForm.tsx",
+                                                    lineNumber: 328,
+                                                    columnNumber: 37
+                                                }, this)
+                                            ]
+                                        }, void 0, true, {
+                                            fileName: "[project]/src/components/LoginForm.tsx",
+                                            lineNumber: 319,
+                                            columnNumber: 33
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
+                                    fileName: "[project]/src/components/LoginForm.tsx",
+                                    lineNumber: 298,
+                                    columnNumber: 29
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    type: "submit",
+                                    disabled: isLoading,
+                                    className: "w-full bg-[#1e40af] hover:bg-[#1e3a8a] text-white font-medium py-4 rounded-xl shadow-lg transition-all duration-300 disabled:opacity-70",
+                                    children: "Mise à jour"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/components/LoginForm.tsx",
+                                    lineNumber: 338,
+                                    columnNumber: 29
+                                }, this)
+                            ]
+                        }, void 0, true),
+                        forgotPasswordStep === 4 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["Fragment"], {
+                            children: [
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "text-center py-8",
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                        className: "text-lg text-gray-700 mb-6",
+                                        children: "Votre mot de passe a été changé avec succès"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/components/LoginForm.tsx",
+                                        lineNumber: 352,
+                                        columnNumber: 33
+                                    }, this)
+                                }, void 0, false, {
+                                    fileName: "[project]/src/components/LoginForm.tsx",
+                                    lineNumber: 351,
+                                    columnNumber: 29
+                                }, this),
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                    type: "button",
+                                    onClick: handleBackToLogin,
+                                    className: "w-full bg-[#1e40af] hover:bg-[#1e3a8a] text-white font-medium py-4 rounded-xl shadow-lg transition-all duration-300",
+                                    children: "Mise à jour"
+                                }, void 0, false, {
+                                    fileName: "[project]/src/components/LoginForm.tsx",
+                                    lineNumber: 355,
+                                    columnNumber: 29
+                                }, this)
+                            ]
+                        }, void 0, true)
+                    ]
+                }, void 0, true, {
+                    fileName: "[project]/src/components/LoginForm.tsx",
+                    lineNumber: 216,
+                    columnNumber: 17
+                }, this)
+            ]
+        }, void 0, true, {
+            fileName: "[project]/src/components/LoginForm.tsx",
+            lineNumber: 204,
+            columnNumber: 13
+        }, this);
+    }
+    // Regular login form
     return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
         className: "w-full p-6 bg-transparent",
         children: [
@@ -209,7 +694,7 @@ function LoginForm() {
                         children: "Vous êtes de retour"
                     }, void 0, false, {
                         fileName: "[project]/src/components/LoginForm.tsx",
-                        lineNumber: 84,
+                        lineNumber: 374,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -217,13 +702,13 @@ function LoginForm() {
                         children: "Faisons en sorte que cette journée soit exceptionnelle"
                     }, void 0, false, {
                         fileName: "[project]/src/components/LoginForm.tsx",
-                        lineNumber: 85,
+                        lineNumber: 375,
                         columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/LoginForm.tsx",
-                lineNumber: 83,
+                lineNumber: 373,
                 columnNumber: 13
             }, this),
             notification && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -231,7 +716,7 @@ function LoginForm() {
                 children: notification.message
             }, void 0, false, {
                 fileName: "[project]/src/components/LoginForm.tsx",
-                lineNumber: 90,
+                lineNumber: 380,
                 columnNumber: 17
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -246,7 +731,7 @@ function LoginForm() {
                                 children: "Email"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/LoginForm.tsx",
-                                lineNumber: 100,
+                                lineNumber: 390,
                                 columnNumber: 21
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -258,13 +743,13 @@ function LoginForm() {
                                 required: true
                             }, void 0, false, {
                                 fileName: "[project]/src/components/LoginForm.tsx",
-                                lineNumber: 101,
+                                lineNumber: 391,
                                 columnNumber: 21
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/LoginForm.tsx",
-                        lineNumber: 99,
+                        lineNumber: 389,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -275,7 +760,7 @@ function LoginForm() {
                                 children: "Mot de passe"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/LoginForm.tsx",
-                                lineNumber: 113,
+                                lineNumber: 403,
                                 columnNumber: 21
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -290,7 +775,7 @@ function LoginForm() {
                                         required: true
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/LoginForm.tsx",
-                                        lineNumber: 115,
+                                        lineNumber: 405,
                                         columnNumber: 25
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -301,30 +786,30 @@ function LoginForm() {
                                             size: 20
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/LoginForm.tsx",
-                                            lineNumber: 128,
+                                            lineNumber: 418,
                                             columnNumber: 45
                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$eye$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__$3c$export__default__as__Eye$3e$__["Eye"], {
                                             size: 20
                                         }, void 0, false, {
                                             fileName: "[project]/src/components/LoginForm.tsx",
-                                            lineNumber: 128,
+                                            lineNumber: 418,
                                             columnNumber: 68
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/LoginForm.tsx",
-                                        lineNumber: 123,
+                                        lineNumber: 413,
                                         columnNumber: 25
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/LoginForm.tsx",
-                                lineNumber: 114,
+                                lineNumber: 404,
                                 columnNumber: 21
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/LoginForm.tsx",
-                        lineNumber: 112,
+                        lineNumber: 402,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -340,7 +825,7 @@ function LoginForm() {
                                         className: "w-5 h-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/LoginForm.tsx",
-                                        lineNumber: 136,
+                                        lineNumber: 426,
                                         columnNumber: 25
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -348,28 +833,29 @@ function LoginForm() {
                                         children: "Se Souvenir"
                                     }, void 0, false, {
                                         fileName: "[project]/src/components/LoginForm.tsx",
-                                        lineNumber: 142,
+                                        lineNumber: 432,
                                         columnNumber: 25
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/components/LoginForm.tsx",
-                                lineNumber: 135,
+                                lineNumber: 425,
                                 columnNumber: 21
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                 type: "button",
+                                onClick: ()=>setIsForgotPassword(true),
                                 className: "text-sm font-medium text-[#FF6B6B] hover:text-[#ff5252]",
                                 children: "Mot de passe oublié ?"
                             }, void 0, false, {
                                 fileName: "[project]/src/components/LoginForm.tsx",
-                                lineNumber: 145,
+                                lineNumber: 435,
                                 columnNumber: 21
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/components/LoginForm.tsx",
-                        lineNumber: 134,
+                        lineNumber: 424,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -379,7 +865,7 @@ function LoginForm() {
                         children: isLoading ? 'Connexion...' : 'Connexion'
                     }, void 0, false, {
                         fileName: "[project]/src/components/LoginForm.tsx",
-                        lineNumber: 151,
+                        lineNumber: 445,
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$compiled$2f$react$2f$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$client$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -395,34 +881,34 @@ function LoginForm() {
                                     children: "S'inscrire"
                                 }, void 0, false, {
                                     fileName: "[project]/src/components/LoginForm.tsx",
-                                    lineNumber: 163,
+                                    lineNumber: 457,
                                     columnNumber: 25
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/components/LoginForm.tsx",
-                            lineNumber: 161,
+                            lineNumber: 455,
                             columnNumber: 21
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/components/LoginForm.tsx",
-                        lineNumber: 160,
+                        lineNumber: 454,
                         columnNumber: 17
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/components/LoginForm.tsx",
-                lineNumber: 96,
+                lineNumber: 386,
                 columnNumber: 13
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/components/LoginForm.tsx",
-        lineNumber: 81,
+        lineNumber: 371,
         columnNumber: 9
     }, this);
 }
-_s(LoginForm, "x8lBAyC5VgXFYKE2UZDHE6bb7+k=", false, function() {
+_s(LoginForm, "g1NLcNmcKgAbimMpgCqt5GCCDCc=", false, function() {
     return [
         __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ThemeProvider$2e$tsx__$5b$app$2d$client$5d$__$28$ecmascript$29$__["useTheme"]
     ];
