@@ -449,7 +449,7 @@ function TransactionDetailContent() {
                             const appId = (transaction as any).user_app_id || transaction.transaction_reference || 'N/A';
 
                             const transType = transaction.type_trans;
-                            const message = `Bonjour moi c'est ${firstName} ${lastName}, j'ai besoin d'aide concernant mon ${transType}.\nRéférence: ${ref}\nMontant: XOF ${amount}\nRéseau: ${network}\nTéléphone: ${phone}\n*${appName} ID:* ${appId}`;
+                            const message = `Bonjour moi c'est ${firstName} ${lastName}, j'ai besoin d'aide concernant mon ${transType}.\nDate: ${formatDate(transaction.created_at)}\nRéférence: ${ref}\nMontant: XOF ${amount}\nRéseau: ${network}\nTéléphone: ${phone}\n*${appName} ID:* ${appId}`;
 
                             window.open(`https://wa.me/22553445327?text=${encodeURIComponent(message)}`, '_blank');
                         }}

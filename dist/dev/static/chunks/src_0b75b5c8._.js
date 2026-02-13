@@ -1123,7 +1123,7 @@ function TransactionDetailContent() {
                             const appName = transaction.app?.public_name || 'App';
                             const appId = transaction.user_app_id || transaction.transaction_reference || 'N/A';
                             const transType = transaction.type_trans;
-                            const message = `Bonjour moi c'est ${firstName} ${lastName}, j'ai besoin d'aide concernant mon ${transType}.\nRéférence: ${ref}\nMontant: XOF ${amount}\nRéseau: ${network}\nTéléphone: ${phone}\n*${appName} ID:* ${appId}`;
+                            const message = `Bonjour moi c'est ${firstName} ${lastName}, j'ai besoin d'aide concernant mon ${transType}.\nDate: ${formatDate(transaction.created_at)}\nRéférence: ${ref}\nMontant: XOF ${amount}\nRéseau: ${network}\nTéléphone: ${phone}\n*${appName} ID:* ${appId}`;
                             window.open(`https://wa.me/22553445327?text=${encodeURIComponent(message)}`, '_blank');
                         },
                         className: "jsx-a285e8668f1fe836" + " " + "w-full py-4 bg-[#ffdedb] hover:bg-[#ffcfcc] text-[#ff6b62] rounded-2xl text-xl font-bold transition-colors shadow-sm mt-4",
