@@ -353,7 +353,7 @@ export default function RegisterForm() {
                             </div>
                             <div className="ml-3 text-sm">
                                 <label htmlFor="terms" className="text-gray-600">
-                                    En cliquant sur Suivant, vous acceptez nos <a href="#" className="font-semibold text-[#002d72]">conditions d'utilisation</a> et confirmez que vous avez plus de 18 ans.
+                                    En cliquant sur Suivant, vous acceptez nos <a href="/privacy-policy" className="font-semibold text-[#002d72]">conditions d'utilisation</a> et confirmez que vous avez plus de 18 ans.
                                 </label>
                             </div>
                         </div>
