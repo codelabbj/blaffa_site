@@ -178,8 +178,12 @@ export default function Deposits() {
   const [phoneToEdit, setPhoneToEdit] = useState<UserPhone | null>(null);
   const [newPhoneNumber, setNewPhoneNumber] = useState('');
 
+  const [lastTransaction, setLastTransaction] = useState<Transaction | null>(null);
+  const [ussdCopied, setUssdCopied] = useState(false);
+  const [pendingTxNotice, setPendingTxNotice] = useState(false);
 
-  useEffect(() => {
+
+    useEffect(() => {
     const handleTransactionLink = (data: WebSocketMessage) => {
       if (data.type === 'transaction_link' && data.data) {
         setTransactionLink(data.data); // Save the link for the modal button
@@ -307,6 +311,14 @@ export default function Deposits() {
         }
 
         await Promise.allSettled(promises);
+
+        if (token) {
+          const lastTx = await fetchLastTransaction();
+          if (lastTx?.status === 'pending') {
+            setCurrentStep('summary');
+            setPendingTxNotice(true);
+          }
+        }
 
       } catch (err) {
         console.error('Error fetching data:', err);
@@ -694,27 +706,11 @@ export default function Deposits() {
 
       setSuccess('Transaction initiée avec succès !');
 
-      // Check for transaction link in response and show modal
-      if (transaction.transaction_link) {
-        setTransactionLink(transaction.transaction_link);
-        setShowPaymentModal(true);
-      }
-
-      // Check if ussd_code is present in response and trigger dialer
-      if (transaction.ussd_code) {
-        attemptDialerRedirect(transaction.ussd_code);
-      }
-
-      // Only redirect main tab to dashboard if there's no payment link or ussd code
-      if (!transaction.transaction_link && !transaction.ussd_code) {
-        setTimeout(() => {
-          if (typeof window !== 'undefined') window.location.href = '/dashboard';
-        }, 2000);
-      }
-
       // Reset form
       setFormData({ amount: '', phoneNumber: '', betid: '', otp_code: '' });
       setValidationErrors({ amount: '', phoneNumber: '', otp_code: '' });
+
+      await fetchLastTransaction()
     } catch (error) {
       console.error('Transaction error:', error);
       //     if (
@@ -733,84 +729,128 @@ export default function Deposits() {
       //   }
       // };
 
-      if (typeof error === 'string') {
-        setError(error);
-      } else if (error && typeof error === 'object' && 'response' in error) {
-        const { status, data } = (error as ApiError).response || {};
-        // Handle the error response
-        if (status === 400 && data) {
-          const errorMessages = [];
-          if (data.amount) {
-            errorMessages.push(`Amount: ${Array.isArray(data.amount) ? data.amount[0] : data.amount}`);
-          }
-          // Add more field checks as needed
-          setError(errorMessages.length > 0 ? errorMessages.join('\n') : data.detail || 'Validation error');
-        } else {
-          setError(data?.detail || 'An error occurred');
-        }
-      } else {
-        setError('An unexpected error occurred');
-      }
-
-      if (isAxiosError(error) && error.response) {
-        const { status, data } = error.response;
-
-        // Handle field-specific validation errors
-        if (status === 400 && data) {
-          const errorMessages = [];
-
-          // Check for field errors
-          if (data.amount) {
-            errorMessages.push(`Amount: ${Array.isArray(data.amount) ? data.amount[0] : data.amount}`);
-          }
-
-          if (data.phone_number) {
-            errorMessages.push(`Phone: ${Array.isArray(data.phone_number) ? data.phone_number[0] : data.phone_number}`);
-          }
-
-          if (data.network_id) {
-            errorMessages.push(`Network: ${Array.isArray(data.network_id) ? data.network_id[0] : data.network_id}`);
-          }
-
-          if (data.user_app_id) {
-            errorMessages.push(`Bet ID: ${Array.isArray(data.user_app_id) ? data.user_app_id[0] : data.user_app_id}`);
-          }
-
-          // Check for non-field errors
-          if (data.detail) {
-            errorMessages.push(data.detail);
-          }
-
-          // If no specific errors found, use a generic message
-          if (errorMessages.length === 0) {
-            errorMessages.push(t('Invalid data. Please check your input.'));
-          }
-
-          setError(errorMessages.join('\n'));
-        } else if (status === 401) {
-          setError(t('Your session has expired. Please log in again.'));
-          // Optionally redirect to login
-          // window.location.href = '/auth';
-        } else if (status === 403) {
-          setError(t('You do not have permission to perform this action.'));
-        } else if (status === 404) {
-          setError(t('The requested resource was not found.'));
-        } else if (status === 429) {
-          setError(t('Too many requests. Please wait a moment and try again.'));
-        } else if (status >= 500) {
-          setError(t('Server error. Please try again later.'));
-        } else {
-          setError(t('An error occurred. Please try again.'));
-        }
-        // } else if ((error as ApiError).response) {
-        //   // The request was made but no response was received
-        //   setError(t('Network error. Please check your connection and try again.'));
-      } else {
-        // Something happened in setting up the request
-        setError(t('An error occurred while setting up the request.'));
-      }
+     handleApiError(error)
     } finally {
       setLoading(false);
+    }
+  };
+  
+  const handleApiError = (error: unknown) => {
+    if (typeof error === 'string') {
+      setError(error);
+    } else if (error && typeof error === 'object' && 'response' in error) {
+      const { status, data } = (error as ApiError).response || {};
+      if (status === 400 && data) {
+        const errorMessages = [];
+        if (data.amount) errorMessages.push(`Amount: ${Array.isArray(data.amount) ? data.amount[0] : data.amount}`);
+        setError(errorMessages.length > 0 ? errorMessages.join('\n') : data.detail || 'Validation error');
+      } else {
+        setError(data?.detail || 'An error occurred');
+      }
+    } else {
+      setError('An unexpected error occurred');
+    }
+
+    if (isAxiosError(error) && error.response) {
+      const { status, data } = error.response;
+      if (status === 400 && data) {
+        const errorMessages = [];
+        if (data.amount) errorMessages.push(`Amount: ${Array.isArray(data.amount) ? data.amount[0] : data.amount}`);
+        if (data.phone_number) errorMessages.push(`Phone: ${Array.isArray(data.phone_number) ? data.phone_number[0] : data.phone_number}`);
+        if (data.network_id) errorMessages.push(`Network: ${Array.isArray(data.network_id) ? data.network_id[0] : data.network_id}`);
+        if (data.user_app_id) errorMessages.push(`Bet ID: ${Array.isArray(data.user_app_id) ? data.user_app_id[0] : data.user_app_id}`);
+        if (data.reference) errorMessages.push(`Reference: ${Array.isArray(data.reference) ? data.reference[0] : data.reference}`);
+        if (data.detail) errorMessages.push(data.detail);
+        if (errorMessages.length === 0) errorMessages.push(t('Invalid data. Please check your input.'));
+        setError(errorMessages.join('\n'));
+      } else if (status === 401) {
+        setError(t('Your session has expired. Please log in again.'));
+      } else if (status === 403) {
+        setError(t('You do not have permission to perform this action.'));
+      } else if (status === 404) {
+        setError(t('The requested resource was not found.'));
+      } else if (status === 429) {
+        setError(t('Too many requests. Please wait a moment and try again.'));
+      } else if (status >= 500) {
+        setError(t('Server error. Please try again later.'));
+      } else {
+        setError(t('An error occurred. Please try again.'));
+      }
+    }
+  };
+
+  const fetchLastTransaction = async (): Promise<Transaction | null> => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) return null;
+
+    try {
+      const response = await api.get('/blaffa/last-transaction', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (response.status === 200) {
+        setLastTransaction(response.data);
+        return response.data;
+      }
+      return null;
+    } catch (error) {
+      console.error('Error fetching last transaction:', error);
+      handleApiError(error);
+      return null;
+    }
+  };
+
+  const finalizeTransaction = async (): Promise<boolean> => {
+    const token = localStorage.getItem('accessToken');
+    if (!token || !lastTransaction) return false;
+
+    try {
+      const response = await api.post('/blaffa/finalize-transaction-user', {
+        reference: lastTransaction.reference,
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      const ok = response.status === 200 || response.status === 201;
+      if (ok) {
+        if (lastTransaction.transaction_link) {
+          window.open(lastTransaction.transaction_link, '_blank');
+        } else if (lastTransaction.ussd_code) {
+          attemptDialerRedirect(lastTransaction.ussd_code);
+          window.location.href = '/dashboard';
+        } else {
+          window.location.href = '/dashboard';
+        }
+      }
+      return ok;
+    } catch (error) {
+      console.error('Error finalizing transaction:', error);
+      handleApiError(error);
+      return false;
+    }
+  };
+
+  const cancelTransaction = async (): Promise<boolean> => {
+    const token = localStorage.getItem('accessToken');
+    if (!token || !lastTransaction) return false;
+    try {
+      const response = await api.post('/blaffa/cancel-transaction', {
+        reference: lastTransaction.reference,
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      const ok = response.status === 200 || response.status === 201;
+      if (ok) {
+        setLastTransaction(null);
+        setPendingTxNotice(false);
+        setCurrentStep('selectId');
+      }
+      return ok;
+    } catch (error) {
+      console.error('Error cancelling transaction:', error);
+      handleApiError(error);
+      return false;
     }
   };
 
@@ -1310,7 +1350,7 @@ export default function Deposits() {
               {/* Amount Section */}
               <div className={`py-6 text-center bg-gradient-to-b ${theme.mode === 'dark' ? 'from-blue-900/10 to-transparent' : 'from-blue-50 to-transparent'}`}>
                 <div className={`text-5xl font-extrabold ${theme.colors.text} tracking-tight`}>
-                  {new Intl.NumberFormat('fr-FR').format(parseInt(formData.amount))} <span className="text-2xl align-top opacity-60 font-bold">F</span>
+                  {new Intl.NumberFormat('fr-FR').format(formData.amount ? parseInt(formData.amount) : lastTransaction?.amount ?? 0)} <span className="text-2xl align-top opacity-60 font-bold">F</span>
                 </div>
               </div>
 
@@ -1323,68 +1363,128 @@ export default function Deposits() {
                 <div className="flex items-center justify-between">
                   <span className={`${theme.colors.d_text} opacity-60 text-sm`}>Plateforme</span>
                   <div className="flex items-center gap-2">
-                    {selectedPlatform?.image && (
-                      <img src={selectedPlatform.image} alt="" className="w-5 h-5 object-contain" />
+                    {(selectedPlatform?.image || lastTransaction?.app?.image) && (
+                      <img src={selectedPlatform?.image || lastTransaction?.app?.image} alt="" className="w-5 h-5 object-contain" />
                     )}
-                    <span className={`font-semibold ${theme.colors.text}`}>{selectedPlatform?.public_name || selectedPlatform?.name}</span>
+                    <span className={`font-semibold ${theme.colors.text}`}>
+                      {selectedPlatform?.public_name || selectedPlatform?.name || lastTransaction?.app?.public_name || lastTransaction?.app?.name}
+                    </span>
                   </div>
                 </div>
 
                 {/* ID */}
                 <div className="flex items-center justify-between">
                   <span className={`${theme.colors.d_text} opacity-60 text-sm`}>ID Utilisateur</span>
-                  <span className={`font-mono font-medium ${theme.colors.text} bg-gray-100 dark:bg-slate-800 px-2 py-0.5 rounded text-sm`}>{selectedBetId}</span>
+                  <span className={`font-mono font-medium ${theme.colors.text} bg-gray-100 dark:bg-slate-800 px-2 py-0.5 rounded text-sm`}>
+                    {selectedBetId || lastTransaction?.user_app_id}
+                  </span>
                 </div>
 
                 {/* Network */}
                 <div className="flex items-center justify-between">
                   <span className={`${theme.colors.d_text} opacity-60 text-sm`}>Moyen de paiement</span>
                   <div className="flex items-center gap-2">
-                    {selectedNetwork?.image && (
-                      <img src={selectedNetwork.image} alt="" className="w-5 h-5 object-contain" />
+                    {(selectedNetwork?.image || lastTransaction?.network?.image) && (
+                      <img src={selectedNetwork?.image || lastTransaction?.network?.image} alt="" className="w-5 h-5 object-contain" />
                     )}
-                    <span className={`font-semibold ${theme.colors.text}`}>{selectedNetwork?.public_name || selectedNetwork?.name}</span>
+                    <span className={`font-semibold ${theme.colors.text}`}>
+                      {selectedNetwork?.public_name || selectedNetwork?.name || lastTransaction?.network?.public_name || lastTransaction?.network?.name}
+                    </span>
                   </div>
                 </div>
 
                 {/* Phone */}
                 <div className="flex items-center justify-between">
                   <span className={`${theme.colors.d_text} opacity-60 text-sm`}>Téléphone</span>
-                  <span className={`font-semibold ${theme.colors.text}`}>{formatPhoneWithCountryCode(selectedPhone?.phone || '')}</span>
+                  <span className={`font-semibold ${theme.colors.text}`}>
+                    {formatPhoneWithCountryCode(selectedPhone?.phone || lastTransaction?.phone_number || '')}
+                  </span>
                 </div>
               </div>
             </div>
 
             {/* Warning - Minimalist */}
-            <p className={`text-xs text-center ${theme.colors.d_text} opacity-50 px-6 leading-relaxed`}>
-              En confirmant, vous acceptez d'initier cette transaction sur le numéro indiqué.
-            </p>
+            {!lastTransaction && (
+              <p className={`text-xs text-center ${theme.colors.d_text} opacity-50 px-6 leading-relaxed`}>
+                En confirmant, vous acceptez d&apos;initier cette transaction sur le numéro indiqué.
+              </p>
+            )}
+
+            {/* USSD Code Display (after submit, when no transaction link) */}
+            {lastTransaction && !lastTransaction.transaction_link && lastTransaction.ussd_code && (
+              <div className={`${theme.mode === 'dark' ? 'bg-slate-800/80 border-slate-700' : 'bg-slate-50 border-slate-200'} border rounded-2xl px-5 py-4`}>
+                <p className={`text-xs font-medium ${theme.colors.d_text} opacity-50 uppercase tracking-wider mb-3`}>Code USSD</p>
+                <div className="flex items-center justify-between gap-4">
+                  <span className={`font-mono font-bold text-2xl ${theme.colors.text} tracking-widest break-all`}>
+                    {lastTransaction.ussd_code}
+                  </span>
+                  <button
+                    onClick={() => {
+                      navigator.clipboard.writeText(lastTransaction.ussd_code!).then(() => {
+                        setUssdCopied(true);
+                        setTimeout(() => setUssdCopied(false), 2000);
+                      });
+                    }}
+                    className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold transition-all ${ussdCopied ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' : `${theme.mode === 'dark' ? 'bg-slate-700 text-slate-300 hover:bg-slate-600' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'}`}`}
+                    title="Copier le code"
+                  >
+                    {ussdCopied ? <><Check className="w-4 h-4" /><span>Copié</span></> : <><Copy className="w-4 h-4" /><span>Copier</span></>}
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* Action Buttons */}
             <div className="flex flex-col gap-3 pt-2">
-              <button
-                onClick={handleSubmit}
-                disabled={loading}
-                className="w-full h-14 bg-[#002d72] hover:bg-[#001d4a] text-white font-bold text-lg rounded-2xl shadow-lg shadow-blue-900/10 transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
-                style={{ backgroundColor: theme.mode === 'dark' ? theme.colors.primary : '#002d72' }}
-              >
-                {loading ? (
-                  <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                    <span>Traitement...</span>
-                  </>
-                ) : (
-                  <span>Confirmer le dépôt</span>
-                )}
-              </button>
+              {lastTransaction ? (
+                <div className="flex gap-3">
+                  <button
+                    onClick={async () => { await cancelTransaction(); }}
+                    disabled={loading}
+                    className="flex-1 h-14 border-2 border-red-500 text-red-500 font-bold text-base rounded-2xl hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors disabled:opacity-50"
+                  >
+                    Annuler
+                  </button>
+                  <button
+                    onClick={async () => { await finalizeTransaction(); }}
+                    disabled={loading}
+                    className="flex-1 h-14 text-white font-bold text-base rounded-2xl shadow-lg transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                    style={{ backgroundColor: theme.mode === 'dark' ? theme.colors.primary : '#002d72' }}
+                  >
+                    {loading ? (
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
+                    ) : (
+                      'Finaliser'
+                    )}
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <button
+                    onClick={handleSubmit}
+                    disabled={loading}
+                    className="w-full h-14 text-white font-bold text-lg rounded-2xl shadow-lg shadow-blue-900/10 transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
+                    style={{ backgroundColor: theme.mode === 'dark' ? theme.colors.primary : '#002d72' }}
+                  >
+                    {loading ? (
+                      <>
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                        <span>Traitement...</span>
+                      </>
+                    ) : (
+                      <span>Confirmer le dépôt</span>
+                    )}
+                  </button>
 
-              <button
-                onClick={() => setCurrentStep('enterDetails')}
-                disabled={loading}
-                className={`w-full py-3 text-center font-bold text-sm ${theme.colors.d_text} opacity-50 hover:opacity-100 transition-opacity`}
-              >
-                Modifier les informations
-              </button>
+                  <button
+                    onClick={() => setCurrentStep('enterDetails')}
+                    disabled={loading}
+                    className={`w-full py-3 text-center font-bold text-sm ${theme.colors.d_text} opacity-50 hover:opacity-100 transition-opacity`}
+                  >
+                    Modifier les informations
+                  </button>
+                </>
+              )}
             </div>
           </div>
         );
@@ -1523,6 +1623,20 @@ export default function Deposits() {
         {/* Main Content */}
         <div className="pb-24">
           <div>
+            {/* Pending Transaction Notice */}
+            {pendingTxNotice && (
+              <div className="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-300 dark:border-amber-700 rounded-2xl">
+                <div className="flex items-start gap-3">
+                  <svg className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                  <p className="text-sm font-medium text-amber-800 dark:text-amber-300">
+                    Votre dernière transaction est en attente de finalisation. Veuillez la finaliser ou l&apos;annuler avant d&apos;en créer une nouvelle.
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* Alert Messages */}
             {error && (
               <div className="mb-6 p-4 bg-gradient-to-r from-red-900/50 to-red-800/50 border border-red-600/50 text-red-300 rounded-2xl backdrop-blur-sm">
