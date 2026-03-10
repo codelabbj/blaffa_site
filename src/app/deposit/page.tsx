@@ -178,6 +178,9 @@ export default function Deposits() {
   const [phoneToEdit, setPhoneToEdit] = useState<UserPhone | null>(null);
   const [newPhoneNumber, setNewPhoneNumber] = useState('');
 
+  const [lastTransaction, setLastTransaction] = useState<Transaction | null>(null);
+  const [ussdCopied, setUssdCopied] = useState(false);
+  const [pendingTxNotice, setPendingTxNotice] = useState(false);
 
   useEffect(() => {
     const handleTransactionLink = (data: WebSocketMessage) => {
@@ -307,6 +310,14 @@ export default function Deposits() {
         }
 
         await Promise.allSettled(promises);
+
+        if (token) {
+          const lastTx = await fetchLastTransaction();
+          if (lastTx?.status === 'pending') {
+            setCurrentStep('summary');
+            setPendingTxNotice(true);
+          }
+        }
 
       } catch (err) {
         console.error('Error fetching data:', err);
@@ -786,6 +797,11 @@ export default function Deposits() {
             errorMessages.push(t('Invalid data. Please check your input.'));
           }
 
+      const ok = response.status === 200 || response.status === 201;
+      if (ok) {
+        setLastTransaction(null);
+        setPendingTxNotice(false);
+        setCurrentStep('selectId');
           setError(errorMessages.join('\n'));
         } else if (status === 401) {
           setError(t('Your session has expired. Please log in again.'));
@@ -1323,34 +1339,42 @@ export default function Deposits() {
                 <div className="flex items-center justify-between">
                   <span className={`${theme.colors.d_text} opacity-60 text-sm`}>Plateforme</span>
                   <div className="flex items-center gap-2">
-                    {selectedPlatform?.image && (
-                      <img src={selectedPlatform.image} alt="" className="w-5 h-5 object-contain" />
+                    {(selectedPlatform?.image || lastTransaction?.app?.image) && (
+                      <img src={selectedPlatform?.image || lastTransaction?.app?.image} alt="" className="w-5 h-5 object-contain" />
                     )}
-                    <span className={`font-semibold ${theme.colors.text}`}>{selectedPlatform?.public_name || selectedPlatform?.name}</span>
+                    <span className={`font-semibold ${theme.colors.text}`}>
+                      {selectedPlatform?.public_name || selectedPlatform?.name || lastTransaction?.app?.public_name || lastTransaction?.app?.name}
+                    </span>
                   </div>
                 </div>
 
                 {/* ID */}
                 <div className="flex items-center justify-between">
                   <span className={`${theme.colors.d_text} opacity-60 text-sm`}>ID Utilisateur</span>
-                  <span className={`font-mono font-medium ${theme.colors.text} bg-gray-100 dark:bg-slate-800 px-2 py-0.5 rounded text-sm`}>{selectedBetId}</span>
+                  <span className={`font-mono font-medium ${theme.colors.text} bg-gray-100 dark:bg-slate-800 px-2 py-0.5 rounded text-sm`}>
+                    {selectedBetId || lastTransaction?.user_app_id}
+                  </span>
                 </div>
 
                 {/* Network */}
                 <div className="flex items-center justify-between">
                   <span className={`${theme.colors.d_text} opacity-60 text-sm`}>Moyen de paiement</span>
                   <div className="flex items-center gap-2">
-                    {selectedNetwork?.image && (
-                      <img src={selectedNetwork.image} alt="" className="w-5 h-5 object-contain" />
+                    {(selectedNetwork?.image || lastTransaction?.network?.image) && (
+                      <img src={selectedNetwork?.image || lastTransaction?.network?.image} alt="" className="w-5 h-5 object-contain" />
                     )}
-                    <span className={`font-semibold ${theme.colors.text}`}>{selectedNetwork?.public_name || selectedNetwork?.name}</span>
+                    <span className={`font-semibold ${theme.colors.text}`}>
+                      {selectedNetwork?.public_name || selectedNetwork?.name || lastTransaction?.network?.public_name || lastTransaction?.network?.name}
+                    </span>
                   </div>
                 </div>
 
                 {/* Phone */}
                 <div className="flex items-center justify-between">
                   <span className={`${theme.colors.d_text} opacity-60 text-sm`}>Téléphone</span>
-                  <span className={`font-semibold ${theme.colors.text}`}>{formatPhoneWithCountryCode(selectedPhone?.phone || '')}</span>
+                  <span className={`font-semibold ${theme.colors.text}`}>
+                    {formatPhoneWithCountryCode(selectedPhone?.phone || lastTransaction?.phone_number || '')}
+                  </span>
                 </div>
               </div>
             </div>
@@ -1523,6 +1547,20 @@ export default function Deposits() {
         {/* Main Content */}
         <div className="pb-24">
           <div>
+            {/* Pending Transaction Notice */}
+            {pendingTxNotice && (
+              <div className="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-300 dark:border-amber-700 rounded-2xl">
+                <div className="flex items-start gap-3">
+                  <svg className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                  <p className="text-sm font-medium text-amber-800 dark:text-amber-300">
+                    Votre dernière transaction est en attente de finalisation. Veuillez la finaliser ou l&apos;annuler avant d&apos;en créer une nouvelle.
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* Alert Messages */}
             {error && (
               <div className="mb-6 p-4 bg-gradient-to-r from-red-900/50 to-red-800/50 border border-red-600/50 text-red-300 rounded-2xl backdrop-blur-sm">
