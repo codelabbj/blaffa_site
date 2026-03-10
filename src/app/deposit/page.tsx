@@ -1595,7 +1595,7 @@ export default function Deposits() {
       <div className="w-full px-6">
         {/* Header Section */}
         <div className="flex items-center gap-6 mb-12">
-          <button
+          {!pendingTxNotice && <button
             onClick={() => {
               if (currentStep === 'selectId') {
                 router.back();
@@ -1616,7 +1616,7 @@ export default function Deposits() {
             <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
-          </button>
+          </button>}
           <h1 className="text-3xl font-bold tracking-tight">{getCurrentStepTitle()}</h1>
         </div>
 

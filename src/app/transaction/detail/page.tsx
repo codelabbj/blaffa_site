@@ -154,8 +154,8 @@ function TransactionDetailContent() {
             case 'approve':
             case 'success':
                 return (
-                    <div className="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mb-6 shadow-sm">
-                        <CheckCircle2 size={40} className="text-white" />
+                    <div className="w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mb-3 shadow-sm">
+                        <CheckCircle2 size={32} className="text-white" />
                     </div>
                 );
             case 'failed':
@@ -163,8 +163,8 @@ function TransactionDetailContent() {
             case 'fail':
             case 'echec':
                 return (
-                    <div className="w-20 h-20 bg-red-500 rounded-full flex items-center justify-center mb-6 shadow-sm">
-                        <AlertCircle size={40} className="text-white" />
+                    <div className="w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mb-3 shadow-sm">
+                        <AlertCircle size={32} className="text-white" />
                     </div>
                 );
             case 'pending':
@@ -172,8 +172,8 @@ function TransactionDetailContent() {
             case 'en attente':
             default:
                 return (
-                    <div className="w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-6">
-                        <RefreshCw size={40} className="text-gray-400 animate-spin-slow" />
+                    <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-3">
+                        <RefreshCw size={32} className="text-gray-400 animate-spin-slow" />
                     </div>
                 );
         }
@@ -284,7 +284,7 @@ function TransactionDetailContent() {
     return (
         <div className={`min-h-screen ${theme.colors.a_background} flex flex-col`}>
             {/* Header */}
-            <div className="flex items-center px-4 py-6">
+            <div className="flex items-center px-4 py-2">
                 <button
                     onClick={() => router.back()}
                     className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
@@ -296,23 +296,23 @@ function TransactionDetailContent() {
                 </h1>
             </div>
 
-            <div className="mx-auto w-full px-4 pb-10 flex flex-col items-center">
-                <div className="mt-8">
+            <div className="mx-auto w-full px-4 pb-14 flex flex-col items-center">
+                <div className="mt-1">
                     {getStatusIcon(transaction.status)}
                 </div>
 
-                <h2 className={`text-2xl font-bold ${getStatusColor(transaction.status)} mb-1`}>
+                <h2 className={`text-2xl font-bold ${getStatusColor(transaction.status)} mb-0.5`}>
                     {getStatusText(transaction.status)}
                 </h2>
-                <p className="text-gray-400 text-sm mb-6">
+                <p className="text-gray-400 text-sm mb-3">
                     {getStatusSubtext(transaction.status, transaction.type_trans)}
                 </p>
-                <div className={`text-3xl font-black ${theme.colors.text} mb-8`}>
+                <div className={`text-3xl font-black ${theme.colors.text} mb-4`}>
                     XOF {transaction.amount}
                 </div>
 
                 {/* Message Box */}
-                <div className={`w-full ${theme.mode === 'dark' ? 'bg-blue-900/10 border-blue-900/30' : 'bg-[#EBF5FF] border-[#D1E9FF]'} rounded-2xl p-4 mb-6 border`}>
+                <div className={`w-full ${theme.mode === 'dark' ? 'bg-blue-900/10 border-blue-900/30' : 'bg-[#EBF5FF] border-[#D1E9FF]'} rounded-2xl p-3 mb-4 border`}>
                     <div className="flex items-center gap-2 mb-1">
                         <AlertCircle size={18} className="text-blue-400" />
                         <span className="font-bold text-[#1E3A8A] dark:text-blue-300">Message</span>
@@ -323,13 +323,13 @@ function TransactionDetailContent() {
                 </div>
 
                 {/* Transaction Information Card */}
-                <div className={`w-full ${theme.mode === 'dark' ? 'bg-[#1a1a1a] border-gray-800' : 'bg-white border-gray-100'} rounded-3xl p-6 border shadow-sm mb-8`}>
-                    <h3 className={`text-lg font-bold ${theme.colors.text} mb-6`}>
+                <div className={`w-full ${theme.mode === 'dark' ? 'bg-[#1a1a1a] border-gray-800' : 'bg-white border-gray-100'} rounded-3xl p-4 border shadow-sm mb-4`}>
+                    <h3 className={`text-base font-bold ${theme.colors.text} mb-3`}>
                         Informations du {transaction.type_trans}
                     </h3>
 
-                    <div className="space-y-6">
-                        <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-4">
+                    <div className="space-y-3">
+                        <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-2">
                             <span className="text-gray-400 text-sm">Type</span>
                             <span className={`font-bold uppercase ${theme.colors.text}`}>{transaction.type_trans}</span>
                         </div>
@@ -347,7 +347,7 @@ function TransactionDetailContent() {
                                     </div>
                                 )}
                             </div>
-                            <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-4">
+                            <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-2">
                                 <span className="text-gray-400 text-xs">Application</span>
                                 <span className={`font-semibold ${theme.colors.text}`}>{transaction.app?.public_name || '1xBet'}</span>
                             </div>
@@ -366,7 +366,7 @@ function TransactionDetailContent() {
                                     </div>
                                 )}
                             </div>
-                            <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-4">
+                            <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-2">
                                 <span className="text-gray-400 text-xs">Réseau</span>
                                 <span className={`font-semibold ${theme.colors.text}`}>
                                     {transaction.network?.public_name || transaction.payment_method || 'ORANGE BURKINA'}
@@ -378,7 +378,7 @@ function TransactionDetailContent() {
                             <div className="w-10 h-10 flex items-center justify-center shrink-0">
                                 <Phone className="text-gray-400" size={20} />
                             </div>
-                            <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-4">
+                            <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-2">
                                 <span className="text-gray-400 text-xs">Numéro</span>
                                 <span className={`font-semibold ${theme.colors.text}`}>{transaction.phone_number}</span>
                             </div>
@@ -388,7 +388,7 @@ function TransactionDetailContent() {
                             <div className="w-10 h-10 flex items-center justify-center shrink-0 text-gray-400">
                                 <span className="font-bold text-xl">$</span>
                             </div>
-                            <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-4">
+                            <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-2">
                                 <span className="text-gray-400 text-xs">Montant</span>
                                 <span className={`font-semibold ${theme.colors.text}`}>XOF {transaction.amount}</span>
                             </div>
@@ -398,7 +398,7 @@ function TransactionDetailContent() {
                             <div className="w-10 h-10 flex items-center justify-center shrink-0">
                                 <FileText className="text-gray-400" size={20} />
                             </div>
-                            <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-4">
+                            <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-2">
                                 <span className="text-gray-400 text-xs">Référence</span>
                                 <div className="flex items-center justify-between">
                                     <span className={`font-semibold ${theme.colors.text} truncate`}>{transaction.reference}</span>
@@ -416,7 +416,7 @@ function TransactionDetailContent() {
                             <div className="w-10 h-10 flex items-center justify-center shrink-0">
                                 <Calendar className="text-gray-400" size={20} />
                             </div>
-                            <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-4">
+                            <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-2">
                                 <span className="text-gray-400 text-xs">Date</span>
                                 <span className={`font-semibold ${theme.colors.text}`}>
                                     {formatDate(transaction.created_at)}
