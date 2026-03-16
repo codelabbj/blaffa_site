@@ -203,11 +203,14 @@ var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$react$2d$i18
 //import DashboardHeader from '@/components/DashboardHeader';
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$components$2f$ThemeProvider$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/components/ThemeProvider.tsx [app-ssr] (ecmascript)");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$context$2f$WebSocketContext$2e$tsx__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/context/WebSocketContext.tsx [app-ssr] (ecmascript)");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$check$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Check$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/check.js [app-ssr] (ecmascript) <export default as Check>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$check$2d$big$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__CheckCircle$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/circle-check-big.js [app-ssr] (ecmascript) <export default as CheckCircle>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$phone$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Phone$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/phone.js [app-ssr] (ecmascript) <export default as Phone>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$x$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__XCircle$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/circle-x.js [app-ssr] (ecmascript) <export default as XCircle>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$copy$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Copy$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/copy.js [app-ssr] (ecmascript) <export default as Copy>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$plus$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Plus$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/plus.js [app-ssr] (ecmascript) <export default as Plus>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$arrow$2d$left$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__ArrowLeft$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/arrow-left.js [app-ssr] (ecmascript) <export default as ArrowLeft>");
+var __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$clock$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Clock$3e$__ = __turbopack_context__.i("[project]/node_modules/lucide-react/dist/esm/icons/clock.js [app-ssr] (ecmascript) <export default as Clock>");
 var __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$axios$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__ = __turbopack_context__.i("[project]/src/lib/axios.ts [app-ssr] (ecmascript)");
 'use client';
 ;
@@ -276,6 +279,10 @@ function Deposits() {
     const [showEditPhoneModal, setShowEditPhoneModal] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
     const [phoneToEdit, setPhoneToEdit] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
     const [newPhoneNumber, setNewPhoneNumber] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])('');
+    const [lastTransaction, setLastTransaction] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
+    const [ussdCopied, setUssdCopied] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [pendingTxNotice, setPendingTxNotice] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(false);
+    const [timeLeft, setTimeLeft] = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useState"])(null);
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
         const handleTransactionLink = (data)=>{
             if (data.type === 'transaction_link' && data.data) {
@@ -299,6 +306,31 @@ function Deposits() {
     }, [
         error
     ]);
+    // Countdown timer logic
+    (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
+        if (timeLeft === null || timeLeft <= 0) return;
+        const timer = setInterval(()=>{
+            setTimeLeft((prev)=>{
+                if (prev === null || prev <= 1) {
+                    clearInterval(timer);
+                    // Auto-cancel/reset when expired
+                    setLastTransaction(null);
+                    setPendingTxNotice(false);
+                    setCurrentStep('selectId');
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+        return ()=>clearInterval(timer);
+    }, [
+        timeLeft
+    ]);
+    const formatTime = (seconds)=>{
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
     // Format phone number with indication from selected network
     const formatPhoneWithCountryCode = (phoneNumber)=>{
         if (!selectedNetwork?.indication || !phoneNumber) return phoneNumber;
@@ -388,6 +420,16 @@ function Deposits() {
                     }));
                 }
                 await Promise.allSettled(promises);
+                if (token) {
+                    const lastTx = await fetchLastTransaction();
+                    if (lastTx?.status === 'pending') {
+                        setCurrentStep('summary');
+                        setPendingTxNotice(true);
+                    } else {
+                        setLastTransaction(null);
+                        setPendingTxNotice(false);
+                    }
+                }
             } catch (err) {
                 console.error('Error fetching data:', err);
             // Don't show critical error if just public load
@@ -713,26 +755,11 @@ function Deposits() {
                 }
             });
             const transaction = response.data;
+            setLastTransaction(transaction);
             setSelectedTransaction({
                 transaction
             });
             setSuccess('Transaction initiée avec succès !');
-            // Check for transaction link in response and show modal
-            if (transaction.transaction_link) {
-                setTransactionLink(transaction.transaction_link);
-                setShowPaymentModal(true);
-            }
-            // Check if ussd_code is present in response and trigger dialer
-            if (transaction.ussd_code) {
-                attemptDialerRedirect(transaction.ussd_code);
-            }
-            // Only redirect main tab to dashboard if there's no payment link or ussd code
-            if (!transaction.transaction_link && !transaction.ussd_code) {
-                setTimeout(()=>{
-                    if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
-                    ;
-                }, 2000);
-            }
             // Reset form
             setFormData({
                 amount: '',
@@ -745,6 +772,8 @@ function Deposits() {
                 phoneNumber: '',
                 otp_code: ''
             });
+            // Automatically finalize the transaction
+            await finalizeTransaction(transaction);
         } catch (error) {
             console.error('Transaction error:', error);
             //     if (
@@ -762,75 +791,132 @@ function Deposits() {
             //     setLoading(false);
             //   }
             // };
-            if (typeof error === 'string') {
-                setError(error);
-            } else if (error && typeof error === 'object' && 'response' in error) {
-                const { status, data } = error.response || {};
-                // Handle the error response
-                if (status === 400 && data) {
-                    const errorMessages = [];
-                    if (data.amount) {
-                        errorMessages.push(`Amount: ${Array.isArray(data.amount) ? data.amount[0] : data.amount}`);
-                    }
-                    // Add more field checks as needed
-                    setError(errorMessages.length > 0 ? errorMessages.join('\n') : data.detail || 'Validation error');
-                } else {
-                    setError(data?.detail || 'An error occurred');
-                }
-            } else {
-                setError('An unexpected error occurred');
-            }
-            if (isAxiosError(error) && error.response) {
-                const { status, data } = error.response;
-                // Handle field-specific validation errors
-                if (status === 400 && data) {
-                    const errorMessages = [];
-                    // Check for field errors
-                    if (data.amount) {
-                        errorMessages.push(`Amount: ${Array.isArray(data.amount) ? data.amount[0] : data.amount}`);
-                    }
-                    if (data.phone_number) {
-                        errorMessages.push(`Phone: ${Array.isArray(data.phone_number) ? data.phone_number[0] : data.phone_number}`);
-                    }
-                    if (data.network_id) {
-                        errorMessages.push(`Network: ${Array.isArray(data.network_id) ? data.network_id[0] : data.network_id}`);
-                    }
-                    if (data.user_app_id) {
-                        errorMessages.push(`Bet ID: ${Array.isArray(data.user_app_id) ? data.user_app_id[0] : data.user_app_id}`);
-                    }
-                    // Check for non-field errors
-                    if (data.detail) {
-                        errorMessages.push(data.detail);
-                    }
-                    // If no specific errors found, use a generic message
-                    if (errorMessages.length === 0) {
-                        errorMessages.push(t('Invalid data. Please check your input.'));
-                    }
-                    setError(errorMessages.join('\n'));
-                } else if (status === 401) {
-                    setError(t('Your session has expired. Please log in again.'));
-                // Optionally redirect to login
-                // window.location.href = '/auth';
-                } else if (status === 403) {
-                    setError(t('You do not have permission to perform this action.'));
-                } else if (status === 404) {
-                    setError(t('The requested resource was not found.'));
-                } else if (status === 429) {
-                    setError(t('Too many requests. Please wait a moment and try again.'));
-                } else if (status >= 500) {
-                    setError(t('Server error. Please try again later.'));
-                } else {
-                    setError(t('An error occurred. Please try again.'));
-                }
-            // } else if ((error as ApiError).response) {
-            //   // The request was made but no response was received
-            //   setError(t('Network error. Please check your connection and try again.'));
-            } else {
-                // Something happened in setting up the request
-                setError(t('An error occurred while setting up the request.'));
-            }
+            handleApiError(error);
         } finally{
             setLoading(false);
+        }
+    };
+    const handleApiError = (error)=>{
+        if (typeof error === 'string') {
+            setError(error);
+        } else if (error && typeof error === 'object' && 'response' in error) {
+            const { status, data } = error.response || {};
+            if (status === 400 && data) {
+                const errorMessages = [];
+                if (data.amount) errorMessages.push(`Amount: ${Array.isArray(data.amount) ? data.amount[0] : data.amount}`);
+                setError(errorMessages.length > 0 ? errorMessages.join('\n') : data.detail || 'Validation error');
+            } else {
+                setError(data?.detail || 'An error occurred');
+            }
+        } else {
+            setError('An unexpected error occurred');
+        }
+        if (isAxiosError(error) && error.response) {
+            const { status, data } = error.response;
+            if (status === 400 && data) {
+                const errorMessages = [];
+                if (data.amount) errorMessages.push(`Amount: ${Array.isArray(data.amount) ? data.amount[0] : data.amount}`);
+                if (data.phone_number) errorMessages.push(`Phone: ${Array.isArray(data.phone_number) ? data.phone_number[0] : data.phone_number}`);
+                if (data.network_id) errorMessages.push(`Network: ${Array.isArray(data.network_id) ? data.network_id[0] : data.network_id}`);
+                if (data.user_app_id) errorMessages.push(`Bet ID: ${Array.isArray(data.user_app_id) ? data.user_app_id[0] : data.user_app_id}`);
+                if (data.reference) errorMessages.push(`Reference: ${Array.isArray(data.reference) ? data.reference[0] : data.reference}`);
+                if (data.detail) errorMessages.push(data.detail);
+                if (errorMessages.length === 0) errorMessages.push(t('Invalid data. Please check your input.'));
+                setError(errorMessages.join('\n'));
+            } else if (status === 401) {
+                setError(t('Your session has expired. Please log in again.'));
+            } else if (status === 403) {
+                setError(t('You do not have permission to perform this action.'));
+            } else if (status === 404) {
+                setError(t('The requested resource was not found.'));
+            } else if (status === 429) {
+                setError(t('Too many requests. Please wait a moment and try again.'));
+            } else if (status >= 500) {
+                setError(t('Server error. Please try again later.'));
+            } else {
+                setError(t('An error occurred. Please try again.'));
+            }
+        }
+    };
+    const fetchLastTransaction = async ()=>{
+        const token = localStorage.getItem('accessToken');
+        if (!token) return null;
+        try {
+            const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$axios$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].get('/blaffa/last-transaction', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            if (response.status === 200) {
+                setLastTransaction(response.data);
+                // Calculate remaining time (5 minutes expiry)
+                const createdTime = new Date(response.data.created_at).getTime();
+                const currentTime = new Date().getTime();
+                const diffInSeconds = Math.floor((currentTime - createdTime) / 1000);
+                const remaining = Math.max(0, 300 - diffInSeconds);
+                setTimeLeft(remaining);
+                return response.data;
+            }
+            return null;
+        } catch (error) {
+            console.error('Error fetching last transaction:', error);
+            handleApiError(error);
+            return null;
+        }
+    };
+    const finalizeTransaction = async (tx)=>{
+        const token = localStorage.getItem('accessToken');
+        const transactionToFinalize = tx || lastTransaction;
+        if (!token || !transactionToFinalize) return false;
+        try {
+            const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$axios$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].post('/blaffa/finalize-transaction-user', {
+                reference: transactionToFinalize.reference
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            const ok = response.status === 200 || response.status === 201;
+            if (ok) {
+                if (transactionToFinalize.transaction_link) {
+                    window.open(transactionToFinalize.transaction_link, '_blank');
+                    router.push('/dashboard');
+                } else if (transactionToFinalize.ussd_code) {
+                    attemptDialerRedirect(transactionToFinalize.ussd_code);
+                    router.push('/dashboard');
+                } else {
+                    router.push('/dashboard');
+                }
+            }
+            return ok;
+        } catch (error) {
+            console.error('Error finalizing transaction:', error);
+            handleApiError(error);
+            return false;
+        }
+    };
+    const cancelTransaction = async ()=>{
+        const token = localStorage.getItem('accessToken');
+        if (!token || !lastTransaction) return false;
+        try {
+            const response = await __TURBOPACK__imported__module__$5b$project$5d2f$src$2f$lib$2f$axios$2e$ts__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].post('/blaffa/cancel-transaction', {
+                reference: lastTransaction.reference
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            const ok = response.status === 200 || response.status === 201;
+            if (ok) {
+                setLastTransaction(null);
+                setPendingTxNotice(false);
+                setCurrentStep('selectId');
+            }
+            return ok;
+        } catch (error) {
+            console.error('Error cancelling transaction:', error);
+            handleApiError(error);
+            return false;
         }
     };
     const closeTransactionDetails = ()=>{
@@ -868,12 +954,12 @@ function Deposits() {
                                 children: "1. Sélectionnez votre plateforme"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                lineNumber: 847,
+                                lineNumber: 930,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/deposit/page.tsx",
-                            lineNumber: 846,
+                            lineNumber: 929,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -895,12 +981,12 @@ function Deposits() {
                                                     className: "h-16 w-16 object-contain"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                                    lineNumber: 863,
+                                                    lineNumber: 946,
                                                     columnNumber: 27
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                                lineNumber: 862,
+                                                lineNumber: 945,
                                                 columnNumber: 25
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -908,24 +994,24 @@ function Deposits() {
                                                 children: platform.public_name || platform.name
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                                lineNumber: 870,
+                                                lineNumber: 953,
                                                 columnNumber: 23
                                             }, this)
                                         ]
                                     }, platform.id, true, {
                                         fileName: "[project]/src/app/deposit/page.tsx",
-                                        lineNumber: 855,
+                                        lineNumber: 938,
                                         columnNumber: 21
                                     }, this);
                                 })
                             }, void 0, false, {
                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                lineNumber: 851,
+                                lineNumber: 934,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/deposit/page.tsx",
-                            lineNumber: 850,
+                            lineNumber: 933,
                             columnNumber: 13
                         }, this),
                         platforms.length === 0 && !loading && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -935,18 +1021,18 @@ function Deposits() {
                                 children: t("Aucune plateforme disponible")
                             }, void 0, false, {
                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                lineNumber: 881,
+                                lineNumber: 964,
                                 columnNumber: 17
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/deposit/page.tsx",
-                            lineNumber: 880,
+                            lineNumber: 963,
                             columnNumber: 15
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/deposit/page.tsx",
-                    lineNumber: 845,
+                    lineNumber: 928,
                     columnNumber: 11
                 }, this);
             case 'manageBetId':
@@ -978,12 +1064,12 @@ function Deposits() {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                lineNumber: 903,
+                                lineNumber: 986,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/deposit/page.tsx",
-                            lineNumber: 902,
+                            lineNumber: 985,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1006,12 +1092,12 @@ function Deposits() {
                                                         className: "w-10 h-10 object-contain"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/deposit/page.tsx",
-                                                        lineNumber: 919,
+                                                        lineNumber: 1002,
                                                         columnNumber: 25
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                                    lineNumber: 918,
+                                                    lineNumber: 1001,
                                                     columnNumber: 23
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1019,13 +1105,13 @@ function Deposits() {
                                                     children: id.link
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                                    lineNumber: 922,
+                                                    lineNumber: 1005,
                                                     columnNumber: 21
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                            lineNumber: 916,
+                                            lineNumber: 999,
                                             columnNumber: 19
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1047,28 +1133,28 @@ function Deposits() {
                                                     d: "M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                                    lineNumber: 929,
+                                                    lineNumber: 1012,
                                                     columnNumber: 23
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                                lineNumber: 928,
+                                                lineNumber: 1011,
                                                 columnNumber: 21
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                            lineNumber: 924,
+                                            lineNumber: 1007,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, id.id, true, {
                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                    lineNumber: 908,
+                                    lineNumber: 991,
                                     columnNumber: 17
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/src/app/deposit/page.tsx",
-                            lineNumber: 906,
+                            lineNumber: 989,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1086,19 +1172,19 @@ function Deposits() {
                                         strokeWidth: 2.5
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/deposit/page.tsx",
-                                        lineNumber: 945,
+                                        lineNumber: 1028,
                                         columnNumber: 17
                                     }, this),
                                     "Ajouter un nouvel ID"
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                lineNumber: 937,
+                                lineNumber: 1020,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/deposit/page.tsx",
-                            lineNumber: 936,
+                            lineNumber: 1019,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1120,30 +1206,30 @@ function Deposits() {
                                             d: "M10 19l-7-7m0 0l7-7m-7 7h18"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                            lineNumber: 956,
+                                            lineNumber: 1039,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/deposit/page.tsx",
-                                        lineNumber: 955,
+                                        lineNumber: 1038,
                                         columnNumber: 17
                                     }, this),
                                     t("Retour aux plateformes")
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                lineNumber: 951,
+                                lineNumber: 1034,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/deposit/page.tsx",
-                            lineNumber: 950,
+                            lineNumber: 1033,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/deposit/page.tsx",
-                    lineNumber: 901,
+                    lineNumber: 984,
                     columnNumber: 11
                 }, this);
             case 'selectNetwork':
@@ -1157,12 +1243,12 @@ function Deposits() {
                                 children: "3. Sélectionnez votre réseau"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                lineNumber: 967,
+                                lineNumber: 1050,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/deposit/page.tsx",
-                            lineNumber: 966,
+                            lineNumber: 1049,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1179,12 +1265,12 @@ function Deposits() {
                                                 className: "w-12 h-12 object-contain"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                                lineNumber: 982,
+                                                lineNumber: 1065,
                                                 columnNumber: 23
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                            lineNumber: 981,
+                                            lineNumber: 1064,
                                             columnNumber: 21
                                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                             className: `w-14 h-14 ${theme.mode === 'dark' ? 'bg-slate-800' : 'bg-gray-100'} rounded-lg flex items-center justify-center flex-shrink-0`,
@@ -1192,12 +1278,12 @@ function Deposits() {
                                                 className: `w-6 h-6 ${theme.colors.d_text} opacity-40`
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                                lineNumber: 986,
+                                                lineNumber: 1069,
                                                 columnNumber: 23
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                            lineNumber: 985,
+                                            lineNumber: 1068,
                                             columnNumber: 21
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1205,18 +1291,18 @@ function Deposits() {
                                             children: network.public_name || network.name
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                            lineNumber: 989,
+                                            lineNumber: 1072,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, network.id, true, {
                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                    lineNumber: 972,
+                                    lineNumber: 1055,
                                     columnNumber: 17
                                 }, this))
                         }, void 0, false, {
                             fileName: "[project]/src/app/deposit/page.tsx",
-                            lineNumber: 970,
+                            lineNumber: 1053,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1232,12 +1318,12 @@ function Deposits() {
                                 children: "Suivant"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                lineNumber: 997,
+                                lineNumber: 1080,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/deposit/page.tsx",
-                            lineNumber: 996,
+                            lineNumber: 1079,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1259,30 +1345,30 @@ function Deposits() {
                                             d: "M10 19l-7-7m0 0l7-7m-7 7h18"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                            lineNumber: 1019,
+                                            lineNumber: 1102,
                                             columnNumber: 19
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/deposit/page.tsx",
-                                        lineNumber: 1018,
+                                        lineNumber: 1101,
                                         columnNumber: 17
                                     }, this),
                                     t("Retour")
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                lineNumber: 1014,
+                                lineNumber: 1097,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/deposit/page.tsx",
-                            lineNumber: 1013,
+                            lineNumber: 1096,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/deposit/page.tsx",
-                    lineNumber: 965,
+                    lineNumber: 1048,
                     columnNumber: 11
                 }, this);
             case 'selectPhone':
@@ -1299,12 +1385,12 @@ function Deposits() {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                lineNumber: 1031,
+                                lineNumber: 1114,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/deposit/page.tsx",
-                            lineNumber: 1030,
+                            lineNumber: 1113,
                             columnNumber: 13
                         }, this),
                         phoneLoading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1313,12 +1399,12 @@ function Deposits() {
                                 className: "animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                lineNumber: 1038,
+                                lineNumber: 1121,
                                 columnNumber: 17
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/deposit/page.tsx",
-                            lineNumber: 1037,
+                            lineNumber: 1120,
                             columnNumber: 15
                         }, this) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
                             children: [
@@ -1337,12 +1423,12 @@ function Deposits() {
                                                                 className: "w-6 h-6 text-white"
                                                             }, void 0, false, {
                                                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                                                lineNumber: 1051,
+                                                                lineNumber: 1134,
                                                                 columnNumber: 27
                                                             }, this)
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                                            lineNumber: 1050,
+                                                            lineNumber: 1133,
                                                             columnNumber: 25
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1350,13 +1436,13 @@ function Deposits() {
                                                             children: formatPhoneWithCountryCode(phone.phone)
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                                            lineNumber: 1053,
+                                                            lineNumber: 1136,
                                                             columnNumber: 25
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                                    lineNumber: 1049,
+                                                    lineNumber: 1132,
                                                     columnNumber: 23
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1378,28 +1464,28 @@ function Deposits() {
                                                             d: "M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                                            lineNumber: 1065,
+                                                            lineNumber: 1148,
                                                             columnNumber: 27
                                                         }, this)
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/deposit/page.tsx",
-                                                        lineNumber: 1064,
+                                                        lineNumber: 1147,
                                                         columnNumber: 25
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                                    lineNumber: 1057,
+                                                    lineNumber: 1140,
                                                     columnNumber: 23
                                                 }, this)
                                             ]
                                         }, phone.id, true, {
                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                            lineNumber: 1044,
+                                            lineNumber: 1127,
                                             columnNumber: 21
                                         }, this))
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                    lineNumber: 1042,
+                                    lineNumber: 1125,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1413,19 +1499,19 @@ function Deposits() {
                                                 strokeWidth: 2.5
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                                lineNumber: 1077,
+                                                lineNumber: 1160,
                                                 columnNumber: 21
                                             }, this),
                                             "Ajouter un numéro"
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/deposit/page.tsx",
-                                        lineNumber: 1073,
+                                        lineNumber: 1156,
                                         columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                    lineNumber: 1072,
+                                    lineNumber: 1155,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1447,24 +1533,24 @@ function Deposits() {
                                                     d: "M10 19l-7-7m0 0l7-7m-7 7h18"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                                    lineNumber: 1088,
+                                                    lineNumber: 1171,
                                                     columnNumber: 23
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                                lineNumber: 1087,
+                                                lineNumber: 1170,
                                                 columnNumber: 21
                                             }, this),
                                             t("Retour")
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/deposit/page.tsx",
-                                        lineNumber: 1083,
+                                        lineNumber: 1166,
                                         columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                    lineNumber: 1082,
+                                    lineNumber: 1165,
                                     columnNumber: 17
                                 }, this)
                             ]
@@ -1472,7 +1558,7 @@ function Deposits() {
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/deposit/page.tsx",
-                    lineNumber: 1029,
+                    lineNumber: 1112,
                     columnNumber: 11
                 }, this);
             case 'addPhone':
@@ -1490,12 +1576,12 @@ function Deposits() {
                                         className: theme.colors.text
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/deposit/page.tsx",
-                                        lineNumber: 1107,
+                                        lineNumber: 1190,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                    lineNumber: 1103,
+                                    lineNumber: 1186,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -1503,13 +1589,13 @@ function Deposits() {
                                     children: "Dépôt - Numéro de télé..."
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                    lineNumber: 1109,
+                                    lineNumber: 1192,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/deposit/page.tsx",
-                            lineNumber: 1102,
+                            lineNumber: 1185,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1522,12 +1608,12 @@ function Deposits() {
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                lineNumber: 1116,
+                                lineNumber: 1199,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/deposit/page.tsx",
-                            lineNumber: 1115,
+                            lineNumber: 1198,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1540,7 +1626,7 @@ function Deposits() {
                                             children: "Nouveau numéro"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                            lineNumber: 1123,
+                                            lineNumber: 1206,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1551,7 +1637,7 @@ function Deposits() {
                                             className: `w-full h-14 px-4 rounded-xl border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-gray-300'} ${theme.colors.a_background} text-lg ${theme.colors.text} focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all placeholder:text-gray-400`
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                            lineNumber: 1126,
+                                            lineNumber: 1209,
                                             columnNumber: 17
                                         }, this),
                                         error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1559,13 +1645,13 @@ function Deposits() {
                                             children: error
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                            lineNumber: 1133,
+                                            lineNumber: 1216,
                                             columnNumber: 27
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                    lineNumber: 1122,
+                                    lineNumber: 1205,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1577,7 +1663,7 @@ function Deposits() {
                                             children: "Annuler"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                            lineNumber: 1137,
+                                            lineNumber: 1220,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -1595,25 +1681,25 @@ function Deposits() {
                                             children: loading ? '...' : 'Enregistrer'
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                            lineNumber: 1143,
+                                            lineNumber: 1226,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                    lineNumber: 1136,
+                                    lineNumber: 1219,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/deposit/page.tsx",
-                            lineNumber: 1121,
+                            lineNumber: 1204,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/deposit/page.tsx",
-                    lineNumber: 1100,
+                    lineNumber: 1183,
                     columnNumber: 11
                 }, this);
             case 'enterDetails':
@@ -1631,12 +1717,12 @@ function Deposits() {
                                         className: "text-gray-900 dark:text-gray-100"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/deposit/page.tsx",
-                                        lineNumber: 1170,
+                                        lineNumber: 1253,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                    lineNumber: 1166,
+                                    lineNumber: 1249,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
@@ -1644,13 +1730,13 @@ function Deposits() {
                                     children: "5. Confirmer le paiement"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                    lineNumber: 1172,
+                                    lineNumber: 1255,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/deposit/page.tsx",
-                            lineNumber: 1165,
+                            lineNumber: 1248,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("form", {
@@ -1667,7 +1753,7 @@ function Deposits() {
                                             children: "Montant (F CFA)"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                            lineNumber: 1180,
+                                            lineNumber: 1263,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -1683,7 +1769,7 @@ function Deposits() {
                                             step: "1"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                            lineNumber: 1183,
+                                            lineNumber: 1266,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1696,7 +1782,7 @@ function Deposits() {
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                            lineNumber: 1201,
+                                            lineNumber: 1284,
                                             columnNumber: 17
                                         }, this),
                                         validationErrors.amount && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1704,13 +1790,13 @@ function Deposits() {
                                             children: validationErrors.amount
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                            lineNumber: 1210,
+                                            lineNumber: 1293,
                                             columnNumber: 19
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                    lineNumber: 1179,
+                                    lineNumber: 1262,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1720,7 +1806,7 @@ function Deposits() {
                                             children: "Numéro de téléphone"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                            lineNumber: 1216,
+                                            lineNumber: 1299,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1734,7 +1820,7 @@ function Deposits() {
                                                             children: getCountryFlag(selectedNetwork?.indication)
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                                            lineNumber: 1222,
+                                                            lineNumber: 1305,
                                                             columnNumber: 21
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
@@ -1742,13 +1828,13 @@ function Deposits() {
                                                             children: selectedNetwork?.indication || '+225'
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                                            lineNumber: 1225,
+                                                            lineNumber: 1308,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                                    lineNumber: 1221,
+                                                    lineNumber: 1304,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1758,24 +1844,24 @@ function Deposits() {
                                                         children: selectedPhone ? selectedNetwork?.indication ? selectedPhone.phone.replace(new RegExp(`^\\+?${selectedNetwork.indication.replace('+', '')}`), '') : selectedPhone.phone : ''
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/deposit/page.tsx",
-                                                        lineNumber: 1231,
+                                                        lineNumber: 1314,
                                                         columnNumber: 21
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                                    lineNumber: 1230,
+                                                    lineNumber: 1313,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                            lineNumber: 1219,
+                                            lineNumber: 1302,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                    lineNumber: 1215,
+                                    lineNumber: 1298,
                                     columnNumber: 15
                                 }, this),
                                 selectedNetwork?.deposit_message && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1795,17 +1881,17 @@ function Deposits() {
                                                         clipRule: "evenodd"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/deposit/page.tsx",
-                                                        lineNumber: 1244,
+                                                        lineNumber: 1327,
                                                         columnNumber: 25
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                                    lineNumber: 1243,
+                                                    lineNumber: 1326,
                                                     columnNumber: 23
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                                lineNumber: 1242,
+                                                lineNumber: 1325,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1813,18 +1899,18 @@ function Deposits() {
                                                 children: selectedNetwork.deposit_message
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                                lineNumber: 1247,
+                                                lineNumber: 1330,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/deposit/page.tsx",
-                                        lineNumber: 1241,
+                                        lineNumber: 1324,
                                         columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                    lineNumber: 1240,
+                                    lineNumber: 1323,
                                     columnNumber: 17
                                 }, this),
                                 selectedNetwork?.tape_code && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1844,17 +1930,17 @@ function Deposits() {
                                                         clipRule: "evenodd"
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/deposit/page.tsx",
-                                                        lineNumber: 1260,
+                                                        lineNumber: 1343,
                                                         columnNumber: 25
                                                     }, this)
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                                    lineNumber: 1259,
+                                                    lineNumber: 1342,
                                                     columnNumber: 23
                                                 }, this)
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                                lineNumber: 1258,
+                                                lineNumber: 1341,
                                                 columnNumber: 21
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -1866,24 +1952,24 @@ function Deposits() {
                                                         children: selectedNetwork.tape_code
                                                     }, void 0, false, {
                                                         fileName: "[project]/src/app/deposit/page.tsx",
-                                                        lineNumber: 1264,
+                                                        lineNumber: 1347,
                                                         columnNumber: 37
                                                     }, this)
                                                 ]
                                             }, void 0, true, {
                                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                                lineNumber: 1263,
+                                                lineNumber: 1346,
                                                 columnNumber: 21
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/deposit/page.tsx",
-                                        lineNumber: 1257,
+                                        lineNumber: 1340,
                                         columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                    lineNumber: 1256,
+                                    lineNumber: 1339,
                                     columnNumber: 17
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1893,12 +1979,12 @@ function Deposits() {
                                         children: selectedPlatform.deposit_message
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/deposit/page.tsx",
-                                        lineNumber: 1279,
+                                        lineNumber: 1362,
                                         columnNumber: 19
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                    lineNumber: 1271,
+                                    lineNumber: 1354,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1906,31 +1992,31 @@ function Deposits() {
                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                         type: "submit",
                                         disabled: loading || !formData.amount || !selectedPhone,
-                                        className: `w-full h-14 text-white font-bold text-lg rounded-2xl shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed`,
+                                        className: "w-full h-14 text-white font-bold text-lg rounded-2xl shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed",
                                         style: {
                                             backgroundColor: theme.mode === 'dark' ? theme.colors.primary : '#1a4384'
                                         },
                                         children: loading ? 'Traitement...' : 'Dépôt'
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/deposit/page.tsx",
-                                        lineNumber: 1287,
+                                        lineNumber: 1370,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                    lineNumber: 1286,
+                                    lineNumber: 1369,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/deposit/page.tsx",
-                            lineNumber: 1177,
+                            lineNumber: 1260,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/deposit/page.tsx",
-                    lineNumber: 1163,
+                    lineNumber: 1246,
                     columnNumber: 11
                 }, this);
             case 'summary':
@@ -1944,12 +2030,12 @@ function Deposits() {
                                 children: "Confirmer le dépôt"
                             }, void 0, false, {
                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                lineNumber: 1304,
+                                lineNumber: 1387,
                                 columnNumber: 15
                             }, this)
                         }, void 0, false, {
                             fileName: "[project]/src/app/deposit/page.tsx",
-                            lineNumber: 1303,
+                            lineNumber: 1386,
                             columnNumber: 13
                         }, this),
                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1960,25 +2046,25 @@ function Deposits() {
                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                         className: `text-5xl font-extrabold ${theme.colors.text} tracking-tight`,
                                         children: [
-                                            new Intl.NumberFormat('fr-FR').format(parseInt(formData.amount)),
+                                            new Intl.NumberFormat('fr-FR').format(formData.amount ? parseInt(formData.amount) : lastTransaction?.amount ?? 0),
                                             " ",
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 className: "text-2xl align-top opacity-60 font-bold",
                                                 children: "F"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                                lineNumber: 1313,
-                                                columnNumber: 86
+                                                lineNumber: 1396,
+                                                columnNumber: 135
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/deposit/page.tsx",
-                                        lineNumber: 1312,
+                                        lineNumber: 1395,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                    lineNumber: 1311,
+                                    lineNumber: 1394,
                                     columnNumber: 15
                                 }, this),
                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1988,7 +2074,7 @@ function Deposits() {
                                             className: `h-px w-full ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-slate-100'}`
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                            lineNumber: 1320,
+                                            lineNumber: 1403,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -1999,39 +2085,39 @@ function Deposits() {
                                                     children: "Plateforme"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                                    lineNumber: 1324,
+                                                    lineNumber: 1407,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     className: "flex items-center gap-2",
                                                     children: [
-                                                        selectedPlatform?.image && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
-                                                            src: selectedPlatform.image,
+                                                        (selectedPlatform?.image || lastTransaction?.app?.image) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                                                            src: selectedPlatform?.image || lastTransaction?.app?.image,
                                                             alt: "",
                                                             className: "w-5 h-5 object-contain"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                                            lineNumber: 1327,
+                                                            lineNumber: 1410,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                             className: `font-semibold ${theme.colors.text}`,
-                                                            children: selectedPlatform?.public_name || selectedPlatform?.name
+                                                            children: selectedPlatform?.public_name || selectedPlatform?.name || lastTransaction?.app?.public_name || lastTransaction?.app?.name
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                                            lineNumber: 1329,
+                                                            lineNumber: 1412,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                                    lineNumber: 1325,
+                                                    lineNumber: 1408,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                            lineNumber: 1323,
+                                            lineNumber: 1406,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2042,21 +2128,21 @@ function Deposits() {
                                                     children: "ID Utilisateur"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                                    lineNumber: 1335,
+                                                    lineNumber: 1420,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                     className: `font-mono font-medium ${theme.colors.text} bg-gray-100 dark:bg-slate-800 px-2 py-0.5 rounded text-sm`,
-                                                    children: selectedBetId
+                                                    children: selectedBetId || lastTransaction?.user_app_id
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                                    lineNumber: 1336,
+                                                    lineNumber: 1421,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                            lineNumber: 1334,
+                                            lineNumber: 1419,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2067,39 +2153,39 @@ function Deposits() {
                                                     children: "Moyen de paiement"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                                    lineNumber: 1341,
+                                                    lineNumber: 1428,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                     className: "flex items-center gap-2",
                                                     children: [
-                                                        selectedNetwork?.image && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
-                                                            src: selectedNetwork.image,
+                                                        (selectedNetwork?.image || lastTransaction?.network?.image) && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("img", {
+                                                            src: selectedNetwork?.image || lastTransaction?.network?.image,
                                                             alt: "",
                                                             className: "w-5 h-5 object-contain"
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                                            lineNumber: 1344,
+                                                            lineNumber: 1431,
                                                             columnNumber: 23
                                                         }, this),
                                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                             className: `font-semibold ${theme.colors.text}`,
-                                                            children: selectedNetwork?.public_name || selectedNetwork?.name
+                                                            children: selectedNetwork?.public_name || selectedNetwork?.name || lastTransaction?.network?.public_name || lastTransaction?.network?.name
                                                         }, void 0, false, {
                                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                                            lineNumber: 1346,
+                                                            lineNumber: 1433,
                                                             columnNumber: 21
                                                         }, this)
                                                     ]
                                                 }, void 0, true, {
                                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                                    lineNumber: 1342,
+                                                    lineNumber: 1429,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                            lineNumber: 1340,
+                                            lineNumber: 1427,
                                             columnNumber: 17
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2110,102 +2196,300 @@ function Deposits() {
                                                     children: "Téléphone"
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                                    lineNumber: 1352,
+                                                    lineNumber: 1441,
                                                     columnNumber: 19
                                                 }, this),
                                                 /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                     className: `font-semibold ${theme.colors.text}`,
-                                                    children: formatPhoneWithCountryCode(selectedPhone?.phone || '')
+                                                    children: formatPhoneWithCountryCode(selectedPhone?.phone || lastTransaction?.phone_number || '')
                                                 }, void 0, false, {
                                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                                    lineNumber: 1353,
+                                                    lineNumber: 1442,
                                                     columnNumber: 19
                                                 }, this)
                                             ]
                                         }, void 0, true, {
                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                            lineNumber: 1351,
+                                            lineNumber: 1440,
                                             columnNumber: 17
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                    lineNumber: 1318,
+                                    lineNumber: 1401,
                                     columnNumber: 15
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/deposit/page.tsx",
-                            lineNumber: 1308,
+                            lineNumber: 1391,
                             columnNumber: 13
                         }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                        !lastTransaction && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
                             className: `text-xs text-center ${theme.colors.d_text} opacity-50 px-6 leading-relaxed`,
                             children: "En confirmant, vous acceptez d'initier cette transaction sur le numéro indiqué."
                         }, void 0, false, {
                             fileName: "[project]/src/app/deposit/page.tsx",
-                            lineNumber: 1359,
-                            columnNumber: 13
+                            lineNumber: 1451,
+                            columnNumber: 15
                         }, this),
-                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                            className: "flex flex-col gap-3 pt-2",
+                        lastTransaction && !lastTransaction.transaction_link && lastTransaction.ussd_code && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: `${theme.mode === 'dark' ? 'bg-slate-800/80 border-slate-700' : 'bg-slate-50 border-slate-200'} border rounded-2xl px-5 py-4`,
                             children: [
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                    onClick: handleSubmit,
-                                    disabled: loading,
-                                    className: "w-full h-14 bg-[#002d72] hover:bg-[#001d4a] text-white font-bold text-lg rounded-2xl shadow-lg shadow-blue-900/10 transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2",
-                                    style: {
-                                        backgroundColor: theme.mode === 'dark' ? theme.colors.primary : '#002d72'
-                                    },
-                                    children: loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
-                                        children: [
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "animate-spin rounded-full h-5 w-5 border-b-2 border-white"
-                                            }, void 0, false, {
-                                                fileName: "[project]/src/app/deposit/page.tsx",
-                                                lineNumber: 1373,
-                                                columnNumber: 21
-                                            }, this),
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                                children: "Traitement..."
-                                            }, void 0, false, {
-                                                fileName: "[project]/src/app/deposit/page.tsx",
-                                                lineNumber: 1374,
-                                                columnNumber: 21
-                                            }, this)
-                                        ]
-                                    }, void 0, true) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
-                                        children: "Confirmer le dépôt"
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/app/deposit/page.tsx",
-                                        lineNumber: 1377,
-                                        columnNumber: 19
-                                    }, this)
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                    className: `text-xs font-medium ${theme.colors.d_text} opacity-50 uppercase tracking-wider mb-3`,
+                                    children: "Code USSD"
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                    lineNumber: 1365,
-                                    columnNumber: 15
+                                    lineNumber: 1459,
+                                    columnNumber: 17
                                 }, this),
-                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                    onClick: ()=>setCurrentStep('enterDetails'),
-                                    disabled: loading,
-                                    className: `w-full py-3 text-center font-bold text-sm ${theme.colors.d_text} opacity-50 hover:opacity-100 transition-opacity`,
-                                    children: "Modifier les informations"
-                                }, void 0, false, {
+                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "flex items-center justify-between gap-4",
+                                    children: [
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            className: `font-mono font-bold text-2xl ${theme.colors.text} tracking-widest break-all`,
+                                            children: lastTransaction.ussd_code
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/deposit/page.tsx",
+                                            lineNumber: 1461,
+                                            columnNumber: 19
+                                        }, this),
+                                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                            onClick: ()=>{
+                                                navigator.clipboard.writeText(lastTransaction.ussd_code).then(()=>{
+                                                    setUssdCopied(true);
+                                                    setTimeout(()=>setUssdCopied(false), 2000);
+                                                });
+                                            },
+                                            className: `flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold transition-all ${ussdCopied ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400' : `${theme.mode === 'dark' ? 'bg-slate-700 text-slate-300 hover:bg-slate-600' : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'}`}`,
+                                            title: "Copier le code",
+                                            children: ussdCopied ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$check$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Check$3e$__["Check"], {
+                                                        className: "w-4 h-4"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/deposit/page.tsx",
+                                                        lineNumber: 1474,
+                                                        columnNumber: 37
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        children: "Copié"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/deposit/page.tsx",
+                                                        lineNumber: 1474,
+                                                        columnNumber: 66
+                                                    }, this)
+                                                ]
+                                            }, void 0, true) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$copy$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Copy$3e$__["Copy"], {
+                                                        className: "w-4 h-4"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/deposit/page.tsx",
+                                                        lineNumber: 1474,
+                                                        columnNumber: 92
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        children: "Copier"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/deposit/page.tsx",
+                                                        lineNumber: 1474,
+                                                        columnNumber: 120
+                                                    }, this)
+                                                ]
+                                            }, void 0, true)
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/deposit/page.tsx",
+                                            lineNumber: 1464,
+                                            columnNumber: 19
+                                        }, this)
+                                    ]
+                                }, void 0, true, {
                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                    lineNumber: 1381,
-                                    columnNumber: 15
+                                    lineNumber: 1460,
+                                    columnNumber: 17
                                 }, this)
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/deposit/page.tsx",
-                            lineNumber: 1364,
+                            lineNumber: 1458,
+                            columnNumber: 15
+                        }, this),
+                        /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                            className: "flex flex-col gap-3 pt-2",
+                            children: lastTransaction ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex items-center justify-between px-2 mb-2",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "flex items-center gap-2",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                        className: `w-2 h-2 rounded-full animate-pulse ${timeLeft && timeLeft > 0 ? 'bg-amber-500' : 'bg-red-500'}`
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/deposit/page.tsx",
+                                                        lineNumber: 1487,
+                                                        columnNumber: 23
+                                                    }, this),
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                        className: "text-sm font-medium opacity-70",
+                                                        children: [
+                                                            "Status: ",
+                                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                                className: "capitalize",
+                                                                children: lastTransaction.status
+                                                            }, void 0, false, {
+                                                                fileName: "[project]/src/app/deposit/page.tsx",
+                                                                lineNumber: 1489,
+                                                                columnNumber: 33
+                                                            }, this)
+                                                        ]
+                                                    }, void 0, true, {
+                                                        fileName: "[project]/src/app/deposit/page.tsx",
+                                                        lineNumber: 1488,
+                                                        columnNumber: 23
+                                                    }, this)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/app/deposit/page.tsx",
+                                                lineNumber: 1486,
+                                                columnNumber: 21
+                                            }, this),
+                                            timeLeft !== null && timeLeft > 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                className: "flex items-center gap-1.5 text-amber-600 dark:text-amber-400 font-mono font-bold text-sm bg-amber-50 dark:bg-amber-900/20 px-3 py-1 rounded-full",
+                                                children: [
+                                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$clock$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__Clock$3e$__["Clock"], {
+                                                        className: "w-4 h-4"
+                                                    }, void 0, false, {
+                                                        fileName: "[project]/src/app/deposit/page.tsx",
+                                                        lineNumber: 1494,
+                                                        columnNumber: 25
+                                                    }, this),
+                                                    formatTime(timeLeft)
+                                                ]
+                                            }, void 0, true, {
+                                                fileName: "[project]/src/app/deposit/page.tsx",
+                                                lineNumber: 1493,
+                                                columnNumber: 23
+                                            }, this),
+                                            timeLeft === 0 && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                className: "text-sm font-bold text-red-500",
+                                                children: "Expiré"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/deposit/page.tsx",
+                                                lineNumber: 1499,
+                                                columnNumber: 23
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/app/deposit/page.tsx",
+                                        lineNumber: 1485,
+                                        columnNumber: 19
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex gap-3",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                onClick: async ()=>{
+                                                    await cancelTransaction();
+                                                },
+                                                disabled: loading,
+                                                className: "flex-1 h-14 border-2 border-red-500 text-red-500 font-bold text-base rounded-2xl hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors disabled:opacity-50",
+                                                children: "Annuler"
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/deposit/page.tsx",
+                                                lineNumber: 1504,
+                                                columnNumber: 21
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                                onClick: async ()=>{
+                                                    await finalizeTransaction();
+                                                },
+                                                disabled: loading || timeLeft !== null && timeLeft <= 0,
+                                                className: "flex-1 h-14 text-white font-bold text-base rounded-2xl shadow-lg transition-all disabled:opacity-50 flex items-center justify-center gap-2",
+                                                style: {
+                                                    backgroundColor: theme.mode === 'dark' ? theme.colors.primary : '#002d72'
+                                                },
+                                                children: loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "animate-spin rounded-full h-5 w-5 border-b-2 border-white"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/deposit/page.tsx",
+                                                    lineNumber: 1518,
+                                                    columnNumber: 25
+                                                }, this) : timeLeft !== null && timeLeft <= 0 ? 'Expiré' : 'Finaliser'
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/deposit/page.tsx",
+                                                lineNumber: 1511,
+                                                columnNumber: 21
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/app/deposit/page.tsx",
+                                        lineNumber: 1503,
+                                        columnNumber: 19
+                                    }, this)
+                                ]
+                            }, void 0, true) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
+                                children: [
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        onClick: handleSubmit,
+                                        disabled: loading,
+                                        className: "w-full h-14 text-white font-bold text-lg rounded-2xl shadow-lg shadow-blue-900/10 transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2",
+                                        style: {
+                                            backgroundColor: theme.mode === 'dark' ? theme.colors.primary : '#002d72'
+                                        },
+                                        children: loading ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["Fragment"], {
+                                            children: [
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                                    className: "animate-spin rounded-full h-5 w-5 border-b-2 border-white"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/deposit/page.tsx",
+                                                    lineNumber: 1535,
+                                                    columnNumber: 25
+                                                }, this),
+                                                /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                                    children: "Traitement..."
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/deposit/page.tsx",
+                                                    lineNumber: 1536,
+                                                    columnNumber: 25
+                                                }, this)
+                                            ]
+                                        }, void 0, true) : /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
+                                            children: "Confirmer le dépôt"
+                                        }, void 0, false, {
+                                            fileName: "[project]/src/app/deposit/page.tsx",
+                                            lineNumber: 1539,
+                                            columnNumber: 23
+                                        }, this)
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/deposit/page.tsx",
+                                        lineNumber: 1527,
+                                        columnNumber: 19
+                                    }, this),
+                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                                        onClick: ()=>setCurrentStep('enterDetails'),
+                                        disabled: loading,
+                                        className: `w-full py-3 text-center font-bold text-sm ${theme.colors.d_text} opacity-50 hover:opacity-100 transition-opacity`,
+                                        children: "Modifier les informations"
+                                    }, void 0, false, {
+                                        fileName: "[project]/src/app/deposit/page.tsx",
+                                        lineNumber: 1543,
+                                        columnNumber: 19
+                                    }, this)
+                                ]
+                            }, void 0, true)
+                        }, void 0, false, {
+                            fileName: "[project]/src/app/deposit/page.tsx",
+                            lineNumber: 1481,
                             columnNumber: 13
                         }, this)
                     ]
                 }, void 0, true, {
                     fileName: "[project]/src/app/deposit/page.tsx",
-                    lineNumber: 1301,
+                    lineNumber: 1384,
                     columnNumber: 11
                 }, this);
         }
@@ -2325,7 +2609,7 @@ function Deposits() {
         `
             }, void 0, false, {
                 fileName: "[project]/src/app/deposit/page.tsx",
-                lineNumber: 1439,
+                lineNumber: 1603,
                 columnNumber: 7
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2334,7 +2618,7 @@ function Deposits() {
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "flex items-center gap-6 mb-12",
                         children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
+                            !pendingTxNotice && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                                 onClick: ()=>{
                                     if (currentStep === 'selectId') {
                                         router.back();
@@ -2364,37 +2648,79 @@ function Deposits() {
                                         d: "M10 19l-7-7m0 0l7-7m-7 7h18"
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/deposit/page.tsx",
-                                        lineNumber: 1517,
+                                        lineNumber: 1681,
                                         columnNumber: 15
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                    lineNumber: 1516,
+                                    lineNumber: 1680,
                                     columnNumber: 13
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                lineNumber: 1498,
-                                columnNumber: 11
+                                lineNumber: 1662,
+                                columnNumber: 32
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h1", {
                                 className: "text-3xl font-bold tracking-tight",
                                 children: getCurrentStepTitle()
                             }, void 0, false, {
                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                lineNumber: 1520,
+                                lineNumber: 1684,
                                 columnNumber: 11
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/deposit/page.tsx",
-                        lineNumber: 1497,
+                        lineNumber: 1661,
                         columnNumber: 9
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                         className: "pb-24",
                         children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                             children: [
+                                pendingTxNotice && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                    className: "mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-300 dark:border-amber-700 rounded-2xl",
+                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
+                                        className: "flex items-start gap-3",
+                                        children: [
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
+                                                className: "w-5 h-5 text-amber-500 shrink-0 mt-0.5",
+                                                fill: "currentColor",
+                                                viewBox: "0 0 20 20",
+                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
+                                                    fillRule: "evenodd",
+                                                    d: "M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z",
+                                                    clipRule: "evenodd"
+                                                }, void 0, false, {
+                                                    fileName: "[project]/src/app/deposit/page.tsx",
+                                                    lineNumber: 1695,
+                                                    columnNumber: 21
+                                                }, this)
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/deposit/page.tsx",
+                                                lineNumber: 1694,
+                                                columnNumber: 19
+                                            }, this),
+                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
+                                                className: "text-sm font-medium text-amber-800 dark:text-amber-300",
+                                                children: "Votre dernière transaction est en attente de finalisation. Veuillez la finaliser ou l'annuler avant d'en créer une nouvelle."
+                                            }, void 0, false, {
+                                                fileName: "[project]/src/app/deposit/page.tsx",
+                                                lineNumber: 1697,
+                                                columnNumber: 19
+                                            }, this)
+                                        ]
+                                    }, void 0, true, {
+                                        fileName: "[project]/src/app/deposit/page.tsx",
+                                        lineNumber: 1693,
+                                        columnNumber: 17
+                                    }, this)
+                                }, void 0, false, {
+                                    fileName: "[project]/src/app/deposit/page.tsx",
+                                    lineNumber: 1692,
+                                    columnNumber: 15
+                                }, this),
                                 error && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                     className: "mb-6 p-4 bg-gradient-to-r from-red-900/50 to-red-800/50 border border-red-600/50 text-red-300 rounded-2xl backdrop-blur-sm",
                                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2404,19 +2730,19 @@ function Deposits() {
                                                 className: "w-5 h-5 mr-3"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                                lineNumber: 1530,
+                                                lineNumber: 1708,
                                                 columnNumber: 19
                                             }, this),
                                             error
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/deposit/page.tsx",
-                                        lineNumber: 1529,
+                                        lineNumber: 1707,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                    lineNumber: 1528,
+                                    lineNumber: 1706,
                                     columnNumber: 15
                                 }, this),
                                 success && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2428,19 +2754,19 @@ function Deposits() {
                                                 className: "w-5 h-5 mr-3"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                                lineNumber: 1539,
+                                                lineNumber: 1717,
                                                 columnNumber: 19
                                             }, this),
                                             success
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/deposit/page.tsx",
-                                        lineNumber: 1538,
+                                        lineNumber: 1716,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                    lineNumber: 1537,
+                                    lineNumber: 1715,
                                     columnNumber: 15
                                 }, this),
                                 loading && !success && !error ? /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2452,163 +2778,43 @@ function Deposits() {
                                                 className: "animate-spin rounded-full h-16 w-16 border-4 border-blue-500/30 border-t-blue-500"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                                lineNumber: 1548,
+                                                lineNumber: 1726,
                                                 columnNumber: 19
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                                 className: "absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 to-blue-500/20 animate-pulse"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                                lineNumber: 1549,
+                                                lineNumber: 1727,
                                                 columnNumber: 19
                                             }, this)
                                         ]
                                     }, void 0, true, {
                                         fileName: "[project]/src/app/deposit/page.tsx",
-                                        lineNumber: 1547,
+                                        lineNumber: 1725,
                                         columnNumber: 17
                                     }, this)
                                 }, void 0, false, {
                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                    lineNumber: 1546,
+                                    lineNumber: 1724,
                                     columnNumber: 15
                                 }, this) : renderStep()
                             ]
                         }, void 0, true, {
                             fileName: "[project]/src/app/deposit/page.tsx",
-                            lineNumber: 1525,
+                            lineNumber: 1689,
                             columnNumber: 11
                         }, this)
                     }, void 0, false, {
                         fileName: "[project]/src/app/deposit/page.tsx",
-                        lineNumber: 1524,
+                        lineNumber: 1688,
                         columnNumber: 9
                     }, this)
                 ]
             }, void 0, true, {
                 fileName: "[project]/src/app/deposit/page.tsx",
-                lineNumber: 1495,
+                lineNumber: 1659,
                 columnNumber: 7
-            }, this),
-            showPaymentModal && transactionLink && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "fixed inset-0 bg-white/10 dark:bg-black/20 backdrop-blur-2xl flex items-center justify-center p-4 z-50 modal-backdrop",
-                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: `${theme.colors.background} rounded-3xl shadow-2xl w-full max-w-sm modal-content overflow-hidden border border-white/20 dark:border-gray-800`,
-                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "p-8 text-center",
-                        children: [
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "w-20 h-20 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-6",
-                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
-                                    className: "w-10 h-10 text-blue-500",
-                                    fill: "none",
-                                    stroke: "currentColor",
-                                    viewBox: "0 0 24 24",
-                                    children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
-                                        strokeLinecap: "round",
-                                        strokeLinejoin: "round",
-                                        strokeWidth: "2",
-                                        d: "M13 10V3L4 14h7v7l9-11h-7z"
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/app/deposit/page.tsx",
-                                        lineNumber: 1569,
-                                        columnNumber: 19
-                                    }, this)
-                                }, void 0, false, {
-                                    fileName: "[project]/src/app/deposit/page.tsx",
-                                    lineNumber: 1568,
-                                    columnNumber: 17
-                                }, this)
-                            }, void 0, false, {
-                                fileName: "[project]/src/app/deposit/page.tsx",
-                                lineNumber: 1567,
-                                columnNumber: 15
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                className: `text-2xl font-bold mb-8 tracking-tight ${theme.colors.text}`,
-                                children: "Paiement requis"
-                            }, void 0, false, {
-                                fileName: "[project]/src/app/deposit/page.tsx",
-                                lineNumber: 1573,
-                                columnNumber: 15
-                            }, this),
-                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "space-y-3",
-                                children: [
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("a", {
-                                        href: transactionLink,
-                                        target: "_blank",
-                                        rel: "noopener noreferrer",
-                                        onClick: ()=>{
-                                            setShowPaymentModal(false);
-                                            setTimeout(()=>{
-                                                if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
-                                                ;
-                                            }, 100);
-                                        },
-                                        className: "w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl text-lg font-bold transition-all shadow-lg shadow-blue-900/20 flex items-center justify-center gap-3 active:scale-[0.98]",
-                                        children: [
-                                            "Continuer le paiement",
-                                            /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("svg", {
-                                                className: "w-5 h-5",
-                                                fill: "none",
-                                                stroke: "currentColor",
-                                                viewBox: "0 0 24 24",
-                                                children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("path", {
-                                                    strokeLinecap: "round",
-                                                    strokeLinejoin: "round",
-                                                    strokeWidth: "2",
-                                                    d: "M14 5l7 7m0 0l-7 7m7-7H3"
-                                                }, void 0, false, {
-                                                    fileName: "[project]/src/app/deposit/page.tsx",
-                                                    lineNumber: 1590,
-                                                    columnNumber: 21
-                                                }, this)
-                                            }, void 0, false, {
-                                                fileName: "[project]/src/app/deposit/page.tsx",
-                                                lineNumber: 1589,
-                                                columnNumber: 19
-                                            }, this)
-                                        ]
-                                    }, void 0, true, {
-                                        fileName: "[project]/src/app/deposit/page.tsx",
-                                        lineNumber: 1576,
-                                        columnNumber: 17
-                                    }, this),
-                                    /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
-                                        onClick: ()=>{
-                                            setShowPaymentModal(false);
-                                            if ("TURBOPACK compile-time falsy", 0) //TURBOPACK unreachable
-                                            ;
-                                        },
-                                        className: "w-full py-3 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 font-medium transition-colors",
-                                        children: "Retour au tableau de bord"
-                                    }, void 0, false, {
-                                        fileName: "[project]/src/app/deposit/page.tsx",
-                                        lineNumber: 1594,
-                                        columnNumber: 17
-                                    }, this)
-                                ]
-                            }, void 0, true, {
-                                fileName: "[project]/src/app/deposit/page.tsx",
-                                lineNumber: 1575,
-                                columnNumber: 15
-                            }, this)
-                        ]
-                    }, void 0, true, {
-                        fileName: "[project]/src/app/deposit/page.tsx",
-                        lineNumber: 1566,
-                        columnNumber: 13
-                    }, this)
-                }, void 0, false, {
-                    fileName: "[project]/src/app/deposit/page.tsx",
-                    lineNumber: 1565,
-                    columnNumber: 11
-                }, this)
-            }, void 0, false, {
-                fileName: "[project]/src/app/deposit/page.tsx",
-                lineNumber: 1564,
-                columnNumber: 9
             }, this),
             showEditPhoneModal && phoneToEdit && /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                 className: "fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 modal-backdrop",
@@ -2625,7 +2831,7 @@ function Deposits() {
                                         children: t("Modifier le numéro de téléphone")
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/deposit/page.tsx",
-                                        lineNumber: 1616,
+                                        lineNumber: 1794,
                                         columnNumber: 19
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2647,23 +2853,23 @@ function Deposits() {
                                                 d: "M6 18L18 6M6 6l12 12"
                                             }, void 0, false, {
                                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                                lineNumber: 1626,
+                                                lineNumber: 1804,
                                                 columnNumber: 23
                                             }, this)
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                            lineNumber: 1625,
+                                            lineNumber: 1803,
                                             columnNumber: 21
                                         }, this)
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/deposit/page.tsx",
-                                        lineNumber: 1617,
+                                        lineNumber: 1795,
                                         columnNumber: 19
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                lineNumber: 1615,
+                                lineNumber: 1793,
                                 columnNumber: 17
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2675,7 +2881,7 @@ function Deposits() {
                                             children: t("Numéro de téléphone")
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                            lineNumber: 1633,
+                                            lineNumber: 1811,
                                             columnNumber: 21
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("input", {
@@ -2686,7 +2892,7 @@ function Deposits() {
                                             placeholder: "ex: 771234567"
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                            lineNumber: 1636,
+                                            lineNumber: 1814,
                                             columnNumber: 21
                                         }, this),
                                         /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
@@ -2694,18 +2900,18 @@ function Deposits() {
                                             children: t("Entrez le numéro sans le préfixe +225")
                                         }, void 0, false, {
                                             fileName: "[project]/src/app/deposit/page.tsx",
-                                            lineNumber: 1643,
+                                            lineNumber: 1821,
                                             columnNumber: 21
                                         }, this)
                                     ]
                                 }, void 0, true, {
                                     fileName: "[project]/src/app/deposit/page.tsx",
-                                    lineNumber: 1632,
+                                    lineNumber: 1810,
                                     columnNumber: 19
                                 }, this)
                             }, void 0, false, {
                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                lineNumber: 1631,
+                                lineNumber: 1809,
                                 columnNumber: 17
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
@@ -2721,7 +2927,7 @@ function Deposits() {
                                         children: t("Annuler")
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/deposit/page.tsx",
-                                        lineNumber: 1650,
+                                        lineNumber: 1828,
                                         columnNumber: 19
                                     }, this),
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
@@ -2731,35 +2937,35 @@ function Deposits() {
                                         children: t("Modifier")
                                     }, void 0, false, {
                                         fileName: "[project]/src/app/deposit/page.tsx",
-                                        lineNumber: 1660,
+                                        lineNumber: 1838,
                                         columnNumber: 19
                                     }, this)
                                 ]
                             }, void 0, true, {
                                 fileName: "[project]/src/app/deposit/page.tsx",
-                                lineNumber: 1649,
+                                lineNumber: 1827,
                                 columnNumber: 17
                             }, this)
                         ]
                     }, void 0, true, {
                         fileName: "[project]/src/app/deposit/page.tsx",
-                        lineNumber: 1614,
+                        lineNumber: 1792,
                         columnNumber: 15
                     }, this)
                 }, void 0, false, {
                     fileName: "[project]/src/app/deposit/page.tsx",
-                    lineNumber: 1613,
+                    lineNumber: 1791,
                     columnNumber: 13
                 }, this)
             }, void 0, false, {
                 fileName: "[project]/src/app/deposit/page.tsx",
-                lineNumber: 1612,
+                lineNumber: 1790,
                 columnNumber: 11
             }, this)
         ]
     }, void 0, true, {
         fileName: "[project]/src/app/deposit/page.tsx",
-        lineNumber: 1438,
+        lineNumber: 1602,
         columnNumber: 5
     }, this);
 }

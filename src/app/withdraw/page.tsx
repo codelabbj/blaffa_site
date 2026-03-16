@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 // import styles from '../styles/Withdraw.module.css';
 //import DashboardHeader from '@/components/DashboardHeader';
 import { useTheme } from '../../components/ThemeProvider';
-import { Check, CheckCircle, Phone, XCircle, HelpCircle, AlertTriangle, ExternalLink, Plus, ArrowLeft } from 'lucide-react';
+import { Check, CheckCircle, Phone, XCircle, HelpCircle, AlertTriangle, ExternalLink, Plus, ArrowLeft, Clock } from 'lucide-react';
 import api from '@/lib/axios';
 import DashboardHeader from '@/components/DashboardHeader';
 
@@ -74,6 +74,8 @@ interface Transaction {
   user_app_id?: string;
   error_message?: string;
   withdriwal_code?: string;
+  ussd_code?: string;
+  transaction_link?: string;
 }
 
 interface TransactionDetail {
@@ -134,6 +136,10 @@ export default function Withdraw() {
   const [showEditPhoneModal, setShowEditPhoneModal] = useState(false);
   const [phoneToEdit, setPhoneToEdit] = useState<UserPhone | null>(null);
   const [newPhoneNumber, setNewPhoneNumber] = useState('');
+
+  const [lastTransaction, setLastTransaction] = useState<Transaction | null>(null);
+  const [pendingTxNotice, setPendingTxNotice] = useState(false);
+  const [timeLeft, setTimeLeft] = useState<number | null>(null);
 
 
   // Phone number management functions
@@ -285,6 +291,17 @@ export default function Withdraw() {
 
         await Promise.allSettled(promises);
 
+        if (token) {
+          const lastTx = await fetchLastTransaction();
+          if (lastTx?.status === 'pending') {
+            // Check if it's a withdrawal and if we want to show it as pending
+            setPendingTxNotice(true);
+          } else {
+            setLastTransaction(null);
+            setPendingTxNotice(false);
+          }
+        }
+
       } catch (err) {
         console.error('Error fetching data:', err);
       } finally {
@@ -294,6 +311,33 @@ export default function Withdraw() {
 
     fetchData();
   }, []);
+
+  // Countdown timer logic
+  useEffect(() => {
+    if (timeLeft === null || timeLeft <= 0) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev === null || prev <= 1) {
+          clearInterval(timer);
+          // Auto-cancel/reset when expired
+          setLastTransaction(null);
+          setPendingTxNotice(false);
+          setCurrentStep('selectId');
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [timeLeft]);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   // Auto-hide error messages after 20 seconds
   useEffect(() => {
@@ -426,6 +470,137 @@ export default function Withdraw() {
       min: parseFloat(String(minVal)),
       max: parseFloat(String(maxVal))
     };
+  };
+
+  const handleApiError = (error: unknown) => {
+    if (typeof error === 'string') {
+      setError(error);
+    } else if (error && typeof error === 'object' && 'response' in error) {
+      const response = (error as any).response;
+      const { status, data } = response || {};
+      if (status === 400 && data) {
+        const errorMessages = [];
+        if (data.amount) errorMessages.push(`Amount: ${Array.isArray(data.amount) ? data.amount[0] : data.amount}`);
+        setError(errorMessages.length > 0 ? errorMessages.join('\n') : data.detail || 'Validation error');
+      } else {
+        setError(data?.detail || 'An error occurred');
+      }
+    } else {
+      setError('An unexpected error occurred');
+    }
+  };
+
+  const fetchLastTransaction = async (): Promise<Transaction | null> => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) return null;
+
+    try {
+      const response = await api.get('/blaffa/last-transaction', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (response.status === 200) {
+        setLastTransaction(response.data);
+        
+        // Calculate time left if status is pending
+        if (response.data.status === 'pending' && response.data.created_at) {
+          const createdAt = new Date(response.data.created_at).getTime();
+          const now = new Date().getTime();
+          const fiveMinutesInMs = 5 * 60 * 1000;
+          const elapsed = now - createdAt;
+          const remaining = Math.max(0, Math.floor((fiveMinutesInMs - elapsed) / 1000));
+          setTimeLeft(remaining);
+          setPendingTxNotice(true);
+        }
+        
+        return response.data;
+      }
+      return null;
+    } catch (error) {
+      console.error('Error fetching last transaction:', error);
+      handleApiError(error);
+      return null;
+    }
+  };
+
+  const finalizeTransaction = async (tx?: Transaction): Promise<boolean> => {
+    const token = localStorage.getItem('accessToken');
+    const transactionToFinalize = tx || lastTransaction;
+    if (!token || !transactionToFinalize) return false;
+
+    setLoading(true);
+    try {
+      const response = await api.post('/blaffa/finalize-transaction-user', {
+        reference: transactionToFinalize.reference,
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      const ok = response.status === 200 || response.status === 201;
+      if (ok) {
+        setPendingTxNotice(false);
+        setTimeLeft(null);
+        if (transactionToFinalize.transaction_link) {
+          window.open(transactionToFinalize.transaction_link, '_blank');
+          router.push('/dashboard');
+        } else if (transactionToFinalize.ussd_code) {
+          attemptDialerRedirect(transactionToFinalize.ussd_code);
+          router.push('/dashboard');
+        } else {
+          router.push('/dashboard');
+        }
+      }
+      return ok;
+    } catch (error) {
+      console.error('Error finalizing transaction:', error);
+      handleApiError(error);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const cancelTransaction = async (): Promise<boolean> => {
+    const token = localStorage.getItem('accessToken');
+    if (!token || !lastTransaction) return false;
+    setLoading(true);
+    try {
+      const response = await api.post('/blaffa/cancel-transaction', {
+        reference: lastTransaction.reference,
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      const ok = response.status === 200 || response.status === 201;
+      if (ok) {
+        setLastTransaction(null);
+        setPendingTxNotice(false);
+        setCurrentStep('selectId');
+      }
+      return ok;
+    } catch (error) {
+      console.error('Error cancelling transaction:', error);
+      handleApiError(error);
+      return false;
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const attemptDialerRedirect = (ussdCode: string): void => {
+    try {
+      const link = document.createElement('a');
+      const encodedCode = ussdCode.replace(/#/g, '%23');
+      link.href = `tel:${encodedCode}`;
+      link.style.display = 'none';
+      document.body.appendChild(link);
+      link.click();
+      setTimeout(() => {
+        document.body.removeChild(link);
+      }, 100);
+    } catch (error) {
+      console.error('Error attempting dialer redirect:', error);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -577,7 +752,11 @@ export default function Withdraw() {
       });
 
       const transaction = response.data;
+      setLastTransaction(transaction);
+      setPendingTxNotice(true);
+      setTimeLeft(300); // 5 minutes
       setSuccess('Retrait initié avec succès !');
+
       // Redirect to dashboard after a short delay
       setTimeout(() => {
         if (typeof window !== 'undefined') window.location.href = '/dashboard';
@@ -1086,7 +1265,7 @@ export default function Withdraw() {
               </p>
             </div>
 
-            <form onSubmit={(e) => { e.preventDefault(); if (validateForm()) setCurrentStep('summary'); }} className="space-y-6">
+            <form onSubmit={handleSubmit} className="space-y-6">
               {/* Withdrawal Code Field */}
               <div>
                 <input
@@ -1171,98 +1350,6 @@ export default function Withdraw() {
             </form>
           </div>
         );
-      case 'summary':
-        return (
-          <div className="space-y-6 animate-in fade-in slide-in-from-bottom-4 duration-500">
-            {/* Header */}
-            <div className="text-center mb-6">
-              <h3 className={`text-2xl font-bold ${theme.colors.text}`}>Confirmer le retrait</h3>
-            </div>
-
-            {/* Main Summary Card */}
-            <div className={`${theme.colors.a_background} border ${theme.mode === 'dark' ? 'border-slate-700' : 'border-slate-200'} rounded-3xl overflow-hidden shadow-sm`}>
-
-              {/* Amount Section */}
-              <div className={`py-6 text-center bg-gradient-to-b ${theme.mode === 'dark' ? 'from-blue-900/10 to-transparent' : 'from-blue-50 to-transparent'}`}>
-                <div className={`text-5xl font-extrabold ${theme.colors.text} tracking-tight`}>
-                  {new Intl.NumberFormat('fr-FR').format(parseInt(formData.amount))} <span className="text-2xl align-top opacity-60 font-bold">F</span>
-                </div>
-              </div>
-
-              {/* Details List */}
-              <div className="px-6 pb-6 space-y-4">
-                {/* Divider */}
-                <div className={`h-px w-full ${theme.mode === 'dark' ? 'bg-slate-700' : 'bg-slate-100'}`}></div>
-
-                {/* Platform */}
-                <div className="flex items-center justify-between">
-                  <span className={`${theme.colors.d_text} opacity-60 text-sm`}>Plateforme</span>
-                  <div className="flex items-center gap-2">
-                    {selectedPlatform?.image && (
-                      <img src={selectedPlatform.image} alt="" className="w-5 h-5 object-contain" />
-                    )}
-                    <span className={`font-semibold ${theme.colors.text}`}>{selectedPlatform?.public_name || selectedPlatform?.name}</span>
-                  </div>
-                </div>
-
-                {/* ID */}
-                <div className="flex items-center justify-between">
-                  <span className={`${theme.colors.d_text} opacity-60 text-sm`}>ID Utilisateur</span>
-                  <span className={`font-mono font-medium ${theme.colors.text} bg-gray-100 dark:bg-slate-800 px-2 py-0.5 rounded text-sm`}>{selectedBetId}</span>
-                </div>
-
-                {/* Network */}
-                <div className="flex items-center justify-between">
-                  <span className={`${theme.colors.d_text} opacity-60 text-sm`}>Moyen de paiement</span>
-                  <div className="flex items-center gap-2">
-                    {selectedNetwork?.image && (
-                      <img src={selectedNetwork.image} alt="" className="w-5 h-5 object-contain" />
-                    )}
-                    <span className={`font-semibold ${theme.colors.text}`}>{selectedNetwork?.public_name || selectedNetwork?.name}</span>
-                  </div>
-                </div>
-
-                {/* Phone */}
-                <div className="flex items-center justify-between">
-                  <span className={`${theme.colors.d_text} opacity-60 text-sm`}>Téléphone</span>
-                  <span className={`font-semibold ${theme.colors.text}`}>{selectedPhone ? stripPhoneIndication(selectedPhone.phone) : ''}</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Warning - Minimalist */}
-            <p className={`text-xs text-center ${theme.colors.d_text} opacity-50 px-6 leading-relaxed`}>
-              En confirmant, vous acceptez d'initier cette transaction sur le numéro indiqué.
-            </p>
-
-            {/* Action Buttons */}
-            <div className="flex flex-col gap-3 pt-2">
-              <button
-                onClick={handleSubmit}
-                disabled={loading}
-                className="w-full h-14 bg-[#002d72] hover:bg-[#001d4a] text-white font-bold text-lg rounded-2xl shadow-lg shadow-blue-900/10 transition-all active:scale-[0.98] disabled:opacity-50 flex items-center justify-center gap-2"
-                style={{ backgroundColor: theme.mode === 'dark' ? theme.colors.primary : '#002d72' }}
-              >
-                {loading ? (
-                  <>
-                    <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                    <span>Traitement...</span>
-                  </>
-                ) : (
-                  <span>Confirmer le retrait</span>
-                )}
-              </button>
-
-              <button
-                onClick={() => setCurrentStep('enterDetails')}
-                disabled={loading}
-                className={`w-full py-3 text-center font-bold text-sm ${theme.colors.d_text} opacity-50 hover:opacity-100 transition-opacity`}
-              >
-                Modifier les informations
-              </button>
-            </div>
-          </div>
-        );
     }
   };
 
@@ -1306,8 +1393,6 @@ export default function Withdraw() {
         return "Retrait - Informations";
       case 'withdrawHelp':
         return "Aide Retrait";
-      case 'summary':
-        return "Confirmer le retrait";
       default:
         return "Retrait";
     }
@@ -1404,8 +1489,6 @@ export default function Withdraw() {
                 setCurrentStep('selectPhone');
               } else if (currentStep === 'enterDetails') {
                 setCurrentStep('withdrawHelp');
-              } else if (currentStep === 'summary') {
-                setCurrentStep('enterDetails');
               }
             }}
             className="p-2 -ml-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full transition-colors"
@@ -1522,6 +1605,22 @@ export default function Withdraw() {
         {/* Main Content */}
         <div className="pb-24">
           <div>
+
+
+            {/* Pending Transaction Notice */}
+            {pendingTxNotice && (
+              <div className="mb-6 p-4 bg-amber-50 dark:bg-amber-900/20 border border-amber-300 dark:border-amber-700 rounded-2xl">
+                <div className="flex items-start gap-3">
+                  <svg className="w-5 h-5 text-amber-500 shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+                  </svg>
+                  <p className="text-sm font-medium text-amber-800 dark:text-amber-300">
+                    Votre dernière transaction est en attente de finalisation. Veuillez la finaliser ou l&apos;annuler avant d&apos;en créer une nouvelle.
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* Alert Messages */}
             {error && (
               <div className="mb-6 p-4 bg-gradient-to-r from-red-900/50 to-red-800/50 border border-red-600/50 text-red-300 rounded-2xl backdrop-blur-sm">

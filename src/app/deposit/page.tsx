@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 //import DashboardHeader from '@/components/DashboardHeader';
 import { useTheme } from '@/components/ThemeProvider';
 import { useWebSocket } from '../../context/WebSocketContext';
-import { Check, CheckCircle, Phone, XCircle, Copy, Plus, ArrowLeft } from 'lucide-react';
+import { Check, CheckCircle, Phone, XCircle, Copy, Plus, ArrowLeft, Clock } from 'lucide-react';
 import api from '@/lib/axios';
 import DashboardHeader from '@/components/DashboardHeader';
 // import { CopyIcon } from 'lucide-react';
@@ -181,6 +181,7 @@ export default function Deposits() {
   const [lastTransaction, setLastTransaction] = useState<Transaction | null>(null);
   const [ussdCopied, setUssdCopied] = useState(false);
   const [pendingTxNotice, setPendingTxNotice] = useState(false);
+  const [timeLeft, setTimeLeft] = useState<number | null>(null);
 
 
     useEffect(() => {
@@ -204,6 +205,33 @@ export default function Deposits() {
       return () => clearTimeout(timer);
     }
   }, [error]);
+
+  // Countdown timer logic
+  useEffect(() => {
+    if (timeLeft === null || timeLeft <= 0) return;
+
+    const timer = setInterval(() => {
+      setTimeLeft(prev => {
+        if (prev === null || prev <= 1) {
+          clearInterval(timer);
+          // Auto-cancel/reset when expired
+          setLastTransaction(null);
+          setPendingTxNotice(false);
+          setCurrentStep('selectId');
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, [timeLeft]);
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   // Format phone number with indication from selected network
   const formatPhoneWithCountryCode = (phoneNumber: string): string => {
@@ -317,8 +345,9 @@ export default function Deposits() {
           if (lastTx?.status === 'pending') {
             setCurrentStep('summary');
             setPendingTxNotice(true);
-          }else{
-            setLastTransaction(null)
+          } else {
+            setLastTransaction(null);
+            setPendingTxNotice(false);
           }
         }
 
@@ -704,6 +733,7 @@ export default function Deposits() {
       });
 
       const transaction = response.data;
+      setLastTransaction(transaction);
       setSelectedTransaction({ transaction });
 
       setSuccess('Transaction initiée avec succès !');
@@ -712,7 +742,8 @@ export default function Deposits() {
       setFormData({ amount: '', phoneNumber: '', betid: '', otp_code: '' });
       setValidationErrors({ amount: '', phoneNumber: '', otp_code: '' });
 
-      await fetchLastTransaction();
+      // Automatically finalize the transaction
+      await finalizeTransaction(transaction);
     } catch (error) {
       console.error('Transaction error:', error);
       //     if (
@@ -792,6 +823,14 @@ export default function Deposits() {
 
       if (response.status === 200) {
         setLastTransaction(response.data);
+        
+        // Calculate remaining time (5 minutes expiry)
+        const createdTime = new Date(response.data.created_at).getTime();
+        const currentTime = new Date().getTime();
+        const diffInSeconds = Math.floor((currentTime - createdTime) / 1000);
+        const remaining = Math.max(0, 300 - diffInSeconds);
+        setTimeLeft(remaining);
+
         return response.data;
       }
       return null;
@@ -802,26 +841,28 @@ export default function Deposits() {
     }
   };
 
-  const finalizeTransaction = async (): Promise<boolean> => {
+  const finalizeTransaction = async (tx?: Transaction): Promise<boolean> => {
     const token = localStorage.getItem('accessToken');
-    if (!token || !lastTransaction) return false;
+    const transactionToFinalize = tx || lastTransaction;
+    if (!token || !transactionToFinalize) return false;
 
     try {
       const response = await api.post('/blaffa/finalize-transaction-user', {
-        reference: lastTransaction.reference,
+        reference: transactionToFinalize.reference,
       }, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
       const ok = response.status === 200 || response.status === 201;
       if (ok) {
-        if (lastTransaction.transaction_link) {
-          window.open(lastTransaction.transaction_link, '_blank');
-        } else if (lastTransaction.ussd_code) {
-          attemptDialerRedirect(lastTransaction.ussd_code);
-          window.location.href = '/dashboard';
+        if (transactionToFinalize.transaction_link) {
+          window.open(transactionToFinalize.transaction_link, '_blank');
+          router.push('/dashboard');
+        } else if (transactionToFinalize.ussd_code) {
+          attemptDialerRedirect(transactionToFinalize.ussd_code);
+          router.push('/dashboard');
         } else {
-          window.location.href = '/dashboard';
+          router.push('/dashboard');
         }
       }
       return ok;
@@ -1329,7 +1370,7 @@ export default function Deposits() {
                 <button
                   type="submit"
                   disabled={loading || !formData.amount || !selectedPhone}
-                  className={`w-full h-14 text-white font-bold text-lg rounded-2xl shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed`}
+                  className="w-full h-14 text-white font-bold text-lg rounded-2xl shadow-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{ backgroundColor: theme.mode === 'dark' ? theme.colors.primary : '#1a4384' }}
                 >
                   {loading ? 'Traitement...' : 'Dépôt'}
@@ -1439,27 +1480,48 @@ export default function Deposits() {
             {/* Action Buttons */}
             <div className="flex flex-col gap-3 pt-2">
               {lastTransaction ? (
-                <div className="flex gap-3">
-                  <button
-                    onClick={async () => { await cancelTransaction(); }}
-                    disabled={loading}
-                    className="flex-1 h-14 border-2 border-red-500 text-red-500 font-bold text-base rounded-2xl hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors disabled:opacity-50"
-                  >
-                    Annuler
-                  </button>
-                  <button
-                    onClick={async () => { await finalizeTransaction(); }}
-                    disabled={loading}
-                    className="flex-1 h-14 text-white font-bold text-base rounded-2xl shadow-lg transition-all disabled:opacity-50 flex items-center justify-center gap-2"
-                    style={{ backgroundColor: theme.mode === 'dark' ? theme.colors.primary : '#002d72' }}
-                  >
-                    {loading ? (
-                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
-                    ) : (
-                      'Finaliser'
+                <>
+                  {/* Status and Timer Bar */}
+                  <div className="flex items-center justify-between px-2 mb-2">
+                    <div className="flex items-center gap-2">
+                      <div className={`w-2 h-2 rounded-full animate-pulse ${timeLeft && timeLeft > 0 ? 'bg-amber-500' : 'bg-red-500'}`}></div>
+                      <span className="text-sm font-medium opacity-70">
+                        Status: <span className="capitalize">{lastTransaction.status}</span>
+                      </span>
+                    </div>
+                    {timeLeft !== null && timeLeft > 0 && (
+                      <div className="flex items-center gap-1.5 text-amber-600 dark:text-amber-400 font-mono font-bold text-sm bg-amber-50 dark:bg-amber-900/20 px-3 py-1 rounded-full">
+                        <Clock className="w-4 h-4" />
+                        {formatTime(timeLeft)}
+                      </div>
                     )}
-                  </button>
-                </div>
+                    {timeLeft === 0 && (
+                      <span className="text-sm font-bold text-red-500">Expiré</span>
+                    )}
+                  </div>
+
+                  <div className="flex gap-3">
+                    <button
+                      onClick={async () => { await cancelTransaction(); }}
+                      disabled={loading}
+                      className="flex-1 h-14 border-2 border-red-500 text-red-500 font-bold text-base rounded-2xl hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors disabled:opacity-50"
+                    >
+                      Annuler
+                    </button>
+                    <button
+                      onClick={async () => { await finalizeTransaction(); }}
+                      disabled={loading || (timeLeft !== null && timeLeft <= 0)}
+                      className="flex-1 h-14 text-white font-bold text-base rounded-2xl shadow-lg transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+                      style={{ backgroundColor: theme.mode === 'dark' ? theme.colors.primary : '#002d72' }}
+                    >
+                      {loading ? (
+                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
+                      ) : (
+                        timeLeft !== null && timeLeft <= 0 ? 'Expiré' : 'Finaliser'
+                      )}
+                    </button>
+                  </div>
+                </>
               ) : (
                 <>
                   <button

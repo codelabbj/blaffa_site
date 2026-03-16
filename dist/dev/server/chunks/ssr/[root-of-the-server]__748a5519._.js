@@ -323,9 +323,9 @@ function TransactionDetailContent() {
             case 'approve':
             case 'success':
                 return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "w-20 h-20 bg-green-500 rounded-full flex items-center justify-center mb-6 shadow-sm",
+                    className: "w-16 h-16 bg-green-500 rounded-full flex items-center justify-center mb-3 shadow-sm",
                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$check$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__CheckCircle2$3e$__["CheckCircle2"], {
-                        size: 40,
+                        size: 32,
                         className: "text-white"
                     }, void 0, false, {
                         fileName: "[project]/src/app/transaction/detail/page.tsx",
@@ -342,9 +342,9 @@ function TransactionDetailContent() {
             case 'fail':
             case 'echec':
                 return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "w-20 h-20 bg-red-500 rounded-full flex items-center justify-center mb-6 shadow-sm",
+                    className: "w-16 h-16 bg-red-500 rounded-full flex items-center justify-center mb-3 shadow-sm",
                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$circle$2d$alert$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__AlertCircle$3e$__["AlertCircle"], {
-                        size: 40,
+                        size: 32,
                         className: "text-white"
                     }, void 0, false, {
                         fileName: "[project]/src/app/transaction/detail/page.tsx",
@@ -361,9 +361,9 @@ function TransactionDetailContent() {
             case 'en attente':
             default:
                 return /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                    className: "w-20 h-20 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-6",
+                    className: "w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mb-3",
                     children: /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])(__TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$lucide$2d$react$2f$dist$2f$esm$2f$icons$2f$refresh$2d$cw$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__$3c$export__default__as__RefreshCw$3e$__["RefreshCw"], {
-                        size: 40,
+                        size: 32,
                         className: "text-gray-400 animate-spin-slow"
                     }, void 0, false, {
                         fileName: "[project]/src/app/transaction/detail/page.tsx",
@@ -584,7 +584,7 @@ function TransactionDetailContent() {
         className: "jsx-a285e8668f1fe836" + " " + `min-h-screen ${theme.colors.a_background} flex flex-col`,
         children: [
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "jsx-a285e8668f1fe836" + " " + "flex items-center px-4 py-6",
+                className: "jsx-a285e8668f1fe836" + " " + "flex items-center px-4 py-2",
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("button", {
                         onClick: ()=>router.back(),
@@ -620,10 +620,10 @@ function TransactionDetailContent() {
                 columnNumber: 13
             }, this),
             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                className: "jsx-a285e8668f1fe836" + " " + "mx-auto w-full px-4 pb-10 flex flex-col items-center",
+                className: "jsx-a285e8668f1fe836" + " " + "mx-auto w-full px-4 pb-14 flex flex-col items-center",
                 children: [
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "jsx-a285e8668f1fe836" + " " + "mt-8",
+                        className: "jsx-a285e8668f1fe836" + " " + "mt-1",
                         children: getStatusIcon(transaction.status)
                     }, void 0, false, {
                         fileName: "[project]/src/app/transaction/detail/page.tsx",
@@ -631,7 +631,7 @@ function TransactionDetailContent() {
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h2", {
-                        className: "jsx-a285e8668f1fe836" + " " + `text-2xl font-bold ${getStatusColor(transaction.status)} mb-1`,
+                        className: "jsx-a285e8668f1fe836" + " " + `text-2xl font-bold ${getStatusColor(transaction.status)} mb-0.5`,
                         children: getStatusText(transaction.status)
                     }, void 0, false, {
                         fileName: "[project]/src/app/transaction/detail/page.tsx",
@@ -639,7 +639,7 @@ function TransactionDetailContent() {
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("p", {
-                        className: "jsx-a285e8668f1fe836" + " " + "text-gray-400 text-sm mb-6",
+                        className: "jsx-a285e8668f1fe836" + " " + "text-gray-400 text-sm mb-3",
                         children: getStatusSubtext(transaction.status, transaction.type_trans)
                     }, void 0, false, {
                         fileName: "[project]/src/app/transaction/detail/page.tsx",
@@ -647,7 +647,7 @@ function TransactionDetailContent() {
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "jsx-a285e8668f1fe836" + " " + `text-3xl font-black ${theme.colors.text} mb-8`,
+                        className: "jsx-a285e8668f1fe836" + " " + `text-3xl font-black ${theme.colors.text} mb-4`,
                         children: [
                             "XOF ",
                             transaction.amount
@@ -658,7 +658,7 @@ function TransactionDetailContent() {
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "jsx-a285e8668f1fe836" + " " + `w-full ${theme.mode === 'dark' ? 'bg-blue-900/10 border-blue-900/30' : 'bg-[#EBF5FF] border-[#D1E9FF]'} rounded-2xl p-4 mb-6 border`,
+                        className: "jsx-a285e8668f1fe836" + " " + `w-full ${theme.mode === 'dark' ? 'bg-blue-900/10 border-blue-900/30' : 'bg-[#EBF5FF] border-[#D1E9FF]'} rounded-2xl p-3 mb-4 border`,
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
                                 className: "jsx-a285e8668f1fe836" + " " + "flex items-center gap-2 mb-1",
@@ -709,10 +709,10 @@ function TransactionDetailContent() {
                         columnNumber: 17
                     }, this),
                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                        className: "jsx-a285e8668f1fe836" + " " + `w-full ${theme.mode === 'dark' ? 'bg-[#1a1a1a] border-gray-800' : 'bg-white border-gray-100'} rounded-3xl p-6 border shadow-sm mb-8`,
+                        className: "jsx-a285e8668f1fe836" + " " + `w-full ${theme.mode === 'dark' ? 'bg-[#1a1a1a] border-gray-800' : 'bg-white border-gray-100'} rounded-3xl p-4 border shadow-sm mb-4`,
                         children: [
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("h3", {
-                                className: "jsx-a285e8668f1fe836" + " " + `text-lg font-bold ${theme.colors.text} mb-6`,
+                                className: "jsx-a285e8668f1fe836" + " " + `text-base font-bold ${theme.colors.text} mb-3`,
                                 children: [
                                     "Informations du ",
                                     transaction.type_trans
@@ -723,10 +723,10 @@ function TransactionDetailContent() {
                                 columnNumber: 21
                             }, this),
                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                className: "jsx-a285e8668f1fe836" + " " + "space-y-6",
+                                className: "jsx-a285e8668f1fe836" + " " + "space-y-3",
                                 children: [
                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                        className: "jsx-a285e8668f1fe836" + " " + "flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-4",
+                                        className: "jsx-a285e8668f1fe836" + " " + "flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-2",
                                         children: [
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                 className: "jsx-a285e8668f1fe836" + " " + "text-gray-400 text-sm",
@@ -787,7 +787,7 @@ function TransactionDetailContent() {
                                                 columnNumber: 29
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "jsx-a285e8668f1fe836" + " " + "flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-4",
+                                                className: "jsx-a285e8668f1fe836" + " " + "flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-2",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         className: "jsx-a285e8668f1fe836" + " " + "text-gray-400 text-xs",
@@ -855,7 +855,7 @@ function TransactionDetailContent() {
                                                 columnNumber: 29
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "jsx-a285e8668f1fe836" + " " + "flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-4",
+                                                className: "jsx-a285e8668f1fe836" + " " + "flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-2",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         className: "jsx-a285e8668f1fe836" + " " + "text-gray-400 text-xs",
@@ -904,7 +904,7 @@ function TransactionDetailContent() {
                                                 columnNumber: 29
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "jsx-a285e8668f1fe836" + " " + "flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-4",
+                                                className: "jsx-a285e8668f1fe836" + " " + "flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-2",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         className: "jsx-a285e8668f1fe836" + " " + "text-gray-400 text-xs",
@@ -953,7 +953,7 @@ function TransactionDetailContent() {
                                                 columnNumber: 29
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "jsx-a285e8668f1fe836" + " " + "flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-4",
+                                                className: "jsx-a285e8668f1fe836" + " " + "flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-2",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         className: "jsx-a285e8668f1fe836" + " " + "text-gray-400 text-xs",
@@ -1005,7 +1005,7 @@ function TransactionDetailContent() {
                                                 columnNumber: 29
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "jsx-a285e8668f1fe836" + " " + "flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-4",
+                                                className: "jsx-a285e8668f1fe836" + " " + "flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-2",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         className: "jsx-a285e8668f1fe836" + " " + "text-gray-400 text-xs",
@@ -1078,7 +1078,7 @@ function TransactionDetailContent() {
                                                 columnNumber: 29
                                             }, this),
                                             /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("div", {
-                                                className: "jsx-a285e8668f1fe836" + " " + "flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-4",
+                                                className: "jsx-a285e8668f1fe836" + " " + "flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-2",
                                                 children: [
                                                     /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2d$jsx$2d$dev$2d$runtime$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["jsxDEV"])("span", {
                                                         className: "jsx-a285e8668f1fe836" + " " + "text-gray-400 text-xs",
