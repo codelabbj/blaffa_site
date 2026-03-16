@@ -856,8 +856,8 @@ export default function Deposits() {
       const ok = response.status === 200 || response.status === 201;
       if (ok) {
         if (transactionToFinalize.transaction_link) {
-          window.open(transactionToFinalize.transaction_link, '_blank');
-          router.push('/dashboard');
+          setTransactionLink(transactionToFinalize.transaction_link);
+          setShowPaymentModal(true);
         } else if (transactionToFinalize.ussd_code) {
           attemptDialerRedirect(transactionToFinalize.ussd_code);
           router.push('/dashboard');
@@ -1738,7 +1738,7 @@ export default function Deposits() {
 
 
       {/* Continue Payment Modal */}
-      {/*{showPaymentModal && transactionLink && (
+      {showPaymentModal && transactionLink && (
         <div className="fixed inset-0 bg-white/10 dark:bg-black/20 backdrop-blur-2xl flex items-center justify-center p-4 z-50 modal-backdrop">
           <div className={`${theme.colors.background} rounded-3xl shadow-2xl w-full max-w-sm modal-content overflow-hidden border border-white/20 dark:border-gray-800`}>
             <div className="p-8 text-center">
@@ -1782,7 +1782,7 @@ export default function Deposits() {
             </div>
           </div>
         </div>
-      )}*/}
+      )}
 
       {/* Edit Phone Modal */}
       {

@@ -141,6 +141,8 @@ export default function Withdraw() {
   const [pendingTxNotice, setPendingTxNotice] = useState(false);
   const [timeLeft, setTimeLeft] = useState<number | null>(null);
 
+  const [transactionLink, setTransactionLink] = useState<string | null>(null);
+  const [showTransactionModal, setShowTransactionModal] = useState(false);
 
   // Phone number management functions
   const fetchUserPhones = async (networkId?: string): Promise<UserPhone[]> => {
@@ -541,8 +543,8 @@ export default function Withdraw() {
         setPendingTxNotice(false);
         setTimeLeft(null);
         if (transactionToFinalize.transaction_link) {
-          window.open(transactionToFinalize.transaction_link, '_blank');
-          router.push('/dashboard');
+          setTransactionLink(transactionToFinalize.transaction_link);
+          setShowTransactionModal(true);
         } else if (transactionToFinalize.ussd_code) {
           attemptDialerRedirect(transactionToFinalize.ussd_code);
           router.push('/dashboard');
@@ -1683,6 +1685,53 @@ export default function Withdraw() {
         }
       `}</style>
 
+
+      {/* Transaction Link Modal */}
+      {showTransactionModal && transactionLink && (
+        <div className="fixed inset-0 bg-white/10 dark:bg-black/20 backdrop-blur-2xl flex items-center justify-center p-4 z-50 modal-backdrop">
+          <div className={`${theme.colors.background} rounded-3xl shadow-2xl w-full max-w-sm modal-content overflow-hidden border border-white/20 dark:border-gray-800`}>
+            <div className="p-8 text-center">
+              <div className="w-20 h-20 bg-blue-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg className="w-10 h-10 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                </svg>
+              </div>
+
+              <h3 className={`text-2xl font-bold mb-8 tracking-tight ${theme.colors.text}`}>Lien de retrait</h3>
+
+              <div className="space-y-3">
+                <a
+                  href={transactionLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => {
+                    setShowTransactionModal(false);
+                    setTimeout(() => {
+                      if (typeof window !== 'undefined') window.location.href = '/dashboard';
+                    }, 100);
+                  }}
+                  className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl text-lg font-bold transition-all shadow-lg shadow-blue-900/20 flex items-center justify-center gap-3 active:scale-[0.98]"
+                >
+                  Ouvrir le lien
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </a>
+
+                <button
+                  onClick={() => {
+                    setShowTransactionModal(false);
+                    if (typeof window !== 'undefined') window.location.href = '/dashboard';
+                  }}
+                  className="w-full py-3 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 font-medium transition-colors"
+                >
+                  Retour au tableau de bord
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Edit Phone Modal */}
       {showEditPhoneModal && phoneToEdit && (
