@@ -55,7 +55,7 @@ const themes: Record<ThemeMode, Theme> = {
       c_background: 'bg-slate-100/50',
       // a_background: 'from-slate-100 via-blue-100 to-slate-50',
       background: 'bg-slate-50',
-      text: '#1f2937',
+      text: 'text-neutral-900',
       a_background: 'bg-white',
       accent: '#8b5cf6',
       hover: 'hover:bg-gray-100'
@@ -87,7 +87,7 @@ const themes: Record<ThemeMode, Theme> = {
       // a_background: 'from-slate-900 via-blue-900 to-slate-800',
       a_background: 'bg-slate-900',
       background: 'bg-slate-800',
-      text: '#f9fafb',
+      text: 'text-white',
       accent: '#a78bfa',
       hover: 'hover:bg-gray-700'
     },

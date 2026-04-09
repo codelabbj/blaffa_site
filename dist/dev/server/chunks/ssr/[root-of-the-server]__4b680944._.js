@@ -33,7 +33,7 @@ const themes = {
             c_background: 'bg-slate-100/50',
             // a_background: 'from-slate-100 via-blue-100 to-slate-50',
             background: 'bg-slate-50',
-            text: '#1f2937',
+            text: 'text-neutral-900',
             a_background: 'bg-white',
             accent: '#8b5cf6',
             hover: 'hover:bg-gray-100'
@@ -65,7 +65,7 @@ const themes = {
             // a_background: 'from-slate-900 via-blue-900 to-slate-800',
             a_background: 'bg-slate-900',
             background: 'bg-slate-800',
-            text: '#f9fafb',
+            text: 'text-white',
             accent: '#a78bfa',
             hover: 'hover:bg-gray-700'
         },
@@ -184,60 +184,100 @@ const WebSocketContext = /*#__PURE__*/ (0, __TURBOPACK__imported__module__$5b$pr
 const WebSocketProvider = ({ children })=>{
     const ws = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRef"])(null);
     const messageHandlers = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRef"])([]);
+    const [isConnected, setIsConnected] = __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["default"].useState(false);
     const reconnectAttempts = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRef"])(0);
-    const isConnected = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRef"])(false);
-    // const reconnectTimeout = useRef<NodeJS.Timeout>();
     const reconnectTimeout = (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useRef"])(null);
     const connect = ()=>{
         const token = localStorage.getItem('accessToken');
         if (!token) {
-            console.log('No access token found, skipping WebSocket connection');
+            console.log('⚠️ [WS] No access token, skipping connection');
+            setIsConnected(false);
             return;
         }
+        // Prevent duplicate connection attempts
         if (ws.current) {
+            if (ws.current.readyState === WebSocket.OPEN) {
+                console.log('ℹ️ [WS] Already connected, skipping redundant attempt');
+                return;
+            }
+            if (ws.current.readyState === WebSocket.CONNECTING) {
+                console.log('ℹ️ [WS] Connection already in progress, waiting...');
+                return;
+            }
+            // If it's in any other state (CLOSING or CLOSED), clean it up before a new attempt
+            ws.current.onclose = null;
+            ws.current.onerror = null;
             ws.current.close();
         }
         try {
-            const wsUrl = `wss://api.blaffa.net/ws/socket?token=${encodeURIComponent(token)}`;
-            ws.current = new WebSocket(wsUrl);
+            // Use URLSearchParams for robust encoding of the JWT token
+            const wsUrl = new URL('wss://api.blaffa.net/ws/socket/');
+            wsUrl.searchParams.set('token', token);
+            const tokenPreview = `${token.substring(0, 5)}...${token.substring(token.length - 4)}`;
+            console.log(`🔌 [WS] Attempting connection with token: ${tokenPreview}`);
+            ws.current = new WebSocket(wsUrl.toString());
             ws.current.onopen = ()=>{
-                console.log('WebSocket connected');
-                isConnected.current = true;
+                console.log('✅ [WS] Connected successfully');
+                setIsConnected(true);
                 reconnectAttempts.current = 0;
             };
             ws.current.onmessage = (event)=>{
                 try {
                     const data = JSON.parse(event.data);
-                    console.log('WebSocket message received:', data);
-                    // const normalizedData = {
-                    //   ...data,
-                    //   // If data has a data property, use that as the URL
-                    //   ...(data.data && { url: data.data })
-                    // };
                     messageHandlers.current.forEach((handler)=>handler(data));
                 } catch (error) {
-                    console.error('Error processing WebSocket message:', error);
+                    console.error('⚠️ [WS] Error processing message:', error);
                 }
             };
-            ws.current.onclose = ()=>{
-                isConnected.current = false;
-                console.log('WebSocket disconnected, attempting to reconnect...');
-                const delay = Math.min(1000 * Math.pow(2, reconnectAttempts.current), 30000);
-                reconnectAttempts.current++;
-                reconnectTimeout.current = setTimeout(connect, delay);
+            ws.current.onclose = (event)=>{
+                setIsConnected(false);
+                const code = event.code;
+                const reason = event.reason || 'No reason';
+                // Don't auto-reconnect if it was a clean logout (1000)
+                if (code !== 1000) {
+                    console.log(`📡 [WS] Connection closed (Code: ${code}, Reason: ${reason}). Retrying...`);
+                    const delay = Math.min(1000 * Math.pow(2, reconnectAttempts.current), 30000);
+                    reconnectAttempts.current++;
+                    if (reconnectTimeout.current) clearTimeout(reconnectTimeout.current);
+                    reconnectTimeout.current = setTimeout(connect, delay);
+                } else {
+                    console.log('👋 [WS] Connection closed normally');
+                }
+                ws.current = null;
             };
             ws.current.onerror = (error)=>{
-                console.error('WebSocket error:', error);
+                // Only log errors if we aren't already transitioning to a successful state
+                if (ws.current?.readyState !== WebSocket.OPEN) {
+                    console.error('❌ [WS] Connection failure');
+                }
             };
         } catch (error) {
-            console.error('WebSocket connection error:', error);
+            console.error('❌ [WS] Setup error:', error);
         }
     };
     (0, __TURBOPACK__imported__module__$5b$project$5d2f$node_modules$2f$next$2f$dist$2f$server$2f$route$2d$modules$2f$app$2d$page$2f$vendored$2f$ssr$2f$react$2e$js__$5b$app$2d$ssr$5d$__$28$ecmascript$29$__["useEffect"])(()=>{
         connect();
+        // Watch for token changes in localStorage (e.g. from other tabs or login)
+        const handleStorageChange = (e)=>{
+            if (e.key === 'accessToken') {
+                console.log('Auth token changed, reconnecting WebSocket...');
+                if (reconnectTimeout.current) clearTimeout(reconnectTimeout.current);
+                connect();
+            }
+        };
+        window.addEventListener('storage', handleStorageChange);
+        // Periodic check for connection (pulse)
+        const interval = setInterval(()=>{
+            if (!ws.current || ws.current.readyState === WebSocket.CLOSED) {
+                const token = localStorage.getItem('accessToken');
+                if (token) connect();
+            }
+        }, 10000);
         return ()=>{
+            window.removeEventListener('storage', handleStorageChange);
+            clearInterval(interval);
             if (ws.current) {
-                ws.current.close();
+                ws.current.close(1000); // Normal closure
             }
             if (reconnectTimeout.current) {
                 clearTimeout(reconnectTimeout.current);
@@ -261,12 +301,12 @@ const WebSocketProvider = ({ children })=>{
         value: {
             addMessageHandler,
             sendMessage,
-            isConnected: isConnected.current
+            isConnected
         },
         children: children
     }, void 0, false, {
         fileName: "[project]/src/context/WebSocketContext.tsx",
-        lineNumber: 105,
+        lineNumber: 151,
         columnNumber: 5
     }, ("TURBOPACK compile-time value", void 0));
 };

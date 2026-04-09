@@ -7,6 +7,8 @@ import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from './ThemeProvider';
 import api from '@/lib/axios';
+import { useWebSocket } from '@/context/WebSocketContext';
+
 // Define the App interface
 interface App {
   id: string;
@@ -106,30 +108,17 @@ export default function TransactionHistory() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
-  // const [ setHasMore] = useState(true);
+  const [hasMore, setHasMore] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { t } = useTranslation();
   const { theme } = useTheme();
   const router = useRouter();
 
-  interface CustomWebSocket extends WebSocket {
-    pingInterval?: NodeJS.Timeout | null;
-  }
-
-  const webSocketRef = useRef<CustomWebSocket | null>(null);
-
-  const wsHealth = useRef({
-    lastMessageTime: 0,
-    messageCount: 0
-  });
-
-
-  // WebSocket reference
-  const webSocketReconnectAttempts = useRef(0);
+  const { addMessageHandler } = useWebSocket();
   // Transactions map to track unique transactions
   const transactionsMapRef = useRef(new Map());
-  // Reconnect timeout reference for WebSocket
-  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
+
 
   // Format date from ISO string to readable format
   const formatDate = (isoDate: string) => {
@@ -177,171 +166,7 @@ export default function TransactionHistory() {
   // Add this function to cycle through filter options
 
 
-  // Update the setupWebSocket function with better error handling and fallback
-  const setupWebSocket = () => {
-    const token = localStorage.getItem('accessToken');
-    if (!token) {
-      setError('Authentication required for real-time updates');
-      console.log(error);
-      window.location.href = '/login';
-      return;
-    }
 
-    // Clean up existing connection
-    cleanupWebSocket();
-
-    try {
-      const wsUrl = `wss://api.blaffa.net/ws/socket?token=${encodeURIComponent(token)}`;
-      webSocketRef.current = new WebSocket(wsUrl);
-
-      // Set connection timeout
-      const connectionTimeout = setTimeout(() => {
-        if (webSocketRef.current?.readyState !== WebSocket.OPEN) {
-          handleConnectionFailure('Connection timeout');
-        }
-      }, 5000);
-
-      webSocketRef.current.onopen = () => {
-        clearTimeout(connectionTimeout);
-        console.log('WebSocket connected successfully');
-        webSocketReconnectAttempts.current = 0;
-        startPingInterval();
-      };
-
-      webSocketRef.current.onclose = (event) => {
-        clearTimeout(connectionTimeout);
-        handleWebSocketClose(event);
-      };
-
-      webSocketRef.current.onerror = (error) => {
-        console.error('WebSocket error:', error);
-        handleConnectionFailure('Connection failed');
-      };
-
-      webSocketRef.current.onmessage = handleWebSocketMessage;
-
-    } catch (error) {
-      console.error('WebSocket setup failed:', error);
-      setError(error instanceof Error ? error.message : 'Failed to establish connection');
-      handleConnectionFailure('Failed to initialize WebSocket');
-    }
-  };
-
-  // Add these helper functions
-  const cleanupWebSocket = () => {
-    if (webSocketRef.current) {
-      webSocketRef.current.close();
-      webSocketRef.current = null;
-    }
-    if (reconnectTimeoutRef.current) {
-      clearTimeout(reconnectTimeoutRef.current);
-    }
-  };
-
-  const startPingInterval = () => {
-    const pingInterval = setInterval(() => {
-      if (webSocketRef.current?.readyState === WebSocket.OPEN) {
-        try {
-          webSocketRef.current.send(JSON.stringify({ type: 'ping' }));
-        } catch (error) {
-          console.error('Failed to send ping:', error);
-          cleanupWebSocket();
-          setupWebSocket();
-        }
-      } else {
-        clearInterval(pingInterval);
-      }
-    }, 30000);
-
-    // Store the interval ID for cleanup
-    if (webSocketRef.current) {
-      webSocketRef.current.pingInterval = pingInterval;
-    }
-  };
-
-  const handleConnectionFailure = (message: string) => {
-    console.error(message);
-    setError(message);
-
-    // Implement exponential backoff
-    const backoffDelay = Math.min(1000 * Math.pow(2, webSocketReconnectAttempts.current), 30000);
-    webSocketReconnectAttempts.current++;
-
-    reconnectTimeoutRef.current = setTimeout(() => {
-      setupWebSocket();
-    }, backoffDelay);
-  };
-
-  const handleWebSocketMessage = (event: MessageEvent) => {
-    try {
-      const data = JSON.parse(event.data);
-      wsHealth.current = {
-        lastMessageTime: Date.now(),
-        messageCount: wsHealth.current.messageCount + 1
-      };
-
-      switch (data.type) {
-        case 'transaction_update':
-          handleTransactionUpdate(data.transaction);
-          break;
-        case 'new_transaction':
-          handleNewTransaction(data.transaction);
-          break;
-        case 'pong':
-          console.log('Received pong from server');
-          break;
-        case 'error':
-          console.error('Server error:', data.message);
-          setError(data.message);
-          break;
-        default:
-          if (data.transaction) {
-            const existingTransaction = transactionsMapRef.current.has(getTransactionKey(data.transaction));
-            if (existingTransaction) {
-              handleTransactionUpdate(data.transaction);
-            } else {
-              handleNewTransaction(data.transaction);
-            }
-          }
-      }
-
-    } catch (error) {
-      console.error('Error processing message:', error);
-    }
-  };
-
-  const handleWebSocketClose = (event: CloseEvent) => {
-    cleanupWebSocket();
-
-    const reason = getCloseReason(event.code);
-    console.log(`WebSocket closed: ${reason}`);
-
-    if (event.code !== 1000) {
-      handleConnectionFailure(reason);
-    }
-  };
-
-  const getCloseReason = (code: number): string => {
-    const closeReasons: Record<number, string> = {
-      1000: 'Normal closure',
-      1001: 'Going away',
-      1002: 'Protocol error',
-      1003: 'Unsupported data',
-      1005: 'No status received',
-      1006: 'Abnormal closure',
-      1007: 'Invalid frame payload data',
-      1008: 'Policy violation',
-      1009: 'Message too big',
-      1010: 'Mandatory extension',
-      1011: 'Internal server error',
-      1012: 'Service restart',
-      1013: 'Try again later',
-      1014: 'Bad gateway',
-      1015: 'TLS handshake'
-    };
-
-    return closeReasons[code] || `Unknown reason (${code})`;
-  };
 
   // Handle new transaction from WebSocket
   const handleNewTransaction = (transaction: Transaction) => {
@@ -412,8 +237,8 @@ export default function TransactionHistory() {
   };
 
   // Fetch transactions from API
-  const fetchTransactions = async (pageNumber: number, activeFilter: string) => {
-    setLoading(true);
+  const fetchTransactions = async (pageNumber: number, activeFilter: string, silent = false) => {
+    if (!silent) setLoading(true);
 
     try {
       const apiUrl = getApiUrl(pageNumber, activeFilter);
@@ -423,7 +248,7 @@ export default function TransactionHistory() {
       if (!token) {
         console.error('No access token found');
         setError('You must be logged in to view transactions.');
-        setLoading(false);
+        if (!silent) setLoading(false);
         return;
       }
 
@@ -444,7 +269,7 @@ export default function TransactionHistory() {
       console.log('Fetched Transactions:', data);
 
       // Process the fetched transactions
-      if (pageNumber === 1) {
+      if (pageNumber === 1 && !silent) {
         // Reset the transactions map for first page
         transactionsMapRef.current.clear();
 
@@ -462,19 +287,33 @@ export default function TransactionHistory() {
           setTransactions([]);
         }
       } else {
-        // For pagination, only add transactions that don't already exist
-        const newTransactions = data.results.filter((tx: HistoricItem) => {
+        // For pagination or silent polling, add/update transactions
+        const newTransactions: HistoricItem[] = [];
+        data.results.forEach((tx: HistoricItem) => {
           const key = getTransactionKey(tx);
           if (!transactionsMapRef.current.has(key)) {
             transactionsMapRef.current.set(key, tx);
-            return true;
+            newTransactions.push(tx);
+          } else if (silent) {
+            transactionsMapRef.current.set(key, tx);
           }
-          return false;
         });
 
-        setTransactions(prev => [...prev, ...newTransactions]);
+        setTransactions(prev => {
+          // If silent polling, update existing ones
+          const updatedPrev = silent ? prev.map(item => {
+            const key = getTransactionKey(item);
+            const fresh = data.results.find((t: HistoricItem) => getTransactionKey(t) === key);
+            return fresh || item;
+          }) : prev;
+          
+          return [...newTransactions, ...updatedPrev].sort((a, b) => 
+            new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+          );
+        });
       }
 
+      setHasMore(!!data.next);
       setError(null);
     } catch (error) {
       console.error('Error fetching transactions:', error);
@@ -492,73 +331,73 @@ export default function TransactionHistory() {
         transactionsMapRef.current.clear();
       }
     } finally {
-      setLoading(false);
+      if (!silent) setLoading(false);
     }
   };
 
-  // Initial fetch and WebSocket setup
+  // Initial fetch and WebSocket listener setup
   useEffect(() => {
-    fetchTransactions(page, 'all');
+    fetchTransactions(1, 'all');
 
-    // Setup WebSocket connection
-    setupWebSocket();
-
-    // Add health check interval for WebSocket
-    const healthCheckInterval = setInterval(() => {
-      const now = Date.now();
-      const minutesSinceLastMessage = (now - wsHealth.current.lastMessageTime) / (1000 * 60);
-
-      if (wsHealth.current.lastMessageTime > 0 && minutesSinceLastMessage > 5) {
-        console.warn('No WebSocket messages received in 5 minutes, reconnecting...');
-        setupWebSocket(); // Force reconnection
+    // Subscribe to global WebSocket messages
+    const removeHandler = addMessageHandler((data) => {
+      switch (data.type) {
+        case 'transaction_update':
+          handleTransactionUpdate(data.transaction);
+          break;
+        case 'new_transaction':
+          handleNewTransaction(data.transaction);
+          break;
+        case 'error':
+          console.error('WebSocket server error:', data.message);
+          setError(data.message);
+          break;
+        default:
+          if (data.transaction) {
+            const key = getTransactionKey(data.transaction);
+            const exists = transactionsMapRef.current.has(key);
+            if (exists) {
+              handleTransactionUpdate(data.transaction);
+            } else {
+              handleNewTransaction(data.transaction);
+            }
+          }
       }
-    }, 60000); // Check every minute
+    });
 
-    // Cleanup function
     return () => {
-      clearInterval(healthCheckInterval);
-      if (webSocketRef.current) {
-        // Clear ping interval if exists
-        if (webSocketRef.current.pingInterval) {
-          clearInterval(webSocketRef.current.pingInterval);
-        }
-
-        webSocketRef.current.close();
-        webSocketRef.current = null;
-      }
-
-      // Clear any pending reconnection timeouts
-      if (reconnectTimeoutRef.current) {
-        clearTimeout(reconnectTimeoutRef.current);
-      }
+      removeHandler();
     };
   }, []);
 
-  // Verify WebSocket connection after initial setup
+  // Polling for real-time status updates in history
   useEffect(() => {
-    // Verify connection after initial setup
-    const verifyConnectionTimeout = setTimeout(() => {
-      // If we haven't received any messages after 10 seconds of setup
-      if (wsHealth.current.messageCount === 0 && webSocketRef.current &&
-        webSocketRef.current.readyState === WebSocket.OPEN) {
-        console.log('Testing WebSocket connection with manual ping...');
-        try {
-          webSocketRef.current.send(JSON.stringify({ type: 'ping' }));
-        } catch (error) {
-          console.error('Failed to send ping, reconnecting WebSocket:', error);
-          setupWebSocket();
-        }
-      }
-    }, 10000);
+    const hasPending = transactions.some(item => 
+      item.transaction && ['pending', 'payment_init_success', 'en attente'].includes(item.transaction.status.toLowerCase() || '')
+    );
 
-    return () => clearTimeout(verifyConnectionTimeout);
-  }, []);
+    if (!hasPending) return;
 
-  // Reset page when tab changes to refetch from the beginning
-  useEffect(() => {
-    setPage(1);
-    fetchTransactions(1, 'all');
-  }, []);
+    const intervalId = setInterval(() => {
+      fetchTransactions(1, 'all', true);
+    }, 5000);
+
+    return () => clearInterval(intervalId);
+  }, [transactions]);
+
+  // Handle scroll for infinite loading
+  const handleScroll = () => {
+    if (!scrollContainerRef.current || loading || !hasMore) return;
+
+    const { scrollTop, scrollHeight, clientHeight } = scrollContainerRef.current;
+    if (scrollTop + clientHeight >= scrollHeight - 50) {
+      const nextPage = page + 1;
+      setPage(nextPage);
+      fetchTransactions(nextPage, 'all');
+    }
+  };
+
+
 
 
   // Show transaction details in page
@@ -645,8 +484,8 @@ export default function TransactionHistory() {
   };
 
   return (
-    <div className={`mt-4 ${theme.colors.a_background} rounded-3xl shadow-sm border border-gray-100 dark:border-gray-800 overflow-hidden`}>
-      <div className="w-full overflow-hidden">
+    <div className={`mt-4 ${theme.colors.a_background} rounded-3xl overflow-hidden`}>
+      <div className="w-full">
         {/* Header with title and controls */}
         <div className="px-6 py-4 flex items-center justify-between">
           <h3 className={`text-xl font-medium ${theme.colors.text}`}>Activités récentes</h3>
@@ -655,8 +494,16 @@ export default function TransactionHistory() {
           </a>
         </div>
 
-        {/* Transaction list */}
-        <div className="space-y-4">
+        {/* Transaction list with internal scroll */}
+        <div 
+          ref={scrollContainerRef}
+          onScroll={handleScroll}
+          className="h-[320px] overflow-y-scroll space-y-2 px-1 relative custom-scrollbar section-scroll"
+          style={{ 
+            WebkitOverflowScrolling: 'touch',
+            overscrollBehavior: 'contain'
+          }}
+        >
           <style>
             {`
         @keyframes slideInUp {
@@ -702,83 +549,56 @@ export default function TransactionHistory() {
           ) : (
             <div className="w-full">
               <div className="grid gap-0">
-                {transactions.map((item, index) => (
+                {transactions.map((item) => (
                   <div
                     key={item.id}
-                    className={`group relative w-full overflow-hidden bg-gradient-to-br ${theme.colors.background} transition-all duration-300 cursor-pointer`}
+                    className={`p-4 flex items-center justify-between ${theme.colors.hover} transition-colors cursor-pointer`}
                     onClick={() => openTransactionDetails(item)}
                   >
-
-                    <div className="relative p-4 w-full">
-                      {/* Unified Layout (Simplified dots design for all screens) */}
-                      <div className="w-full">
-                        <div className="flex items-center justify-between w-full">
-                          <div className="flex items-center gap-3">
-                            {/* Stylized Icon based on type and status */}
-                            {['completed', 'accept', 'success', 'successful', 'payment_init_success'].includes(item.transaction.status.toLowerCase()) ? (
-                              <div className={`w-10 h-10 rounded-full bg-green-500/10 flex items-center justify-center flex-shrink-0 text-green-500`}>
-                                {item.transaction.type_trans === 'deposit' ? (
-                                  <svg className="w-5 h-5 rotate-180" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
-                                  </svg>
-                                ) : (
-                                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
-                                  </svg>
-                                )}
-                              </div>
-                            ) : (
-                              /* Stylized Dots Icon - Light gray circle with 3 blue dots for other statuses */
-                              <div className={`w-10 h-10 rounded-full ${theme.mode === 'dark' ? 'bg-gray-700' : 'bg-gray-50'} flex items-center justify-center flex-shrink-0`}>
-                                <div className="flex gap-0.5">
-                                  <div className={`w-1 h-1 rounded-full ${theme.mode === 'dark' ? 'bg-[#60a5fa]' : 'bg-[#3b82f6]'}`}></div>
-                                  <div className={`w-1 h-1 rounded-full ${theme.mode === 'dark' ? 'bg-[#60a5fa]' : 'bg-[#3b82f6]'}`}></div>
-                                  <div className={`w-1 h-1 rounded-full ${theme.mode === 'dark' ? 'bg-[#60a5fa]' : 'bg-[#3b82f6]'}`}></div>
-                                </div>
-                              </div>
-                            )}
-
-                            {/* Transaction Info */}
-                            <div className="flex flex-col">
-                              <h3 className={`font-semibold text-sm ${theme.colors.text} leading-tight`}>
-                                {item.transaction.type_trans === 'deposit' ? 'Dépôt' : item.transaction.type_trans === 'withdrawal' ? 'Retrait' : item.transaction.type_trans}
-                              </h3>
-                              <p className={`text-xs ${theme.mode === 'dark' ? 'text-gray-400' : 'text-gray-500'} font-normal`}>
-                                {formatDate(item.transaction.created_at)}
-                              </p>
-                            </div>
-                          </div>
-
-                          {/* Amount and Status */}
-                          <div className="text-right">
-                            <div className={`font-bold text-sm ${theme.colors.text}`}>
-                              XOF {item.transaction.amount}
-                            </div>
-                            <p className={`text-[10px] md:text-xs tracking-wide ${item.transaction.status.toLowerCase() === 'expired'
-                              ? 'text-red-500'
-                              : ['completed', 'accept', 'success', 'successful'].includes(item.transaction.status.toLowerCase())
-                                ? 'text-green-500'
-                                : (theme.mode === 'dark' ? 'text-gray-500' : 'text-[#b3b3b3]')
-                              } font-normal`}>
-                              {item.transaction.status.toLowerCase() === 'expired'
-                                ? 'EXPIRED'
-                                : ['completed', 'accept', 'success', 'successful'].includes(item.transaction.status.toLowerCase())
-                                  ? 'success'
-                                  : item.transaction.status === 'pending'
-                                    ? 'pending'
-                                    : item.transaction.status}
-                            </p>
+                    <div className="flex items-center gap-4">
+                      {/* Stylized Icon based on type and status */}
+                      {['completed', 'accept', 'success', 'successful'].includes(item.transaction.status.toLowerCase()) ? (
+                        <div className={`w-12 h-12 rounded-full ${theme.mode === 'dark' ? 'bg-red-950/20' : 'bg-[#fff1f1]'} flex items-center justify-center flex-shrink-0`}>
+                          <svg className={`w-6 h-6 text-[#FF4D4D] ${item.transaction.type_trans === 'deposit' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+                          </svg>
+                        </div>
+                      ) : (
+                        /* Processing Icon - 3 blue dots */
+                        <div className={`w-12 h-12 rounded-full ${theme.mode === 'dark' ? 'bg-slate-800' : 'bg-neutral-100'} flex items-center justify-center flex-shrink-0`}>
+                          <div className="flex gap-1">
+                            <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                            <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                            <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
                           </div>
                         </div>
+                      )}
+
+                      <div>
+                        <h4 className={`font-bold text-base ${theme.colors.text} leading-tight`}>
+                          {item.transaction.type_trans === 'deposit' ? 'Dépot' : 'Retrait'}
+                        </h4>
+                        <p className={`text-sm ${theme.mode === 'dark' ? 'text-neutral-400' : 'text-neutral-500'} font-medium`}>
+                          {formatDate(item.transaction.created_at)}
+                        </p>
                       </div>
                     </div>
 
-                    {/* Gradient border effect on hover */}
-                    <div className="absolute inset-0 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
-                      <div className="absolute inset-0 rounded-2xl bg-gradient-to-r from-blue-500/20 via-blue-500/20 to-blue-500/20 blur-sm"></div>
+                    <div className="text-right">
+                      <div className={`font-bold text-base ${theme.colors.text} whitespace-nowrap`}>
+                        XOF {item.transaction.amount < 0 ? '-' : ''} {Math.abs(item.transaction.amount)}
+                      </div>
+                      <p className={`text-sm font-bold capitalize ${
+                        ['completed', 'accept', 'success', 'successful'].includes(item.transaction.status.toLowerCase()) 
+                        ? 'text-green-500' 
+                        : 'text-red-500'
+                      }`}>
+                        {item.transaction.status === 'pending' ? 'en cours' : item.transaction.status.toLowerCase() === 'completed' ? 'success' : item.transaction.status}
+                      </p>
                     </div>
                   </div>
                 ))}
+
               </div>
             </div>
           )}
