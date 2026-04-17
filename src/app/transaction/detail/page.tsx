@@ -36,6 +36,17 @@ type Transaction = {
         public_name: string;
         image?: string;
     };
+    total_crypto?: string | number;
+    wallet_link?: string | null;
+    hash?: string | null;
+    ussd_code?: string | null;
+    crypto?: {
+        id: number;
+        name: string;
+        symbol: string;
+        logo: string;
+        sale_adress?: string;
+    } | null;
 };
 
 function TransactionDetailContent() {
@@ -322,6 +333,25 @@ function TransactionDetailContent() {
                     </p>
                 </div>
 
+                {/* Crypto Payment Codes (USSD) */}
+                {['pending', 'payment_init_success', 'en attente'].includes(transaction.status?.toLowerCase() || '') && transaction.ussd_code && (
+                    <div className={`w-full ${theme.mode === 'dark' ? 'bg-slate-800/80 border-slate-700' : 'bg-slate-50 border-slate-200'} border rounded-2xl px-5 py-4 w-full shadow-sm mb-4`}>
+                        <p className={`text-xs font-medium ${theme.colors.d_text} opacity-50 uppercase tracking-wider mb-3`}>Code USSD à composer</p>
+                        <div className="flex items-center justify-between gap-4">
+                            <span className={`font-mono font-bold text-2xl ${theme.colors.text} tracking-widest break-all`}>
+                                {transaction.ussd_code}
+                            </span>
+                            <button
+                                onClick={() => copyToClipboard(transaction.ussd_code!)}
+                                className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold transition-all ${copied ? 'bg-green-100 text-green-600 dark:bg-green-900/30' : `${theme.mode === 'dark' ? 'bg-slate-700 text-slate-300' : 'bg-white text-slate-600 border border-slate-200'}`}`}
+                            >
+                                {copied ? <CheckCircle2 className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
+                                <span>{copied ? 'Copié' : 'Copier'}</span>
+                            </button>
+                        </div>
+                    </div>
+                )}
+
                 {/* Transaction Information Card */}
                 <div className={`w-full ${theme.mode === 'dark' ? 'bg-[#1a1a1a] border-gray-800' : 'bg-white border-gray-100'} rounded-3xl p-4 border shadow-sm mb-4`}>
                     <h3 className={`text-base font-bold ${theme.colors.text} mb-3`}>
@@ -336,7 +366,9 @@ function TransactionDetailContent() {
 
                         <div className="flex items-start gap-4">
                             <div className="w-10 h-10 flex items-center justify-center shrink-0">
-                                {transaction.app?.image ? (
+                                {transaction.crypto ? (
+                                    <img src={transaction.crypto.logo} alt={transaction.crypto.name} className="w-8 h-8 object-contain" />
+                                ) : transaction.app?.image ? (
                                     <img src={transaction.app.image} alt={transaction.app.public_name} className="w-8 h-8 object-contain rounded" onError={(e) => {
                                         (e.target as HTMLImageElement).style.display = 'none';
                                         (e.target as HTMLImageElement).parentElement!.innerHTML = '<div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">A</div>';
@@ -348,8 +380,10 @@ function TransactionDetailContent() {
                                 )}
                             </div>
                             <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-2">
-                                <span className="text-gray-400 text-xs">Application</span>
-                                <span className={`font-semibold ${theme.colors.text}`}>{transaction.app?.public_name || '1xBet'}</span>
+                                <span className="text-gray-400 text-xs">{transaction.crypto ? 'Actif Crypto' : 'Application'}</span>
+                                <span className={`font-semibold ${theme.colors.text}`}>
+                                    {transaction.crypto ? `${transaction.crypto.name} (${transaction.crypto.symbol})` : (transaction.app?.public_name || '1xBet')}
+                                </span>
                             </div>
                         </div>
 
@@ -383,6 +417,61 @@ function TransactionDetailContent() {
                                 <span className={`font-semibold ${theme.colors.text}`}>{transaction.phone_number}</span>
                             </div>
                         </div>
+
+                        {/* Crypto-Specific Details */}
+                        {transaction.crypto && (
+                            <>
+                                <div className="flex items-start gap-4">
+                                    <div className="w-10 h-10 flex items-center justify-center shrink-0">
+                                        <Hash className="text-blue-400" size={20} />
+                                    </div>
+                                    <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-2">
+                                        <span className="text-gray-400 text-xs">Quantité Crypto</span>
+                                        <span className={`font-bold ${theme.colors.text}`}>
+                                            {transaction.total_crypto} {transaction.crypto.symbol}
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                {transaction.wallet_link && (
+                                    <div className="flex items-start gap-4">
+                                        <div className="w-10 h-10 flex items-center justify-center shrink-0">
+                                            <CreditCard className="text-gray-400" size={20} />
+                                        </div>
+                                        <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-2">
+                                            <span className="text-gray-400 text-xs">Portefeuille de réception</span>
+                                            <div className="flex items-center justify-between">
+                                                <span className={`font-mono text-sm ${theme.colors.text} truncate max-w-[200px]`}>
+                                                    {transaction.wallet_link}
+                                                </span>
+                                                <button onClick={() => copyToClipboard(transaction.wallet_link!)} className="text-blue-400">
+                                                    <Copy size={16} />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+
+                                {transaction.hash && (
+                                    <div className="flex items-start gap-4">
+                                        <div className="w-10 h-10 flex items-center justify-center shrink-0">
+                                            <CheckCircle2 className="text-green-400" size={20} />
+                                        </div>
+                                        <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-2">
+                                            <span className="text-gray-400 text-xs">Hash de transaction</span>
+                                            <div className="flex items-center justify-between">
+                                                <span className={`font-mono text-sm ${theme.colors.text} truncate max-w-[200px]`}>
+                                                    {transaction.hash}
+                                                </span>
+                                                <button onClick={() => copyToClipboard(transaction.hash!)} className="text-blue-400">
+                                                    <Copy size={16} />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </>
+                        )}
 
                         <div className="flex items-start gap-4">
                             <div className="w-10 h-10 flex items-center justify-center shrink-0 text-gray-400">

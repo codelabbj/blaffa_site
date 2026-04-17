@@ -85,6 +85,13 @@ interface Transaction {
   transaction_reference: string | null;
   error_message: string | null;
   net_payable_amount: number | null;
+  total_crypto?: string | number;
+  crypto?: {
+    id: number;
+    name: string;
+    symbol: string;
+    logo: string;
+  } | null;
 }
 
 // Define the HistoricItem type
@@ -557,7 +564,11 @@ export default function TransactionHistory() {
                   >
                     <div className="flex items-center gap-4">
                       {/* Stylized Icon based on type and status */}
-                      {['completed', 'accept', 'success', 'successful'].includes(item.transaction.status.toLowerCase()) ? (
+                      {item.transaction.crypto ? (
+                        <div className={`w-12 h-12 rounded-full overflow-hidden bg-gray-50 dark:bg-gray-800 flex items-center justify-center flex-shrink-0 border ${theme.mode === 'dark' ? 'border-gray-700' : 'border-gray-100'}`}>
+                          <img src={item.transaction.crypto.logo} alt={item.transaction.crypto.name} className="w-8 h-8 object-contain" />
+                        </div>
+                      ) : ['completed', 'accept', 'success', 'successful'].includes(item.transaction.status.toLowerCase()) ? (
                         <div className={`w-12 h-12 rounded-full ${theme.mode === 'dark' ? 'bg-red-950/20' : 'bg-[#fff1f1]'} flex items-center justify-center flex-shrink-0`}>
                           <svg className={`w-6 h-6 text-[#FF4D4D] ${item.transaction.type_trans === 'deposit' ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth="2">
                             <path strokeLinecap="round" strokeLinejoin="round" d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
@@ -576,7 +587,9 @@ export default function TransactionHistory() {
 
                       <div>
                         <h4 className={`font-bold text-base ${theme.colors.text} leading-tight`}>
-                          {item.transaction.type_trans === 'deposit' ? 'Dépot' : 'Retrait'}
+                          {item.transaction.crypto 
+                            ? (item.transaction.type_trans === 'buy' ? `Achat ${item.transaction.crypto.symbol}` : `Vente ${item.transaction.crypto.symbol}`)
+                            : (item.transaction.type_trans === 'deposit' ? 'Dépôt' : 'Retrait')}
                         </h4>
                         <p className={`text-sm ${theme.mode === 'dark' ? 'text-neutral-400' : 'text-neutral-500'} font-medium`}>
                           {formatDate(item.transaction.created_at)}
@@ -586,7 +599,9 @@ export default function TransactionHistory() {
 
                     <div className="text-right">
                       <div className={`font-bold text-base ${theme.colors.text} whitespace-nowrap`}>
-                        XOF {item.transaction.amount < 0 ? '-' : ''} {Math.abs(item.transaction.amount)}
+                        {item.transaction.crypto 
+                          ? `${item.transaction.total_crypto} ${item.transaction.crypto.symbol}`
+                          : `XOF ${item.transaction.amount < 0 ? '-' : ''} ${Math.abs(item.transaction.amount)}`}
                       </div>
                       <p className={`text-sm font-bold capitalize ${
                         ['completed', 'accept', 'success', 'successful'].includes(item.transaction.status.toLowerCase()) 

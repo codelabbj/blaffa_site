@@ -9,7 +9,7 @@ import { FaArrowLeft } from 'react-icons/fa';
 import CryptoTransactionForm from '@/components/CryptoTransactionForm';
 import { ImSpinner2 } from 'react-icons/im';
 
-interface Crypto {
+interface Cryptocurrency {
     id: number;
     public_amount: number;
     created_at: string;
@@ -30,8 +30,21 @@ interface Network {
     image?: string;
 }
 
+interface CryptoNetwork {
+    id: number;
+    name: string;
+    symbol: string;
+    logo: string;
+    is_active: boolean;
+    crypto: {
+        id: number;
+        name: string;
+    };
+}
+
 const CRYPTO_API = "/blaffa/crypto";
 const NETWORK_API = "/blaffa/network/";
+const CRYPTO_NETWORK_API = "/betpay/crypto-network/";
 
 interface CryptoSelectionGridProps {
     mode: 'buy' | 'sale';
@@ -40,13 +53,14 @@ interface CryptoSelectionGridProps {
 
 export default function CryptoSelectionGrid({ mode, title }: CryptoSelectionGridProps) {
     const { theme } = useTheme();
-    const [cryptos, setCryptos] = useState<Crypto[]>([]);
+    const [cryptos, setCryptos] = useState<Cryptocurrency[]>([]);
     const [networks, setNetworks] = useState<Network[]>([]);
+    const [cryptoNetworks, setCryptoNetworks] = useState<CryptoNetwork[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-    const [selectedCrypto, setSelectedCrypto] = useState<Crypto | null>(null);
-    const [selectedNetwork, setSelectedNetwork] = useState<Network | null>(null);
-    const [step, setStep] = useState<'crypto' | 'network' | 'details'>('crypto');
+    const [selectedCrypto, setSelectedCrypto] = useState<Cryptocurrency | null>(null);
+    const [selectedCryptoNetwork, setSelectedCryptoNetwork] = useState<CryptoNetwork | null>(null);
+    const [step, setStep] = useState<'crypto' | 'crypto-network' | 'details'>('crypto');
 
     // Fetch Cryptos
     useEffect(() => {
@@ -66,7 +80,7 @@ export default function CryptoSelectionGrid({ mode, title }: CryptoSelectionGrid
         fetchCryptos();
     }, [mode]);
 
-    // Fetch Networks
+    // Fetch Networks (Payment Networks)
     useEffect(() => {
         const fetchNetworks = async () => {
             try {
@@ -81,60 +95,62 @@ export default function CryptoSelectionGrid({ mode, title }: CryptoSelectionGrid
         fetchNetworks();
     }, []);
 
-    const handleCryptoSelect = (crypto: Crypto) => {
+    const handleCryptoSelect = async (crypto: Cryptocurrency) => {
         const token = localStorage.getItem('accessToken');
         if (!token) {
             window.location.href = '/login';
             return;
         }
         setSelectedCrypto(crypto);
-        setStep('network');
+        setLoading(true);
+        try {
+            const response = await api.get(CRYPTO_NETWORK_API);
+            const allNetworks = Array.isArray(response.data.results) ? response.data.results : (Array.isArray(response.data) ? response.data : []);
+            const filtered = allNetworks.filter((n: CryptoNetwork) => n.crypto?.id === crypto.id && n.is_active);
+            setCryptoNetworks(filtered);
+            setStep('crypto-network');
+        } catch (err) {
+            console.error("Failed to fetch crypto networks", err);
+            // Fallback: stay on crypto or show error
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const handleNetworkSelect = (network: Network) => {
-        setSelectedNetwork(network);
+    const handleCryptoNetworkSelect = (network: CryptoNetwork) => {
+        setSelectedCryptoNetwork(network);
         setStep('details');
     };
 
     const handleBack = () => {
         if (step === 'details') {
-            setStep('network');
-            setSelectedNetwork(null);
-        } else if (step === 'network') {
+            setStep('crypto-network');
+            setSelectedCryptoNetwork(null);
+        } else if (step === 'crypto-network') {
             setStep('crypto');
             setSelectedCrypto(null);
+            setCryptoNetworks([]);
         } else {
             window.history.back();
         }
     };
 
-    if (step === 'details' && selectedCrypto && selectedNetwork) {
+    if (step === 'details' && selectedCrypto && selectedCryptoNetwork) {
         return (
             <div className="w-full">
-                <button
-                    onClick={handleBack}
-                    className={`group flex items-center gap-2 mb-6 ${theme.mode === 'dark' ? 'text-gray-400 hover:text-white' : 'text-gray-500 hover:text-gray-900'} transition-colors`}
-                >
-                    <FaArrowLeft />
-                    <span className="font-medium">Retour</span>
-                </button>
-                <div className="mb-6">
-                    <h2 className={`text-xl font-bold ${theme.colors.text}`}>4. Entrez les informations de la crypto</h2>
-                </div>
                 <CryptoTransactionForm
                     isVerified={true}
                     crypto={selectedCrypto}
-                    // network={selectedNetwork} // Pass network prop (Typescript will complain until I update Form)
-                    // For now, allow Form to update, I'll update Form next.
-                    // But I need to pass it. I'll pass it as `selectedNetwork` and I'll update the interface in Form.
                     typeTrans={mode}
-                    selectedNetwork={selectedNetwork} // Passing it here
+                    selectedCryptoNetwork={selectedCryptoNetwork}
+                    paymentNetworks={networks}
+                    onBack={handleBack}
                 />
             </div>
         );
     }
 
-    if (step === 'network' && selectedCrypto) {
+    if (step === 'crypto-network' && selectedCrypto) {
         return (
             <div className="w-full">
                 <button
@@ -144,30 +160,40 @@ export default function CryptoSelectionGrid({ mode, title }: CryptoSelectionGrid
                     <FaArrowLeft />
                     <span className="font-medium">Retour</span>
                 </button>
-                <h1 className={`text-2xl font-bold mb-6 ${theme.colors.text}`}>Réseau</h1>
-                <p className={`font-medium mb-6 ${theme.colors.d_text}`}>3. Sélectionnez votre réseau</p>
+                <h1 className={`text-2xl font-bold mb-6 ${theme.colors.text}`}>Crypto-Network Step</h1>
+                <p className={`font-medium mb-6 ${theme.colors.d_text}`}>2. Sélectionnez votre réseau blockchain</p>
 
                 <div className="space-y-3">
-                    {networks.map((network) => (
-                        <div
-                            key={network.id}
-                            onClick={() => handleNetworkSelect(network)}
-                            className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all 
-                                ${theme.mode === 'dark' ? 'border-slate-700 hover:bg-slate-800' : 'border-gray-200 hover:bg-gray-50'} 
-                                ${theme.colors.a_background}`}
-                        >
-                            <div className="w-10 h-10 relative flex-shrink-0">
-                                {network.image ? (
-                                    <img src={network.image} alt={network.name} className="w-full h-full object-contain rounded-md" />
-                                ) : (
-                                    <div className="w-full h-full bg-gray-200 rounded-md flex items-center justify-center text-xs font-bold text-gray-500">
-                                        {network.name.substring(0, 2)}
-                                    </div>
-                                )}
+                    {cryptoNetworks.length > 0 ? (
+                        cryptoNetworks.map((network) => (
+                            <div
+                                key={network.id}
+                                onClick={() => handleCryptoNetworkSelect(network)}
+                                className={`flex items-center gap-4 p-4 rounded-xl border cursor-pointer transition-all 
+                                    ${theme.mode === 'dark' ? 'border-slate-700 hover:bg-slate-800' : 'border-gray-200 hover:bg-gray-50'} 
+                                    ${theme.colors.a_background}`}
+                            >
+                                <div className="w-10 h-10 relative flex-shrink-0">
+                                    {network.logo ? (
+                                        <img src={network.logo} alt={network.name} className="w-full h-full object-contain rounded-md" />
+                                    ) : (
+                                        <div className="w-full h-full bg-gray-200 rounded-md flex items-center justify-center text-xs font-bold text-gray-500">
+                                            {network.symbol}
+                                        </div>
+                                    )}
+                                </div>
+                                <div className="flex flex-col">
+                                    <span className={`text-lg font-bold ${theme.colors.text}`}>{network.name}</span>
+                                    <span className={`text-sm text-gray-500`}>{network.symbol}</span>
+                                </div>
                             </div>
-                            <span className={`text-lg font-medium ${theme.colors.text}`}>{network.public_name || network.name}</span>
+                        ))
+                    ) : (
+                        <div className={`p-8 text-center rounded-xl border border-dashed ${theme.mode === 'dark' ? 'border-slate-700' : 'border-gray-200'}`}>
+                            <p className={theme.colors.d_text}>Aucun réseau disponible pour cette crypto.</p>
+                            <button onClick={handleBack} className="mt-4 text-blue-500 font-medium">Retour</button>
                         </div>
-                    ))}
+                    )}
                 </div>
             </div>
         );

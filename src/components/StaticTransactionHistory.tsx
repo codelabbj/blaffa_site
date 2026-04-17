@@ -45,6 +45,13 @@ interface Transaction {
     transaction_reference: string | null;
     error_message: string | null;
     net_payable_amount: number | null;
+    total_crypto?: string | number;
+    crypto?: {
+        id: number;
+        name: string;
+        symbol: string;
+        logo: string;
+    } | null;
 }
 
 type HistoricItem = {
@@ -191,19 +198,27 @@ export default function StaticTransactionHistory() {
                                             <div className="w-full">
                                                 <div className="flex items-center justify-between w-full">
                                                     <div className="flex items-center gap-4">
-                                                        {/* Stylized Dots Icon - Light gray circle with 3 blue dots */}
-                                                        <div className="w-12 h-12 rounded-full bg-gray-50 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
-                                                            <div className="flex gap-0.5">
-                                                                <div className="w-1.5 h-1.5 rounded-full bg-[#3b82f6] dark:bg-[#60a5fa]"></div>
-                                                                <div className="w-1.5 h-1.5 rounded-full bg-[#3b82f6] dark:bg-[#60a5fa]"></div>
-                                                                <div className="w-1.5 h-1.5 rounded-full bg-[#3b82f6] dark:bg-[#60a5fa]"></div>
+                                                        {/* Stylized Icon based on type and status */}
+                                                        {item.transaction.crypto ? (
+                                                            <div className="w-12 h-12 rounded-full overflow-hidden bg-gray-50 dark:bg-gray-800 flex items-center justify-center flex-shrink-0 border border-gray-100 dark:border-gray-700">
+                                                                <img src={item.transaction.crypto.logo} alt={item.transaction.crypto.name} className="w-8 h-8 object-contain" />
                                                             </div>
-                                                        </div>
+                                                        ) : (
+                                                            <div className="w-12 h-12 rounded-full bg-gray-50 dark:bg-gray-700 flex items-center justify-center flex-shrink-0">
+                                                                <div className="flex gap-0.5">
+                                                                    <div className="w-1.5 h-1.5 rounded-full bg-[#3b82f6] dark:bg-[#60a5fa]"></div>
+                                                                    <div className="w-1.5 h-1.5 rounded-full bg-[#3b82f6] dark:bg-[#60a5fa]"></div>
+                                                                    <div className="w-1.5 h-1.5 rounded-full bg-[#3b82f6] dark:bg-[#60a5fa]"></div>
+                                                                </div>
+                                                            </div>
+                                                        )}
 
                                                         {/* Transaction Info */}
                                                         <div className="flex flex-col">
                                                             <h3 className="font-medium text-[1.05rem] text-gray-900 dark:text-white leading-tight">
-                                                                {item.transaction.type_trans === 'deposit' ? 'Dépôt' : item.transaction.type_trans === 'withdrawal' ? 'Retrait' : item.transaction.type_trans}
+                                                                {item.transaction.crypto 
+                                                                    ? (item.transaction.type_trans === 'buy' ? `Achat ${item.transaction.crypto.symbol}` : `Vente ${item.transaction.crypto.symbol}`)
+                                                                    : (item.transaction.type_trans === 'deposit' ? 'Dépôt' : item.transaction.type_trans === 'withdrawal' ? 'Retrait' : item.transaction.type_trans)}
                                                             </h3>
                                                             <p className="text-[0.85rem] text-gray-500 dark:text-gray-400 font-normal">
                                                                 {formatDate(item.transaction.created_at)}
@@ -214,7 +229,9 @@ export default function StaticTransactionHistory() {
                                                     {/* Amount and Status */}
                                                     <div className="text-right">
                                                         <div className="font-medium text-[1rem] text-gray-900 dark:text-white">
-                                                            XOF {item.transaction.amount}
+                                                            {item.transaction.crypto 
+                                                                ? `${item.transaction.total_crypto} ${item.transaction.crypto.symbol}`
+                                                                : `XOF ${item.transaction.amount}`}
                                                         </div>
                                                         <p className="text-[0.85rem] text-[#b3b3b3] dark:text-gray-500 font-normal">
                                                             {item.transaction.status === 'pending' ? 'pending' : item.transaction.status}
