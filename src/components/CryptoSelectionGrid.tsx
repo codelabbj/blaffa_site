@@ -19,6 +19,8 @@ interface Cryptocurrency {
     name: string;
     amount: string;
     symbol: string;
+    buy_price?: number | string;
+    sale_price?: number | string;
 }
 
 interface Network {
@@ -236,7 +238,9 @@ export default function CryptoSelectionGrid({ mode, title }: CryptoSelectionGrid
                                 <img src={crypto.logo} alt={crypto.name} className={`w-full h-full object-contain rounded-full ${theme.mode === 'dark' ? 'bg-slate-800' : 'bg-black'} text-white p-1`} />
                             </div>
                             <h3 className={`font-medium mb-1 ${theme.colors.text}`}>{crypto.name}</h3>
-                            <p className={`font-bold ${theme.colors.primary}`}>{parseInt(crypto.public_amount.toString()).toFixed(1)} CFA</p>
+                            <p className={`font-bold ${theme.colors.primary}`}>
+                                {parseInt(((mode === 'buy' ? crypto.buy_price : crypto.sale_price) || 0).toString()).toFixed(1)} CFA
+                            </p>
                         </div>
                     ))}
                 </div>
