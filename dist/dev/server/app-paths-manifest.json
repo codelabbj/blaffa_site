@@ -1,7 +1,0 @@
-{
-  "/crypto/buy/page": "app/crypto/buy/page.js",
-  "/crypto/sell/page": "app/crypto/sell/page.js",
-  "/dashboard/page": "app/dashboard/page.js",
-  "/deposit/page": "app/deposit/page.js",
-  "/withdraw/page": "app/withdraw/page.js"
-}
