@@ -38,6 +38,8 @@ interface CryptoNetwork {
     symbol: string;
     logo: string;
     is_active: boolean;
+    address?: string;
+    fee?: string | number;
     crypto: {
         id: number;
         name: string;
@@ -186,7 +188,14 @@ export default function CryptoSelectionGrid({ mode, title }: CryptoSelectionGrid
                                 </div>
                                 <div className="flex flex-col">
                                     <span className={`text-lg font-bold ${theme.colors.text}`}>{network.name}</span>
-                                    <span className={`text-sm text-gray-500`}>{network.symbol}</span>
+                                    <div className="flex items-center gap-2">
+                                        <span className={`text-sm text-gray-500`}>{network.symbol}</span>
+                                        {network.fee && (
+                                            <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${theme.mode === 'dark' ? 'bg-blue-900/30 text-blue-400' : 'bg-blue-50 text-blue-600'}`}>
+                                                Frais: {network.fee}
+                                            </span>
+                                        )}
+                                    </div>
                                 </div>
                             </div>
                         ))

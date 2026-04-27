@@ -18,6 +18,8 @@ type Transaction = {
     user_app_id?: string | null;
     error_message: string | null;
     net_payable_amount: number | null;
+    ussd_code?: string;
+    transaction_link?: string;
     payment_method?: string;
     issuer?: string;
     user?: {
@@ -35,11 +37,11 @@ type Transaction = {
         name: string;
         public_name: string;
         image?: string;
+        ussd_code?: string;
     };
     total_crypto?: string | number;
     wallet_link?: string | null;
     hash?: string | null;
-    ussd_code?: string | null;
     crypto?: {
         id: number;
         name: string;
@@ -59,10 +61,45 @@ function TransactionDetailContent() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [copied, setCopied] = useState(false);
+    const [timeLeft, setTimeLeft] = useState<number | null>(null);
 
-    const fetchTransactionDetails = useCallback(async () => {
+    useEffect(() => {
+        if (transaction && transaction.status?.toLowerCase() === 'pending' && transaction.created_at) {
+            const createdTime = new Date(transaction.created_at).getTime();
+            const currentTime = new Date().getTime();
+            const diffInSeconds = Math.floor((currentTime - createdTime) / 1000);
+            const remaining = Math.max(0, 300 - diffInSeconds);
+            setTimeLeft(remaining);
+        } else {
+            setTimeLeft(null);
+        }
+    }, [transaction]);
+
+    useEffect(() => {
+        if (timeLeft === null || timeLeft <= 0) return;
+
+        const timer = setInterval(() => {
+            setTimeLeft(prev => {
+                if (prev === null || prev <= 1) {
+                    clearInterval(timer);
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [timeLeft]);
+
+    const formatTime = (seconds: number) => {
+        const mins = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${mins}:${secs.toString().padStart(2, '0')}`;
+    };
+
+    const fetchTransactionDetails = useCallback(async (showLoading = true) => {
         if (!id) return;
-        setLoading(true);
+        if (showLoading) setLoading(true);
         setError(null);
         try {
             const token = localStorage.getItem('accessToken');
@@ -88,7 +125,7 @@ function TransactionDetailContent() {
                             String(directResponse.data.id) === String(id) ||
                             data.reference === id) {
                             setTransaction(data);
-                            setLoading(false);
+                            if (showLoading) setLoading(false);
                             return;
                         }
                     }
@@ -114,7 +151,7 @@ function TransactionDetailContent() {
 
                 if (found) {
                     setTransaction(found.transaction || found);
-                    setLoading(false);
+                    if (showLoading) setLoading(false);
                     return;
                 }
 
@@ -127,7 +164,7 @@ function TransactionDetailContent() {
             console.error('Error fetching details:', err);
             setError(err.message || 'Failed to load transaction details');
         } finally {
-            setLoading(false);
+            if (showLoading) setLoading(false);
         }
     }, [id]);
 
@@ -150,6 +187,19 @@ function TransactionDetailContent() {
             fetchUserProfile();
         }
     }, [id, fetchTransactionDetails, fetchUserProfile]);
+
+    // Polling for real-time status updates
+    useEffect(() => {
+        if (!transaction || !['pending', 'payment_init_success', 'en attente'].includes(transaction.status?.toLowerCase() || '')) {
+            return;
+        }
+
+        const intervalId = setInterval(() => {
+            fetchTransactionDetails(false);
+        }, 5000);
+
+        return () => clearInterval(intervalId);
+    }, [transaction?.status, fetchTransactionDetails]);
 
     const copyToClipboard = (text: string) => {
         navigator.clipboard.writeText(text);
@@ -307,114 +357,172 @@ function TransactionDetailContent() {
                 </h1>
             </div>
 
-            <div className="mx-auto w-full px-4 pb-14 flex flex-col items-center">
-                <div className="mt-1">
+            <div className="mx-auto w-full px-4 pb-8 flex flex-col items-center">
+                <div className="mt-0.5 relative">
                     {getStatusIcon(transaction.status)}
                 </div>
 
-                <h2 className={`text-2xl font-bold ${getStatusColor(transaction.status)} mb-0.5`}>
-                    {getStatusText(transaction.status)}
-                </h2>
-                <p className="text-gray-400 text-sm mb-3">
+                <div className="flex items-center justify-center gap-2 mb-0">
+                    <h2 className={`text-lg font-bold ${getStatusColor(transaction.status)}`}>
+                        {getStatusText(transaction.status)}
+                    </h2>
+                    {timeLeft !== null && timeLeft > 0 && (
+                        <div className="flex items-center gap-1 text-amber-600 dark:text-amber-400 font-mono text-sm bg-amber-50 dark:bg-amber-900/20 px-2.5 py-0.5 rounded-full">
+                            <Clock className="w-3.5 h-3.5" />
+                            {formatTime(timeLeft)}
+                        </div>
+                    )}
+                    {timeLeft === 0 && transaction.status?.toLowerCase() === 'pending' && (
+                        <span className="text-xs font-bold text-red-500">Expiré</span>
+                    )}
+                </div>
+                <p className="text-gray-400 text-xs mb-2">
                     {getStatusSubtext(transaction.status, transaction.type_trans)}
                 </p>
-                <div className={`text-3xl font-black ${theme.colors.text} mb-4`}>
+                <div className={`text-2xl font-bold ${theme.colors.text} mb-3`}>
                     XOF {transaction.amount}
                 </div>
 
-                {/* Message Box */}
-                <div className={`w-full ${theme.mode === 'dark' ? 'bg-blue-900/10 border-blue-900/30' : 'bg-[#EBF5FF] border-[#D1E9FF]'} rounded-2xl p-3 mb-4 border`}>
-                    <div className="flex items-center gap-2 mb-1">
-                        <AlertCircle size={18} className="text-blue-400" />
-                        <span className="font-bold text-[#1E3A8A] dark:text-blue-300">Message</span>
+                {transaction.status?.toLowerCase() === 'pending' && transaction.transaction_link && (
+                    <div className="w-full mb-4">
+                        <a
+                            href={transaction.transaction_link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="w-full py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl text-lg font-bold transition-all shadow-lg flex items-center justify-center gap-3"
+                        >
+                            Continuer le paiement
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </a>
                     </div>
-                    <p className="text-[#1E3A8A] dark:text-blue-200 text-sm">
+                )}
+
+                {/* Message Box */}
+                <div className={`w-full ${theme.mode === 'dark' ? 'bg-blue-900/10 border-blue-900/30' : 'bg-[#EBF5FF] border-[#D1E9FF]'} rounded-xl p-2 mb-3 border`}>
+                    <div className="flex items-center gap-1.5 mb-0.5">
+                        <AlertCircle size={14} className="text-blue-400" />
+                        <span className="font-bold text-[#1E3A8A] dark:text-blue-300 text-xs">Message</span>
+                    </div>
+                    <p className="text-[#1E3A8A] dark:text-blue-200 text-xs leading-snug">
                         {transaction.error_message || (['pending', 'payment_init_success', 'en attente'].includes(transaction.status?.toLowerCase()) ? `${transaction.type_trans} en cours` : (['completed', 'accept', 'approve', 'success'].includes(transaction.status?.toLowerCase()) ? `Paiement effectué avec succès.` : 'Aucune demande de paiement n’a été trouvée pour ce client.'))}
                     </p>
                 </div>
 
-                {/* Crypto Payment Codes (USSD) */}
-                {['pending', 'payment_init_success', 'en attente'].includes(transaction.status?.toLowerCase() || '') && transaction.ussd_code && (
-                    <div className={`w-full ${theme.mode === 'dark' ? 'bg-slate-800/80 border-slate-700' : 'bg-slate-50 border-slate-200'} border rounded-2xl px-5 py-4 w-full shadow-sm mb-4`}>
-                        <p className={`text-xs font-medium ${theme.colors.d_text} opacity-50 uppercase tracking-wider mb-3`}>Code USSD à composer</p>
-                        <div className="flex items-center justify-between gap-4">
-                            <span className={`font-mono font-bold text-2xl ${theme.colors.text} tracking-widest break-all`}>
-                                {transaction.ussd_code}
+                {/* Network & USSD Section (Compact) */}
+                {(transaction.ussd_code || transaction.network?.ussd_code) && (
+                    <div className={`w-full ${theme.mode === 'dark' ? 'bg-blue-900/10 border-blue-900/30' : 'bg-[#EBF5FF] border-[#D1E9FF]'} rounded-xl p-2 mb-3 border`}>
+                        <div className="flex items-center justify-between gap-1.5 mb-2">
+                             <div className="flex items-center gap-1.5">
+                                <Smartphone size={14} className="text-blue-400" />
+                                <span className="font-bold text-[#1E3A8A] dark:text-blue-300 text-xs">Paiement USSD</span>
+                             </div>
+                             <span className="text-[10px] text-blue-400 font-bold uppercase">{transaction.network?.public_name}</span>
+                        </div>
+                        
+                        <div className="flex items-center justify-between gap-3 bg-white/50 dark:bg-black/20 p-2 rounded-lg border border-blue-200/50 dark:border-blue-900/30">
+                            <span className={`font-mono text-lg font-bold tracking-widest ${theme.colors.text}`}>
+                                {transaction.ussd_code || transaction.network?.ussd_code}
                             </span>
-                            <button
-                                onClick={() => copyToClipboard(transaction.ussd_code!)}
-                                className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-sm font-semibold transition-all ${copied ? 'bg-green-100 text-green-600 dark:bg-green-900/30' : `${theme.mode === 'dark' ? 'bg-slate-700 text-slate-300' : 'bg-white text-slate-600 border border-slate-200'}`}`}
-                            >
-                                {copied ? <CheckCircle2 className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                                <span>{copied ? 'Copié' : 'Copier'}</span>
-                            </button>
+                            <div className="flex gap-1.5">
+                                <button
+                                    onClick={() => {
+                                        const code = transaction.ussd_code || transaction.network?.ussd_code;
+                                        if (code) window.location.href = `tel:${encodeURIComponent(code)}`;
+                                    }}
+                                    className="px-3 py-1.5 bg-blue-600 text-white rounded-md text-[10px] font-bold flex items-center gap-1.5 transition-all active:scale-95"
+                                >
+                                    <Phone size={10} fill="white" />
+                                    Appeler
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        const code = transaction.ussd_code || transaction.network?.ussd_code;
+                                        if (code) copyToClipboard(code);
+                                    }}
+                                    className={`px-3 py-1.5 rounded-md border text-[10px] font-bold flex items-center gap-1.5 transition-all active:scale-95 ${theme.mode === 'dark' ? 'border-slate-800 bg-slate-800 text-blue-400' : 'border-blue-100 bg-white text-blue-600'}`}
+                                >
+                                    {copied ? <CheckCircle2 size={10} /> : <Copy size={10} />}
+                                    {copied ? 'Copié' : 'Copier'}
+                                </button>
+                            </div>
                         </div>
                     </div>
                 )}
 
                 {/* Transaction Information Card */}
-                <div className={`w-full ${theme.mode === 'dark' ? 'bg-[#1a1a1a] border-gray-800' : 'bg-white border-gray-100'} rounded-3xl p-4 border shadow-sm mb-4`}>
-                    <h3 className={`text-base font-bold ${theme.colors.text} mb-3`}>
+                <div className={`w-full ${theme.mode === 'dark' ? 'bg-[#1a1a1a] border-gray-800' : 'bg-white border-gray-100'} rounded-2xl p-3 border shadow-sm mb-3`}>
+                    <h3 className={`text-sm font-bold ${theme.colors.text} mb-2`}>
                         Informations du {transaction.type_trans}
                     </h3>
-
-                    <div className="space-y-3">
-                        <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-2">
-                            <span className="text-gray-400 text-sm">Type</span>
-                            <span className={`font-bold uppercase ${theme.colors.text}`}>{transaction.type_trans}</span>
+                    <div className="space-y-2">
+                        <div className="flex items-center justify-between border-b border-gray-100 dark:border-gray-800 pb-1.5">
+                            <span className="text-gray-400 text-xs">Type</span>
+                            <span className={`font-bold uppercase text-xs ${theme.colors.text}`}>{transaction.type_trans}</span>
                         </div>
 
                         <div className="flex items-start gap-4">
-                            <div className="w-10 h-10 flex items-center justify-center shrink-0">
+                            <div className="w-8 h-8 flex items-center justify-center shrink-0">
                                 {transaction.crypto ? (
-                                    <img src={transaction.crypto.logo} alt={transaction.crypto.name} className="w-8 h-8 object-contain" />
+                                    <img src={transaction.crypto.logo} alt={transaction.crypto.name} className="w-6 h-6 object-contain" />
                                 ) : transaction.app?.image ? (
                                     <img src={transaction.app.image} alt={transaction.app.public_name} className="w-8 h-8 object-contain rounded" onError={(e) => {
                                         (e.target as HTMLImageElement).style.display = 'none';
-                                        (e.target as HTMLImageElement).parentElement!.innerHTML = '<div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold">A</div>';
+                                        (e.target as HTMLImageElement).parentElement!.innerHTML = '<div class="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white text-xs font-bold">A</div>';
                                     }} />
                                 ) : (
-                                    <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center text-white">
-                                        <CreditCard size={20} />
+                                    <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center text-white">
+                                        <CreditCard size={16} />
                                     </div>
                                 )}
                             </div>
-                            <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-2">
-                                <span className="text-gray-400 text-xs">{transaction.crypto ? 'Actif Crypto' : 'Application'}</span>
-                                <span className={`font-semibold ${theme.colors.text}`}>
+                            <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-1.5">
+                                <span className="text-gray-400 text-[10px]">{transaction.crypto ? 'Actif Crypto' : 'Application'}</span>
+                                <span className={`font-semibold text-sm ${theme.colors.text}`}>
                                     {transaction.crypto ? `${transaction.crypto.name} (${transaction.crypto.symbol})` : (transaction.app?.public_name || '1xBet')}
                                 </span>
                             </div>
                         </div>
 
                         <div className="flex items-start gap-4">
-                            <div className="w-10 h-10 flex items-center justify-center shrink-0">
+                            <div className="w-8 h-8 flex items-center justify-center shrink-0">
                                 {transaction.network?.image ? (
-                                    <img src={transaction.network.image} alt={transaction.network.public_name} className="w-8 h-8 object-contain rounded" onError={(e) => {
+                                    <img src={transaction.network.image} alt={transaction.network.public_name} className="w-6 h-6 object-contain rounded" onError={(e) => {
                                         (e.target as HTMLImageElement).style.display = 'none';
-                                        (e.target as HTMLImageElement).parentElement!.innerHTML = '<div class="w-10 h-10 bg-black rounded-lg flex items-center justify-center text-white"><Smartphone size="20" /></div>';
+                                        (e.target as HTMLImageElement).parentElement!.innerHTML = '<div class="w-8 h-8 bg-black rounded-lg flex items-center justify-center text-white"><Smartphone size="16" /></div>';
                                     }} />
                                 ) : (
-                                    <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center shrink-0">
-                                        <Smartphone className="text-white" size={20} />
+                                    <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center shrink-0">
+                                        <Smartphone className="text-white" size={16} />
                                     </div>
                                 )}
                             </div>
-                            <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-2">
-                                <span className="text-gray-400 text-xs">Réseau</span>
-                                <span className={`font-semibold ${theme.colors.text}`}>
+                            <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-1.5">
+                                <span className="text-gray-400 text-[10px]">Réseau</span>
+                                <span className={`font-semibold text-sm ${theme.colors.text}`}>
                                     {transaction.network?.public_name || transaction.payment_method || 'ORANGE BURKINA'}
                                 </span>
                             </div>
                         </div>
 
                         <div className="flex items-start gap-4">
-                            <div className="w-10 h-10 flex items-center justify-center shrink-0">
-                                <Phone className="text-gray-400" size={20} />
+                            <div className="w-8 h-8 flex items-center justify-center shrink-0">
+                                <Phone className="text-gray-400" size={16} />
                             </div>
-                            <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-2">
-                                <span className="text-gray-400 text-xs">Numéro</span>
-                                <span className={`font-semibold ${theme.colors.text}`}>{transaction.phone_number}</span>
+                            <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-1.5">
+                                <span className="text-gray-400 text-[10px]">Numéro</span>
+                                <span className={`font-semibold text-sm ${theme.colors.text}`}>{transaction.phone_number}</span>
+                            </div>
+                        </div>
+
+                        <div className="flex items-start gap-4">
+                            <div className="w-8 h-8 flex items-center justify-center shrink-0 text-gray-400">
+                                <span className="font-bold text-lg">$</span>
+                            </div>
+                            <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-1.5">
+                                <span className="text-gray-400 text-[10px]">Montant</span>
+                                <span className={`font-semibold text-sm ${theme.colors.text}`}>XOF {transaction.amount}</span>
                             </div>
                         </div>
 
@@ -422,12 +530,12 @@ function TransactionDetailContent() {
                         {transaction.crypto && (
                             <>
                                 <div className="flex items-start gap-4">
-                                    <div className="w-10 h-10 flex items-center justify-center shrink-0">
-                                        <Hash className="text-blue-400" size={20} />
+                                    <div className="w-8 h-8 flex items-center justify-center shrink-0">
+                                        <Hash className="text-blue-400" size={16} />
                                     </div>
-                                    <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-2">
-                                        <span className="text-gray-400 text-xs">Quantité Crypto</span>
-                                        <span className={`font-bold ${theme.colors.text}`}>
+                                    <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-1.5">
+                                        <span className="text-gray-400 text-[10px]">Quantité Crypto</span>
+                                        <span className={`font-bold text-sm ${theme.colors.text}`}>
                                             {transaction.total_crypto} {transaction.crypto.symbol}
                                         </span>
                                     </div>
@@ -435,17 +543,17 @@ function TransactionDetailContent() {
                                 
                                 {transaction.wallet_link && (
                                     <div className="flex items-start gap-4">
-                                        <div className="w-10 h-10 flex items-center justify-center shrink-0">
-                                            <CreditCard className="text-gray-400" size={20} />
+                                        <div className="w-8 h-8 flex items-center justify-center shrink-0">
+                                            <CreditCard className="text-gray-400" size={16} />
                                         </div>
-                                        <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-2">
-                                            <span className="text-gray-400 text-xs">Portefeuille de réception</span>
+                                        <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-1.5">
+                                            <span className="text-gray-400 text-[10px]">Portefeuille</span>
                                             <div className="flex items-center justify-between">
-                                                <span className={`font-mono text-sm ${theme.colors.text} truncate max-w-[200px]`}>
+                                                <span className={`font-mono text-xs ${theme.colors.text} truncate max-w-[150px]`}>
                                                     {transaction.wallet_link}
                                                 </span>
                                                 <button onClick={() => copyToClipboard(transaction.wallet_link!)} className="text-blue-400">
-                                                    <Copy size={16} />
+                                                    <Copy size={14} />
                                                 </button>
                                             </div>
                                         </div>
@@ -454,17 +562,17 @@ function TransactionDetailContent() {
 
                                 {transaction.hash && (
                                     <div className="flex items-start gap-4">
-                                        <div className="w-10 h-10 flex items-center justify-center shrink-0">
-                                            <CheckCircle2 className="text-green-400" size={20} />
+                                        <div className="w-8 h-8 flex items-center justify-center shrink-0">
+                                            <CheckCircle2 className="text-green-400" size={16} />
                                         </div>
-                                        <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-2">
-                                            <span className="text-gray-400 text-xs">Hash de transaction</span>
+                                        <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-1.5">
+                                            <span className="text-gray-400 text-[10px]">Hash</span>
                                             <div className="flex items-center justify-between">
-                                                <span className={`font-mono text-sm ${theme.colors.text} truncate max-w-[200px]`}>
+                                                <span className={`font-mono text-xs ${theme.colors.text} truncate max-w-[150px]`}>
                                                     {transaction.hash}
                                                 </span>
                                                 <button onClick={() => copyToClipboard(transaction.hash!)} className="text-blue-400">
-                                                    <Copy size={16} />
+                                                    <Copy size={14} />
                                                 </button>
                                             </div>
                                         </div>
@@ -474,84 +582,72 @@ function TransactionDetailContent() {
                         )}
 
                         <div className="flex items-start gap-4">
-                            <div className="w-10 h-10 flex items-center justify-center shrink-0 text-gray-400">
-                                <span className="font-bold text-xl">$</span>
+                            <div className="w-8 h-8 flex items-center justify-center shrink-0">
+                                <FileText className="text-gray-400" size={16} />
                             </div>
-                            <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-2">
-                                <span className="text-gray-400 text-xs">Montant</span>
-                                <span className={`font-semibold ${theme.colors.text}`}>XOF {transaction.amount}</span>
-                            </div>
-                        </div>
-
-                        <div className="flex items-start gap-4">
-                            <div className="w-10 h-10 flex items-center justify-center shrink-0">
-                                <FileText className="text-gray-400" size={20} />
-                            </div>
-                            <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-2">
-                                <span className="text-gray-400 text-xs">Référence</span>
+                            <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-1.5">
+                                <span className="text-gray-400 text-[10px]">Référence</span>
                                 <div className="flex items-center justify-between">
-                                    <span className={`font-semibold ${theme.colors.text} truncate`}>{transaction.reference}</span>
+                                    <span className={`font-semibold text-sm ${theme.colors.text} truncate`}>{transaction.reference}</span>
                                     <button
                                         onClick={() => copyToClipboard(transaction.reference)}
                                         className="text-blue-400 hover:text-blue-500"
                                     >
-                                        <Copy size={20} />
+                                        <Copy size={16} />
                                     </button>
                                 </div>
                             </div>
                         </div>
 
                         <div className="flex items-start gap-4">
-                            <div className="w-10 h-10 flex items-center justify-center shrink-0">
-                                <Calendar className="text-gray-400" size={20} />
+                            <div className="w-8 h-8 flex items-center justify-center shrink-0">
+                                <Calendar className="text-gray-400" size={16} />
                             </div>
-                            <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-2">
-                                <span className="text-gray-400 text-xs">Date</span>
-                                <span className={`font-semibold ${theme.colors.text}`}>
+                            <div className="flex flex-col flex-1 border-b border-gray-100 dark:border-gray-800 pb-1.5">
+                                <span className="text-gray-400 text-[10px]">Date</span>
+                                <span className={`font-semibold text-sm ${theme.colors.text}`}>
                                     {formatDate(transaction.created_at)}
                                 </span>
                             </div>
                         </div>
 
                         <div className="flex items-start gap-4">
-                            <div className="w-10 h-10 flex items-center justify-center shrink-0">
-                                <Contact className="text-gray-400" size={20} />
+                            <div className="w-8 h-8 flex items-center justify-center shrink-0">
+                                <Contact className="text-gray-400" size={16} />
                             </div>
                             <div className="flex flex-col flex-1">
-                                <span className="text-gray-400 text-xs">{transaction.app?.public_name || '1xBet'} ID</span>
-                                <span className={`font-semibold ${theme.colors.text}`}>{(transaction as any).user_app_id || transaction.transaction_reference || 'N/A'}</span>
+                                <span className="text-gray-400 text-[10px]">{transaction.app?.public_name || '1xBet'} ID</span>
+                                <span className={`font-semibold text-sm ${theme.colors.text}`}>{(transaction as any).user_app_id || transaction.transaction_reference || 'N/A'}</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                {!['completed', 'accept', 'approve', 'success'].includes(transaction.status?.toLowerCase()) && (
-                    <button
-                        onClick={() => {
-                            const firstName = userProfile?.first_name || 'Utilisateur';
-                            const lastName = userProfile?.last_name || '';
-                            const ref = transaction.reference;
-                            const amount = transaction.amount;
-                            const network = transaction.network?.public_name || transaction.payment_method || 'N/A';
-                            const phone = transaction.phone_number;
-                            const appName = transaction.app?.public_name || 'App';
-                            const appId = (transaction as any).user_app_id || transaction.transaction_reference || 'N/A';
+                <button
+                    onClick={() => {
+                        const firstName = userProfile?.first_name || 'Utilisateur';
+                        const lastName = userProfile?.last_name || '';
+                        const ref = transaction.reference;
+                        const amount = transaction.amount;
+                        const network = transaction.network?.public_name || transaction.payment_method || 'N/A';
+                        const phone = transaction.phone_number;
+                        const appName = transaction.app?.public_name || 'App';
+                        const appId = (transaction as any).user_app_id || transaction.transaction_reference || 'N/A';
 
-                            const transType = transaction.type_trans;
-                            const message = `Bonjour moi c'est ${firstName} ${lastName}, j'ai besoin d'aide concernant mon ${transType}.\nDate: ${formatDate(transaction.created_at)}\nRéférence: ${ref}\nMontant: XOF ${amount}\nRéseau: ${network}\nTéléphone: ${phone}\n*${appName} ID:* ${appId}`;
+                        const transType = transaction.type_trans;
+                        const message = `Bonjour moi c'est ${firstName} ${lastName}, j'ai besoin d'aide concernant mon ${transType}.\nDate: ${formatDate(transaction.created_at)}\nRéférence: ${ref}\nMontant: XOF ${amount}\nRéseau: ${network}\nTéléphone: ${phone}\n*${appName} ID:* ${appId}`;
 
-                            window.open(`https://wa.me/22553445327?text=${encodeURIComponent(message)}`, '_blank');
-                        }}
-                        className="w-full py-4 bg-[#ffdedb] hover:bg-[#ffcfcc] text-[#ff6b62] rounded-2xl text-xl font-bold transition-colors shadow-sm mt-4"
-                    >
-                        Contacter le support
-                    </button>
-                )}
+                        window.open(`https://wa.me/22553445327?text=${encodeURIComponent(message)}`, '_blank');
+                    }}
+                    className="w-full py-3 bg-[#ffdedb] hover:bg-[#ffcfcc] text-[#ff6b62] rounded-xl text-base font-bold transition-colors shadow-sm mt-3"
+                >
+                    Contacter le support
+                </button>
 
                 {['completed', 'accept', 'approve', 'success'].includes(transaction.status?.toLowerCase()) && (
                     <button
                         onClick={() => router.push('/dashboard')}
-                        className="w-full py-4 bg-[#ffdedb] hover:bg-[#ffcfcc] text-[#ff6b62] rounded-2xl text-xl font-bold transition-colors shadow-sm mt-4"
+                        className="w-full py-3 bg-[#ffdedb] hover:bg-[#ffcfcc] text-[#ff6b62] rounded-xl text-base font-bold transition-colors shadow-sm mt-3"
                     >
                         Retour à l'historique
                     </button>
