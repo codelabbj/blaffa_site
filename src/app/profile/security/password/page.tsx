@@ -52,142 +52,121 @@ export default function ChangePassword() {
         try {
             // Assuming endpoint /auth/set_password or similar. 
             // In Djoser it's /auth/users/set_password/ but let's try /auth/set_password based on project patterns.
-            const response = await api.post(`/auth/set_password`, {
+            const response = await api.post(`/auth/users/set_password/`, {
                 current_password: formData.currentPassword,
                 new_password: formData.newPassword,
                 re_new_password: formData.confirmPassword,
             });
 
             if (response.status === 204 || response.status === 200) {
+                // Update remembered credentials if they belong to this user
+                const CREDS_KEY = 'blaffa_remembered_creds';
+                const userEmail = localStorage.getItem('userEmail');
+                const savedCreds = localStorage.getItem(CREDS_KEY);
+
+                if (userEmail && savedCreds) {
+                    try {
+                        const creds = JSON.parse(savedCreds);
+                        if (creds.email === userEmail) {
+                            localStorage.setItem(CREDS_KEY, JSON.stringify({ ...creds, password: formData.newPassword }));
+                        }
+                    } catch (e) {
+                        console.error('Error updating saved credentials', e);
+                    }
+                }
+
                 toast.success(t('Password updated successfully!'));
                 router.push('/profile');
             }
         } catch (error: any) {
             console.error('Error updating password:', error);
-            const errorMessage = error.response?.data?.non_field_errors?.[0] ||
-                error.response?.data?.current_password?.[0] ||
-                t('Failed to update password. Please check your current password.');
+            const data = error.response?.data;
+            let errorMessage = t('Failed to update password.');
+            
+            if (data) {
+                if (data.current_password) errorMessage = data.current_password[0];
+                else if (data.new_password) errorMessage = data.new_password[0];
+                else if (data.non_field_errors) errorMessage = data.non_field_errors[0];
+                else if (data.detail) errorMessage = data.detail;
+            }
+            
             toast.error(errorMessage);
         }
     };
 
     return (
-        <div className={`min-h-screen ${theme.mode === 'dark' ? 'bg-slate-900' : 'bg-white'} pb-24`}>
+        <div className={`min-h-screen ${theme.mode === 'dark' ? 'bg-slate-900' : 'bg-white'} pb-24 pt-[env(safe-area-inset-top)]`}>
             <Head>
                 <title>{t("Modifier le mot de passe")}</title>
             </Head>
 
-            <div className="animate-in slide-in-from-bottom-10 fade-in duration-500 min-h-screen">
-                <div className="bg-[#003399] pt-14 pb-12 px-6 rounded-b-[3.5rem] relative mb-12 shadow-2xl shadow-blue-900/40">
+            <div className="bg-[#003399] pt-14 pb-12 px-6 rounded-b-[3rem] relative mb-8 shadow-2xl overflow-hidden">
+                <div className="max-w-lg mx-auto flex items-center relative">
                     <button
-                        onClick={() => router.back()}
-                        className="absolute top-14 left-6 text-white hover:opacity-70 transition-opacity"
+                        onClick={() => router.push('/profile')}
+                        className="text-white hover:opacity-70 transition-opacity shrink-0"
                     >
-                        <ChevronLeft size={36} />
+                        <ChevronLeft size={32} />
                     </button>
-                    <h2 className="text-white text-2xl font-bold text-center mt-1">Sécurité</h2>
+                    <h2 className="text-white text-xl md:text-2xl font-bold flex-1 text-center pr-8">
+                        Modifier le mot de passe
+                    </h2>
+                </div>
+            </div>
 
-                    <div className="flex flex-col items-center mt-12">
-                        <div className="w-32 h-32 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center mb-6 border border-white/20">
-                            <Lock className="text-white w-16 h-16" />
-                        </div>
-                        <h3 className="text-white text-3xl font-bold mb-1">Mot de passe</h3>
-                        <p className="text-blue-100/70 text-lg font-medium tracking-wide">Modifier votre mot de passe</p>
-                    </div>
+            <form onSubmit={handleUpdatePassword} className="px-5 space-y-8 max-w-lg mx-auto">
+                <div className="mb-6">
+                    <h4 className="text-[#002266] dark:text-blue-300 text-xl font-extrabold">Informations de sécurité</h4>
+                    <p className="text-gray-400 text-xs mt-1">Gérez la protection de votre compte</p>
                 </div>
 
-                <form onSubmit={handleUpdatePassword} className="px-6 space-y-10 pb-36 max-w-lg mx-auto">
-                    <h4 className="text-[#002266] dark:text-blue-300 text-2xl font-extrabold mb-8">Nouveau mot de passe</h4>
-
-                    <div className="space-y-8">
-                        {/* Current Password */}
-                        <div className="relative group">
-                            <label className="absolute -top-3.5 left-6 px-1.5 text-gray-400 dark:text-gray-500 text-sm font-bold bg-white dark:bg-slate-900 group-focus-within:text-blue-600 transition-colors">Mot de passe actuel</label>
-                            <div className="flex items-center bg-white dark:bg-slate-800/50 border border-gray-100 dark:border-gray-700/50 rounded-3xl p-5 shadow-sm focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all">
-                                <div className="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center mr-5">
-                                    <Lock className="text-blue-600" size={28} />
+                <div className="space-y-7">
+                    {[
+                        { id: 'current', label: 'Mot de passe actuel', name: 'currentPassword' },
+                        { id: 'new', label: 'Nouveau mot de passe', name: 'newPassword' },
+                        { id: 'confirm', label: 'Confirmer le mot de passe', name: 'confirmPassword' }
+                    ].map((field) => (
+                        <div key={field.id} className="relative group">
+                            <label className={`absolute -top-3 left-5 px-1.5 ${theme.colors.d_text} opacity-60 text-xs font-bold ${theme.mode === 'dark' ? 'bg-slate-900' : 'bg-white'} group-focus-within:text-blue-600 transition-colors z-10`}>
+                                {field.label}
+                            </label>
+                            <div className={`flex items-center ${theme.mode === 'dark' ? 'bg-slate-900' : 'bg-white'} border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-gray-100'} rounded-2xl p-3.5 shadow-sm focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all`}>
+                                <div className={`w-11 h-11 rounded-xl ${theme.mode === 'dark' ? 'bg-blue-900/20' : 'bg-blue-50'} flex items-center justify-center mr-4 shrink-0`}>
+                                    <Lock className="text-blue-600 dark:text-blue-400" size={22} />
                                 </div>
-                                <input
-                                    type={showPassword.current ? "text" : "password"}
-                                    name="currentPassword"
-                                    placeholder="••••••••"
-                                    value={formData.currentPassword}
-                                    onChange={handleChange}
-                                    className="flex-1 text-xl font-bold bg-transparent outline-none text-gray-900 dark:text-white"
-                                    required
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => togglePasswordVisibility('current')}
-                                    className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
-                                >
-                                    {showPassword.current ? <EyeOff size={24} /> : <Eye size={24} />}
-                                </button>
+                                <div className="flex-1 relative flex items-center min-w-0">
+                                    <input
+                                        type={showPassword[field.id as keyof typeof showPassword] ? "text" : "password"}
+                                        name={field.name}
+                                        placeholder="••••••••"
+                                        value={formData[field.name as keyof typeof formData]}
+                                        onChange={handleChange}
+                                        className={`flex-1 text-lg font-bold bg-transparent outline-none ${theme.colors.text} pr-9 min-w-0`}
+                                        required
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={() => togglePasswordVisibility(field.id as keyof typeof showPassword)}
+                                        className="absolute right-0 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-blue-600 transition-colors"
+                                    >
+                                        {showPassword[field.id as keyof typeof showPassword] ? <EyeOff size={20} /> : <Eye size={20} />}
+                                    </button>
+                                </div>
                             </div>
                         </div>
+                    ))}
+                </div>
 
-                        {/* New Password */}
-                        <div className="relative group">
-                            <label className="absolute -top-3.5 left-6 px-1.5 text-gray-400 dark:text-gray-500 text-sm font-bold bg-white dark:bg-slate-900 group-focus-within:text-blue-600 transition-colors">Nouveau mot de passe</label>
-                            <div className="flex items-center bg-white dark:bg-slate-800/50 border border-gray-100 dark:border-gray-700/50 rounded-3xl p-5 shadow-sm focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all">
-                                <div className="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center mr-5">
-                                    <Lock className="text-blue-600" size={28} />
-                                </div>
-                                <input
-                                    type={showPassword.new ? "text" : "password"}
-                                    name="newPassword"
-                                    placeholder="••••••••"
-                                    value={formData.newPassword}
-                                    onChange={handleChange}
-                                    className="flex-1 text-xl font-bold bg-transparent outline-none text-gray-900 dark:text-white"
-                                    required
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => togglePasswordVisibility('new')}
-                                    className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
-                                >
-                                    {showPassword.new ? <EyeOff size={24} /> : <Eye size={24} />}
-                                </button>
-                            </div>
-                        </div>
-
-                        {/* Confirm Password */}
-                        <div className="relative group">
-                            <label className="absolute -top-3.5 left-6 px-1.5 text-gray-400 dark:text-gray-500 text-sm font-bold bg-white dark:bg-slate-900 group-focus-within:text-blue-600 transition-colors">Confirmer le nouveau mot de passe</label>
-                            <div className="flex items-center bg-white dark:bg-slate-800/50 border border-gray-100 dark:border-gray-700/50 rounded-3xl p-5 shadow-sm focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all">
-                                <div className="w-14 h-14 rounded-2xl bg-blue-50 dark:bg-blue-900/20 flex items-center justify-center mr-5">
-                                    <Lock className="text-blue-600" size={28} />
-                                </div>
-                                <input
-                                    type={showPassword.confirm ? "text" : "password"}
-                                    name="confirmPassword"
-                                    placeholder="••••••••"
-                                    value={formData.confirmPassword}
-                                    onChange={handleChange}
-                                    className="flex-1 text-xl font-bold bg-transparent outline-none text-gray-900 dark:text-white"
-                                    required
-                                />
-                                <button
-                                    type="button"
-                                    onClick={() => togglePasswordVisibility('confirm')}
-                                    className="p-2 text-gray-400 hover:text-blue-600 transition-colors"
-                                >
-                                    {showPassword.confirm ? <EyeOff size={24} /> : <Eye size={24} />}
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
+                <div className="pt-4">
                     <button
                         type="submit"
-                        className="w-full bg-[#003399] text-white py-6 rounded-[2rem] flex items-center justify-center gap-4 text-2xl font-bold shadow-2xl shadow-blue-500/30 mt-12 active:scale-[0.98] transition-all hover:bg-[#002b80]"
+                        className="w-full bg-[#003399] text-white py-5 rounded-2xl flex items-center justify-center gap-3 text-lg font-bold shadow-xl shadow-blue-900/20 active:scale-[0.98] transition-all"
                     >
-                        <Save size={28} />
-                        Modifier le mot de passe
+                        <Save size={24} />
+                        Enregistrer
                     </button>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     );
 }

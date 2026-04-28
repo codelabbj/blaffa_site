@@ -97,15 +97,14 @@ const DashboardHeader = () => {
 
   return (
     <>
-      <header className="backdrop-blur-lg border-b border-black/20 sticky top-0 z-50 overflow-x-hidden">
+      <header className="backdrop-blur-lg border-b border-black/20 sticky top-0 z-50 overflow-x-hidden bg-white/80 dark:bg-slate-900/80">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
           <div className="flex items-center justify-between h-16 w-full overflow-x-hidden">
             <div className="flex items-center space-x-4 flex-shrink-0">
               <div className="flex items-center space-x-2">
-                {/* <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
-                
-              </div> */}
-                <Image src="/logo.png" alt="Logo" width={40} height={40} className="rounded-full" />
+                <div className="w-8 h-8 bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg flex items-center justify-center overflow-hidden">
+                  <Image src="/logo.png" alt="Logo" width={40} height={40} className="rounded-full" />
+                </div>
                 <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-blue-600 bg-clip-text text-transparent">
                   Blaffa
                 </span>
@@ -113,18 +112,15 @@ const DashboardHeader = () => {
             </div>
 
             <div className="flex items-center space-x-2 sm:space-x-4 flex-shrink-0">
-              {/* Support/Contact Icon */}
               <a href='/contact' className="relative p-2 hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
                 <Headphones className="h-5 w-5 sm:h-6 sm:w-6" />
               </a>
-
-              {/* Notification Bell with Red Dot */}
               <a href='/notifications' className="relative p-2 hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-full transition-colors">
                 <Bell className="h-5 w-5 sm:h-6 sm:w-6" />
-                {/* Red notification dot */}
-                <span className="absolute top-1 right-1 w-2 h-2 bg-red-500 rounded-full"></span>
               </a>
-
+              <a className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center relative group" href='/profile'>
+                <User size={16} className="text-sm text-white font-bold group-hover:scale-110 transition-transform" />
+              </a>
               <div className="w-8 h-8">
                 <ThemeToggle />
               </div>

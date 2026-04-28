@@ -90,120 +90,71 @@ export default function EditProfile() {
     if (loading) return <p className="p-6 text-center text-white">{t('Loading profile...')}</p>;
 
     return (
-        <div className={`min-h-screen ${theme.mode === 'dark' ? 'bg-slate-900' : 'bg-white'} pb-24`}>
+        <div className={`min-h-screen ${theme.colors.background} pb-24 pt-[env(safe-area-inset-top)]`}>
             <Head>
                 <title>{t("Modifier le profil")}</title>
                 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0" />
             </Head>
 
-            <div className="animate-in slide-in-from-bottom-10 fade-in duration-500 min-h-screen">
-                <div className="bg-[#003399] pt-14 pb-12 px-6 rounded-b-[3.5rem] relative mb-12 shadow-2xl shadow-blue-900/40">
+            <div className="bg-[#003399] pt-14 pb-12 px-6 rounded-b-[3rem] relative mb-8 shadow-2xl overflow-hidden">
+                <div className="max-w-lg mx-auto flex items-center relative">
                     <button
-                        onClick={() => router.back()}
-                        className="absolute top-14 left-6 text-white hover:opacity-70 transition-opacity"
+                        onClick={() => router.push('/profile')}
+                        className="text-white hover:opacity-70 transition-opacity shrink-0"
                     >
-                        <ChevronLeft size={36} />
+                        <ChevronLeft size={32} />
                     </button>
-                    <h2 className="text-white text-2xl font-bold text-center mt-1">Modifier le profil</h2>
+                    <h2 className="text-white text-xl md:text-2xl font-bold flex-1 text-center pr-8">
+                         Modifier le profil
+                    </h2>
+                </div>
+            </div>
 
-                    <div className="flex flex-col items-center mt-12">
-                        <div className={`w-36 h-36 rounded-full ${theme.colors.a_background} flex items-center justify-center mb-6 shadow-xl border-4 border-white/20`}>
-                            <svg xmlns="http://www.w3.org/2000/svg" className={`w-20 h-20 ${theme.colors.text} opacity-20`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                            </svg>
-                        </div>
-                        <h3 className="text-white text-3xl font-bold mb-1">{formData.firstName} {formData.lastName}</h3>
-                        <p className="text-blue-100/70 text-lg font-medium tracking-wide">{formData.email}</p>
-                    </div>
+            <form onSubmit={handleUpdateDetails} className="px-5 space-y-8 max-w-lg mx-auto">
+                <div className="mb-6">
+                    <h4 className="text-[#002266] dark:text-blue-300 text-xl font-extrabold">Informations personnelles</h4>
+                    <p className="text-gray-400 text-xs mt-1">Mettez à jour vos informations de contact</p>
                 </div>
 
-                <form onSubmit={handleUpdateDetails} className="px-6 space-y-10 pb-36 max-w-lg mx-auto">
-                    <h4 className="text-[#002266] dark:text-blue-300 text-2xl font-extrabold mb-8">Informations personnelles</h4>
-
-                    <div className="space-y-8">
-                        {/* Prénom */}
-                        <div className="relative group">
-                            <label className={`absolute -top-3.5 left-6 px-1.5 ${theme.colors.d_text} opacity-60 text-sm font-bold ${theme.colors.a_background} group-focus-within:text-blue-600 transition-colors`}>Prénom</label>
-                            <div className={`flex items-center ${theme.colors.a_background} border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-gray-100'} rounded-3xl p-5 shadow-sm focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all`}>
-                                <div className={`w-14 h-14 rounded-2xl ${theme.mode === 'dark' ? 'bg-blue-900/20' : 'bg-blue-50'} flex items-center justify-center mr-5`}>
-                                    <User className="text-blue-600 dark:text-blue-400" size={28} />
+                <div className="space-y-7">
+                    {[
+                        { id: 'firstName', label: 'Prénom', name: 'firstName', icon: User, placeholder: 'Prénom' },
+                        { id: 'lastName', label: 'Nom', name: 'lastName', icon: IdCard, placeholder: 'Nom' },
+                        { id: 'email', label: 'Email', name: 'email', icon: Mail, placeholder: 'Email', type: 'email' },
+                        { id: 'phoneNumber', label: 'Numéro de Téléphone', name: 'phoneNumber', icon: Phone, placeholder: 'Numéro de Téléphone' }
+                    ].map((field) => (
+                        <div key={field.id} className="relative group">
+                            <label className={`absolute -top-3 left-5 px-1.5 ${theme.colors.d_text} opacity-60 text-xs font-bold ${theme.mode === 'dark' ? 'bg-slate-900' : 'bg-white'} group-focus-within:text-blue-600 transition-colors z-10`}>
+                                {field.label}
+                            </label>
+                            <div className={`flex items-center ${theme.mode === 'dark' ? 'bg-slate-900' : 'bg-white'} border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-gray-100'} rounded-2xl p-3.5 shadow-sm focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all`}>
+                                <div className={`w-11 h-11 rounded-xl ${theme.mode === 'dark' ? 'bg-blue-900/20' : 'bg-blue-50'} flex items-center justify-center mr-4 shrink-0`}>
+                                    <field.icon className="text-blue-600 dark:text-blue-400" size={22} />
                                 </div>
                                 <input
-                                    type="text"
-                                    name="firstName"
-                                    placeholder="Rasheed"
-                                    value={formData.firstName}
+                                    type={field.type || "text"}
+                                    name={field.name}
+                                    placeholder={field.placeholder}
+                                    value={formData[field.name as keyof typeof formData]}
                                     onChange={handleChange}
-                                    className={`flex-1 text-xl font-bold bg-transparent outline-none ${theme.colors.text}`}
+                                    className={`flex-1 text-lg font-bold bg-transparent outline-none ${theme.colors.text} min-w-0`}
+                                    required
                                 />
                             </div>
                         </div>
+                    ))}
+                </div>
 
-                        {/* Nom */}
-                        <div className="relative group">
-                            <label className={`absolute -top-3.5 left-6 px-1.5 ${theme.colors.d_text} opacity-60 text-sm font-bold ${theme.colors.a_background} group-focus-within:text-blue-600 transition-colors`}>Nom</label>
-                            <div className={`flex items-center ${theme.colors.a_background} border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-gray-100'} rounded-3xl p-5 shadow-sm focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all`}>
-                                <div className={`w-14 h-14 rounded-2xl ${theme.mode === 'dark' ? 'bg-blue-900/20' : 'bg-blue-50'} flex items-center justify-center mr-5`}>
-                                    <IdCard className="text-blue-600 dark:text-blue-400" size={28} />
-                                </div>
-                                <input
-                                    type="text"
-                                    name="lastName"
-                                    placeholder="idris"
-                                    value={formData.lastName}
-                                    onChange={handleChange}
-                                    className={`flex-1 text-xl font-bold bg-transparent outline-none ${theme.colors.text}`}
-                                />
-                            </div>
-                        </div>
-
-                        {/* Email */}
-                        <div className="relative group">
-                            <label className={`absolute -top-3.5 left-6 px-1.5 ${theme.colors.d_text} opacity-60 text-sm font-bold ${theme.colors.a_background} group-focus-within:text-blue-600 transition-colors`}>Email</label>
-                            <div className={`flex items-center ${theme.colors.a_background} border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-gray-100'} rounded-3xl p-5 shadow-sm focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all`}>
-                                <div className={`w-14 h-14 rounded-2xl ${theme.mode === 'dark' ? 'bg-blue-900/20' : 'bg-blue-50'} flex items-center justify-center mr-5`}>
-                                    <Mail className="text-blue-600 dark:text-blue-400" size={28} />
-                                </div>
-                                <input
-                                    type="email"
-                                    name="email"
-                                    placeholder="viralrarsh@gmail.com"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    className={`flex-1 text-xl font-bold bg-transparent outline-none ${theme.colors.text}`}
-                                />
-                            </div>
-                        </div>
-
-                        {/* Téléphone */}
-                        <div className="relative group">
-                            <label className={`absolute -top-3.5 left-6 px-1.5 ${theme.colors.d_text} opacity-60 text-sm font-bold ${theme.colors.a_background} group-focus-within:text-blue-600 transition-colors`}>Téléphone</label>
-                            <div className={`flex items-center ${theme.colors.a_background} border ${theme.mode === 'dark' ? 'border-slate-800' : 'border-gray-100'} rounded-3xl p-5 shadow-sm focus-within:ring-2 focus-within:ring-blue-500/20 focus-within:border-blue-500 transition-all`}>
-                                <div className={`w-14 h-14 rounded-2xl ${theme.mode === 'dark' ? 'bg-blue-900/20' : 'bg-blue-50'} flex items-center justify-center mr-5`}>
-                                    <Phone className="text-blue-600 dark:text-blue-400" size={28} />
-                                </div>
-                                <input
-                                    type="text"
-                                    name="phoneNumber"
-                                    placeholder="08110798402"
-                                    value={formData.phoneNumber}
-                                    onChange={handleChange}
-                                    className={`flex-1 text-xl font-bold bg-transparent outline-none ${theme.colors.text}`}
-                                />
-                            </div>
-                        </div>
-                    </div>
-
+                <div className="pt-4">
                     <button
                         type="submit"
-                        className={`w-full text-white py-6 rounded-[2rem] flex items-center justify-center gap-4 text-2xl font-bold shadow-2xl transition-all hover:opacity-90 active:scale-[0.98] mt-12`}
-                        style={{ backgroundColor: theme.mode === 'dark' ? theme.colors.primary : '#003399', boxShadow: `0 20px 40px ${theme.mode === 'dark' ? 'rgba(0,0,0,0.4)' : 'rgba(0,51,153,0.3)'}` }}
+                        className="w-full bg-[#003399] text-white py-5 rounded-2xl flex items-center justify-center gap-3 text-lg font-bold shadow-xl shadow-blue-900/20 active:scale-[0.98] transition-all"
                     >
-                        <Save size={28} />
-                        Enregistrer les modifications
+                        <Save size={24} />
+                        Enregistrer
                     </button>
-                </form>
-            </div>
+                </div>
+            </form>
         </div>
     );
 }

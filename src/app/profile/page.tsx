@@ -10,7 +10,7 @@ import { useTheme } from '@/components/ThemeProvider';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import api from '@/lib/axios';
-import { User, Pencil, ChevronRight, Shield, Star, LogOut, Trash2, HelpCircle, CheckCircle2, Moon, X } from 'lucide-react';
+import { User, Pencil, ChevronRight, Shield, Star, LogOut, Trash2, HelpCircle, CheckCircle2, Moon, X, Mail } from 'lucide-react';
 
 export default function Profile() {
   const { t } = useTranslation();
@@ -175,123 +175,84 @@ export default function Profile() {
   }
 
   return (
-    <div className={`${theme.mode === 'dark' ? 'bg-[#0a0a0a]' : 'bg-slate-50'}`}>
+    <div className={`min-h-screen ${theme.colors.background} pt-[env(safe-area-inset-top)]`}>
       <Head>
         <title>{t("Profile")}</title>
       </Head>
 
-      {/* Redesigned Navy Blue Header */}
-      <div className="bg-[#002d72] pt-12 pb-10 px-6 relative animate-in fade-in duration-700">
-        {/* Edit Button in Top Right */}
+      <div className="bg-[#003399] pt-12 pb-16 px-6 rounded-b-[2.5rem] relative mb-8 shadow-2xl">
         <button
           onClick={() => router.push('/profile/edit')}
-          className="absolute top-8 right-6 w-9 h-9 bg-white/20 hover:bg-white/30 rounded-full flex items-center justify-center transition-all shadow-sm"
+          className="absolute top-12 right-6 w-10 h-10 bg-white/10 rounded-full flex items-center justify-center text-white"
         >
-          <Pencil size={16} className="text-white" />
+          <Pencil size={20} />
         </button>
-
         <div className="flex flex-col items-center">
-          {/* Circular Avatar */}
-          <div className="w-20 h-20 rounded-full bg-white flex items-center justify-center mb-5 shadow-xl border-4 border-white/10">
-            <User size={40} className="text-[#002d72] stroke-[1.5]" />
+          <div className="w-24 h-24 rounded-full bg-white flex items-center justify-center mb-4 shadow-xl">
+            <User size={48} className="text-[#002d72]" />
           </div>
-
-          {/* User Info */}
-          <h1 className="text-xl font-bold text-white mb-1 tracking-tight">
+          <h1 className="text-xl font-bold text-white mb-1">
             {formData.firstName} {formData.lastName}
           </h1>
-          <p className="text-blue-100/70 text-xs mb-1 font-medium">{formData.email}</p>
-          <p className="text-blue-100/70 text-xs font-medium">
-            {formData.phoneCode || '+229'} {formData.phone || formData.phoneNumber}
-          </p>
+          <p className="text-blue-100/70 text-sm font-medium">{formData.email}</p>
         </div>
       </div>
 
-      {/* Parameters Section */}
-      <div className="px-6 py-6 w-full space-y-4">
-        <h3 className="text-gray-400 text-base font-bold mb-3 ml-1">Paramètres</h3>
-
-        <div className="space-y-3">
-          {/* Status Card */}
-          <div className={`w-full p-5 ${theme.mode === 'dark' ? 'bg-[#1a1a1a] border-gray-800' : 'bg-white border-gray-100'} border rounded-3xl flex items-center shadow-sm`}>
-            {formData.status === 'verify' ? (
-              <>
-                <div className="w-8 h-8 rounded-full bg-[#e8f5e9] flex items-center justify-center mr-4">
-                  <CheckCircle2 size={20} className="text-[#4caf50]" />
-                </div>
-                <span className="text-[#4caf50] font-bold">Compte vérifié avec succès</span>
-              </>
-            ) : formData.status === 'pending' ? (
-              <>
-                <div className="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center mr-4">
-                  <CheckCircle2 size={20} className="text-yellow-600" />
-                </div>
-                <span className="text-yellow-600 font-bold">Vérification en cours</span>
-              </>
-            ) : (
-              <>
-                <div className="w-8 h-8 rounded-full bg-yellow-100 flex items-center justify-center mr-4">
-                  <HelpCircle size={20} className="text-yellow-600" />
-                </div>
-                <span className="text-yellow-600 font-bold">Compte non vérifié</span>
-              </>
-            )}
+      <div className="px-6 pb-24 space-y-4">
+        {formData.status === 'verify' ? (
+          <div className="bg-green-500/10 border border-green-500/20 p-4 rounded-2xl flex items-center gap-3">
+            <CheckCircle2 size={24} className="text-green-500" />
+            <span className="text-green-700 dark:text-green-400 font-bold text-sm">Compte vérifié</span>
           </div>
+        ) : (
+          <div className="bg-yellow-500/10 border border-yellow-500/20 p-4 rounded-2xl flex items-center gap-3">
+            <HelpCircle size={24} className="text-yellow-500" />
+            <span className="text-yellow-700 dark:text-yellow-500 font-bold text-sm">Vérification en attente</span>
+          </div>
+        )}
 
-          {/* Dark Mode Card */}
-          <div className={`w-full p-5 ${theme.mode === 'dark' ? 'bg-[#1a1a1a] border-gray-800' : 'bg-white border-gray-100'} border rounded-3xl flex items-center justify-between shadow-sm`}>
-            <div className="flex items-center gap-4">
-              <div className="w-11 h-11 rounded-full bg-gray-50 dark:bg-gray-800/50 flex items-center justify-center">
-                <Moon size={22} className="text-gray-500" />
-              </div>
-              <span className={`text-lg font-bold ${theme.colors.text}`}>Mode sombre</span>
+        <div className="space-y-2">
+          {/* Dark Mode Toggle */}
+          <div className={`w-full p-4 ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-800' : 'bg-white border-gray-100'} border rounded-2xl flex items-center justify-between shadow-sm`}>
+            <div className="flex items-center gap-3">
+              <Moon size={20} className="text-blue-600" />
+              <span className={`font-bold ${theme.colors.text}`}>Mode sombre</span>
             </div>
-            <div
+            <button
               onClick={toggleTheme}
-              className={`w-14 h-7 ${theme.mode === 'dark' ? 'bg-blue-600' : 'bg-gray-200'} rounded-full relative transition-all duration-300 cursor-pointer p-1 shadow-inner`}
+              className={`w-12 h-6 ${theme.mode === 'dark' ? 'bg-blue-600' : 'bg-gray-200'} rounded-full relative transition-colors`}
             >
-              <div className={`w-5 h-5 bg-white rounded-full transition-all duration-300 ${theme.mode === 'dark' ? 'translate-x-7' : 'translate-x-0'} shadow-md`}></div>
-            </div>
+              <div className={`w-5 h-5 bg-white rounded-full absolute top-0.5 transition-all ${theme.mode === 'dark' ? 'right-0.5' : 'left-0.5'}`} />
+            </button>
           </div>
 
-          {/* Menu Items */}
           {[
-            { label: 'Support', icon: HelpCircle, path: '/contact' },
-            { label: 'Parametre de securite', icon: Shield, onClick: () => setShowSecurityMenu(true) },
-            { label: 'Politique de l\'application', icon: Star, path: '/privacy-policy' },
-            { label: 'Deconnexion', icon: LogOut, onClick: handleLogout },
-            { label: 'Supprimer le compte', icon: Trash2, onClick: () => setShowDeleteConfirmation(true) }
+            { label: 'Paramètres de sécurité', icon: Shield, onClick: () => setShowSecurityMenu(true) },
+            { label: 'Support & Assistance', icon: HelpCircle, path: '/contact' },
+            { label: 'Politique de confidentialité', icon: Star, path: '/privacy-policy' },
+            { label: 'Déconnexion', icon: LogOut, onClick: handleLogout },
+            { label: 'Zone de danger', icon: Trash2, onClick: () => setShowDeleteConfirmation(true), color: 'text-red-500' }
           ].map((item, idx) => {
             const content = (
-              <>
-                <div className="flex items-center gap-4">
-                  <div className="w-10 h-10 rounded-full bg-gray-50 dark:bg-gray-800/50 flex items-center justify-center group-hover:bg-blue-50 dark:group-hover:bg-blue-900/20 transition-colors">
-                    <item.icon size={20} className="text-gray-500 group-hover:text-blue-500 transition-colors" />
-                  </div>
-                  <span className={`text-base font-bold ${theme.colors.text}`}>{item.label}</span>
+              <div className={`w-full p-4 ${theme.mode === 'dark' ? 'bg-slate-900 border-slate-800' : 'bg-white border-gray-100'} border rounded-2xl flex items-center justify-between shadow-sm`}>
+                <div className="flex items-center gap-3">
+                  <item.icon size={20} className={item.color || "text-blue-600"} />
+                  <span className={`font-bold ${theme.colors.text}`}>{item.label}</span>
                 </div>
-                <ChevronRight size={20} className="text-gray-300 group-hover:text-gray-500 transition-colors" />
-              </>
+                <ChevronRight size={20} className="text-gray-400" />
+              </div>
             );
 
             if (item.path) {
               return (
-                <Link
-                  key={idx}
-                  href={item.path}
-                  className={`w-full p-4 ${theme.mode === 'dark' ? 'bg-[#1a1a1a] border-gray-800' : 'bg-white border-gray-100'} border rounded-3xl flex items-center justify-between shadow-sm active:scale-[0.98] transition-all group`}
-                >
+                <Link key={idx} href={item.path} className="block w-full">
                   {content}
                 </Link>
               );
             }
 
             return (
-              <button
-                key={idx}
-                onClick={item.onClick}
-                className={`w-full p-4 ${theme.mode === 'dark' ? 'bg-[#1a1a1a] border-gray-800' : 'bg-white border-gray-100'} border rounded-3xl flex items-center justify-between shadow-sm active:scale-[0.98] transition-all group`}
-              >
+              <button key={idx} onClick={item.onClick} className="block w-full text-left">
                 {content}
               </button>
             );
@@ -299,35 +260,27 @@ export default function Profile() {
         </div>
       </div>
 
-      {/* Security Menu Overlay */}
       {showSecurityMenu && (
-        <div className="fixed inset-0 z-50 flex flex-col justify-end">
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setShowSecurityMenu(false)}></div>
-          <div className={`relative w-full max-w-lg mx-auto ${theme.mode === 'dark' ? 'bg-[#1a1a1a]' : 'bg-white'} rounded-t-[3rem] p-10 animate-in slide-in-from-bottom duration-500 shadow-2xl border-t border-white/10`}>
-            <div className="w-16 h-1 bg-gray-300 dark:bg-gray-700 rounded-full mx-auto mb-8 opacity-50"></div>
-            <div className="flex justify-between items-center mb-8">
-              <h3 className={`text-2xl font-black ${theme.colors.text}`}>Sécurité</h3>
-              <button
-                onClick={() => setShowSecurityMenu(false)}
-                className="w-10 h-10 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center text-gray-500 font-bold"
-              >
-                <X size={20} />
-              </button>
-            </div>
-
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-6">
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setShowSecurityMenu(false)}></div>
+          <div className={`relative w-full max-w-sm ${theme.mode === 'dark' ? 'bg-slate-900' : 'bg-white'} rounded-3xl p-6 shadow-2xl`}>
+            <h3 className={`text-xl font-bold ${theme.colors.text} mb-6`}>Sécurité</h3>
             <button
               onClick={() => router.push('/profile/security/password')}
-              className={`w-full p-6 ${theme.mode === 'dark' ? 'bg-gray-800/40 border-gray-700' : 'bg-gray-50 border-gray-100'} border rounded-3xl flex items-center justify-between shadow-sm group hover:border-blue-500/50 transition-all`}
+              className={`w-full p-4 ${theme.mode === 'dark' ? 'bg-slate-800' : 'bg-slate-100'} rounded-2xl flex items-center justify-between mb-4`}
             >
-              <div className="flex items-center gap-5">
-                <div className="w-12 h-12 rounded-full bg-blue-500/10 flex items-center justify-center border border-blue-500/20">
-                  <Shield size={22} className="text-blue-500" />
-                </div>
-                <span className={`text-xl font-bold ${theme.colors.text}`}>Modifier le mot de passe</span>
+              <div className="flex items-center gap-3">
+                <Shield size={20} className="text-blue-600" />
+                <span className={`font-bold ${theme.colors.text}`}>Changer le mot de passe</span>
               </div>
-              <ChevronRight size={24} className="text-gray-300 group-hover:translate-x-1 transition-transform" />
+              <ChevronRight size={20} className="text-gray-400" />
             </button>
-            <div className="h-10"></div>
+            <button
+              onClick={() => setShowSecurityMenu(false)}
+              className="w-full py-3 text-center font-bold text-gray-500"
+            >
+              Fermer
+            </button>
           </div>
         </div>
       )}

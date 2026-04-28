@@ -224,12 +224,12 @@ export default function Dashboard() {
       <div className="fixed bottom-24 right-6 z-40">
         <button
           onClick={() => setIsContactMenuOpen(!isContactMenuOpen)}
-          className="w-16 h-16 bg-[#002d72] rounded-full flex items-center justify-center shadow-2xl transition-transform active:scale-90 overflow-hidden"
+          className="w-14 h-14 bg-[#002d72] rounded-full flex items-center justify-center shadow-2xl transition-transform active:scale-90 overflow-hidden"
         >
           {isContactMenuOpen ? (
-            <X className="w-8 h-8 text-white" />
+            <X className="w-6 h-6 text-white" />
           ) : (
-            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M20 2H4C2.9 2 2 2.9 2 4V22L6 18H20C21.1 18 22 17.1 22 16V4C22 2.9 21.1 2 20 2Z" fill="white" />
               <rect x="6" y="6" width="12" height="2" rx="1" fill="#002d72" />
               <rect x="6" y="10" width="12" height="2" rx="1" fill="#002d72" />

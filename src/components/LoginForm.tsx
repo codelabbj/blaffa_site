@@ -33,6 +33,24 @@ export default function LoginForm() {
     // OTP input refs
     const otpRefs = [useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null), useRef<HTMLInputElement>(null)];
 
+    // Persistence Key
+    const CREDS_KEY = 'blaffa_remembered_creds';
+
+    // Load saved credentials on mount
+    useEffect(() => {
+        const savedCreds = localStorage.getItem(CREDS_KEY);
+        if (savedCreds) {
+            try {
+                const { email: savedEmail, password: savedPassword } = JSON.parse(savedCreds);
+                setEmail(savedEmail || '');
+                setPassword(savedPassword || '');
+                setRememberMe(true);
+            } catch (e) {
+                console.error('Error parsing saved credentials', e);
+            }
+        }
+    }, []);
+
     // Resend timer countdown
     useEffect(() => {
         if (resendTimer > 0) {
@@ -69,6 +87,11 @@ export default function LoginForm() {
             if (data && data.id) {
                 localStorage.setItem('userId', data.id.toString());
             }
+            // Save email for profile password update helper
+            localStorage.setItem('userEmail', email.replace(/\s+/g, ''));
+
+            // Store credentials for auto-fill on next login
+            localStorage.setItem(CREDS_KEY, JSON.stringify({ email: email.replace(/\s+/g, ''), password }));
 
             api.defaults.headers.common['Authorization'] = `Bearer ${access}`;
 
@@ -137,10 +160,21 @@ export default function LoginForm() {
                     confirm_new_password: confirmNewPassword
                 });
 
+                // Update remembered credentials if the email matches
+                const savedCreds = localStorage.getItem(CREDS_KEY);
+                if (savedCreds) {
+                    try {
+                        const creds = JSON.parse(savedCreds);
+                        if (creds.email === forgotEmail) {
+                            localStorage.setItem(CREDS_KEY, JSON.stringify({ ...creds, password: newPassword }));
+                        }
+                    } catch (e) { }
+                }
+
                 setForgotPasswordStep(4);
                 // Auto redirect after 3 seconds
                 setTimeout(() => {
-                    handleBackToLogin();
+                    handleBackToLogin(true);
                 }, 3000);
             }
         } catch (error: any) {
@@ -188,7 +222,7 @@ export default function LoginForm() {
         }
     };
 
-    const handleBackToLogin = () => {
+    const handleBackToLogin = (forceReload = false) => {
         setIsForgotPassword(false);
         setForgotPasswordStep(1);
         setForgotEmail('');
@@ -196,14 +230,18 @@ export default function LoginForm() {
         setNewPassword('');
         setConfirmNewPassword('');
         setNotification(null);
+
+        if (forceReload) {
+            window.location.reload();
+        }
     };
 
     // Render forgot password flow
     if (isForgotPassword) {
         return (
-            <div className="w-full p-6 bg-transparent">
-                <div className="mb-8">
-                    <h1 className="text-2xl font-semibold text-gray-700 dark:text-gray-700 mb-2">Réinitialiser le mot de passe</h1>
+            <div className="w-full max-w-md mx-auto p-4 sm:p-6 bg-transparent">
+                <div className="mb-6 sm:mb-8">
+                    <h1 className="text-xl sm:text-2xl font-semibold text-gray-700 dark:text-gray-700 mb-2">Réinitialiser le mot de passe</h1>
                 </div>
 
                 {/* Notification */}
@@ -239,7 +277,7 @@ export default function LoginForm() {
                             <div className="text-center">
                                 <button
                                     type="button"
-                                    onClick={handleBackToLogin}
+                                    onClick={() => handleBackToLogin()}
                                     className="text-sm text-[#1e40af] hover:underline font-medium"
                                 >
                                     Retour
@@ -253,7 +291,7 @@ export default function LoginForm() {
                         <>
                             <div className="space-y-4">
                                 <label className="block text-sm font-normal text-gray-700">Entrez le code</label>
-                                <div className="flex gap-3 justify-center">
+                                <div className="flex gap-2 sm:gap-3 justify-center">
                                     {otp.map((digit, index) => (
                                         <input
                                             key={index}
@@ -264,7 +302,7 @@ export default function LoginForm() {
                                             value={digit}
                                             onChange={(e) => handleOtpChange(index, e.target.value)}
                                             onKeyDown={(e) => handleOtpKeyDown(index, e)}
-                                            className="w-16 h-16 text-center text-2xl font-semibold rounded-xl border-2 border-[#1e40af] bg-white text-gray-900 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition-all"
+                                            className="w-12 h-12 sm:w-16 sm:h-16 text-center text-xl sm:text-2xl font-semibold rounded-xl border-2 border-[#1e40af] bg-white text-gray-900 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition-all"
                                         />
                                     ))}
                                 </div>
@@ -354,7 +392,7 @@ export default function LoginForm() {
 
                             <button
                                 type="button"
-                                onClick={handleBackToLogin}
+                                onClick={() => handleBackToLogin(true)}
                                 className="w-full bg-[#1e40af] hover:bg-[#1e3a8a] text-white font-medium py-4 rounded-xl shadow-lg transition-all duration-300"
                             >
                                 Mise à jour
@@ -368,11 +406,11 @@ export default function LoginForm() {
 
     // Regular login form
     return (
-        <div className="w-full p-6 bg-transparent">
+        <div className="w-full max-w-md mx-auto p-4 sm:p-6 bg-transparent">
             {/* Header content matches image */}
-            <div className="mb-8 ">
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-900 mb-2">Vous êtes de retour</h1>
-                <p className="text-gray-500 text-sm">Faisons en sorte que cette journée soit exceptionnelle</p>
+            <div className="mb-6 sm:mb-8 ">
+                <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-900 mb-2">Vous êtes de retour</h1>
+                <p className="text-gray-500 text-xs sm:text-sm">Faisons en sorte que cette journée soit exceptionnelle</p>
             </div>
 
             {/* Notification */}

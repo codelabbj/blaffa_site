@@ -77,8 +77,10 @@ export default function CryptoTransactionForm({
   const [apiResult, setApiResult] = useState<Record<string, string> | null>(null);
   const [error, setError] = useState('');
   const [hash, setHash] = useState('');
-  const [view, setView] = useState<'form' | 'sale_confirm'>('form');
+  const [view, setView] = useState<'form' | 'sale_confirm' | 'buy_confirm'>('form');
   const [selectedPaymentNetwork, setSelectedPaymentNetwork] = useState<Network | null>(null);
+  const [qrCodeData, setQrCodeData] = useState<{ qr_code_base64: string; address: string } | null>(null);
+  const [qrLoading, setQrLoading] = useState(false);
 
   // Steps: details (wallet for buy only) -> payment_network -> phone -> amounts
   const [internalStep, setInternalStep] = useState<'details' | 'payment_network' | 'phone' | 'amounts'>(
@@ -243,7 +245,10 @@ export default function CryptoTransactionForm({
         setView('sale_confirm');
         return;
       }
-      await submitBuy();
+      if (transactionType === 'buy') {
+        setView('buy_confirm');
+        return;
+      }
     }
   };
 
@@ -277,6 +282,26 @@ export default function CryptoTransactionForm({
       setLoading(false);
     }
   };
+
+  const fetchQRCode = async (networkId: number | string) => {
+    setQrLoading(true);
+    try {
+      const response = await api.get(`/betpay/crypto-network-qrcode`, {
+        params: { network_id: String(networkId) }
+      });
+      setQrCodeData(response.data);
+    } catch (err) {
+      console.error('Error fetching QR code:', err);
+    } finally {
+      setQrLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (view === 'sale_confirm' && selectedCryptoNetwork?.id) {
+      fetchQRCode(selectedCryptoNetwork.id);
+    }
+  }, [view, selectedCryptoNetwork?.id]);
 
   const handleHashSubmit = async () => {
     if (!selectedPaymentNetwork || !selectedPhone) return;
@@ -335,20 +360,51 @@ export default function CryptoTransactionForm({
           Veuillez envoyer vos cryptos à l&apos;adresse ci-dessous dans votre portefeuille ({selectedCryptoNetwork.name}).
         </p>
 
-        <div className="mb-6">
-          <p className={`text-sm font-bold mb-2 ${theme.mode === 'dark' ? 'text-blue-400' : 'text-blue-900'}`}>Adresse de destination :</p>
-          <div className={`flex items-center gap-3 p-4 rounded-xl border ${theme.mode === 'dark' ? 'bg-slate-800/50 border-slate-700' : 'bg-gray-50 border-gray-200'}`}>
-            <span className={`flex-1 font-mono text-sm break-all ${theme.colors.text}`}>
-              {selectedCryptoNetwork.address || 'Adresse non disponible'}
-            </span>
-            <button
-              onClick={() => handleCopy(selectedCryptoNetwork.address || '')}
-              className={`p-2 rounded-lg ${theme.mode === 'dark' ? 'bg-slate-700 text-blue-400' : 'bg-blue-100 text-blue-800'}`}
-            >
-              <FaCopy />
-            </button>
+        {qrLoading ? (
+          <div className="flex flex-col items-center justify-center p-8 bg-gray-50 dark:bg-slate-800/30 rounded-2xl mb-6">
+            <div className="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mb-2"></div>
+            <p className="text-xs text-gray-500">Chargement du QR Code...</p>
           </div>
-        </div>
+        ) : qrCodeData ? (
+          <div className="flex flex-col items-center gap-4 mb-6 p-6 bg-white dark:bg-slate-800 rounded-3xl shadow-sm border border-gray-100 dark:border-slate-700">
+            <div className="bg-white p-3 rounded-2xl shadow-inner">
+              <img 
+                src={qrCodeData.qr_code_base64} 
+                alt="QR Code" 
+                className="w-48 h-48 object-contain"
+              />
+            </div>
+            <div className="w-full">
+              <p className={`text-xs font-bold mb-2 ${theme.colors.text}`}>Adresse {selectedCryptoNetwork.name} :</p>
+              <div className={`flex items-center gap-3 p-3 rounded-xl border ${theme.mode === 'dark' ? 'bg-slate-900 shadow-inner border-slate-700' : 'bg-gray-50 border-gray-100'}`}>
+                <span className={`flex-1 font-mono text-xs break-all ${theme.colors.text}`}>
+                  {qrCodeData.address}
+                </span>
+                <button
+                  onClick={() => handleCopy(qrCodeData.address)}
+                  className={`p-2 rounded-lg ${theme.mode === 'dark' ? 'bg-slate-800 text-blue-400' : 'bg-blue-100 text-blue-800'}`}
+                >
+                  <FaCopy />
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="mb-6">
+            <p className={`text-sm font-bold mb-2 ${theme.mode === 'dark' ? 'text-blue-400' : 'text-blue-900'}`}>Adresse de destination :</p>
+            <div className={`flex items-center gap-3 p-4 rounded-xl border ${theme.mode === 'dark' ? 'bg-slate-800/50 border-slate-700' : 'bg-gray-50 border-gray-200'}`}>
+              <span className={`flex-1 font-mono text-sm break-all ${theme.colors.text}`}>
+                {selectedCryptoNetwork.address || 'Adresse non disponible'}
+              </span>
+              <button
+                onClick={() => handleCopy(selectedCryptoNetwork.address || '')}
+                className={`p-2 rounded-lg ${theme.mode === 'dark' ? 'bg-slate-700 text-blue-400' : 'bg-blue-100 text-blue-800'}`}
+              >
+                <FaCopy />
+              </button>
+            </div>
+          </div>
+        )}
 
         {/* Instruction Message */}
         <div className={`p-4 rounded-xl flex items-start gap-3 mb-6 ${theme.mode === 'dark' ? 'bg-blue-900/10 border border-blue-900/30' : 'bg-blue-50 border border-blue-100'}`}>
@@ -392,6 +448,75 @@ export default function CryptoTransactionForm({
             disabled={loading || !hash}
           >
             {loading ? t('Traitement...') : 'Valider'}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // ─────────────────────────────────────────────────────
+  // BUY CONFIRMATION VIEW
+  // ─────────────────────────────────────────────────────
+  if (view === 'buy_confirm') {
+    return (
+      <div className="w-full min-h-[400px] flex flex-col">
+        <div className="flex items-center gap-4 mb-8">
+          <button onClick={() => setView('form')} className={`${theme.colors.hover} text-xl`}>
+            <FaArrowLeft />
+          </button>
+          <h1 className={`text-xl font-bold ${theme.colors.text}`}>Confirmation de l&apos;achat</h1>
+        </div>
+
+        <div className={`p-6 rounded-3xl mb-6 ${theme.mode === 'dark' ? 'bg-slate-800 shadow-inner border border-slate-700' : 'bg-gray-50 border border-gray-100'}`}>
+          <div className="space-y-4">
+            <div className="flex justify-between items-center pb-3 border-b border-gray-200 dark:border-slate-700">
+              <span className="text-sm text-gray-500">Vous payez</span>
+              <span className={`text-lg font-bold ${theme.colors.text}`}>{amount} XOF</span>
+            </div>
+            <div className="flex justify-between items-center pb-3 border-b border-gray-200 dark:border-slate-700">
+              <span className="text-sm text-gray-500">Vous recevez</span>
+              <span className={`text-lg font-bold text-blue-600`}>{quantity} {crypto.symbol}</span>
+            </div>
+            <div className="flex justify-between items-center pb-3 border-b border-gray-200 dark:border-slate-700">
+              <span className="text-sm text-gray-500">Réseau Crypto</span>
+              <span className={`text-sm font-medium ${theme.colors.text}`}>{selectedCryptoNetwork.name}</span>
+            </div>
+            <div className="flex justify-between items-center pb-3 border-b border-gray-200 dark:border-slate-700">
+              <span className="text-sm text-gray-500">Mode de paiement</span>
+              <span className={`text-sm font-medium ${theme.colors.text}`}>{selectedPaymentNetwork?.public_name}</span>
+            </div>
+            <div className="flex justify-between items-center pb-3 border-b border-gray-200 dark:border-slate-700">
+              <span className="text-sm text-gray-500">Numéro</span>
+              <span className={`text-sm font-medium ${theme.colors.text}`}>{selectedPhone?.phone}</span>
+            </div>
+            <div className="flex flex-col gap-2 pt-1">
+              <span className="text-sm text-gray-500">Adresse de réception</span>
+              <span className={`text-xs font-mono break-all p-3 rounded-lg ${theme.mode === 'dark' ? 'bg-slate-900 text-blue-400' : 'bg-blue-50 text-blue-900'} border border-blue-100 dark:border-blue-900/30`}>
+                {walletLink}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div className={`p-4 rounded-xl flex items-start gap-3 mb-8 ${theme.mode === 'dark' ? 'bg-orange-900/10 border border-orange-900/30' : 'bg-orange-50 border border-orange-100'}`}>
+          <FaInfoCircle size={16} className="text-orange-500 shrink-0 mt-0.5" />
+          <p className={`text-xs font-medium leading-relaxed ${theme.mode === 'dark' ? 'text-orange-300' : 'text-orange-900'}`}>
+            Assurez-vous que l&apos;adresse de réception est correcte. Les transactions sur le réseau {selectedCryptoNetwork.name} sont définitives.
+          </p>
+        </div>
+
+        <div className="mt-auto">
+          {error && (
+            <div className="mb-4 p-3 bg-red-50 border border-red-200 text-red-600 rounded-xl text-sm font-medium">
+              {error}
+            </div>
+          )}
+          <button
+            onClick={submitBuy}
+            className="w-full py-4 rounded-xl font-bold text-lg text-white shadow-lg bg-[#003087] hover:bg-[#002566] transition-all disabled:opacity-50"
+            disabled={loading}
+          >
+            {loading ? t('Traitement...') : 'Confirmer l\'achat'}
           </button>
         </div>
       </div>
