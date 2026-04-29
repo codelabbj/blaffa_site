@@ -411,7 +411,7 @@ function TransactionDetailContent() {
                 </div>
 
                 {/* Network & USSD Section (Compact) */}
-                {(transaction.ussd_code || transaction.network?.ussd_code) && (
+                {(transaction.ussd_code || transaction.network?.ussd_code) && transaction.status?.toLowerCase() === 'pending' && (
                     <div className={`w-full ${theme.mode === 'dark' ? 'bg-blue-900/10 border-blue-900/30' : 'bg-[#EBF5FF] border-[#D1E9FF]'} rounded-xl p-2 mb-3 border`}>
                         <div className="flex items-center justify-between gap-1.5 mb-2">
                              <div className="flex items-center gap-1.5">
