@@ -5,7 +5,7 @@ const API_URL = 'https://api.blaffa.net';
 // Create axios instance with base URL
 const api = axios.create({
   baseURL: API_URL,
-  timeout: 10000, // 10 seconds timeout
+  timeout: 60000, // 60 seconds timeout
   headers: {
     'Content-Type': 'application/json',
   },
@@ -119,7 +119,7 @@ api.interceptors.response.use(
         if (!isRetry) {
             console.log(`[API] Request failed or timed out. Retrying in background: ${originalRequest.url}`);
             // Trigger background retry
-            const backgroundRequest = { ...originalRequest, timeout: 30000, _isRetry: true } as any;
+            const backgroundRequest = { ...originalRequest, timeout: 120000, _isRetry: true } as any;
             api(backgroundRequest).catch(err => {
                 console.error(`[API] Background retry failed for: ${originalRequest.url}`, err);
             });

@@ -144,6 +144,29 @@ function BetIdsContent() {
       return;
     }
 
+    const appObject = apps.find(app => app.id === selectedApp);
+    const appName = appObject?.name?.toUpperCase() || '';
+    const isBetMomo = appName === 'BETMOMO' || appObject?.public_name?.toUpperCase() === 'BETMOMO';
+
+    if (isBetMomo) {
+      try {
+        const response = await api.post(`/blaffa/id_link`, { link: newAppId.trim(), app_name_id: selectedApp }, {
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        });
+        if (response.status === 200 || response.status === 201) {
+          setSuccess(t('ID de pari ajouté avec succès !'));
+          setTimeout(() => {
+            if (origin === 'deposit') router.push('/deposit');
+            else if (origin === 'withdraw') router.push('/withdraw');
+            else router.back();
+          }, 1500);
+        }
+      } catch (err: any) {
+        setError(err.response?.data?.detail || t('Failed to add bet ID'));
+      }
+      return;
+    }
+
     try {
       const searchResponse = await api.get(`/blaffa/search-user?app_id=${selectedApp}&userid=${encodeURIComponent(newAppId.trim())}`, {
         headers: {
