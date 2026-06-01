@@ -155,6 +155,7 @@ function BetIdsContent() {
         });
         if (response.status === 200 || response.status === 201) {
           setSuccess(t('ID de pari ajouté avec succès !'));
+          await fetchBetIds();
           setTimeout(() => {
             if (origin === 'deposit') router.push('/deposit');
             else if (origin === 'withdraw') router.push('/withdraw');
@@ -221,6 +222,7 @@ function BetIdsContent() {
       });
       if (response.status === 200 || response.status === 201) {
         setSuccess(t('ID de pari ajouté avec succès !'));
+        await fetchBetIds();
         // Redirect back to origin after success
         setTimeout(() => {
           if (origin === 'deposit') router.push('/deposit');

@@ -38,6 +38,8 @@ type Transaction = {
         public_name: string;
         image?: string;
         ussd_code?: string;
+        payment_by_link?: boolean;
+        payment_by_ussd_code?: boolean;
     };
     total_crypto?: string | number;
     wallet_link?: string | null;
@@ -383,7 +385,7 @@ function TransactionDetailContent() {
                     XOF {transaction.amount}
                 </div>
 
-                {transaction.status?.toLowerCase() === 'pending' && transaction.transaction_link && (
+                {transaction.status?.toLowerCase() === 'pending' && transaction.network?.payment_by_link && transaction.transaction_link && (
                     <div className="w-full mb-4">
                         <a
                             href={transaction.transaction_link}
@@ -411,7 +413,7 @@ function TransactionDetailContent() {
                 </div>
 
                 {/* Network & USSD Section (Compact) */}
-                {(transaction.ussd_code || transaction.network?.ussd_code) && transaction.status?.toLowerCase() === 'pending' && (
+                {transaction.network?.payment_by_ussd_code && (transaction.ussd_code || transaction.network?.ussd_code) && transaction.status?.toLowerCase() === 'pending' && (
                     <div className={`w-full ${theme.mode === 'dark' ? 'bg-blue-900/10 border-blue-900/30' : 'bg-[#EBF5FF] border-[#D1E9FF]'} rounded-xl p-2 mb-3 border`}>
                         <div className="flex items-center justify-between gap-1.5 mb-2">
                              <div className="flex items-center gap-1.5">
@@ -421,19 +423,19 @@ function TransactionDetailContent() {
                              <span className="text-[10px] text-blue-400 font-bold uppercase">{transaction.network?.public_name}</span>
                         </div>
                         
-                        <div className="flex items-center justify-between gap-3 bg-white/50 dark:bg-black/20 p-2 rounded-lg border border-blue-200/50 dark:border-blue-900/30">
-                            <span className={`font-mono text-lg font-bold tracking-widest ${theme.colors.text}`}>
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 bg-white/50 dark:bg-black/20 p-2.5 rounded-lg border border-blue-200/50 dark:border-blue-900/30">
+                            <span className={`font-mono text-base sm:text-lg font-bold tracking-widest ${theme.colors.text} break-all`}>
                                 {transaction.ussd_code || transaction.network?.ussd_code}
                             </span>
-                            <div className="flex gap-1.5">
+                            <div className="flex gap-1.5 shrink-0">
                                 <button
                                     onClick={() => {
                                         const code = transaction.ussd_code || transaction.network?.ussd_code;
                                         if (code) window.location.href = `tel:${encodeURIComponent(code)}`;
                                     }}
-                                    className="px-3 py-1.5 bg-blue-600 text-white rounded-md text-[10px] font-bold flex items-center gap-1.5 transition-all active:scale-95"
+                                    className="flex-1 sm:flex-none px-3 py-2 sm:py-1.5 bg-blue-600 text-white rounded-md text-[11px] sm:text-[10px] font-bold flex items-center justify-center gap-1.5 transition-all active:scale-95"
                                 >
-                                    <Phone size={10} fill="white" />
+                                    <Phone size={12} fill="white" />
                                     Appeler
                                 </button>
                                 <button
@@ -441,9 +443,9 @@ function TransactionDetailContent() {
                                         const code = transaction.ussd_code || transaction.network?.ussd_code;
                                         if (code) copyToClipboard(code);
                                     }}
-                                    className={`px-3 py-1.5 rounded-md border text-[10px] font-bold flex items-center gap-1.5 transition-all active:scale-95 ${theme.mode === 'dark' ? 'border-slate-800 bg-slate-800 text-blue-400' : 'border-blue-100 bg-white text-blue-600'}`}
+                                    className={`flex-1 sm:flex-none px-3 py-2 sm:py-1.5 rounded-md border text-[11px] sm:text-[10px] font-bold flex items-center justify-center gap-1.5 transition-all active:scale-95 ${theme.mode === 'dark' ? 'border-slate-800 bg-slate-800 text-blue-400' : 'border-blue-100 bg-white text-blue-600'}`}
                                 >
-                                    {copied ? <CheckCircle2 size={10} /> : <Copy size={10} />}
+                                    {copied ? <CheckCircle2 size={12} /> : <Copy size={12} />}
                                     {copied ? 'Copié' : 'Copier'}
                                 </button>
                             </div>
