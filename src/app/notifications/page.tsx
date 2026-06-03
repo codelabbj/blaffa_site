@@ -522,7 +522,7 @@ export default function NotificationsPage() {
                 ref={index === notifications.length - 1 ? lastNotificationElement : null}
                 className={`group relative bg-gradient-to-br ${theme.colors.background} rounded-xl border-2 transition-all duration-200 ${notification.is_read
                   ? 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
-                  : 'border-blue-300 dark:border-blue-700 bg-blue-50/50 dark:bg-blue-900/10 hover:border-blue-400 dark:hover:border-blue-600 shadow-sm'
+                  : 'border-blue-300 dark:border-blue-700 hover:border-blue-400 dark:hover:border-blue-600 shadow-sm'
                   } p-5 hover:shadow-lg cursor-pointer ${selectedNotifications.has(notification.id) ? 'ring-2 ring-blue-500 ring-offset-2' : ''
                   }`}
                 onClick={() => {
@@ -548,18 +548,15 @@ export default function NotificationsPage() {
 
                   {/* Unread Indicator */}
                   {!isSelectionMode && !notification.is_read && (
-                    <div className="flex-shrink-0 mt-2">
-                      <div className="w-3 h-3 bg-blue-500 rounded-full animate-pulse shadow-lg shadow-blue-500/50" />
+                    <div className="absolute top-6 left-2">
+                      <div className="w-2.5 h-2.5 bg-blue-500 rounded-full animate-pulse shadow-lg shadow-blue-500/50" />
                     </div>
                   )}
 
                   {/* Content */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between gap-3 mb-2">
-                      <h3 className={`text-base font-semibold leading-tight ${notification.is_read
-                        ? `${theme.colors.text} opacity-80`
-                        : `${theme.colors.text}`
-                        }`}>
+                      <h3 className={`text-base font-semibold leading-tight ${theme.colors.text} opacity-80`}>
                         {notification.title}
                       </h3>
                       <div className="flex items-center gap-2 flex-shrink-0">
@@ -568,10 +565,7 @@ export default function NotificationsPage() {
                         </span>
                       </div>
                     </div>
-                    <p className={`text-sm leading-relaxed ${notification.is_read
-                      ? 'text-gray-600 dark:text-gray-400'
-                      : 'text-gray-700 dark:text-gray-300'
-                      }`}>
+                    <p className={`text-sm leading-relaxed text-gray-600 dark:text-gray-400`}>
                       {renderContentWithLinks(notification.content)}
                     </p>
                   </div>
@@ -583,7 +577,7 @@ export default function NotificationsPage() {
                         e.stopPropagation();
                         markAsRead(notification.id);
                       }}
-                      className="flex-shrink-0 p-2 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200"
+                      className="absolute right-4 top-1/2 -translate-y-1/2 z-10 flex-shrink-0 p-2 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"
                       title="Marquer comme lu"
                     >
                       <Check className="h-5 w-5 text-blue-600 dark:text-blue-400" />
