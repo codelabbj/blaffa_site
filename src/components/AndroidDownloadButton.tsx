@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from './ThemeProvider';
 import { Download, ChevronDown } from 'lucide-react';
+import Link from 'next/link';
 
 interface AndroidDownloadButtonProps {
     downloadLink: string;
@@ -57,17 +58,23 @@ export default function AndroidDownloadButton({ downloadLink, className = "" }: 
 
             {isOpen && (
                 <div className="absolute top-full mt-2 right-0 md:right-auto md:left-0 w-64 md:w-72 bg-white dark:bg-slate-900 border border-gray-200 dark:border-gray-800 rounded-2xl shadow-2xl z-[100] animate-in fade-in zoom-in duration-200 overflow-hidden">
-                    <div className="p-4 space-y-4">
-                        <p className={`text-xs md:text-sm leading-relaxed ${theme.colors.text} opacity-90`}>
-                            {t("For downloading the mobile app on android devices you will be ask to add your email account")}
-                        </p>
-                        <button
-                            onClick={handleDownload}
-                            className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs md:text-sm font-semibold rounded-xl transition-colors shadow-md shadow-blue-500/20 flex items-center justify-center gap-2"
+                    <div className="p-4 space-y-3">
+                        <Link
+                            href={`/download-android?link=${encodeURIComponent(downloadLink)}`}
+                            className="w-full py-2.5 bg-green-600 hover:bg-green-700 text-white text-xs md:text-sm font-semibold rounded-xl transition-colors shadow-md shadow-green-500/20 flex items-center justify-center gap-2"
+                            onClick={() => setIsOpen(false)}
                         >
                             <Download className="w-4 h-4" />
-                            {t("Click here to continue")}
-                        </button>
+                            {t("How to download Android App")}
+                        </Link>
+                        <Link
+                            href="/download-ios"
+                            className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs md:text-sm font-semibold rounded-xl transition-colors shadow-md shadow-blue-500/20 flex items-center justify-center gap-2"
+                            onClick={() => setIsOpen(false)}
+                        >
+                            <Download className="w-4 h-4" />
+                            {t("How to download iOS App")}
+                        </Link>
                     </div>
                     <div className="bg-blue-600 h-1 w-full"></div>
                 </div>

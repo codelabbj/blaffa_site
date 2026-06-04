@@ -12,7 +12,7 @@ const resources = {
       "Secure Global Payments": "Secure Global Payments",
       "Fast, secure transactions with real-time tracking": "Fast, secure transactions with real-time tracking",
       "Download mobile app": "Download mobile app",
-      "For downloading the mobile app on android devices you will be ask to add your email account": "For downloading the mobile app on android devices you will be ask to add your email account",
+      
       "Click here to continue": "Click here to continue",
       "Bank-level Security": "Bank-level Security",
       "Simple Payments": "Simple Payments",
@@ -358,6 +358,23 @@ const resources = {
       "Choose Transaction Type": "Choose Transaction Type",
       "Buy Crypto": "Buy Crypto",
       "Sell Crypto": "Sell Crypto",
+      
+      // Download App Instructions
+      "How to download Android App": "How to download Android App",
+      "How to download iOS App": "How to download iOS App",
+      "Installe la PWA pour recevoir les notifications push directement sur ton écran d'accueil.": "Install the PWA to receive push notifications directly on your home screen.",
+      "Ouvre BLAFFA dans Safari": "Open BLAFFA in Safari",
+      "Cette page doit être chargée dans Safari iOS (pas Chrome, pas Firefox). L'installation PWA et les notifs push ne fonctionnent que via Safari sur iPhone.": "This page must be loaded in iOS Safari (not Chrome, not Firefox). PWA installation and push notifications only work via Safari on iPhone.",
+      "Tape l'icône de partage": "Tap the share icon",
+      "En bas de l'écran (ou en haut à droite sur iPad), tape l'icône Partager(carré avec une flèche vers le haut).": "At the bottom of the screen (or top right on iPad), tap the Share icon (square with an upward arrow).",
+      "« Sur l'écran d'accueil »": "« Add to Home Screen »",
+      "Dans le menu qui s'ouvre, fais défiler vers le bas et tape « Sur l'écran d'accueil » (icône + dans un carré). Confirme avec Ajouter en haut à droite.": "In the menu that opens, scroll down and tap « Add to Home Screen » (+ icon in a square). Confirm with Add at the top right.",
+      "Ouvre BLAFFA depuis l'écran d'accueil": "Open BLAFFA from the home screen",
+      "L'icône BLAFFA (carré bleu avec B doré) apparaît sur ton écran d'accueil. Tape dessus — l'app s'ouvre en plein écran, sans la barre d'adresse Safari.": "The BLAFFA icon (blue square with a golden B) appears on your home screen. Tap it — the app opens in full screen, without the Safari address bar.",
+      "Active les notifications": "Enable notifications",
+      "Une fois dans l'app installée, va sur n'importe quelle page admin. Un bandeau « 🔔 Activer les notifications » apparaîtra. Tape dessus → iOS demande l'autorisation → Autoriser.": "Once the app is installed, go to any admin page. A banner « 🔔 Enable notifications » will appear. Tap it → iOS asks for permission → Allow.",
+      "Tu recevras des notifications pour :": "You will receive notifications for:",
+      "Nouveau retrait sub-compte à payer": "New sub-account withdrawal to pay"
     },
   },
   fr: {
@@ -369,7 +386,7 @@ const resources = {
       "Secure Global Payments": "Paiements mondiaux sécurisés",
       "Fast, secure transactions with real-time tracking": "Transactions rapides et sécurisées avec suivi en temps réel",
       "Download mobile app": "Télécharger l'application mobile",
-      "For downloading the mobile app on android devices you will be ask to add your email account": "Pour télécharger l'application mobile sur les appareils Android, il vous sera demandé d'ajouter votre compte e-mail",
+     
       "Click here to continue": "Cliquez ici pour continuer",
       "Bank-level Security": "Sécurité de niveau bancaire",
       "Mobile Money": "Argent mobile",
@@ -719,6 +736,23 @@ const resources = {
       "Choose Transaction Type": "Choisissez le type de transaction",
       "Buy Crypto": "Acheter de la crypto",
       "Sell Crypto": "Vendre de la crypto",
+
+      // Download App Instructions
+      "How to download Android App": "Comment télécharger l'application Android",
+      "How to download iOS App": "Comment télécharger l'application iOS",
+      "Installe la PWA pour recevoir les notifications push directement sur ton écran d'accueil.": "Installe la PWA pour recevoir les notifications push directement sur ton écran d'accueil.",
+      "Ouvre BLAFFA dans Safari": "Ouvre BLAFFA dans Safari",
+      "Cette page doit être chargée dans Safari iOS (pas Chrome, pas Firefox). L'installation PWA et les notifs push ne fonctionnent que via Safari sur iPhone.": "Cette page doit être chargée dans Safari iOS (pas Chrome, pas Firefox). L'installation PWA et les notifs push ne fonctionnent que via Safari sur iPhone.",
+      "Tape l'icône de partage": "Tape l'icône de partage",
+      "En bas de l'écran (ou en haut à droite sur iPad), tape l'icône Partager(carré avec une flèche vers le haut).": "En bas de l'écran (ou en haut à droite sur iPad), tape l'icône Partager(carré avec une flèche vers le haut).",
+      "« Sur l'écran d'accueil »": "« Sur l'écran d'accueil »",
+      "Dans le menu qui s'ouvre, fais défiler vers le bas et tape « Sur l'écran d'accueil » (icône + dans un carré). Confirme avec Ajouter en haut à droite.": "Dans le menu qui s'ouvre, fais défiler vers le bas et tape « Sur l'écran d'accueil » (icône + dans un carré). Confirme avec Ajouter en haut à droite.",
+      "Ouvre BLAFFA depuis l'écran d'accueil": "Ouvre BLAFFA depuis l'écran d'accueil",
+      "L'icône BLAFFA (carré bleu avec B doré) apparaît sur ton écran d'accueil. Tape dessus — l'app s'ouvre en plein écran, sans la barre d'adresse Safari.": "L'icône BLAFFA (carré bleu avec B doré) apparaît sur ton écran d'accueil. Tape dessus — l'app s'ouvre en plein écran, sans la barre d'adresse Safari.",
+      "Active les notifications": "Active les notifications",
+      "Une fois dans l'app installée, va sur n'importe quelle page admin. Un bandeau « 🔔 Activer les notifications » apparaîtra. Tape dessus → iOS demande l'autorisation → Autoriser.": "Une fois dans l'app installée, va sur n'importe quelle page admin. Un bandeau « 🔔 Activer les notifications » apparaîtra. Tape dessus → iOS demande l'autorisation → Autoriser.",
+      "Tu recevras des notifications pour :": "Tu recevras des notifications pour :",
+      "Nouveau retrait sub-compte à payer": "Nouveau retrait sub-compte à payer"
     },
   },
 };
