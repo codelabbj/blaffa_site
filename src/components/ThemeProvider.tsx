@@ -238,10 +238,10 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   // Initialize theme on mount
   useEffect(() => {
     // Check for saved theme preference or system preference
-    const savedTheme = typeof window !== 'undefined' ? localStorage.getItem('theme') as ThemeMode : null;
+    const savedTheme = typeof window !== 'undefined' ? localStorage.getItem('theme') : null;
     const prefersDark = typeof window !== 'undefined' && window.matchMedia('(prefers-color-scheme: dark)').matches;
     
-    const initialTheme = savedTheme || (prefersDark ? 'dark' : 'light');
+    const initialTheme: ThemeMode = (savedTheme === 'light' || savedTheme === 'dark') ? savedTheme : (prefersDark ? 'dark' : 'light');
     setThemeMode(initialTheme);
     applyTheme(initialTheme);
     setMounted(true);

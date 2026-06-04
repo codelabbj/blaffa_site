@@ -239,12 +239,12 @@ export default function NotificationsPage() {
     const diffHours = Math.floor(diffMs / 3600000);
     const diffDays = Math.floor(diffMs / 86400000);
 
-    if (diffMins < 1) return 'Just now';
-    if (diffMins < 60) return `${diffMins}m ago`;
-    if (diffHours < 24) return `${diffHours}h ago`;
-    if (diffDays < 7) return `${diffDays}d ago`;
+    if (diffMins < 1) return 'À l\'instant';
+    if (diffMins < 60) return `Il y a ${diffMins} min`;
+    if (diffHours < 24) return `Il y a ${diffHours} h`;
+    if (diffDays < 7) return `Il y a ${diffDays} j`;
 
-    return date.toLocaleDateString();
+    return date.toLocaleDateString('fr-FR');
   };
 
   // Render notification content with clickable links
@@ -515,15 +515,15 @@ export default function NotificationsPage() {
             </div>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-4">
             {notifications.map((notification, index) => (
               <div
                 key={notification.id}
                 ref={index === notifications.length - 1 ? lastNotificationElement : null}
-                className={`group relative bg-gradient-to-br ${theme.colors.background} rounded-xl border-2 transition-all duration-200 ${notification.is_read
-                  ? 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
-                  : 'border-blue-300 dark:border-blue-700 hover:border-blue-400 dark:hover:border-blue-600 shadow-sm'
-                  } p-5 hover:shadow-lg cursor-pointer ${selectedNotifications.has(notification.id) ? 'ring-2 ring-blue-500 ring-offset-2' : ''
+                className={`group relative bg-gradient-to-br ${theme.colors.background} rounded-2xl border transition-all duration-300 ease-out ${notification.is_read
+                  ? 'border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700'
+                  : 'border-blue-200 dark:border-blue-800 hover:border-blue-300 dark:hover:border-blue-700 shadow-sm'
+                  } px-5 py-4 hover:shadow-md hover:-translate-y-[1px] cursor-pointer ${selectedNotifications.has(notification.id) ? 'ring-2 ring-blue-500 ring-offset-2' : ''
                   }`}
                 onClick={() => {
                   if (isSelectionMode) {
@@ -533,10 +533,10 @@ export default function NotificationsPage() {
                   }
                 }}
               >
-                <div className="flex items-start gap-4">
+                <div className="flex items-start gap-3">
                   {/* Selection Checkbox */}
                   {isSelectionMode && (
-                    <div className="flex-shrink-0 mt-1">
+                    <div className="flex-shrink-0 mt-0.5">
                       <input
                         type="checkbox"
                         checked={selectedNotifications.has(notification.id)}
@@ -548,26 +548,22 @@ export default function NotificationsPage() {
 
                   {/* Unread Indicator */}
                   {!isSelectionMode && !notification.is_read && (
-                    <div className="absolute top-6 left-2">
-                      <div className="w-2.5 h-2.5 bg-blue-500 rounded-full animate-pulse shadow-lg shadow-blue-500/50" />
+                    <div className="absolute top-5 left-1.5">
+                      <div className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full ring-2 ring-blue-100 dark:ring-blue-900/50" />
                     </div>
                   )}
 
                   {/* Content */}
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between gap-3 mb-2">
-                      <h3 className={`text-base font-semibold leading-tight ${theme.colors.text} opacity-80`}>
-                        {notification.title}
-                      </h3>
-                      <div className="flex items-center gap-2 flex-shrink-0">
-                        <span className="text-xs font-medium text-gray-500 dark:text-gray-400 whitespace-nowrap">
-                          {formatDate(notification.created_at)}
-                        </span>
-                      </div>
-                    </div>
-                    <p className={`text-sm leading-relaxed text-gray-600 dark:text-gray-400`}>
+                    <h3 className={`text-[15px] font-medium leading-snug ${theme.colors.text} opacity-90 tracking-tight`}>
+                      {notification.title}
+                    </h3>
+                    <p className={`text-[13.5px] leading-relaxed text-gray-600 dark:text-gray-400 mt-1.5`}>
                       {renderContentWithLinks(notification.content)}
                     </p>
+                    <span className="text-[11px] font-medium text-gray-400 dark:text-gray-500 mt-2 block uppercase tracking-wider">
+                      {formatDate(notification.created_at)}
+                    </span>
                   </div>
 
                   {/* Mark as Read Button */}
@@ -577,10 +573,10 @@ export default function NotificationsPage() {
                         e.stopPropagation();
                         markAsRead(notification.id);
                       }}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 z-10 flex-shrink-0 p-2 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200 bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 z-10 flex-shrink-0 p-2 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200"
                       title="Marquer comme lu"
                     >
-                      <Check className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                      <Check className="h-4 w-4 text-blue-600 dark:text-blue-400" />
                     </button>
                   )}
                 </div>
