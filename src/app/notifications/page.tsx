@@ -247,8 +247,28 @@ export default function NotificationsPage() {
     return date.toLocaleDateString('fr-FR');
   };
 
-  // Render notification content with clickable links
-  const renderContentWithLinks = (content: string) => {
+  // Render notification content, parsing HTML if present, or linkifying plain text
+  const renderNotificationContent = (content: string) => {
+    if (!content || typeof content !== 'string') return null;
+
+    // Check if content contains HTML tags (e.g. <ul>, <p>, <strong>, etc.)
+    const hasHtml = /<[a-z][\s\S]*>/i.test(content);
+
+    if (hasHtml) {
+      return (
+        <span
+          className="break-words [&_a]:text-blue-600 [&_a]:dark:text-blue-400 [&_a]:hover:underline [&_a]:font-medium [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5"
+          dangerouslySetInnerHTML={{ __html: content }}
+          onClick={(e) => {
+            const target = e.target as HTMLElement;
+            if (target.tagName === 'A' || target.closest('a')) {
+              e.stopPropagation();
+            }
+          }}
+        />
+      );
+    }
+
     // URL regex pattern
     const urlPattern = /(https?:\/\/[^\s]+)/g;
     const parts = content.split(urlPattern);
@@ -559,7 +579,7 @@ export default function NotificationsPage() {
                       {notification.title}
                     </h3>
                     <p className={`text-[13.5px] leading-relaxed text-gray-600 dark:text-gray-400 mt-1.5`}>
-                      {renderContentWithLinks(notification.content)}
+                      {renderNotificationContent(notification.content)}
                     </p>
                     <span className="text-[11px] font-medium text-gray-400 dark:text-gray-500 mt-2 block uppercase tracking-wider">
                       {formatDate(notification.created_at)}
