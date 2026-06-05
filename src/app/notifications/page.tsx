@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useRef } from 'react';
-import { Bell, Check, CheckCheck, ArrowLeft, RefreshCw } from 'lucide-react';
+import { Bell, Check, CheckCheck, ArrowLeft, RefreshCw, MessageCircle } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { useRouter } from 'next/navigation';
 import { useTheme } from '../../components/ThemeProvider';
@@ -233,18 +233,17 @@ export default function NotificationsPage() {
   // Format date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    const now = new Date();
-    const diffMs = now.getTime() - date.getTime();
-    const diffMins = Math.floor(diffMs / 60000);
-    const diffHours = Math.floor(diffMs / 3600000);
-    const diffDays = Math.floor(diffMs / 86400000);
-
-    if (diffMins < 1) return 'À l\'instant';
-    if (diffMins < 60) return `Il y a ${diffMins} min`;
-    if (diffHours < 24) return `Il y a ${diffHours} h`;
-    if (diffDays < 7) return `Il y a ${diffDays} j`;
-
-    return date.toLocaleDateString('fr-FR');
+    const day = String(date.getDate()).padStart(2, '0');
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const month = months[date.getMonth()];
+    const year = date.getFullYear();
+    
+    let hours = date.getHours();
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+    const ampm = hours >= 12 ? 'AM' : 'PM';
+    const displayHours = hours % 12 || 12;
+    
+    return `${day} ${month}, ${year} : ${displayHours}:${minutes} ${ampm}`;
   };
 
   // Render notification content, parsing HTML if present, or linkifying plain text
@@ -256,8 +255,8 @@ export default function NotificationsPage() {
 
     if (hasHtml) {
       return (
-        <span
-          className="break-words [&_a]:text-blue-600 [&_a]:dark:text-blue-400 [&_a]:hover:underline [&_a]:font-medium [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5"
+        <div
+          className="break-words [&_a]:text-blue-600 [&_a]:dark:text-blue-400 [&_a]:hover:underline [&_a]:font-medium [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_p]:mb-3 [&_p]:last:mb-0 whitespace-pre-wrap text-[15px] leading-relaxed"
           dangerouslySetInnerHTML={{ __html: content }}
           onClick={(e) => {
             const target = e.target as HTMLElement;
@@ -269,27 +268,42 @@ export default function NotificationsPage() {
       );
     }
 
-    // URL regex pattern
-    const urlPattern = /(https?:\/\/[^\s]+)/g;
-    const parts = content.split(urlPattern);
+    // Split plain text by double newlines (\n\n or \r\n\r\n) to get paragraph blocks
+    const paragraphs = content.replace(/\r\n/g, '\n').split('\n\n');
 
-    return parts.map((part, index) => {
-      if (part.match(urlPattern)) {
-        return (
-          <a
-            key={index}
-            href={part}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-blue-600 dark:text-blue-400 hover:underline font-medium"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {part}
-          </a>
-        );
-      }
-      return <span key={index}>{part}</span>;
-    });
+    return (
+      <div className="text-[15px] leading-relaxed">
+        {paragraphs.map((para, paraIndex) => {
+          if (para.trim() === '') return null;
+
+          // URL regex pattern
+          const urlPattern = /(https?:\/\/[^\s]+)/g;
+          const parts = para.split(urlPattern);
+
+          return (
+            <p key={paraIndex} className="mb-3.5 last:mb-0 whitespace-pre-wrap leading-relaxed">
+              {parts.map((part, index) => {
+                if (part.match(urlPattern)) {
+                  return (
+                    <a
+                      key={index}
+                      href={part}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 dark:text-blue-400 hover:underline font-medium break-all"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {part}
+                    </a>
+                  );
+                }
+                return <span key={index}>{part}</span>;
+              })}
+            </p>
+          );
+        })}
+      </div>
+    );
   };
 
   // Setup WebSocket (same as in NotificationBell)
@@ -540,11 +554,9 @@ export default function NotificationsPage() {
               <div
                 key={notification.id}
                 ref={index === notifications.length - 1 ? lastNotificationElement : null}
-                className={`group relative bg-gradient-to-br ${theme.colors.background} rounded-2xl border transition-all duration-300 ease-out ${notification.is_read
-                  ? 'border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700'
-                  : 'border-blue-200 dark:border-blue-800 hover:border-blue-300 dark:hover:border-blue-700 shadow-sm'
-                  } px-5 py-4 hover:shadow-md hover:-translate-y-[1px] cursor-pointer ${selectedNotifications.has(notification.id) ? 'ring-2 ring-blue-500 ring-offset-2' : ''
-                  }`}
+                className={`group relative bg-[#f0f1f3] dark:bg-slate-800/80 rounded-[20px] transition-all duration-300 ease-out px-6 py-5 hover:bg-[#e7e8eb] dark:hover:bg-slate-700/80 cursor-pointer ${
+                  selectedNotifications.has(notification.id) ? 'ring-2 ring-blue-500 ring-offset-2' : ''
+                }`}
                 onClick={() => {
                   if (isSelectionMode) {
                     toggleNotificationSelection(notification.id);
@@ -553,10 +565,10 @@ export default function NotificationsPage() {
                   }
                 }}
               >
-                <div className="flex items-start gap-3">
+                <div className="flex items-start gap-4">
                   {/* Selection Checkbox */}
                   {isSelectionMode && (
-                    <div className="flex-shrink-0 mt-0.5">
+                    <div className="flex-shrink-0 mt-1.5">
                       <input
                         type="checkbox"
                         checked={selectedNotifications.has(notification.id)}
@@ -566,22 +578,26 @@ export default function NotificationsPage() {
                     </div>
                   )}
 
-                  {/* Unread Indicator */}
-                  {!isSelectionMode && !notification.is_read && (
-                    <div className="absolute top-5 left-1.5">
-                      <div className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full ring-2 ring-blue-100 dark:ring-blue-900/50" />
-                    </div>
-                  )}
-
-                  {/* Content */}
+                  {/* Card Main Area */}
                   <div className="flex-1 min-w-0">
-                    <h3 className={`text-[15px] font-medium leading-snug ${theme.colors.text} opacity-90 tracking-tight`}>
-                      {notification.title}
-                    </h3>
-                    <p className={`text-[13.5px] leading-relaxed text-gray-600 dark:text-gray-400 mt-1.5`}>
+                    {/* Card Header (Icon & Title) */}
+                    <div className="flex items-center gap-2 mb-3">
+                      <MessageCircle className="h-5 w-5 text-gray-700 dark:text-gray-300 flex-shrink-0" />
+                      <h3 className={`text-[16px] font-semibold text-gray-900 dark:text-gray-100 leading-snug tracking-tight`}>
+                        {notification.title}
+                      </h3>
+                      {!notification.is_read && !isSelectionMode && (
+                        <span className="w-2.5 h-2.5 bg-blue-500 rounded-full flex-shrink-0 ml-1.5 ring-2 ring-blue-100 dark:ring-blue-900/50 animate-pulse" />
+                      )}
+                    </div>
+
+                    {/* Card Content */}
+                    <div className="notification-content text-[15px] leading-relaxed text-gray-800 dark:text-gray-200 mt-1">
                       {renderNotificationContent(notification.content)}
-                    </p>
-                    <span className="text-[11px] font-medium text-gray-400 dark:text-gray-500 mt-2 block uppercase tracking-wider">
+                    </div>
+
+                    {/* Card Footer (Date) */}
+                    <span className="text-[12px] text-gray-500 dark:text-gray-400 mt-4 block">
                       {formatDate(notification.created_at)}
                     </span>
                   </div>
@@ -593,7 +609,7 @@ export default function NotificationsPage() {
                         e.stopPropagation();
                         markAsRead(notification.id);
                       }}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 z-10 flex-shrink-0 p-2 hover:bg-blue-100 dark:hover:bg-blue-900/30 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200"
+                      className="absolute right-4 top-4 z-10 flex-shrink-0 p-2 hover:bg-gray-200 dark:hover:bg-slate-700 rounded-lg opacity-0 group-hover:opacity-100 transition-all duration-200"
                       title="Marquer comme lu"
                     >
                       <Check className="h-4 w-4 text-blue-600 dark:text-blue-400" />

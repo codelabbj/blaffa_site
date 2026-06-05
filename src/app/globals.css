@@ -63,3 +63,22 @@
 * {
   transition: background-color 0.3s, color 0.3s;
 }
+
+/* Notification card content overrides to restore paragraph and line spacing */
+.notification-content {
+  white-space: pre-wrap !important;
+  word-break: break-word;
+}
+
+.notification-content p {
+  margin-top: 0 !important;
+  margin-bottom: 0.875rem !important;
+}
+
+.notification-content p:last-child {
+  margin-bottom: 0 !important;
+}
+
+.notification-content br {
+  margin-bottom: 0.5rem !important;
+}
