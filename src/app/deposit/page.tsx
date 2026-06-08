@@ -55,6 +55,7 @@ interface App {
   minimum_deposit?: number;
   maximum_deposit?: number;
   deposit_message?: string;
+  deposit_bonus_percent?: number;
 }
 
 
@@ -1289,6 +1290,18 @@ export default function Deposits() {
                   }`}>
                   {getDepositLimits().min} F - {getDepositLimits().max} F
                 </div>
+                {(() => {
+                  const bonusPercent = selectedPlatform?.deposit_bonus_percent ? parseFloat(String(selectedPlatform.deposit_bonus_percent)) : 0;
+                  const hasBonus = bonusPercent > 0;
+                  const amountNum = parseFloat(formData.amount);
+                  const totalWithBonus = !isNaN(amountNum) && amountNum > 0 ? amountNum + (amountNum * bonusPercent) / 100 : 0;
+                  if (!hasBonus || isNaN(amountNum) || amountNum <= 0) return null;
+                  return (
+                    <div className="mt-1 text-sm font-semibold text-emerald-600 dark:text-emerald-400">
+                      Vous recevrez : {new Intl.NumberFormat('fr-FR').format(totalWithBonus)} F CFA (+{bonusPercent}% de bonus)
+                    </div>
+                  );
+                })()}
                 {validationErrors.amount && (
                   <p className="mt-2 text-sm text-red-500">{validationErrors.amount}</p>
                 )}
