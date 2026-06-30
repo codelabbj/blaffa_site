@@ -6,7 +6,8 @@ import Link from 'next/link';
 import api from '@/lib/axios';
 import Image from 'next/image';
 
-const GOOGLE_WEB_CLIENT_ID = '753574948805-a9orslut92jefkocpfjpkut9uvp831o4.apps.googleusercontent.com';
+// const GOOGLE_WEB_CLIENT_ID = '753574948805-a9orslut92jefkocpfjpkut9uvp831o4.apps.googleusercontent.com';
+const GOOGLE_WEB_CLIENT_ID = '827338495555-48shks0ehuban4tv1d6kajo8q7v62302.apps.googleusercontent.com';
 
 // Country data with flags and codes
 const countries = [
