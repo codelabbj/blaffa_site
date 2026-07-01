@@ -643,7 +643,7 @@ function TransactionDetailContent() {
                     }}
                     className="w-full py-3 bg-[#ffdedb] hover:bg-[#ffcfcc] text-[#ff6b62] rounded-xl text-base font-bold transition-colors shadow-sm mt-3"
                 >
-                    Contacter le support
+                    ENVOYER UNE RÉCLAMATION
                 </button>
 
                 {['completed', 'accept', 'approve', 'success'].includes(transaction.status?.toLowerCase()) && (
