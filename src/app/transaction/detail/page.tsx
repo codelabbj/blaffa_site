@@ -64,6 +64,7 @@ function TransactionDetailContent() {
     const [error, setError] = useState<string | null>(null);
     const [copied, setCopied] = useState(false);
     const [timeLeft, setTimeLeft] = useState<number | null>(null);
+    const [whatsappNumber, setWhatsappNumber] = useState<string>('22553445327');
 
     useEffect(() => {
         if (transaction && transaction.status?.toLowerCase() === 'pending' && transaction.created_at) {
@@ -183,12 +184,28 @@ function TransactionDetailContent() {
         }
     }, []);
 
+    const fetchSettings = useCallback(async () => {
+        try {
+            const response = await fetch('https://api.blaffa.net/blaffa/setting/');
+            if (response.ok) {
+                const data = await response.json();
+                const settings = Array.isArray(data) ? data[0] : data;
+                if (settings?.whatsapp_phone) {
+                    setWhatsappNumber(settings.whatsapp_phone);
+                }
+            }
+        } catch (err) {
+            console.error('Error fetching settings:', err);
+        }
+    }, []);
+
     useEffect(() => {
         if (id) {
             fetchTransactionDetails();
             fetchUserProfile();
+            fetchSettings();
         }
-    }, [id, fetchTransactionDetails, fetchUserProfile]);
+    }, [id, fetchTransactionDetails, fetchUserProfile, fetchSettings]);
 
     // Polling for real-time status updates
     useEffect(() => {
@@ -639,7 +656,7 @@ function TransactionDetailContent() {
                         const transType = transaction.type_trans;
                         const message = `Bonjour moi c'est ${firstName} ${lastName}, j'ai besoin d'aide concernant mon ${transType}.\nDate: ${formatDate(transaction.created_at)}\nRéférence: ${ref}\nMontant: XOF ${amount}\nRéseau: ${network}\nTéléphone: ${phone}\n*${appName} ID:* ${appId}`;
 
-                        window.open(`https://wa.me/22553445327?text=${encodeURIComponent(message)}`, '_blank');
+                        window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
                     }}
                     className="w-full py-3 bg-[#ffdedb] hover:bg-[#ffcfcc] text-[#ff6b62] rounded-xl text-base font-bold transition-colors shadow-sm mt-3"
                 >
