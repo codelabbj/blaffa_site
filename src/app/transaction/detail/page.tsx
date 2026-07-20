@@ -64,7 +64,6 @@ function TransactionDetailContent() {
     const [error, setError] = useState<string | null>(null);
     const [copied, setCopied] = useState(false);
     const [timeLeft, setTimeLeft] = useState<number | null>(null);
-    const [whatsappNumber, setWhatsappNumber] = useState<string>('22553445327');
 
     useEffect(() => {
         if (transaction && transaction.status?.toLowerCase() === 'pending' && transaction.created_at) {
@@ -184,28 +183,12 @@ function TransactionDetailContent() {
         }
     }, []);
 
-    const fetchSettings = useCallback(async () => {
-        try {
-            const response = await fetch('https://api.blaffa.net/blaffa/setting/');
-            if (response.ok) {
-                const data = await response.json();
-                const settings = Array.isArray(data) ? data[0] : data;
-                if (settings?.whatsapp_phone) {
-                    setWhatsappNumber(settings.whatsapp_phone);
-                }
-            }
-        } catch (err) {
-            console.error('Error fetching settings:', err);
-        }
-    }, []);
-
     useEffect(() => {
         if (id) {
             fetchTransactionDetails();
             fetchUserProfile();
-            fetchSettings();
         }
-    }, [id, fetchTransactionDetails, fetchUserProfile, fetchSettings]);
+    }, [id, fetchTransactionDetails, fetchUserProfile]);
 
     // Polling for real-time status updates
     useEffect(() => {
@@ -308,6 +291,41 @@ function TransactionDetailContent() {
         } catch (e) {
             return dateString;
         }
+    };
+
+    const formatTransTypeLabel = (typeTrans: string) => {
+        const t = (typeTrans || '').toLowerCase();
+        if (t === 'deposit' || t === 'reward') return 'dépôt';
+        if (t === 'withdrawal' || t === 'coupon_withdrawal') return 'retrait';
+        if (t === 'buy') return 'achat crypto';
+        if (t === 'sale') return 'vente crypto';
+        return typeTrans || 'opération';
+    };
+
+    const openAssistantWithClaim = () => {
+        if (!transaction) return;
+        const firstName = userProfile?.first_name || 'Utilisateur';
+        const lastName = userProfile?.last_name || '';
+        const typeLabel = formatTransTypeLabel(transaction.type_trans);
+        const network = transaction.network?.public_name || transaction.payment_method || 'N/A';
+        const appId = (transaction as any).user_app_id || transaction.transaction_reference || 'N/A';
+
+        const message =
+            `Bonjour moi c'est ${firstName} ${lastName}, j'ai besoin d'aide concernant mon ${typeLabel}.\n` +
+            `Type: ${typeLabel}\n` +
+            `Date: ${formatDate(transaction.created_at)}\n` +
+            `Référence: ${transaction.reference}\n` +
+            `Montant: XOF ${transaction.amount}\n` +
+            `Réseau: ${network}\n` +
+            `Téléphone: ${transaction.phone_number}\n` +
+            `ID joueur: ${appId}`;
+
+        try {
+            sessionStorage.setItem('blaffa_chatbot_prefill', message);
+        } catch {
+            /* ignore */
+        }
+        router.push('/contact?open=assistant');
     };
 
     if (loading) {
@@ -643,21 +661,7 @@ function TransactionDetailContent() {
                 </div>
 
                 <button
-                    onClick={() => {
-                        const firstName = userProfile?.first_name || 'Utilisateur';
-                        const lastName = userProfile?.last_name || '';
-                        const ref = transaction.reference;
-                        const amount = transaction.amount;
-                        const network = transaction.network?.public_name || transaction.payment_method || 'N/A';
-                        const phone = transaction.phone_number;
-                        const appName = transaction.app?.public_name || 'App';
-                        const appId = (transaction as any).user_app_id || transaction.transaction_reference || 'N/A';
-
-                        const transType = transaction.type_trans;
-                        const message = `Bonjour moi c'est ${firstName} ${lastName}, j'ai besoin d'aide concernant mon ${transType}.\nDate: ${formatDate(transaction.created_at)}\nRéférence: ${ref}\nMontant: XOF ${amount}\nRéseau: ${network}\nTéléphone: ${phone}\n*${appName} ID:* ${appId}`;
-
-                        window.open(`https://wa.me/${whatsappNumber}?text=${encodeURIComponent(message)}`, '_blank');
-                    }}
+                    onClick={openAssistantWithClaim}
                     className="w-full py-3 bg-[#ffdedb] hover:bg-[#ffcfcc] text-[#ff6b62] rounded-xl text-base font-bold transition-colors shadow-sm mt-3"
                 >
                     ENVOYER UNE RÉCLAMATION

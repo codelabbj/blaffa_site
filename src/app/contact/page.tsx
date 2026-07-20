@@ -1,13 +1,61 @@
 "use client"
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { ArrowLeft, ChevronRight, X, Camera, Plus } from 'lucide-react';
 import { useTheme } from '../../components/ThemeProvider';
+import { fetchSettings } from '@/lib/blaffa-api';
+import { SupportChatbot } from '@/components/SupportChatbot';
 
-export default function ContactPage() {
+const PREFILL_STORAGE_KEY = 'blaffa_chatbot_prefill';
+
+function ContactPageContent() {
     const { theme } = useTheme();
     const router = useRouter();
+    const searchParams = useSearchParams();
     const [isFormOpen, setIsFormOpen] = useState(false);
+    const [chatbotEnabled, setChatbotEnabled] = useState(false);
+    const [isChatOpen, setIsChatOpen] = useState(false);
+    const [settingsLoaded, setSettingsLoaded] = useState(false);
+    const [prefillMessage, setPrefillMessage] = useState('');
+
+    useEffect(() => {
+        let cancelled = false;
+        (async () => {
+            try {
+                const settings = await fetchSettings();
+                if (!cancelled) {
+                    setChatbotEnabled(Boolean(settings?.use_chatbot));
+                }
+            } catch {
+                if (!cancelled) setChatbotEnabled(false);
+            } finally {
+                if (!cancelled) setSettingsLoaded(true);
+            }
+        })();
+        return () => {
+            cancelled = true;
+        };
+    }, []);
+
+    useEffect(() => {
+        try {
+            const stored = sessionStorage.getItem(PREFILL_STORAGE_KEY);
+            if (stored) {
+                setPrefillMessage(stored);
+                sessionStorage.removeItem(PREFILL_STORAGE_KEY);
+            }
+        } catch {
+            /* ignore */
+        }
+    }, []);
+
+    useEffect(() => {
+        if (!settingsLoaded) return;
+        const openAssistant = searchParams.get('open') === 'assistant';
+        if (openAssistant && chatbotEnabled) {
+            setIsChatOpen(true);
+        }
+    }, [settingsLoaded, chatbotEnabled, searchParams]);
 
     // Custom QA Icon SVG
     const QAIcon = () => (
@@ -17,20 +65,20 @@ export default function ContactPage() {
         </svg>
     );
 
-    // Custom Support Icon SVG (Circular)
-    const SupportIconLarge = () => (
-        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-black dark:text-white">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
-            <path d="M12 7C9.23858 7 7 9.23858 7 12C7 14.7614 9.23858 17 12 17" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-            <circle cx="12" cy="12" r="2" fill="currentColor" />
-            <path d="M14 12C14 10.8954 13.1046 10 12 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    const BotIcon = () => (
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="4" y="8" width="16" height="12" rx="3" stroke="currentColor" strokeWidth="2" />
+            <path d="M12 4V8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            <circle cx="9" cy="13" r="1.5" fill="currentColor" />
+            <circle cx="15" cy="13" r="1.5" fill="currentColor" />
+            <path d="M9 17H15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
         </svg>
     );
 
     return (
         <div className={`min-h-screen ${theme.mode === 'dark' ? theme.colors.a_background : 'bg-white'} font-sans relative`}>
             {/* Main Landing View */}
-            <div className={`transition-opacity duration-300 ${isFormOpen ? 'opacity-0' : 'opacity-100'}`}>
+            <div className={`transition-opacity duration-300 ${isFormOpen || isChatOpen ? 'opacity-0 pointer-events-none' : 'opacity-100'}`}>
                 <header className="px-4 h-20 flex items-center">
                     <button onClick={() => router.back()} className="p-2 -ml-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
                         <ArrowLeft className={theme.colors.text} size={32} />
@@ -55,7 +103,25 @@ export default function ContactPage() {
                         </p>
                     </div>
 
-                    <div className="mt-20">
+                    <div className="mt-20 space-y-6">
+                        {settingsLoaded && chatbotEnabled && (
+                            <button
+                                onClick={() => setIsChatOpen(true)}
+                                className={`w-full flex items-center gap-5 py-2 px-1 rounded-2xl transition-all active:scale-[0.98]`}
+                            >
+                                <div className="w-16 h-16 bg-gray-50 dark:bg-gray-800 rounded-2xl flex items-center justify-center flex-shrink-0 border border-gray-100 dark:border-gray-700 shadow-sm text-black dark:text-white">
+                                    <BotIcon />
+                                </div>
+                                <div className="flex flex-1 flex-col items-start gap-1">
+                                    <span className={`text-2xl font-bold ${theme.colors.text}`}>Assistant IA</span>
+                                    <span className="text-gray-500 text-[1rem] font-medium text-left leading-tight">
+                                        Discutez avec notre chatbot pour une aide rapide
+                                    </span>
+                                </div>
+                                <ChevronRight className="text-black dark:text-white" size={32} />
+                            </button>
+                        )}
+
                         <button
                             onClick={() => setIsFormOpen(true)}
                             className={`w-full flex items-center gap-5 py-2 px-1 rounded-2xl transition-all active:scale-[0.98]`}
@@ -72,6 +138,29 @@ export default function ContactPage() {
                     </div>
                 </main>
             </div>
+
+            {/* Chatbot overlay */}
+            {isChatOpen && chatbotEnabled && (
+                <div className="fixed inset-0 z-[60] flex flex-col justify-end bg-black/50 animate-in fade-in duration-200">
+                    <div className="mt-auto w-full max-w-lg mx-auto bg-white dark:bg-gray-900 rounded-t-[2rem] shadow-2xl flex flex-col h-[min(78vh,640px)] max-h-[calc(100dvh-env(safe-area-inset-top)-4.5rem)] pb-[calc(env(safe-area-inset-bottom)+0.5rem)]">
+                        <div className="shrink-0 flex items-center justify-between px-4 pt-4 pb-2">
+                            <div>
+                                <p className={`font-bold text-lg ${theme.colors.text}`}>Assistant IA</p>
+                                <p className="text-sm text-gray-500">Tapez votre message en bas</p>
+                            </div>
+                            <button
+                                onClick={() => setIsChatOpen(false)}
+                                className="w-10 h-10 border border-gray-200 dark:border-gray-700 rounded-xl flex items-center justify-center"
+                            >
+                                <X size={20} />
+                            </button>
+                        </div>
+                        <div className="flex-1 min-h-0 px-3 pb-2">
+                            <SupportChatbot hideHeader initialMessage={prefillMessage} />
+                        </div>
+                    </div>
+                </div>
+            )}
 
             {/* Form Modal Overlay */}
             {isFormOpen && (
@@ -155,5 +244,17 @@ export default function ContactPage() {
                 </div>
             )}
         </div>
+    );
+}
+
+export default function ContactPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-white dark:bg-[#0a0a0a] flex items-center justify-center">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+            </div>
+        }>
+            <ContactPageContent />
+        </Suspense>
     );
 }
