@@ -16,10 +16,12 @@ import {
   BitcoinIcon,
   Send,
   Headset,
+  Bot,
 } from 'lucide-react';
 
 import Advertisement_Hero from '../../components/Advertisement_Hero';
 import AndroidDownloadButton from '../../components/AndroidDownloadButton';
+import { SupportChatbot } from '@/components/SupportChatbot';
 
 
 
@@ -28,9 +30,11 @@ export default function Dashboard() {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(true);
   const [isContactMenuOpen, setIsContactMenuOpen] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const [telegramUrl, setTelegramUrl] = useState('');
   const [whatsappUrl, setWhatsappUrl] = useState('');
   const [downloadApkLink, setDownloadApkLink] = useState('');
+  const [chatbotEnabled, setChatbotEnabled] = useState(false);
   const [cryptoEnable, setCryptoEnable] = useState(true);
   const [depositEnable, setDepositEnable] = useState(true);
   const [withdrawEnable, setWithdrawEnable] = useState(true);
@@ -65,6 +69,9 @@ export default function Dashboard() {
             setWhatsappUrl(formatWhatsAppLink(settings.whatsapp_phone_indi, settings.whatsapp_phone));
           }
 
+          if (Object.prototype.hasOwnProperty.call(settings, 'use_chatbot')) {
+            setChatbotEnabled(Boolean(settings.use_chatbot));
+          }
           if (Object.prototype.hasOwnProperty.call(settings, 'crypto_enable')) {
             setCryptoEnable(settings.crypto_enable);
           }
@@ -240,20 +247,70 @@ export default function Dashboard() {
 
         {isContactMenuOpen && (
           <div className="absolute bottom-20 right-0 flex flex-col items-end gap-3 mb-4 animate-in fade-in slide-in-from-bottom-5">
-            <a href={telegramUrl} target="_blank" rel="noopener noreferrer" className={`${theme.mode === 'dark' ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-neutral-200 text-neutral-800'} border px-5 py-3 rounded-2xl shadow-lg flex items-center gap-2 font-bold whitespace-nowrap`}>
-              <span>Telegram</span>
-              <Send className="w-5 h-5 text-blue-500" />
-            </a>
-            <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className={`${theme.mode === 'dark' ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-neutral-200 text-neutral-800'} border px-5 py-3 rounded-2xl shadow-lg flex items-center gap-2 font-bold whitespace-nowrap`}>
-              <span>WhatsApp</span>
-              <div className="w-6 h-6 bg-green-500 rounded-lg flex items-center justify-center">
-                <Image src="/whatsapp.png" width={16} height={16} alt="WA" />
-              </div>
-            </a>
+            {chatbotEnabled && (
+              <button
+                type="button"
+                onClick={() => {
+                  setIsContactMenuOpen(false);
+                  setIsChatOpen(true);
+                }}
+                className={`${theme.mode === 'dark' ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-neutral-200 text-neutral-800'} border px-5 py-3 rounded-2xl shadow-lg flex items-center gap-2 font-bold whitespace-nowrap`}
+              >
+                <span>Assistant IA</span>
+                <Bot className="w-5 h-5 text-[#144692]" />
+              </button>
+            )}
+            {telegramUrl ? (
+              <a href={telegramUrl} target="_blank" rel="noopener noreferrer" className={`${theme.mode === 'dark' ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-neutral-200 text-neutral-800'} border px-5 py-3 rounded-2xl shadow-lg flex items-center gap-2 font-bold whitespace-nowrap`}>
+                <span>Telegram</span>
+                <Send className="w-5 h-5 text-blue-500" />
+              </a>
+            ) : null}
+            {whatsappUrl ? (
+              <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className={`${theme.mode === 'dark' ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-neutral-200 text-neutral-800'} border px-5 py-3 rounded-2xl shadow-lg flex items-center gap-2 font-bold whitespace-nowrap`}>
+                <span>WhatsApp</span>
+                <div className="w-6 h-6 bg-green-500 rounded-lg flex items-center justify-center">
+                  <Image src="/whatsapp.png" width={16} height={16} alt="WA" />
+                </div>
+              </a>
+            ) : null}
           </div>
         )}
       </div>
+
+      {isChatOpen && chatbotEnabled && (
+        <div className="fixed inset-0 z-[60] flex flex-col justify-end bg-black/50">
+          <div
+            className={`w-full max-w-lg mx-auto flex flex-col ${theme.mode === 'dark' ? 'bg-slate-900' : 'bg-white'} rounded-t-[2rem] shadow-2xl h-[min(78vh,640px)] max-h-[calc(100dvh-env(safe-area-inset-top)-4.5rem)] pb-[calc(env(safe-area-inset-bottom)+0.5rem)]`}
+          >
+            <div className="shrink-0 flex items-center justify-between px-4 pt-4 pb-2">
+              <div>
+                <p className={`font-bold text-lg ${theme.mode === 'dark' ? 'text-white' : 'text-neutral-900'}`}>
+                  Assistant IA
+                </p>
+                <p className="text-sm text-gray-500">Tapez votre message en bas</p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsChatOpen(false)}
+                className="w-10 h-10 border border-gray-200 dark:border-slate-700 rounded-xl flex items-center justify-center"
+                aria-label="Fermer"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="flex-1 min-h-0 px-3 pb-2">
+              <SupportChatbot
+                hideHeader
+                pageKey="dashboard"
+                route="/dashboard"
+                screenTitle="Dashboard"
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
-
+
