@@ -1,6 +1,8 @@
 import { initializeApp, getApp, getApps } from 'firebase/app';
 import { getMessaging, getToken, onMessage, Messaging } from 'firebase/messaging';
 import api from './axios';
+import { emitRealtimeEvent } from './realtime-events';
+import type { AppNotification } from './notifications';
 
 const firebaseConfig = {
     apiKey: "AIzaSyCpYf8cR98sJ9Vw12ARlXFUqJyy3PSI1Vg",
@@ -97,21 +99,26 @@ export async function initializePushNotifications(): Promise<void> {
 
         // Écouter les messages reçus au premier plan
         onMessage(messaging, (payload) => {
-            console.log('📨 [TEST LOG] Push notification received while app in foreground:', {
-                title: payload.notification?.title,
-                body: payload.notification?.body,
-                data: payload.data,
-                timestamp: new Date().toISOString(),
-            });
+            const title = payload.notification?.title || payload.data?.title || 'Blaffa';
+            const body = payload.notification?.body || payload.data?.body || payload.data?.content || '';
+            const data = payload.data || {};
 
-            // Afficher une notification locale via le Service Worker registration
+            const realtimeNotification: AppNotification = {
+                id: String(data.id || data.notification_id || `push-${Date.now()}`),
+                title: String(title),
+                content: String(body),
+                created_at: String(data.created_at || new Date().toISOString()),
+                is_read: false,
+            };
+
+            emitRealtimeEvent({ kind: 'notification', notification: realtimeNotification });
+
             navigator.serviceWorker.ready.then((registration) => {
-                registration.showNotification(payload.notification?.title || 'Notification', {
-                    body: payload.notification?.body || '',
-                    icon: '/logo.png', // Chemin vers votre icône
-                    data: payload.data,
+                registration.showNotification(String(title), {
+                    body: String(body),
+                    icon: '/logo.png',
+                    data,
                 });
-                console.log('✅ [TEST LOG] Local notification shown for foreground push notification');
             });
         });
 

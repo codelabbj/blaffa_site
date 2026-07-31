@@ -5,6 +5,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import Image from 'next/image'; // Import Next.js Image component
 //import { useTranslation } from 'react-i18next';
 import api from '../lib/axios';
+import { getCache, setCache, CACHE_KEYS } from '../lib/cache';
 
 // Define the type for a single slide object
 interface Slide {
@@ -23,10 +24,16 @@ interface Ad {
 
 
 const SlidingHero = ({ baseUrl = 'https://api.blaffa.net' }) => {
-  // Use the Slide type for the slides state
-  const [slides, setSlides] = useState<Slide[]>([]);
+  const [slides, setSlides] = useState<Slide[]>(() => {
+    const cached = getCache<Slide[]>(CACHE_KEYS.ADVERTISEMENTS);
+    if (!cached?.length) return [];
+    return cached.filter((ad: Ad) => ad.enable);
+  });
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => {
+    const cached = getCache<Slide[]>(CACHE_KEYS.ADVERTISEMENTS);
+    return !(cached && cached.filter((ad: Ad) => ad.enable).length > 0);
+  });
   // Explicitly type the error state
   const [error, setError] = useState<string | null>(null);
   // Type imageLoaded as a record mapping string IDs to boolean
@@ -36,50 +43,35 @@ const SlidingHero = ({ baseUrl = 'https://api.blaffa.net' }) => {
   // Fetch advertisements from API
   useEffect(() => {
     const fetchAds = async () => {
+      const cached = getCache<Slide[]>(CACHE_KEYS.ADVERTISEMENTS);
+      if (cached && cached.length > 0) {
+        const enabled = cached.filter((ad: Ad) => ad.enable);
+        if (enabled.length > 0) {
+          setSlides(enabled);
+          setLoading(false);
+          return;
+        }
+      }
+
       try {
-        setLoading(true);
-        setError(null); // Clear previous errors
-        // Use fetch instead of axios to avoid sending auth token
+        setError(null);
         const response = await fetch(`${baseUrl}/blaffa/advertisement`, {
           method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-          },
+          headers: { 'Content-Type': 'application/json' },
         });
-        
+
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
-        
-        const data = await response.json();
-        
-        // Ensure data.results is an array and contains objects matching Slide interface
-        if (Array.isArray(data.results)) {
-          const enabledAds: Slide[] = data.results.filter((ad: Ad) => ad.enable); // Use 'any' temporarily if structure is uncertain, or refine filter type
-          setSlides(enabledAds);
-          // Save to localStorage for offline/fallback use
-          localStorage.setItem('advertisementCache', JSON.stringify(enabledAds));
-        } else {
-            console.error('API response results is not an array:', data);
-            setSlides([]); // Set to empty array if results is not as expected
-        }
 
-      } catch (err: unknown) { // Catch error as unknown
+        const data = await response.json();
+        const results = Array.isArray(data.results) ? data.results : (Array.isArray(data) ? data : []);
+        const enabledAds: Slide[] = results.filter((ad: Ad) => ad.enable);
+        setCache(CACHE_KEYS.ADVERTISEMENTS, results);
+        setSlides(enabledAds);
+      } catch (err: unknown) {
         console.error('Error fetching advertisements:', err);
-        // Try to load from localStorage cache
-        const cachedAds = localStorage.getItem('advertisementCache');
-        if (cachedAds) {
-          try {
-            const parsedAds = JSON.parse(cachedAds) as Slide[];
-            setSlides(parsedAds);
-            console.log('Loaded advertisements from cache');
-          } catch (parseErr) {
-            console.error('Failed to parse cached advertisements:', parseErr);
-            setSlides([]); // Empty array if no valid cache
-          }
-        } else {
-          setSlides([]); // Empty array if no cache available
-        }
+        setSlides([]);
       } finally {
         setLoading(false);
       }

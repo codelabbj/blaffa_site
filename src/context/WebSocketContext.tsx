@@ -1,11 +1,22 @@
 // src/contexts/WebSocketContext.tsx
 'use client';
 
-import React, { createContext, useContext, useEffect, useRef, ReactNode } from 'react';
+import React, {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useRef,
+  ReactNode,
+} from 'react';
+import { handleWebSocketMessage } from '@/lib/ws-messages';
+
+const WS_URL = 'wss://api.blaffa.net/ws/socket';
+const FALLBACK_POLL_MS = 3 * 60 * 1000;
 
 interface WebSocketContextType {
-  addMessageHandler: (handler: (data: any) => void) => () => void;
-  sendMessage: (message: any) => void;
+  addMessageHandler: (handler: (data: unknown) => void) => () => void;
+  sendMessage: (message: unknown) => void;
   isConnected: boolean;
 }
 
@@ -13,148 +24,123 @@ const WebSocketContext = createContext<WebSocketContextType | undefined>(undefin
 
 export const WebSocketProvider = ({ children }: { children: ReactNode }) => {
   const ws = useRef<WebSocket | null>(null);
-  const messageHandlers = useRef<((data: any) => void)[]>([]);
+  const messageHandlers = useRef<Array<(data: unknown) => void>>([]);
   const [isConnected, setIsConnected] = React.useState(false);
   const reconnectAttempts = useRef(0);
-  const reconnectTimeout = useRef<NodeJS.Timeout | null>(null);
+  const reconnectTimeout = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const connect = () => {
+  const connect = useCallback(() => {
     const token = localStorage.getItem('accessToken');
     if (!token) {
-      console.log('⚠️ [WS] No access token, skipping connection');
       setIsConnected(false);
       return;
     }
 
-    // Prevent duplicate connection attempts
     if (ws.current) {
-      if (ws.current.readyState === WebSocket.OPEN) {
-        console.log('ℹ️ [WS] Already connected, skipping redundant attempt');
-        return;
-      }
-      if (ws.current.readyState === WebSocket.CONNECTING) {
-        console.log('ℹ️ [WS] Connection already in progress, waiting...');
-        return;
-      }
-      // If it's in any other state (CLOSING or CLOSED), clean it up before a new attempt
+      if (ws.current.readyState === WebSocket.OPEN) return;
+      if (ws.current.readyState === WebSocket.CONNECTING) return;
       ws.current.onclose = null;
       ws.current.onerror = null;
       ws.current.close();
     }
 
     try {
-      // Use URLSearchParams for robust encoding of the JWT token
-      const wsUrl = new URL('wss://api.blaffa.net/ws/socket/');
+      const wsUrl = new URL(WS_URL);
       wsUrl.searchParams.set('token', token);
-      
-      const tokenPreview = `${token.substring(0, 5)}...${token.substring(token.length - 4)}`;
-      console.log(`🔌 [WS] Attempting connection with token: ${tokenPreview}`);
-      
       ws.current = new WebSocket(wsUrl.toString());
 
       ws.current.onopen = () => {
-        console.log('✅ [WS] Connected successfully');
         setIsConnected(true);
         reconnectAttempts.current = 0;
       };
 
       ws.current.onmessage = (event) => {
         try {
-          const data = JSON.parse(event.data);
-          messageHandlers.current.forEach(handler => handler(data));
+          const data = JSON.parse(event.data as string);
+          handleWebSocketMessage(data);
+          messageHandlers.current.forEach((handler) => handler(data));
         } catch (error) {
-          console.error('⚠️ [WS] Error processing message:', error);
+          console.error('[WS] Error processing message:', error);
         }
       };
 
       ws.current.onclose = (event) => {
         setIsConnected(false);
-        const code = event.code;
-        const reason = event.reason || 'No reason';
-        
-        // Don't auto-reconnect if it was a clean logout (1000)
-        if (code !== 1000) {
-          console.log(`📡 [WS] Connection closed (Code: ${code}, Reason: ${reason}). Retrying...`);
-          const delay = Math.min(1000 * Math.pow(2, reconnectAttempts.current), 30000);
-          reconnectAttempts.current++;
-          
+        ws.current = null;
+
+        if (event.code !== 1000) {
+          const delay = Math.min(1000 * 2 ** reconnectAttempts.current, 30000);
+          reconnectAttempts.current += 1;
           if (reconnectTimeout.current) clearTimeout(reconnectTimeout.current);
           reconnectTimeout.current = setTimeout(connect, delay);
-        } else {
-          console.log('👋 [WS] Connection closed normally');
         }
-        ws.current = null;
       };
 
-      ws.current.onerror = (error) => {
-        // Only log errors if we aren't already transitioning to a successful state
+      ws.current.onerror = () => {
         if (ws.current?.readyState !== WebSocket.OPEN) {
-          console.error('❌ [WS] Connection failure');
+          setIsConnected(false);
         }
       };
-
     } catch (error) {
-      console.error('❌ [WS] Setup error:', error);
+      console.error('[WS] Setup error:', error);
+      setIsConnected(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     connect();
 
-    // Watch for token changes in localStorage (e.g. from other tabs or login)
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'accessToken') {
-        console.log('Auth token changed, reconnecting WebSocket...');
         if (reconnectTimeout.current) clearTimeout(reconnectTimeout.current);
         connect();
       }
     };
 
-    window.addEventListener('storage', handleStorageChange);
-
-    // Periodic check for connection (pulse)
-    const interval = setInterval(() => {
-      if (!ws.current || ws.current.readyState === WebSocket.CLOSED) {
-        const token = localStorage.getItem('accessToken');
-        if (token) connect();
+    const handleFocus = () => {
+      const token = localStorage.getItem('accessToken');
+      if (token && (!ws.current || ws.current.readyState === WebSocket.CLOSED)) {
+        connect();
       }
-    }, 10000);
+    };
+
+    window.addEventListener('storage', handleStorageChange);
+    window.addEventListener('focus', handleFocus);
+
+    const heartbeat = setInterval(() => {
+      const token = localStorage.getItem('accessToken');
+      if (!token) return;
+      if (!ws.current || ws.current.readyState === WebSocket.CLOSED) {
+        connect();
+      }
+    }, FALLBACK_POLL_MS);
 
     return () => {
       window.removeEventListener('storage', handleStorageChange);
-      clearInterval(interval);
+      window.removeEventListener('focus', handleFocus);
+      clearInterval(heartbeat);
+      if (reconnectTimeout.current) clearTimeout(reconnectTimeout.current);
       if (ws.current) {
-        ws.current.close(1000); // Normal closure
+        ws.current.close(1000);
       }
-      if (reconnectTimeout.current) {
-        clearTimeout(reconnectTimeout.current);
-      }
+    };
+  }, [connect]);
+
+  const addMessageHandler = useCallback((handler: (data: unknown) => void) => {
+    messageHandlers.current.push(handler);
+    return () => {
+      messageHandlers.current = messageHandlers.current.filter((h) => h !== handler);
     };
   }, []);
 
-  const addMessageHandler = (handler: (data: any) => void) => {
-    messageHandlers.current.push(handler);
-    return () => {
-      messageHandlers.current = messageHandlers.current.filter(h => h !== handler);
-    };
-  };
-
-  const sendMessage = (message: any) => {
+  const sendMessage = useCallback((message: unknown) => {
     if (ws.current?.readyState === WebSocket.OPEN) {
       ws.current.send(JSON.stringify(message));
-    } else {
-      console.error('WebSocket is not connected');
     }
-  };
+  }, []);
 
   return (
-    <WebSocketContext.Provider 
-      value={{ 
-        addMessageHandler, 
-        sendMessage, 
-        isConnected 
-      }}
-    >
+    <WebSocketContext.Provider value={{ addMessageHandler, sendMessage, isConnected }}>
       {children}
     </WebSocketContext.Provider>
   );
@@ -167,3 +153,5 @@ export const useWebSocket = () => {
   }
   return context;
 };
+
+export { FALLBACK_POLL_MS };

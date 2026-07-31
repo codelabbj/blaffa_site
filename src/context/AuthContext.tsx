@@ -3,6 +3,7 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useRouter } from 'next/navigation';
+import { clearCache } from '@/lib/cache';
 
 interface AuthContextType {
   isAuthenticated: boolean;
@@ -31,6 +32,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const logout = () => {
     localStorage.removeItem('accessToken');
+    clearCache();
     setIsAuthenticated(false);
     router.push('/');
   };

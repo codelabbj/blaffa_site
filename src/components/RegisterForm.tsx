@@ -4,6 +4,7 @@ import { useState, useRef, useEffect } from 'react';
 import { Eye, EyeOff, ChevronDown, Check, Search } from 'lucide-react';
 import Link from 'next/link';
 import api from '@/lib/axios';
+import { parseRegisterError } from '@/lib/registerErrors';
 import Image from 'next/image';
 
 // const GOOGLE_WEB_CLIENT_ID = '753574948805-a9orslut92jefkocpfjpkut9uvp831o4.apps.googleusercontent.com';
@@ -52,12 +53,27 @@ export default function RegisterForm() {
     const [countrySearch, setCountrySearch] = useState('');
     const dropdownRef = useRef<HTMLDivElement>(null);
     const [phone, setPhone] = useState('');
+    const [useWhatsapp, setUseWhatsapp] = useState(false);
+    const [showWhatsappDialog, setShowWhatsappDialog] = useState(false);
 
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [termsAccepted, setTermsAccepted] = useState(false);
+
+    useEffect(() => {
+        const fetchSettings = async () => {
+            try {
+                const response = await api.get('/blaffa/v2/setting/');
+                const settings = Array.isArray(response.data) ? response.data[0] : response.data;
+                setUseWhatsapp(Boolean(settings?.use_whatsapp));
+            } catch {
+                setUseWhatsapp(false);
+            }
+        };
+        fetchSettings();
+    }, []);
 
     // Close dropdown when clicking outside
     useEffect(() => {
@@ -99,7 +115,12 @@ export default function RegisterForm() {
             setStep(2);
         } else if (step === 2) {
             if (!phone) {
-                setNotification({ type: 'error', message: 'Veuillez entrer votre numéro de téléphone.' });
+                setNotification({
+                    type: 'error',
+                    message: useWhatsapp
+                        ? 'Veuillez entrer votre numéro WhatsApp.'
+                        : 'Veuillez entrer votre numéro de téléphone.',
+                });
                 return;
             }
             setStep(3);
@@ -112,7 +133,31 @@ export default function RegisterForm() {
         if (step > 1) setStep(step - 1);
     };
 
-    const handleSubmit = async () => {
+    const registerUser = async (whatsappVerified: boolean) => {
+        const fullPhone = `${countryCode.replace(/\D/g, '')}${phone.replace(/\s+/g, '')}`;
+        const payload: Record<string, string | boolean> = {
+            first_name: firstName,
+            last_name: lastName,
+            email,
+            phone: phone.replace(/\s+/g, ''),
+            phone_indicative: countryCode,
+            password,
+            re_password: confirmPassword,
+        };
+        if (useWhatsapp) {
+            payload.user_whatsapp_phone = fullPhone;
+            payload.whatsapp_verified = whatsappVerified;
+        }
+
+        await api.post('/auth/registration', payload);
+        setShowWhatsappDialog(false);
+        setNotification({ type: 'success', message: 'Inscription réussie! Veuillez vous connecter.' });
+        setTimeout(() => {
+            window.location.href = '/login';
+        }, 1000);
+    };
+
+    const handleSubmit = async (skipWhatsappCheck = false) => {
         if (!termsAccepted) {
             setNotification({ type: 'error', message: 'Veuillez accepter les conditions d\'utilisation.' });
             return;
@@ -127,35 +172,53 @@ export default function RegisterForm() {
         }
 
         setIsLoading(true);
+        setNotification(null);
+        if (skipWhatsappCheck) {
+            setShowWhatsappDialog(false);
+        }
+
         try {
-            const payload = {
-                first_name: firstName,
-                last_name: lastName,
-                email,
-                phone: phone.replace(/\s+/g, ''),
-                phone_indicative: countryCode,
-                password,
-                re_password: confirmPassword,
-            };
+            const fullPhone = `${countryCode.replace(/\D/g, '')}${phone.replace(/\s+/g, '')}`;
+            let whatsappVerified = false;
 
-            const response = await api.post('/auth/registration', payload);
-            console.log('Registration response:', response.data);
+            if (useWhatsapp && !skipWhatsappCheck) {
+                try {
+                    const checkResponse = await api.post('/auth/check-whatsapp-phone', {
+                        user_whatsapp_phone: fullPhone,
+                    });
+                    if (checkResponse.data?.success) {
+                        whatsappVerified = true;
+                    } else {
+                        setShowWhatsappDialog(true);
+                        return;
+                    }
+                } catch (error: any) {
+                    const message = error?.response?.data?.message;
+                    if (message === 'NUMBER_NOT_ON_WHATSAPP' || message === 'INVALID_PHONE') {
+                        setShowWhatsappDialog(true);
+                        return;
+                    }
+                    if (message !== 'WHATSAPP_DISABLED') {
+                        setNotification({
+                            type: 'error',
+                            message: 'Impossible de vérifier ce numéro WhatsApp. Réessayez.',
+                        });
+                        return;
+                    }
+                }
+            }
 
-            setNotification({ type: 'success', message: 'Inscription réussie! Veuillez vous connecter.' });
-            setTimeout(() => {
-                window.location.href = '/login';
-            }, 1000);
-
+            await registerUser(whatsappVerified);
         } catch (error: any) {
             console.error('Registration error:', error);
-            let message = 'Erreur lors de l\'inscription.';
-            if (error.response?.data?.message) {
-                message = error.response.data.message;
-            }
-            setNotification({ type: 'error', message });
+            setNotification({ type: 'error', message: parseRegisterError(error) });
         } finally {
             setIsLoading(false);
         }
+    };
+
+    const handleRegisterWithoutWhatsapp = () => {
+        void handleSubmit(true);
     };
 
     return (
@@ -190,6 +253,35 @@ export default function RegisterForm() {
                 <div className={`mb-4 p-3 rounded text-sm ${notification.type === "success" ? "bg-green-100 text-green-700" : "bg-red-50 text-red-500"
                     }`}>
                     {notification.message}
+                </div>
+            )}
+
+            {showWhatsappDialog && (
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 px-4 backdrop-blur-sm">
+                    <div className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
+                        <h2 className="text-lg font-bold text-gray-900">Numéro WhatsApp introuvable</h2>
+                        <p className="mt-3 text-sm text-gray-600">
+                            Ce numéro n&apos;a pas été trouvé sur WhatsApp. Vous pourrez le configurer plus tard dans votre profil.
+                        </p>
+                        <div className="mt-6 flex flex-col gap-3">
+                            <button
+                                type="button"
+                                onClick={handleRegisterWithoutWhatsapp}
+                                disabled={isLoading}
+                                className="w-full rounded-xl bg-[#1e40af] px-4 py-3 text-sm font-semibold text-white disabled:opacity-60"
+                            >
+                                {isLoading ? 'Inscription...' : 'Continuer'}
+                            </button>
+                            <button
+                                type="button"
+                                onClick={() => setShowWhatsappDialog(false)}
+                                disabled={isLoading}
+                                className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-700 disabled:opacity-60"
+                            >
+                                Modifier le numéro
+                            </button>
+                        </div>
+                    </div>
                 </div>
             )}
 
@@ -238,7 +330,9 @@ export default function RegisterForm() {
                 {step === 2 && (
                     <div className="space-y-5 animate-in fade-in slide-in-from-right-4 duration-300">
                         <div>
-                            <label className="block text-gray-800 text-base font-medium mb-1.5">Téléphone</label>
+                            <label className="block text-gray-800 text-base font-medium mb-1.5">
+                                {useWhatsapp ? 'Numéro WhatsApp' : 'Téléphone'}
+                            </label>
                             <div className="flex rounded-xl border border-gray-200 bg-gray-50 overflow-visible focus-within:ring-2 focus-within:ring-[#002d72] focus-within:border-transparent transition-all relative">
                                 {/* Country Code Selector (Interactive Dropdown) */}
                                 <div className="relative" ref={dropdownRef}>
@@ -309,6 +403,11 @@ export default function RegisterForm() {
                             <div className="text-right mt-1">
                                 <span className="text-gray-400 text-xs">{phone.length}/8</span>
                             </div>
+                            {useWhatsapp && (
+                                <p className="mt-2 text-sm text-gray-600">
+                                    Ce numéro sera enregistré sur votre compte et vérifié sur WhatsApp lors de l&apos;inscription.
+                                </p>
+                            )}
                         </div>
                     </div>
                 )}

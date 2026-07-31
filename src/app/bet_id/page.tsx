@@ -112,7 +112,7 @@ function BetIdsContent() {
     if (!token) return;
 
     try {
-      const response = await api.get(`/blaffa/app_name`, {
+      const response = await api.get(`/blaffa/v2/app_name`, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`

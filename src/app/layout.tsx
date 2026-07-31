@@ -40,10 +40,10 @@
 
 'use client';
 
-import React, { Suspense, useEffect } from 'react';
+import React, { Suspense, useEffect, useRef } from 'react';
 import { ThemeProvider } from '../components/ThemeProvider';
 import { WebSocketProvider } from '../context/WebSocketContext';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
 import { I18nextProvider } from 'react-i18next';
 import { initializeI18n } from '../../i18n';
 import "./globals.css";
@@ -52,27 +52,28 @@ import "./globals.css";
 const i18n = initializeI18n();
 
 import BottomNavbar from '../components/BottomNavbar';
+import NotificationChannelDialog from '../components/NotificationChannelDialog';
+import { QueryProvider } from '../providers/QueryProvider';
 
 function LayoutContent({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
+  const pushInitRef = useRef(false);
 
   useEffect(() => {
-    // Set language from localStorage or default to 'fr'
     const lang = localStorage.getItem('i18nextLng') || 'fr';
     i18n.changeLanguage(lang);
-
-    // Update HTML lang attribute
     document.documentElement.lang = lang;
+  }, []);
 
-    // Initialize push notifications if user is logged in
+  useEffect(() => {
+    if (pushInitRef.current) return;
     const accessToken = localStorage.getItem('accessToken');
-    if (accessToken) {
-      import('../lib/push-notifications').then(({ initializePushNotifications }) => {
-        initializePushNotifications();
-      }).catch(err => console.error('Failed to load push notifications utility:', err));
-    }
-  }, [pathname, searchParams]);
+    if (!accessToken) return;
+    pushInitRef.current = true;
+    import('../lib/push-notifications')
+      .then(({ initializePushNotifications }) => initializePushNotifications())
+      .catch(() => undefined);
+  }, []);
 
   // Check if current path is an auth page (login or register)
   // const isAuthPage = pathname === '/login' || pathname === '/register';
@@ -86,6 +87,7 @@ function LayoutContent({ children }: { children: React.ReactNode }) {
         {children}
       </main>
       {showBottomNav && <BottomNavbar />}
+      <NotificationChannelDialog />
     </div>
   );
 }
@@ -96,21 +98,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang={i18n.language} className="overflow-x-hidden" suppressHydrationWarning>
+    <html lang="fr" className="overflow-x-hidden" suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
-      <body className="antialiased overflow-x-hidden">
+      <body className="antialiased overflow-x-hidden" suppressHydrationWarning>
         <I18nextProvider i18n={i18n}>
-          <WebSocketProvider>
-            <ThemeProvider>
-              <Suspense fallback={<div>Loading...</div>}>
-                <LayoutContent>
-                  {children}
-                </LayoutContent>
-              </Suspense>
-            </ThemeProvider>
-          </WebSocketProvider>
+          <QueryProvider>
+            <WebSocketProvider>
+              <ThemeProvider>
+                <Suspense fallback={<div>Loading...</div>}>
+                  <LayoutContent>
+                    {children}
+                  </LayoutContent>
+                </Suspense>
+              </ThemeProvider>
+            </WebSocketProvider>
+          </QueryProvider>
         </I18nextProvider>
       </body>
     </html>

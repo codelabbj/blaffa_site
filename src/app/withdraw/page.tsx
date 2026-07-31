@@ -143,6 +143,8 @@ export default function Withdraw() {
 
   const [transactionLink, setTransactionLink] = useState<string | null>(null);
   const [showTransactionModal, setShowTransactionModal] = useState(false);
+  const [dynamicMaxWithdrawal, setDynamicMaxWithdrawal] = useState<number | null>(null);
+  const [networkBalanceMessage, setNetworkBalanceMessage] = useState('');
 
   // Phone number management functions
   const fetchUserPhones = async (networkId?: string): Promise<UserPhone[]> => {
@@ -247,7 +249,7 @@ export default function Withdraw() {
 
   const fetchPlatforms = async () => {
     try {
-      const response = await api.get('/blaffa/app_name?operation_type=withdrawal');
+      const response = await api.get('/blaffa/v2/app_name?operation_type=withdrawal');
 
       if (response.status === 200) {
         const data = response.data;
@@ -449,11 +451,49 @@ export default function Withdraw() {
       return;
     }
     setSelectedPlatform(platform);
+    setDynamicMaxWithdrawal(null);
+    setNetworkBalanceMessage('');
     setCurrentStep('manageBetId');
+  };
+
+  const fetchNetworkBalanceLimit = async (network: Network) => {
+    const token = localStorage.getItem('accessToken');
+    if (!token) return;
+    const platformMax = parseFloat(
+      String(selectedPlatform?.max_win || selectedPlatform?.maximum_withdrawal || '1000000')
+    );
+    try {
+      const response = await api.get(
+        `/blaffa/flashpay/devices/${encodeURIComponent(network.id)}/balance/`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          params: {
+            network_id: network.id,
+            default_amount: platformMax,
+          },
+        }
+      );
+      const returnedBalance = Number(response.data?.amount ?? platformMax);
+      const safeBalance = Number.isFinite(returnedBalance) ? returnedBalance : platformMax;
+      setDynamicMaxWithdrawal(safeBalance);
+      if (safeBalance <= 900) {
+        const networkLabel = network.public_name || network.name || 'ce réseau';
+        setNetworkBalanceMessage(
+          `Le solde disponible sur ${networkLabel} est de ${safeBalance}. Vous pouvez patienter le temps que nous rechargeons le réseau ou essayer le retrait avec un autre réseau.`
+        );
+      } else {
+        setNetworkBalanceMessage('');
+      }
+    } catch (err) {
+      console.error('Error fetching flashpay network balance:', err);
+      setDynamicMaxWithdrawal(platformMax);
+      setNetworkBalanceMessage('');
+    }
   };
 
   const handleNetworkSelect = async (network: Network) => {
     setSelectedNetwork(network);
+    await fetchNetworkBalanceLimit(network);
 
     // Fetch user phones for this network
     setPhoneLoading(true);
@@ -467,10 +507,12 @@ export default function Withdraw() {
   // Get current min and max withdrawal limits
   const getWithdrawalLimits = () => {
     const minVal = selectedPlatform?.minimun_with || selectedPlatform?.minimum_withdrawal || '100';
-    const maxVal = selectedPlatform?.max_win || selectedPlatform?.maximum_withdrawal || '1000000';
+    const baseMax = parseFloat(String(selectedPlatform?.max_win || selectedPlatform?.maximum_withdrawal || '1000000'));
+    const resolvedMax = dynamicMaxWithdrawal !== null ? Math.min(baseMax, dynamicMaxWithdrawal) : baseMax;
+    const resolvedMin = Math.min(parseFloat(String(minVal)), resolvedMax);
     return {
-      min: parseFloat(String(minVal)),
-      max: parseFloat(String(maxVal))
+      min: resolvedMin,
+      max: resolvedMax
     };
   };
 
@@ -1263,7 +1305,7 @@ export default function Withdraw() {
             <div className="mb-6 p-4 bg-orange-50 border border-orange-200 rounded-xl flex items-start gap-3">
               <AlertTriangle className="w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5" />
               <p className="text-sm text-orange-700">
-                Assurez-vous que le montant est dans les limites autorisées {getWithdrawalLimits().min} F - {getWithdrawalLimits().max} F.
+                {networkBalanceMessage || `Assurez-vous que le montant est dans les limites autorisées ${getWithdrawalLimits().min} F - ${getWithdrawalLimits().max} F.`}
               </p>
             </div>
 

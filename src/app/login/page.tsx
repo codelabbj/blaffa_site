@@ -11,7 +11,7 @@ export default function LoginPage() {
     useEffect(() => {
         const fetchSettings = async () => {
             try {
-                const response = await fetch('https://api.blaffa.net/blaffa/setting/', {
+                const response = await fetch('https://api.blaffa.net/blaffa/v2/setting/', {
                     method: 'GET',
                     headers: {
                         'Content-Type': 'application/json',

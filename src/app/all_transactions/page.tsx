@@ -7,6 +7,8 @@ import { useTheme } from '../../components/ThemeProvider'; // Adjust path as nee
 import axios from 'axios'
 import api from '@/lib/axios';
 import DashboardHeader from '@/components/DashboardHeader';
+import { getCache, setCache, CACHE_KEYS } from '@/lib/cache';
+import { HistoricListSkeleton, TransactionRowsSkeleton } from '@/components/skeletons/PageSkeletons';
 
 type Transaction = {
   id: string;
@@ -44,8 +46,12 @@ type ApiResponse = {
 };
 
 export default function AllTransactionsPage() {
-  const [transactions, setTransactions] = useState<Transaction[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [transactions, setTransactions] = useState<Transaction[]>(() => {
+    const cached = getCache<any[]>(CACHE_KEYS.RECENT_TRANSACTIONS);
+    if (!cached) return [];
+    return cached.map((item) => item.transaction || item);
+  });
+  const [loading, setLoading] = useState(() => !getCache(CACHE_KEYS.RECENT_TRANSACTIONS));
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -66,7 +72,9 @@ export default function AllTransactionsPage() {
 
   // Fetch transactions from API
   const fetchTransactions = useCallback(async (pageNumber: number, category: string = 'all') => {
-    if (pageNumber === 1) setLoading(true);
+    const hasCachedData = transactions.length > 0 || !!getCache(CACHE_KEYS.RECENT_TRANSACTIONS);
+    if (pageNumber === 1 && !hasCachedData) setLoading(true);
+    else if (pageNumber > 1) setLoading(true);
 
     try {
       const token = localStorage.getItem('accessToken');
@@ -77,7 +85,7 @@ export default function AllTransactionsPage() {
         return;
       }
 
-      let apiUrl = `/blaffa/historic?page=${pageNumber}`;
+      let apiUrl = pageNumber === 1 ? '/blaffa/historic' : `/blaffa/historic?page=${pageNumber}`;
       if (category === 'deposit') apiUrl += '&type=deposit';
       if (category === 'withdrawal') apiUrl += '&type=withdrawal';
 
@@ -105,10 +113,25 @@ export default function AllTransactionsPage() {
         .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
 
       setTransactions(prev => pageNumber === 1 ? newTransactions : [...prev, ...newTransactions]);
+      if (pageNumber === 1 && category === 'all' && activeStatus === 'all') {
+        setCache(CACHE_KEYS.RECENT_TRANSACTIONS, data.results);
+      }
       setHasMore(!!data.next);
       setError(null);
     } catch (err) {
       console.error('Error in fetchTransactions:', err);
+
+      if (axios.isAxiosError(err) && err.response?.status === 404 && pageNumber > 1) {
+        setHasMore(false);
+        setError(null);
+        return;
+      }
+
+      if (pageNumber === 1 && (transactions.length > 0 || getCache(CACHE_KEYS.RECENT_TRANSACTIONS))) {
+        setError(null);
+        return;
+      }
+
       let errorMessage = 'Failed to load transactions';
 
       if (axios.isAxiosError(err)) {
@@ -127,7 +150,7 @@ export default function AllTransactionsPage() {
       setLoading(false);
       setIsRefreshing(false);
     }
-  }, []);
+  }, [activeStatus, transactions.length]);
 
   const lastTransactionElement = useCallback((node: HTMLDivElement | null) => {
     if (loading || !node) return;
@@ -230,12 +253,8 @@ export default function AllTransactionsPage() {
     }
   }
 
-  if (loading && transactions.length === 0 && !isFilterOpen) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-orange-500"></div>
-      </div>
-    );
+  if (loading && transactions.length === 0 && !getCache(CACHE_KEYS.RECENT_TRANSACTIONS) && !isFilterOpen) {
+    return <HistoricListSkeleton />;
   }
 
   if (error && !isFilterOpen) {
@@ -421,10 +440,7 @@ export default function AllTransactionsPage() {
           /* Transactions List View */
           <div className="grid gap-0">
             {loading && page === 1 ? (
-              <div className="flex flex-col items-center justify-center py-20 gap-4">
-                <div className="w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-                <p className="text-gray-500 animate-pulse">Chargement...</p>
-              </div>
+              <TransactionRowsSkeleton count={5} className="py-6" />
             ) : transactions.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-32 px-6 text-center">
                 <div className="mb-8 text-gray-200 dark:text-gray-800">
@@ -507,10 +523,8 @@ export default function AllTransactionsPage() {
                 )
               })
             )}
-            {loading && hasMore && (
-              <div className="flex justify-center py-4">
-                <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-              </div>
+            {loading && hasMore && page > 1 && (
+              <TransactionRowsSkeleton count={2} className="py-2" />
             )}
           </div>
         )}

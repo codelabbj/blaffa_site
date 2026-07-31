@@ -7,7 +7,9 @@ import { useRouter } from 'next/navigation';
 import { useTranslation } from 'react-i18next';
 import { useTheme } from './ThemeProvider';
 import api from '@/lib/axios';
+import { getCache, setCache, CACHE_KEYS } from '@/lib/cache';
 import { useWebSocket } from '@/context/WebSocketContext';
+import { TransactionRowsSkeleton } from '@/components/skeletons/PageSkeletons';
 
 // Define the App interface
 interface App {
@@ -111,8 +113,8 @@ type HistoricItem = {
  */
 
 export default function TransactionHistory() {
-  const [transactions, setTransactions] = useState<HistoricItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [transactions, setTransactions] = useState<HistoricItem[]>(() => getCache<HistoricItem[]>(CACHE_KEYS.RECENT_TRANSACTIONS) || []);
+  const [loading, setLoading] = useState(() => !getCache(CACHE_KEYS.RECENT_TRANSACTIONS));
   const [error, setError] = useState<string | null>(null);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
@@ -245,7 +247,16 @@ export default function TransactionHistory() {
 
   // Fetch transactions from API
   const fetchTransactions = async (pageNumber: number, activeFilter: string, silent = false) => {
-    if (!silent) setLoading(true);
+    const hasCachedData =
+      transactions.length > 0 || !!(getCache<HistoricItem[]>(CACHE_KEYS.RECENT_TRANSACTIONS)?.length);
+
+    if (!silent) {
+      if (pageNumber > 1) {
+        setLoading(true);
+      } else if (!hasCachedData) {
+        setLoading(true);
+      }
+    }
 
     try {
       const apiUrl = getApiUrl(pageNumber, activeFilter);
@@ -289,6 +300,7 @@ export default function TransactionHistory() {
           });
 
           setTransactions(data.results);
+          setCache(CACHE_KEYS.RECENT_TRANSACTIONS, data.results);
         } else {
           // No transactions found
           setTransactions([]);
@@ -333,7 +345,7 @@ export default function TransactionHistory() {
       }
 
       // Set empty transactions if API failed
-      if (pageNumber === 1) {
+      if (pageNumber === 1 && !getCache(CACHE_KEYS.RECENT_TRANSACTIONS)) {
         setTransactions([]);
         transactionsMapRef.current.clear();
       }
@@ -347,17 +359,22 @@ export default function TransactionHistory() {
     fetchTransactions(1, 'all');
 
     // Subscribe to global WebSocket messages
-    const removeHandler = addMessageHandler((data) => {
+    const removeHandler = addMessageHandler((raw) => {
+      const data = raw as {
+        type?: string;
+        transaction?: Transaction;
+        message?: string;
+      };
       switch (data.type) {
         case 'transaction_update':
-          handleTransactionUpdate(data.transaction);
+          if (data.transaction) handleTransactionUpdate(data.transaction);
           break;
         case 'new_transaction':
-          handleNewTransaction(data.transaction);
+          if (data.transaction) handleNewTransaction(data.transaction);
           break;
         case 'error':
           console.error('WebSocket server error:', data.message);
-          setError(data.message);
+          setError(data.message ?? null);
           break;
         default:
           if (data.transaction) {
@@ -537,13 +554,8 @@ export default function TransactionHistory() {
       `}
           </style>
 
-          {loading && page === 1 ? (
-            <div className="flex justify-center items-center py-16">
-              <div className="relative">
-                <div className="animate-spin rounded-full h-12 w-12 border-4 border-blue-500/30 border-t-blue-500"></div>
-                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/20 to-blue-500/20 animate-pulse"></div>
-              </div>
-            </div>
+          {loading && page === 1 && transactions.length === 0 && !getCache(CACHE_KEYS.RECENT_TRANSACTIONS) ? (
+            <TransactionRowsSkeleton count={4} className="py-4" />
           ) : transactions.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-10 px-6">
               <p className={`${theme.mode === 'dark' ? 'text-gray-400' : 'text-gray-500'} text-sm mb-2 text-center font-normal`}>
@@ -620,12 +632,7 @@ export default function TransactionHistory() {
 
           {/* Load More Indicator */}
           {loading && page > 1 && (
-            <div className="flex justify-center items-center py-8">
-              <div className="relative">
-                <div className="animate-spin rounded-full h-8 w-8 border-3 border-blue-500/30 border-t-blue-500"></div>
-                <div className="absolute inset-0 rounded-full bg-gradient-to-r from-blue-500/10 to-blue-500/10 animate-pulse"></div>
-              </div>
-            </div>
+            <TransactionRowsSkeleton count={2} className="py-4" />
           )}
         </div>
 

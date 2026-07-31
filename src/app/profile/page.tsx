@@ -10,7 +10,9 @@ import { useTheme } from '@/components/ThemeProvider';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import api from '@/lib/axios';
-import { User, Pencil, ChevronRight, Shield, Star, LogOut, Trash2, HelpCircle, CheckCircle2, Moon, X, Mail } from 'lucide-react';
+import { User, Pencil, ChevronRight, Shield, Star, LogOut, Trash2, HelpCircle, CheckCircle2, Moon } from 'lucide-react';
+import NotificationChannelsPanel, { useNotificationChannelStatus } from '@/components/NotificationChannelsPanel';
+import { clearCache } from '@/lib/cache';
 
 export default function Profile() {
   const { t } = useTranslation();
@@ -30,11 +32,8 @@ export default function Profile() {
   const [loading, setLoading] = useState(true);
   const [showDeleteConfirmation, setShowDeleteConfirmation] = useState(false);
   const [showSecurityMenu, setShowSecurityMenu] = useState(false);
-  const [showNotificationMenu, setShowNotificationMenu] = useState(false);
   const [deleteConfirmText, setDeleteConfirmText] = useState('');
-  const [pushEnabled, setPushEnabled] = useState(true);
-  const [emailEnabled, setEmailEnabled] = useState(false);
-  const [isUpdate, setIsUpdate] = useState(false);
+  const { refresh: refreshChannelStatus } = useNotificationChannelStatus();
 
   // Fetch user profile metrics/data
   useEffect(() => {
@@ -59,7 +58,7 @@ export default function Profile() {
           status: profileData.status || '',
         }));
 
-        setIsUpdate(profileData.is_update === true);
+        refreshChannelStatus();
       } catch (error: unknown) {
         console.error('Error fetching profile data:', error);
       } finally {
@@ -73,6 +72,7 @@ export default function Profile() {
   const handleLogout = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
+    clearCache();
     toast.info(t('Logged out successfully.'));
     router.push('/');
   };
@@ -97,6 +97,7 @@ export default function Profile() {
 
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
+      clearCache();
       toast.success(t('Account deleted successfully!'));
       router.push('/');
     } catch (error: unknown) {
@@ -210,6 +211,14 @@ export default function Profile() {
             <span className="text-yellow-700 dark:text-yellow-500 font-bold text-sm">Vérification en attente</span>
           </div>
         )}
+
+        <div className={`${theme.mode === 'dark' ? 'bg-slate-900 border-slate-800' : 'bg-white border-gray-100'} border rounded-2xl p-4 shadow-sm`}>
+          <NotificationChannelsPanel
+            mode="profile"
+            showHeader
+            onStatusChange={refreshChannelStatus}
+          />
+        </div>
 
         <div className="space-y-2">
           {/* Dark Mode Toggle */}

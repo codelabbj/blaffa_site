@@ -46,7 +46,7 @@ export default function Dashboard() {
   useEffect(() => {
     const fetchSettings = async () => {
       try {
-        const response = await api.get('/blaffa/setting/');
+        const response = await api.get('/blaffa/v2/setting/');
 
         if (response.status === 200) {
           const settingsData = response.data;

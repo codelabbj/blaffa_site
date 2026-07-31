@@ -152,9 +152,10 @@ export default function CryptoTransactionForm({
   // Listen for transaction_link from websocket — only open tab if link exists
   useEffect(() => {
     type WebSocketMessage = { type: string; data?: string };
-    const handler = (data: WebSocketMessage) => {
-      if (data.type === 'transaction_link' && data.data) {
-        window.open(data.data, '_blank');
+    const handler = (data: unknown) => {
+      const msg = data as WebSocketMessage;
+      if (msg.type === 'transaction_link' && msg.data) {
+        window.open(msg.data, '_blank');
       }
     };
     const removeHandler = addMessageHandler(handler);

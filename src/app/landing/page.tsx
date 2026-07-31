@@ -43,7 +43,7 @@ export default function LandingPage() {
   useEffect(() => {
     const fetchTelegramUrl = async () => {
       try {
-        const response = await fetch('https://api.blaffa.net/blaffa/setting/', {
+        const response = await fetch('https://api.blaffa.net/blaffa/v2/setting/', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -59,8 +59,6 @@ export default function LandingPage() {
 
         if (settings?.telegram) {
           setTelegramUrl(settings.telegram);
-          // Save to localStorage for offline/fallback use
-          localStorage.setItem('settingsCache', JSON.stringify(settings));
         }
 
         const rawDownloadLink = settings?.dowload_apk_link || settings?.download_apk_link;
@@ -69,24 +67,7 @@ export default function LandingPage() {
         }
       } catch (error) {
         console.error('Error fetching telegram URL from settings:', error);
-        // Try to load from cache
-        const cachedSettings = localStorage.getItem('settingsCache');
-        if (cachedSettings) {
-          try {
-            const settings = JSON.parse(cachedSettings);
-            if (settings?.telegram) {
-              setTelegramUrl(settings.telegram);
-              console.log('Loaded settings from cache');
-            }
-            const rawDownloadLink = settings?.dowload_apk_link || settings?.download_apk_link;
-            if (rawDownloadLink) {
-              setDownloadApkLink(rawDownloadLink);
-            }
-          } catch (parseErr) {
-            console.error('Failed to parse cached settings:', parseErr);
-          }
-        }
-        // Keep default fallback URL if no cache
+        // Keep default fallback URL
       }
     };
 

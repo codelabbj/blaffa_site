@@ -784,28 +784,24 @@ export const initializeI18n = () => {
     return i18n;
   }
 
-  // Client-side initialization with language detection
-  const savedLanguage = localStorage.getItem('i18nextLng') || 'fr';
-
-  const config = {
-    resources,
-    lng: savedLanguage,
-    fallbackLng: 'fr',
-    supportedLngs: ['fr', 'en'],
-    interpolation: {
-      escapeValue: false,
-    },
-    detection: {
-      order: ['localStorage', 'navigator'],
-      lookupLocalStorage: 'i18nextLng',
-      caches: ['localStorage'],
-    },
-  };
-
+  // Client-side: même langue initiale que le SSR, puis LayoutContent applique localStorage
   i18n
     .use(LanguageDetector)
     .use(initReactI18next)
-    .init(config);
+    .init({
+      resources,
+      lng: 'fr',
+      fallbackLng: 'fr',
+      supportedLngs: ['fr', 'en'],
+      interpolation: {
+        escapeValue: false,
+      },
+      detection: {
+        order: ['localStorage', 'navigator'],
+        lookupLocalStorage: 'i18nextLng',
+        caches: ['localStorage'],
+      },
+    });
 
   return i18n;
 };

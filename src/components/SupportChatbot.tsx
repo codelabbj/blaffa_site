@@ -325,7 +325,6 @@ export function SupportChatbot({
           ref={fileRef}
           type="file"
           accept="image/*"
-          capture="environment"
           className="hidden"
           onChange={(e) => void onPickImage(e.target.files?.[0] || null)}
         />
@@ -347,12 +346,6 @@ export function SupportChatbot({
           placeholder="Écrivez votre message…"
           className="flex-1 resize-none rounded-2xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 px-4 py-3 text-sm leading-5 text-gray-900 dark:text-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#1a4384]/30 min-h-[4.5rem]"
           disabled={sending}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' && !e.shiftKey) {
-              e.preventDefault();
-              onSubmit(e as unknown as FormEvent);
-            }
-          }}
         />
         <button
           type="submit"

@@ -186,10 +186,11 @@ export default function Deposits() {
 
 
     useEffect(() => {
-    const handleTransactionLink = (data: WebSocketMessage) => {
-      if (data.type === 'transaction_link' && data.data) {
-        setTransactionLink(data.data); // Save the link for the modal button
-        setShowPaymentModal(true); // Open the modal
+    const handleTransactionLink = (data: unknown) => {
+      const msg = data as WebSocketMessage;
+      if (msg.type === 'transaction_link' && msg.data) {
+        setTransactionLink(msg.data);
+        setShowPaymentModal(true);
       }
     };
     const removeHandler = addMessageHandler(handleTransactionLink);
@@ -290,7 +291,7 @@ export default function Deposits() {
     try {
       // Use axios directly or api instance without auth header for this request if possible
       // Or just let api instance handle it (if no token in localStorage, no header added usually)
-      const response = await api.get('/blaffa/app_name?operation_type=deposit');
+      const response = await api.get('/blaffa/v2/app_name?operation_type=deposit');
 
       if (response.status === 200) {
         const data = response.data;

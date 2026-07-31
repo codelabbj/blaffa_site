@@ -84,7 +84,7 @@ const CouponPage = () => {
 
   const fetchPlatforms = async () => {
     try {
-      const response = await api.get('/blaffa/app_name?operation_type=coupon');
+      const response = await api.get('/blaffa/v2/app_name?operation_type=coupon');
       if (response.status === 200) {
         setPlatforms(response.data || []);
       }
