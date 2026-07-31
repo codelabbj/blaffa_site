@@ -35,6 +35,8 @@ export default function Dashboard() {
   const [whatsappUrl, setWhatsappUrl] = useState('');
   const [downloadApkLink, setDownloadApkLink] = useState('');
   const [chatbotEnabled, setChatbotEnabled] = useState(false);
+  const [telegramEnabled, setTelegramEnabled] = useState(false);
+  const [whatsappEnabled, setWhatsappEnabled] = useState(false);
   const [cryptoEnable, setCryptoEnable] = useState(true);
   const [depositEnable, setDepositEnable] = useState(true);
   const [withdrawEnable, setWithdrawEnable] = useState(true);
@@ -71,6 +73,12 @@ export default function Dashboard() {
 
           if (Object.prototype.hasOwnProperty.call(settings, 'use_chatbot')) {
             setChatbotEnabled(Boolean(settings.use_chatbot));
+          }
+          if (Object.prototype.hasOwnProperty.call(settings, 'use_telegram')) {
+            setTelegramEnabled(Boolean(settings.use_telegram));
+          }
+          if (Object.prototype.hasOwnProperty.call(settings, 'use_whatsapp')) {
+            setWhatsappEnabled(Boolean(settings.use_whatsapp));
           }
           if (Object.prototype.hasOwnProperty.call(settings, 'crypto_enable')) {
             setCryptoEnable(settings.crypto_enable);
@@ -228,6 +236,7 @@ export default function Dashboard() {
       </main>
 
       {/* Floating Action Button (FAB) - Chat */}
+      {(chatbotEnabled || (telegramEnabled && telegramUrl) || (whatsappEnabled && whatsappUrl)) && (
       <div className="fixed bottom-24 right-6 z-40">
         <button
           onClick={() => setIsContactMenuOpen(!isContactMenuOpen)}
@@ -260,13 +269,13 @@ export default function Dashboard() {
                 <Bot className="w-5 h-5 text-[#144692]" />
               </button>
             )}
-            {telegramUrl ? (
+            {telegramEnabled && telegramUrl ? (
               <a href={telegramUrl} target="_blank" rel="noopener noreferrer" className={`${theme.mode === 'dark' ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-neutral-200 text-neutral-800'} border px-5 py-3 rounded-2xl shadow-lg flex items-center gap-2 font-bold whitespace-nowrap`}>
                 <span>Telegram</span>
                 <Send className="w-5 h-5 text-blue-500" />
               </a>
             ) : null}
-            {whatsappUrl ? (
+            {whatsappEnabled && whatsappUrl ? (
               <a href={whatsappUrl} target="_blank" rel="noopener noreferrer" className={`${theme.mode === 'dark' ? 'bg-slate-800 border-slate-700 text-white' : 'bg-white border-neutral-200 text-neutral-800'} border px-5 py-3 rounded-2xl shadow-lg flex items-center gap-2 font-bold whitespace-nowrap`}>
                 <span>WhatsApp</span>
                 <div className="w-6 h-6 bg-green-500 rounded-lg flex items-center justify-center">
@@ -277,6 +286,7 @@ export default function Dashboard() {
           </div>
         )}
       </div>
+      )}
 
       {isChatOpen && chatbotEnabled && (
         <div className="fixed inset-0 z-[60] flex flex-col justify-end bg-black/50">
