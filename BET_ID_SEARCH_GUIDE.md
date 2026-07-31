@@ -9,6 +9,7 @@ The bet ID search feature allows users to:
 2. Validate the user exists and has the correct currency (CurrencyId === 27)
 3. Display confirmation/error modals
 4. Add the validated bet ID to saved IDs
+
 5. View and manage saved bet IDs
 
 ## Key Components
