@@ -862,9 +862,9 @@ export default function Deposits() {
           setShowPaymentModal(true);
         } else if (transactionToFinalize.ussd_code) {
           attemptDialerRedirect(transactionToFinalize.ussd_code);
-          router.push('/dashboard');
+          router.push(`/transaction/detail?id=${transactionToFinalize.id}`);
         } else {
-          router.push('/dashboard');
+          router.push(`/transaction/detail?id=${transactionToFinalize.id}`);
         }
       }
       return ok;

@@ -20,6 +20,7 @@ type Transaction = {
     net_payable_amount: number | null;
     ussd_code?: string;
     transaction_link?: string;
+    payment_phone?: string | null;
     payment_method?: string;
     issuer?: string;
     user?: {
@@ -433,6 +434,38 @@ function TransactionDetailContent() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                             </svg>
                         </a>
+                    </div>
+                )}
+
+                {/* Wave : numéro marchand à copier */}
+                {['pending', 'payment_init_success', 'en attente'].includes(transaction.status?.toLowerCase()) &&
+                    transaction.network?.name?.toLowerCase() === 'wave' &&
+                    transaction.payment_phone && (
+                    <div className={`w-full ${theme.mode === 'dark' ? 'bg-blue-900/10 border-blue-900/30' : 'bg-[#EBF5FF] border-[#D1E9FF]'} rounded-xl p-2 mb-3 border`}>
+                        <div className="flex items-center justify-between gap-1.5 mb-2">
+                             <div className="flex items-center gap-1.5">
+                                <Smartphone size={14} className="text-blue-400" />
+                                <span className="font-bold text-[#1E3A8A] dark:text-blue-300 text-xs">Paiement Wave</span>
+                             </div>
+                             <span className="text-[10px] text-blue-400 font-bold uppercase">{transaction.network?.public_name}</span>
+                        </div>
+                        <p className="text-[#1E3A8A] dark:text-blue-200 text-[11px] mb-2 leading-snug">
+                            Copiez ce numéro et envoyez le montant via Wave.
+                        </p>
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-3 bg-white/50 dark:bg-black/20 p-2.5 rounded-lg border border-blue-200/50 dark:border-blue-900/30">
+                            <span className={`font-mono text-base sm:text-lg font-bold tracking-widest ${theme.colors.text} break-all`}>
+                                {transaction.payment_phone}
+                            </span>
+                            <div className="flex gap-1.5 shrink-0">
+                                <button
+                                    onClick={() => copyToClipboard(transaction.payment_phone!)}
+                                    className={`flex-1 sm:flex-none px-3 py-2 sm:py-1.5 rounded-md border text-[11px] sm:text-[10px] font-bold flex items-center justify-center gap-1.5 transition-all active:scale-95 ${theme.mode === 'dark' ? 'border-slate-800 bg-slate-800 text-blue-400' : 'border-blue-100 bg-white text-blue-600'}`}
+                                >
+                                    {copied ? <CheckCircle2 size={12} /> : <Copy size={12} />}
+                                    {copied ? 'Copié' : 'Copier'}
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 )}
 
