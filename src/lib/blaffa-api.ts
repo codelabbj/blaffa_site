@@ -28,6 +28,7 @@ export async function sendChatbotMessage(payload: {
     detail?: string;
     escalated?: boolean;
     silent?: boolean;
+    images?: Array<{ url?: string; caption?: string }>;
   };
 }
 

@@ -72,6 +72,21 @@ function stripImageUrlFromText(content: string, imageUrl: string | null): string
     .trim();
 }
 
+function firstReplyImageUrl(data: {
+  message?: string;
+  images?: Array<{ url?: string } | string> | null;
+}): string | undefined {
+  const imgs = data.images;
+  if (Array.isArray(imgs)) {
+    for (const item of imgs) {
+      const url = (typeof item === 'string' ? item : item?.url || '').trim();
+      if (url.startsWith('http://') || url.startsWith('https://')) return url;
+    }
+  }
+  return extractImageUrlFromText(data.message || '') || undefined;
+}
+
+
 /** Aligne My Customer : messages > 24 h hors contexte IA. */
 function isWithinChatWindow(iso?: string, nowMs = Date.now()): boolean {
   if (!iso) return true; // messages locaux sans date : on garde
@@ -698,8 +713,8 @@ export function SupportChatbot({
           role: 'assistant',
           createdAt: new Date().toISOString(),
           content: reply || 'Je n’ai pas pu répondre pour le moment. Réessayez.',
-          ...(extractImageUrlFromText(reply)
-            ? { imageUrl: extractImageUrlFromText(reply)! }
+          ...(firstReplyImageUrl({ message: reply, images: (data as any).images })
+            ? { imageUrl: firstReplyImageUrl({ message: reply, images: (data as any).images })! }
             : {}),
         },
       ]);
@@ -818,9 +833,9 @@ export function SupportChatbot({
             role: 'assistant',
             createdAt: new Date().toISOString(),
             content: reply || 'Je n’ai pas pu répondre pour le moment. Réessayez.',
-            ...(extractImageUrlFromText(reply)
-              ? { imageUrl: extractImageUrlFromText(reply)! }
-              : {}),
+            ...(firstReplyImageUrl({ message: reply, images: (data as any).images })
+            ? { imageUrl: firstReplyImageUrl({ message: reply, images: (data as any).images })! }
+            : {}),
             ...(looksLikeAudioUrl(reply) ? { audioUrl: reply.trim() } : {}),
           },
         ]);
