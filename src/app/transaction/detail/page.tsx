@@ -65,6 +65,7 @@ function TransactionDetailContent() {
     const [error, setError] = useState<string | null>(null);
     const [copied, setCopied] = useState(false);
     const [timeLeft, setTimeLeft] = useState<number | null>(null);
+    const [showWaveModal, setShowWaveModal] = useState(false);
 
     useEffect(() => {
         if (transaction && transaction.status?.toLowerCase() === 'pending' && transaction.created_at) {
@@ -421,7 +422,27 @@ function TransactionDetailContent() {
                     XOF {transaction.amount}
                 </div>
 
-                {transaction.status?.toLowerCase() === 'pending' && transaction.network?.payment_by_link && transaction.transaction_link && (
+                {/* Wave Payment Modal for payment_phone - PRIORITY OVER EVERYTHING */}
+                {transaction.network?.name?.toLowerCase() === 'wave' && 
+                 transaction.payment_phone && (
+                    <div className="w-full mb-4">
+                        <button
+                            onClick={() => setShowWaveModal(true)}
+                            className="w-full py-4 bg-green-600 hover:bg-green-700 text-white rounded-2xl text-lg font-bold transition-all shadow-lg flex items-center justify-center gap-3"
+                        >
+                            🌊 Continuer le paiement Wave
+                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                            </svg>
+                        </button>
+                    </div>
+                )}
+
+                {/* Regular transaction link payments (COMPLETELY BLOCKED FOR WAVE) */}
+                {['pending', 'payment_init_success', 'en attente'].includes(transaction.status?.toLowerCase()) && 
+                 transaction.network?.payment_by_link && 
+                 transaction.transaction_link && 
+                 transaction.network?.name?.toLowerCase() !== 'wave' && (
                     <div className="w-full mb-4">
                         <a
                             href={transaction.transaction_link}
@@ -437,8 +458,8 @@ function TransactionDetailContent() {
                     </div>
                 )}
 
-                {/* Wave : numéro marchand à copier */}
-                {['pending', 'payment_init_success', 'en attente'].includes(transaction.status?.toLowerCase()) &&
+                {/* Wave : numéro marchand à copier - REPLACED BY MODAL */}
+                {/* {['pending', 'payment_init_success', 'en attente'].includes(transaction.status?.toLowerCase()) &&
                     transaction.network?.name?.toLowerCase() === 'wave' &&
                     transaction.payment_phone && (
                     <div className={`w-full ${theme.mode === 'dark' ? 'bg-blue-900/10 border-blue-900/30' : 'bg-[#EBF5FF] border-[#D1E9FF]'} rounded-xl p-2 mb-3 border`}>
@@ -467,7 +488,7 @@ function TransactionDetailContent() {
                             </div>
                         </div>
                     </div>
-                )}
+                )} */}
 
                 {/* Message Box */}
                 <div className={`w-full ${theme.mode === 'dark' ? 'bg-blue-900/10 border-blue-900/30' : 'bg-[#EBF5FF] border-[#D1E9FF]'} rounded-xl p-2 mb-3 border`}>
@@ -709,6 +730,79 @@ function TransactionDetailContent() {
                     </button>
                 )}
             </div>
+
+            {/* Wave Payment Modal for payment_phone */}
+            {showWaveModal && (
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+                    <div className={`w-full max-w-sm ${theme.mode === 'dark' ? 'bg-gray-900' : 'bg-white'} rounded-2xl shadow-2xl`}>
+                        <div className="p-6">
+                            <div className="flex items-center justify-center mb-4">
+                                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                                    <Smartphone className="text-blue-600" size={24} />
+                                </div>
+                            </div>
+                            
+                            <h3 className={`text-lg font-bold text-center ${theme.colors.text} mb-2`}>
+                                Paiement Wave
+                            </h3>
+                            
+                            <p className="text-gray-600 dark:text-gray-400 text-sm text-center mb-6">
+                                Continuez en envoyant le montant exact à ce numéro
+                            </p>
+                            
+                            <div className={`${theme.mode === 'dark' ? 'bg-blue-900/10 border-blue-900/30' : 'bg-[#EBF5FF] border-[#D1E9FF]'} rounded-xl p-4 mb-6 border`}>
+                                <div className="flex items-center justify-between mb-2">
+                                    <span className="text-[#1E3A8A] dark:text-blue-300 text-sm font-semibold">
+                                        Numéro marchand
+                                    </span>
+                                    <span className="text-[10px] text-blue-400 font-bold uppercase">
+                                        {transaction.network?.public_name}
+                                    </span>
+                                </div>
+                                
+                                <div className="bg-white/50 dark:bg-black/20 p-3 rounded-lg border border-blue-200/50 dark:border-blue-900/30 mb-3">
+                                    <span className={`font-mono text-xl font-bold tracking-wider ${theme.colors.text} block text-center`}>
+                                        {transaction.payment_phone}
+                                    </span>
+                                </div>
+                                
+                                <div className="bg-white/50 dark:bg-black/20 p-3 rounded-lg border border-blue-200/50 dark:border-blue-900/30">
+                                    <div className="text-center">
+                                        <span className="text-gray-600 dark:text-gray-400 text-xs block mb-1">
+                                            Montant à envoyer
+                                        </span>
+                                        <span className={`font-bold text-lg ${theme.colors.text}`}>
+                                            XOF {transaction.amount}
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={() => setShowWaveModal(false)}
+                                    className="flex-1 py-3 border-2 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 rounded-xl font-semibold transition-colors"
+                                >
+                                    Fermer
+                                </button>
+                                <button
+                                    onClick={() => {
+                                        copyToClipboard(transaction.payment_phone!);
+                                        setShowWaveModal(false);
+                                    }}
+                                    className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 transition-colors"
+                                >
+                                    <Copy size={16} />
+                                    Copier
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* Wave transaction_link dialogue remains commented */}
+            {/* Wave payment dialogue with transaction_link would go here but is kept commented */}
 
             <style jsx>{`
                 .animate-spin-slow {
