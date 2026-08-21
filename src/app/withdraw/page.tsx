@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next';
 // import styles from '../styles/Withdraw.module.css';
 //import DashboardHeader from '@/components/DashboardHeader';
 import { useTheme } from '../../components/ThemeProvider';
-import { Check, CheckCircle, Phone, XCircle, HelpCircle, AlertTriangle, ExternalLink, Plus, ArrowLeft, Clock } from 'lucide-react';
+import { Check, CheckCircle, Phone, XCircle, HelpCircle, AlertTriangle, ExternalLink, Plus, ArrowLeft, Clock, Copy } from 'lucide-react';
 import api from '@/lib/axios';
 import DashboardHeader from '@/components/DashboardHeader';
 
@@ -76,6 +76,7 @@ interface Transaction {
   withdriwal_code?: string;
   ussd_code?: string;
   transaction_link?: string;
+  payment_phone?: string;
 }
 
 interface TransactionDetail {
@@ -143,6 +144,7 @@ export default function Withdraw() {
 
   const [transactionLink, setTransactionLink] = useState<string | null>(null);
   const [showTransactionModal, setShowTransactionModal] = useState(false);
+  const [showWaveModal, setShowWaveModal] = useState(false);
   const [dynamicMaxWithdrawal, setDynamicMaxWithdrawal] = useState<number | null>(null);
   const [networkBalanceMessage, setNetworkBalanceMessage] = useState('');
 
@@ -584,7 +586,14 @@ export default function Withdraw() {
       if (ok) {
         setPendingTxNotice(false);
         setTimeLeft(null);
-        if (transactionToFinalize.transaction_link) {
+        // WAVE TRANSACTIONS GET PRIORITY - CHECK FIRST AND BLOCK transaction_link
+        if (transactionToFinalize.network?.name?.toLowerCase() === 'wave' && 
+            transactionToFinalize.payment_phone) {
+          setShowWaveModal(true);
+        } else if (transactionToFinalize.network?.name?.toLowerCase() === 'wave') {
+          // Even Wave without payment_phone should not show transaction_link modal
+          router.push('/dashboard');
+        } else if (transactionToFinalize.transaction_link) {
           setTransactionLink(transactionToFinalize.transaction_link);
           setShowTransactionModal(true);
         } else if (transactionToFinalize.ussd_code) {
@@ -597,6 +606,18 @@ export default function Withdraw() {
       return ok;
     } catch (error) {
       console.error('Error finalizing transaction:', error);
+      
+      // Handle 404 error by removing last transaction
+      if (error && typeof error === 'object' && 'response' in error) {
+        const apiError = error as { response?: { status: number } };
+        if (apiError.response?.status === 404) {
+          setLastTransaction(null);
+          setPendingTxNotice(false);
+          setCurrentStep('selectId');
+          return true; // Treat as success since we cleared the stale transaction
+        }
+      }
+      
       handleApiError(error);
       return false;
     } finally {
@@ -624,6 +645,18 @@ export default function Withdraw() {
       return ok;
     } catch (error) {
       console.error('Error cancelling transaction:', error);
+      
+      // Handle 404 error by removing last transaction
+      if (error && typeof error === 'object' && 'response' in error) {
+        const apiError = error as { response?: { status: number } };
+        if (apiError.response?.status === 404) {
+          setLastTransaction(null);
+          setPendingTxNotice(false);
+          setCurrentStep('selectId');
+          return true; // Treat as success since we cleared the stale transaction
+        }
+      }
+      
       handleApiError(error);
       return false;
     } finally {
@@ -644,6 +677,15 @@ export default function Withdraw() {
       }, 100);
     } catch (error) {
       console.error('Error attempting dialer redirect:', error);
+    }
+  };
+
+  // Copy to clipboard utility
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (error) {
+      console.error('Failed to copy text:', error);
     }
   };
 
@@ -1768,6 +1810,65 @@ export default function Withdraw() {
                   className="w-full py-3 text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 font-medium transition-colors"
                 >
                   Retour au tableau de bord
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Wave Payment Modal for payment_phone */}
+      {showWaveModal && lastTransaction && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className={`w-full max-w-sm ${theme.mode === 'dark' ? 'bg-gray-900' : 'bg-white'} rounded-2xl shadow-2xl`}>
+            <div className="p-6">
+              <div className="text-center mb-6">
+                <div className="w-16 h-16 bg-green-100 dark:bg-green-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Phone className="w-8 h-8 text-green-600 dark:text-green-400" />
+                </div>
+                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2">
+                  Paiement Wave
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300 text-sm leading-relaxed">
+                  Continuez en envoyant le montant exact à ce numéro
+                </p>
+              </div>
+
+              <div className="bg-gray-50 dark:bg-gray-800 rounded-xl p-4 mb-6">
+                <div className="text-center">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-2">Numéro marchand</p>
+                  <div className="flex items-center justify-center gap-2 bg-white dark:bg-gray-700 rounded-lg p-3 border border-gray-200 dark:border-gray-600">
+                    <Phone className="w-5 h-5 text-gray-400" />
+                    <span className="font-mono text-lg font-semibold text-gray-900 dark:text-white">
+                      {lastTransaction.payment_phone}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="mt-4 text-center">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mb-1">Montant</p>
+                  <p className="text-2xl font-bold text-green-600 dark:text-green-400">
+                    {lastTransaction.amount} FCFA
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowWaveModal(false)}
+                  className="flex-1 py-3 border-2 border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 rounded-xl font-semibold transition-colors"
+                >
+                  Fermer
+                </button>
+                <button
+                  onClick={() => {
+                    copyToClipboard(lastTransaction.payment_phone!);
+                    setShowWaveModal(false);
+                  }}
+                  className="flex-1 py-3 bg-blue-600 text-white rounded-xl font-semibold flex items-center justify-center gap-2 transition-colors"
+                >
+                  <Copy className="w-4 h-4" />
+                  Copier
                 </button>
               </div>
             </div>
