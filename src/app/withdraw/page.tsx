@@ -1422,6 +1422,14 @@ export default function Withdraw() {
               </div>
 
 
+              {selectedNetwork?.name?.toLowerCase() === 'wave' && (
+                <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-xl">
+                  <p className="text-sm text-blue-800 dark:text-blue-200">
+                    Blaffa prend en charge uniquement 0,5 % des frais de retrait Wave.
+                  </p>
+                </div>
+              )}
+
               {/* Submit Button */}
               <div className="pt-6 pb-20">
                 <button

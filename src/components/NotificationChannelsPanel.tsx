@@ -16,9 +16,6 @@ const INPUT_CLASS =
 const INPUT_FULL_CLASS =
   'w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-sm text-slate-900 placeholder:text-slate-400 outline-none focus:ring-2 focus:ring-[#002d72] focus:border-transparent dark:border-slate-500 dark:bg-slate-700 dark:text-white dark:placeholder:text-slate-400';
 
-export const DISMISS_COUNT_KEY = 'blaffaNotificationPromptDismissCount_v2';
-export const MAX_DISMISS_COUNT = 3;
-
 export const countries = [
   { name: "Côte d'Ivoire", code: '225', flag: '🇨🇮' },
   { name: 'Burkina Faso', code: '226', flag: '🇧🇫' },
@@ -111,13 +108,6 @@ export function parseTelegramUsernameInput(raw: string): string {
 
 function openTelegramUrl(url: string) {
   window.open(url, '_blank', 'noopener,noreferrer');
-}
-
-export function hasAnyChannelVerified(user: Record<string, unknown> | null | undefined) {
-  const whatsappOk = Boolean(
-    user?.whatsapp_verified || user?.user_whatsapp_phone || user?.whatsapp
-  );
-  return Boolean(whatsappOk || user?.telegram_verified || user?.sms_verified);
 }
 
 export function useNotificationChannelStatus(autoFetch = true) {
@@ -433,8 +423,6 @@ export default function NotificationChannelsPanel({
   };
 
   const handleLater = () => {
-    const dismissCount = Number(localStorage.getItem(DISMISS_COUNT_KEY) || '0');
-    localStorage.setItem(DISMISS_COUNT_KEY, String(dismissCount + 1));
     onClose?.();
   };
 

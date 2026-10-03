@@ -652,6 +652,7 @@ export default function Deposits() {
 
   // Validation function for OTP code
   const validateOtpCode = (otp: string): string => {
+    // Pas de champ OTP dans l'UI dépôt → ne pas bloquer silencieusement Wave/autres
     if (selectedNetwork?.otp_required) {
       if (!otp || otp.trim() === '') {
         return 'Le code OTP est requis';
@@ -676,13 +677,18 @@ export default function Deposits() {
     const errors = {
       amount: validateAmount(formData.amount),
       phoneNumber: '', // No longer need to validate phone input
-      otp_code: validateOtpCode(formData.otp_code),
+      // OTP: uniquement si le réseau l'exige ET qu'on a un champ (sinon skip — bug Wave)
+      otp_code: '',
     };
 
     setValidationErrors(errors);
+    setError('');
 
-    // Return true if no errors
-    return !Object.values(errors).some(error => error !== '');
+    const ok = !Object.values(errors).some(error => error !== '');
+    if (!ok && errors.amount) {
+      setError(errors.amount);
+    }
+    return ok;
   };
 
 
@@ -859,16 +865,14 @@ export default function Deposits() {
 
       const ok = response.status === 200 || response.status === 201;
       if (ok) {
-        // WAVE TRANSACTIONS GET PRIORITY - CHECK FIRST AND BLOCK transaction_link
-        if (transactionToFinalize.network?.name?.toLowerCase() === 'wave' && 
-            transactionToFinalize.payment_phone) {
-          setShowWaveModal(true);
-        } else if (transactionToFinalize.network?.name?.toLowerCase() === 'wave') {
-          // Even Wave without payment_phone should not show transaction_link modal
-          router.push(`/transaction/detail?id=${transactionToFinalize.id}`);
-        } else if (transactionToFinalize.transaction_link) {
+        const isWave =
+          transactionToFinalize.network?.name?.toLowerCase() === 'wave';
+        // Connect Pro Wave → ouvrir le lien de paiement (prioritaire)
+        if (transactionToFinalize.transaction_link) {
           setTransactionLink(transactionToFinalize.transaction_link);
           setShowPaymentModal(true);
+        } else if (isWave && transactionToFinalize.payment_phone) {
+          setShowWaveModal(true);
         } else if (transactionToFinalize.ussd_code) {
           attemptDialerRedirect(transactionToFinalize.ussd_code);
           router.push(`/transaction/detail?id=${transactionToFinalize.id}`);
@@ -1408,18 +1412,16 @@ export default function Deposits() {
 
               {/* Warning Text */}
               <div className="text-center">
-                {/* No dynamic field specified for this one yet, keeping it or hiding if empty? 
-                     The user said "same for this..." suggesting it might be dynamic too.
-                     If it's not in the API, I'll keep it static or remove if redundant.
-                     Wait, re-reading: "same for this `Dès que vous payez...` and in place of this `tape_code` so those key is got from the network api response"
-                     If there's no key for "Dès que vous payez...", I'll see if I can find it in the platform response.
-                 */}
                 {selectedPlatform?.deposit_message && (
                   <p className="text-sm text-orange-500 dark:text-orange-400 italic">
                     {selectedPlatform.deposit_message}
                   </p>
                 )}
               </div>
+
+              {error && (
+                <p className="text-sm text-red-500 text-center font-medium">{error}</p>
+              )}
 
               {/* Submit Button */}
               <div className="pt-6">

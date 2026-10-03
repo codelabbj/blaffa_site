@@ -5,11 +5,7 @@ import { usePathname } from 'next/navigation';
 import { Bell } from 'lucide-react';
 import api from '@/lib/axios';
 import { fetchSettings } from '@/lib/blaffa-api';
-import NotificationChannelsPanel, {
-  DISMISS_COUNT_KEY,
-  MAX_DISMISS_COUNT,
-  hasAnyChannelVerified,
-} from './NotificationChannelsPanel';
+import NotificationChannelsPanel from './NotificationChannelsPanel';
 
 const SESSION_DISMISS_KEY = 'blaffaNotificationPromptSessionDismiss';
 
@@ -34,9 +30,6 @@ export default function NotificationChannelDialog() {
       if (pathname === '/profile') return;
       if (sessionStorage.getItem(SESSION_DISMISS_KEY) === '1') return;
 
-      const dismissCount = Number(localStorage.getItem(DISMISS_COUNT_KEY) || '0');
-      if (dismissCount >= MAX_DISMISS_COUNT) return;
-
       try {
         const [settings, userResponse] = await Promise.all([
           fetchSettings(),
@@ -44,17 +37,18 @@ export default function NotificationChannelDialog() {
         ]);
 
         const user = userResponse.data;
-
-        if (hasAnyChannelVerified(user)) return;
-
-        const needWhatsapp = Boolean(
-          settings?.use_whatsapp &&
-            !(user?.whatsapp_verified || user?.user_whatsapp_phone || user?.whatsapp)
+        const whatsappConnected = Boolean(
+          user?.whatsapp_verified || user?.user_whatsapp_phone || user?.whatsapp
         );
-        const needTelegram = Boolean(settings?.use_telegram && !user?.telegram_verified);
-        const needSms = Boolean(settings?.use_sms && !user?.sms_verified);
+        const telegramConnected = Boolean(
+          user?.telegram_verified || user?.user_telegram_username
+        );
 
-        if (!needWhatsapp && !needTelegram && !needSms) return;
+        if (whatsappConnected || telegramConnected) return;
+
+        const needWhatsapp = Boolean(settings?.use_whatsapp);
+        const needTelegram = Boolean(settings?.use_telegram);
+        if (!needWhatsapp && !needTelegram) return;
 
         setOpen(true);
       } catch (err) {
@@ -66,13 +60,10 @@ export default function NotificationChannelDialog() {
   }, [pathname]);
 
   const handleAllDone = () => {
-    localStorage.setItem(DISMISS_COUNT_KEY, String(MAX_DISMISS_COUNT));
     closePrompt();
   };
 
   const handleLater = () => {
-    const dismissCount = Number(localStorage.getItem(DISMISS_COUNT_KEY) || '0');
-    localStorage.setItem(DISMISS_COUNT_KEY, String(dismissCount + 1));
     closePrompt();
   };
 
